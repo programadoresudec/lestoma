@@ -5,8 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\lestoma.Common\lestoma.Common.csproj" />
-    <ProjectReference Include="..\lestoma.Data\lestoma.Data.csproj" />
+    <Folder Include="Helpers\" />
   </ItemGroup>
 
 </Project>
