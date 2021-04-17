@@ -1,4 +1,4 @@
-﻿using lestoma.Common.Responses;
+﻿using lestoma.CommonUtils.Responses;
 using lestoma.Data;
 using Microsoft.AspNetCore.Mvc;
 using System;

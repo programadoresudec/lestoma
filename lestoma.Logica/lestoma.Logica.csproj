@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\lestoma.Common\lestoma.Common.csproj" />
+    <ProjectReference Include="..\lestoma.CommonUtils\lestoma.CommonUtils.csproj" />
     <ProjectReference Include="..\lestoma.Data\lestoma.Data.csproj" />
   </ItemGroup>
 

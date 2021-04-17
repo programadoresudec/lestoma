@@ -1,5 +1,5 @@
-﻿using lestoma.Common.Entities;
-using lestoma.Common.Responses;
+﻿using lestoma.CommonUtils.Entities;
+using lestoma.CommonUtils.Responses;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,7 +8,7 @@ namespace lestoma.Data.DAO
 {
     public class DAOUsuario
     {
-        public async Task<EUsuario> Logeo(ResponseLogin login, Mapeo db)
+        public async Task<EUsuario> Logeo(RequestLogin login, Mapeo db)
         {
 
             var lista = (await (from persona in db.TablaUsuarios

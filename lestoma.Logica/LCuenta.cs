@@ -1,4 +1,4 @@
-﻿using lestoma.Common.Responses;
+﻿using lestoma.CommonUtils.Responses;
 using lestoma.Data;
 using lestoma.Data.DAO;
 using System;
@@ -9,7 +9,7 @@ namespace lestoma.Logica
     public class LCuenta
     {
         private readonly Response _respuesta = new Response();
-        public async Task<Response> Login(ResponseLogin login, Mapeo db)
+        public async Task<Response> Login(RequestLogin login, Mapeo db)
         {
             var user = await new DAOUsuario().Logeo(login, db);
             if (user == null)

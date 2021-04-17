@@ -1,12 +1,8 @@
-﻿using lestoma.Common.Entities;
-using lestoma.Common.Responses;
+﻿using lestoma.CommonUtils.Entities;
+using lestoma.CommonUtils.Responses;
 using lestoma.Data;
 using lestoma.Logica;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace lestoma.Api.Controllers
@@ -22,7 +18,7 @@ namespace lestoma.Api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Logeo(ResponseLogin logeo)
+        public async Task<IActionResult> Logeo(RequestLogin logeo)
         {
             if (ModelState.IsValid)
             {
@@ -31,7 +27,7 @@ namespace lestoma.Api.Controllers
                 {
                     return Unauthorized(Respuesta);
                 }
-                UsuarioToken usuario = new UsuarioToken
+                RequestToken usuario = new RequestToken
                 {
                     Rol = ((EUsuario)Respuesta.Data).Rol.NombreRol,
                     Token = "sdwq"

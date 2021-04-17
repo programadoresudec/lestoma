@@ -1,4 +1,4 @@
-﻿using lestoma.Common.Entities;
+﻿using lestoma.CommonUtils.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

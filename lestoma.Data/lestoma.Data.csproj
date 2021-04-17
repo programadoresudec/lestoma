@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\lestoma.Common\lestoma.Common.csproj" />
+    <ProjectReference Include="..\lestoma.CommonUtils\lestoma.CommonUtils.csproj" />
   </ItemGroup>
 
 </Project>
