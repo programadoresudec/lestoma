@@ -1,5 +1,11 @@
 ﻿using lestoma.App.Validators;
 using lestoma.App.Validators.Rules;
+using lestoma.CommonUtils.Entities;
+using lestoma.CommonUtils.Interfaces;
+using lestoma.CommonUtils.Responses;
+using Prism.Navigation;
+using System.Collections.Generic;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -12,7 +18,8 @@ namespace lestoma.App.ViewModels
     public class LoginPageViewModel : LoginViewModel
     {
         #region Fields
-
+        private readonly INavigationService _navigationService;
+        private readonly IApiService _apiService;
         private ValidatableObject<string> password;
 
         #endregion
@@ -22,10 +29,11 @@ namespace lestoma.App.ViewModels
         /// <summary>
         /// Initializes a new instance for the <see cref="LoginPageViewModel" /> class.
         /// </summary>
-        public LoginPageViewModel()
+        public LoginPageViewModel(INavigationService navigationService, IApiService apiService)
+            : base(navigationService, apiService)
         {
-            Syncfusion.Licensing.SyncfusionLicenseProvider.
-               RegisterLicense("NDMxODc5QDMxMzkyZTMxMmUzMENoS0RZSTVCbThZYzBtd2tCQjFMb2xnbklkSkFwNXBlWXl3YlZpOE9mQmc9");
+            _navigationService = navigationService;
+            _apiService = apiService;
             this.InitializeProperties();
             this.AddValidationRules();
             this.LoginCommand = new Command(this.LoginClicked);
@@ -130,11 +138,36 @@ namespace lestoma.App.ViewModels
         /// Invoked when the Log In button is clicked.
         /// </summary>
         /// <param name="obj">The Object</param>
-        private void LoginClicked(object obj)
+        private async void LoginClicked(object obj)
         {
+            if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+            {
+
+                await App.Current.MainPage.DisplayAlert("", "", "");
+                return;
+            }
             if (this.AreFieldsValid())
             {
-                // Do something
+                string url = App.Current.Resources["UrlAPI"].ToString();
+
+                LoginRequest login = new LoginRequest
+                {
+                    Email = this.Email.ToString(),
+                    Clave = this.password.ToString()
+
+                };
+
+                var lista = await _apiService.GetListAsync<List<EUsuario>>(url, "Account/Usuarios");
+             
+                Response respuesta = await _apiService.PostAsync(url, "Account/Login", login);
+                if (!respuesta.IsExito)
+                {
+                    await App.Current.MainPage.DisplayAlert("Error", respuesta.Mensaje, "Aceptar");
+                    this.password = null;
+                    return;
+                }
+                TokenRequest token = (TokenRequest)respuesta.Data;
+                await App.Current.MainPage.DisplayAlert("Satisfactorio", respuesta.Mensaje, "Aceptar");
             }
         }
 

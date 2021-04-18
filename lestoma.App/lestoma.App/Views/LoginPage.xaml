@@ -25,9 +25,7 @@
     </ContentPage.Resources>
 
     <!--  Binding context for login with social icon page  -->
-    <ContentPage.BindingContext>
-        <viewModel:LoginPageViewModel />
-    </ContentPage.BindingContext>
+    
 
     <ContentPage.Content>
         <Grid>
@@ -196,7 +194,6 @@
                 Text="{StaticResource Close}"
                 TextColor="{DynamicResource Gray-White}"
                 VerticalOptions="Start" />
-
         </Grid>
     </ContentPage.Content>
 </ContentPage>

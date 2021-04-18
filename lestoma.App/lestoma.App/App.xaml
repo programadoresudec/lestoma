@@ -7,6 +7,7 @@
   <Application.Resources>
 
         <ResourceDictionary>
+             <x:String x:Key="UrlAPI">https://onsaleprepweb.azurewebsites.net</x:String>
             <ResourceDictionary.MergedDictionaries>
                 <themes:LightTheme />
             </ResourceDictionary.MergedDictionaries >

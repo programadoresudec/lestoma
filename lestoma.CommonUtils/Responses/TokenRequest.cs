@@ -4,7 +4,7 @@ using System.Text;
 
 namespace lestoma.CommonUtils.Responses
 {
-    public class RequestToken
+    public class TokenRequest
     {
         public string Rol { get; set; }
         public string Token { get; set; }

@@ -8,7 +8,7 @@ namespace lestoma.Data.DAO
 {
     public class DAOUsuario
     {
-        public async Task<EUsuario> Logeo(RequestLogin login, Mapeo db)
+        public async Task<EUsuario> Logeo(LoginRequest login, Mapeo db)
         {
 
             var lista = (await (from persona in db.TablaUsuarios

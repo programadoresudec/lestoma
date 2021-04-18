@@ -10,7 +10,8 @@ namespace lestoma.CommonUtils.Responses
 {
     public class ApiService : IApiService
     {
-        public async Task<Response> GetListAsync<T>(string urlBase, string servicePrefix, string controller)
+        #region GetList Api service
+        public async Task<Response> GetListAsync<T>(string urlBase, string controller)
         {
             try
             {
@@ -18,11 +19,9 @@ namespace lestoma.CommonUtils.Responses
                 {
                     BaseAddress = new Uri(urlBase),
                 };
-
-                string url = $"{servicePrefix}{controller}";
-                HttpResponseMessage response = await client.GetAsync(url);
+                HttpResponseMessage response = await client.GetAsync(controller);
                 string jsonString = await response.Content.ReadAsStringAsync();
-                Response respuesta = JsonConvert.DeserializeObject<Response>(jsonString);
+                var respuesta = JsonConvert.DeserializeObject<Response>(jsonString);
                 if (!response.IsSuccessStatusCode)
                 {
                     return respuesta;
@@ -46,18 +45,21 @@ namespace lestoma.CommonUtils.Responses
             }
         }
 
-        public async Task<Response> PostAsync<T>(string urlBase, string servicePrefix, string controller, string json)
+        #endregion
+
+        #region Post Api service
+        public async Task<Response> PostAsync<T>(string urlBase, string controller, T model)
         {
             try
             {
+                string json = JsonConvert.SerializeObject(model);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
                 HttpClient client = new HttpClient
                 {
                     BaseAddress = new Uri(urlBase),
                 };
 
-                string url = $"{servicePrefix}{controller}";
-                HttpResponseMessage response = await client.PostAsync(url, content);
+                HttpResponseMessage response = await client.PostAsync(controller, content);
                 string jsonString = await response.Content.ReadAsStringAsync();
                 Response respuesta = JsonConvert.DeserializeObject<Response>(jsonString);
                 if (!response.IsSuccessStatusCode)
@@ -74,6 +76,7 @@ namespace lestoma.CommonUtils.Responses
                     Mensaje = ex.Message
                 };
             }
-        }
+        } 
+        #endregion
     }
 }

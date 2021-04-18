@@ -24,6 +24,8 @@ namespace lestoma.App
 
         protected override async void OnInitialized()
         {
+            Syncfusion.Licensing.SyncfusionLicenseProvider.
+               RegisterLicense("NDMxODc5QDMxMzkyZTMxMmUzMENoS0RZSTVCbThZYzBtd2tCQjFMb2xnbklkSkFwNXBlWXl3YlZpOE9mQmc9");
             InitializeComponent();
             await NavigationService.NavigateAsync("NavigationPage/LoginPage");
         }

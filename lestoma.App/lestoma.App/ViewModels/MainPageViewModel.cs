@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using lestoma.CommonUtils.Interfaces;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
 using System;
@@ -10,8 +11,8 @@ namespace lestoma.App.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
-        public MainPageViewModel(INavigationService navigationService)
-            : base(navigationService)
+        public MainPageViewModel(INavigationService navigationService, IApiService apiService)
+            : base(navigationService,apiService)
         {
             Title = "Main Page";
         }

@@ -2,7 +2,7 @@
 
 namespace lestoma.CommonUtils.Responses
 {
-    public class RequestLogin
+    public class LoginRequest
     {
         [Required]
         [EmailAddress]

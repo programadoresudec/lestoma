@@ -2,7 +2,10 @@
 using lestoma.CommonUtils.Responses;
 using lestoma.Data;
 using lestoma.Logica;
+using lestoma.Logica.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace lestoma.Api.Controllers
@@ -12,22 +15,32 @@ namespace lestoma.Api.Controllers
     public class AccountController : BaseController
     {
         private readonly Mapeo _context;
-        public AccountController(Mapeo context)
+        private readonly IUsuarioService _usuarioService;
+
+        public AccountController(Mapeo context, IUsuarioService usuarioService)
         {
             _context = context;
+            _usuarioService = usuarioService;
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Logeo(RequestLogin logeo)
+        [HttpGet("Usuarios")]
+        public async Task<IActionResult> Lista()
+        {
+            List<EUsuario> usuarios = await _context.TablaUsuarios.ToListAsync();
+           return Ok(usuarios);
+        }
+        [HttpPost("Login")]
+        public async Task<IActionResult> Logeo(LoginRequest logeo)
         {
             if (ModelState.IsValid)
             {
-                Respuesta = await new LCuenta().Login(logeo, _context);
+                Respuesta = await _usuarioService.Login(logeo);
+
                 if (Respuesta.Data == null)
                 {
                     return Unauthorized(Respuesta);
                 }
-                RequestToken usuario = new RequestToken
+                TokenRequest usuario = new TokenRequest
                 {
                     Rol = ((EUsuario)Respuesta.Data).Rol.NombreRol,
                     Token = "sdwq"

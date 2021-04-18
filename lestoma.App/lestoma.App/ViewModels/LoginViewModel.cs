@@ -1,5 +1,7 @@
 ﻿using lestoma.App.Validators;
 using lestoma.App.Validators.Rules;
+using lestoma.CommonUtils.Interfaces;
+using Prism.Navigation;
 using Xamarin.Forms.Internals;
 
 namespace lestoma.App.ViewModels
@@ -8,12 +10,11 @@ namespace lestoma.App.ViewModels
     /// ViewModel for login page.
     /// </summary>
     [Preserve(AllMembers = true)]
-    public class LoginViewModel : BaseViewModel
+    public class LoginViewModel : ViewModelBase
     {
         #region Fields
 
         private ValidatableObject<string> email;
-
         #endregion
 
         #region Constructor
@@ -21,7 +22,8 @@ namespace lestoma.App.ViewModels
         /// <summary>
         /// Initializes a new instance for the <see cref="LoginViewModel" /> class.
         /// </summary>
-        public LoginViewModel()
+        public LoginViewModel(INavigationService navigationService, IApiService apiService)
+            : base(navigationService, apiService)
         {
             this.InitializeProperties();
             this.AddValidationRules();

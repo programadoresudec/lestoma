@@ -1,18 +1,15 @@
+using lestoma.CommonUtils.Interfaces;
+using lestoma.CommonUtils.Responses;
 using lestoma.Data;
+using lestoma.Logica.Interfaces;
+using lestoma.Logica.LogicaService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace lestoma.Api
 {
@@ -38,6 +35,8 @@ namespace lestoma.Api
             {
                 options.UseNpgsql(Configuration.GetConnectionString("PostgresConnection"));
             });
+            services.AddScoped<IApiService, ApiService>();
+            services.AddScoped<IUsuarioService, LSUsuario>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
