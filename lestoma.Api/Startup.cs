@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System;
 using System.Text;
 
 namespace lestoma.Api
@@ -31,10 +32,8 @@ namespace lestoma.Api
         {
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "lestoma.Api", Version = "v1" });
-            });
+       
+
             services.AddDbContext<Mapeo>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("PostgresConnection"));
@@ -42,7 +41,41 @@ namespace lestoma.Api
 
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
+            services.AddSwaggerGen(swagger =>
+            {
+                //This is to generate the Default UI of Swagger Documentation    
+                swagger.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "lestoma.Api",
+                    Description = "Authentication and Authorization in ASP.NET 5 with JWT and Swagger"
+                });
+                // To Enable authorization using Swagger (JWT)    
+                swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Copia y pega el Token en el campo 'Value:' así: Bearer {Token JWT}.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
+                });
+                swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                          new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "Bearer"
+                                }
+                            },
+                            new string[] {}
 
+                    }
+                });
+            });
             // JWT TOKEN
             var appSettings = appSettingsSection.Get<AppSettings>();
             var llave = Encoding.ASCII.GetBytes(appSettings.Secreto);
@@ -52,8 +85,8 @@ namespace lestoma.Api
             {
                 d.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 d.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(d=>
+            })
+                .AddJwtBearer(d =>
                 {
                     d.RequireHttpsMetadata = false;
                     d.SaveToken = true;
@@ -62,9 +95,13 @@ namespace lestoma.Api
                         ValidIssuer = issuer,
                         ValidAudience = audience,
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(llave)
+                        IssuerSigningKey = new SymmetricSecurityKey(llave),
+                        //establezca clockskew en cero para que los tokens caduquen exactamente a la hora de
+                        //vencimiento del token(en lugar de 5 minutos después)
+                        ClockSkew = TimeSpan.Zero
                     };
                 });
+
 
             services.AddScoped<IApiService, ApiService>();
             services.AddScoped<IUsuarioService, LSUsuario>();
@@ -79,6 +116,7 @@ namespace lestoma.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "lestoma.Api v1"));
             }
+          
 
             app.UseHttpsRedirection();
 

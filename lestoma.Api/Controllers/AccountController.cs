@@ -4,6 +4,7 @@ using lestoma.CommonUtils.Responses;
 using lestoma.Data;
 using lestoma.Logica;
 using lestoma.Logica.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -32,6 +33,7 @@ namespace lestoma.Api.Controllers
             _appSettings = appSettings.Value;
         }
 
+        [Authorize]
         [HttpGet("Usuarios")]
         public async Task<IActionResult> Lista()
         {
@@ -72,11 +74,13 @@ namespace lestoma.Api.Controllers
                 (
                     new Claim[]
                     {
-                        new Claim(ClaimTypes.Role,user.Rol.NombreRol),
+                        new Claim(ClaimTypes.Role, user.Rol.NombreRol),
                         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                        new Claim(ClaimTypes.Email,user.Email)
+                        new Claim(ClaimTypes.Email, user.Email)
                     }
                 ),
+                Audience = _appSettings.Audience,
+                Issuer = _appSettings.Issuer,
                 Expires = DateTime.UtcNow.AddMinutes(15),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(llave), SecurityAlgorithms.HmacSha256Signature)
             };
