@@ -137,20 +137,7 @@
                             CornerRadius="4"
                             HorizontalOptions="Fill"
                             Style="{StaticResource GradientButtonStyle}"
-                            Text="LOG IN" />
-
-
-                        <Label
-                            Grid.Row="6"
-                            Style="{StaticResource DescriptionLabelStyle}"
-                            Text="Or log in with your social media credentials"
-                            TextColor="{DynamicResource Gray-White}" />
-
-                        <!--  Login button with social icons  -->
-                        <Grid Grid.Row="7">
-                            <template:SocialIconTemplate />
-                        </Grid>
-
+                            Text="Iniciar Sesión" />
                     </Grid>
 
                     <StackLayout

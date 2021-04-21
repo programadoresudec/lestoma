@@ -1,5 +1,6 @@
 ﻿using lestoma.App.Validators;
 using lestoma.App.Validators.Rules;
+using lestoma.App.Views;
 using lestoma.CommonUtils.Entities;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Responses;
@@ -175,9 +176,9 @@ namespace lestoma.App.ViewModels
         /// Invoked when the Sign Up button is clicked.
         /// </summary>
         /// <param name="obj">The Object</param>
-        private void SignUpClicked(object obj)
+        private async void SignUpClicked(object obj)
         {
-            // Do something
+            await _navigationService.NavigateAsync(nameof(RegistroPage));
         }
 
         /// <summary>
