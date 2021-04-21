@@ -59,7 +59,7 @@
                         <Label
                             FontSize="20"
                             Style="{StaticResource TitleLabelStyle}"
-                            Text="Log In"
+                            Text="Iniciar Sesión"
                             TextColor="{DynamicResource Gray-White}" />
 
                         <!--  Label to display the description of this page  -->
@@ -67,7 +67,7 @@
                             Grid.Row="1"
                             Margin="14,8"
                             Style="{StaticResource DescriptionLabelStyle}"
-                            Text="Let's get to work"
+                            Text="Aplicativo Movíl Lestoma"
                             TextColor="{DynamicResource Gray-White}" />
 
                         <!--  Entry to get email ID from user  -->
@@ -155,7 +155,7 @@
 
                         <Label
                             Style="{StaticResource DescriptionLabelStyle}"
-                            Text="Don't have an account?"
+                            Text="No tienes cuenta?"
                             TextColor="{DynamicResource Gray-White}"
                             VerticalTextAlignment="Center" />
 
@@ -163,7 +163,7 @@
                         <buttons:SfButton
                             Command="{Binding SignUpCommand}"
                             Style="{StaticResource TransparentButtonStyle}"
-                            Text="Sign Up"
+                            Text="Registrarse"
                             TextColor="{DynamicResource PrimaryColor}" />
 
                     </StackLayout>

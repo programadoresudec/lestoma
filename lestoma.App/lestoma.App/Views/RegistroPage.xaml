@@ -58,14 +58,14 @@
                         <Label
                             FontSize="20"
                             Style="{StaticResource TitleLabelStyle}"
-                            Text="Sign Up"
+                            Text="Registrate"
                             TextColor="{DynamicResource Gray-White}" />
 
                         <!--  Label to display the description of this page  -->
                         <Label
                             Margin="0,-16,0,8"
                             Style="{StaticResource DescriptionLabelStyle}"
-                            Text="Create an account to start doing more"
+                            Text="Crea tu cuenta "
                             TextColor="{DynamicResource Gray-White}" />
 
                         <StackLayout>
@@ -213,14 +213,14 @@
 
                         <Label
                             Style="{StaticResource DescriptionLabelStyle}"
-                            Text="Already have an account?"
+                            Text="Ya tienes cuenta?"
                             TextColor="{DynamicResource Gray-White}"
                             VerticalTextAlignment="Center" />
 
                         <buttons:SfButton
                             Command="{Binding LoginCommand}"
                             Style="{StaticResource TransparentButtonStyle}"
-                            Text="Log In"
+                            Text="Iniciar sesión"
                             TextColor="{DynamicResource PrimaryColor}" />
 
                     </StackLayout>
