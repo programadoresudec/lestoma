@@ -1,7 +1,7 @@
 using lestoma.App.ViewModels;
 using lestoma.App.Views;
 using lestoma.CommonUtils.Interfaces;
-using lestoma.CommonUtils.Responses;
+using lestoma.CommonUtils.Services;
 using Prism;
 using Prism.Ioc;
 using Xamarin.Essentials.Implementation;

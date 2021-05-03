@@ -1,4 +1,5 @@
 ﻿using lestoma.CommonUtils.Entities;
+using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Responses;
 using lestoma.Data;
 using lestoma.Data.DAO;
@@ -13,9 +14,12 @@ namespace lestoma.Logica.LogicaService
         private readonly Response _respuesta = new Response();
         private readonly Mapeo _db;
 
-        public LSUsuario(Mapeo db)
+        private IGenericRepository<EUsuario> _usuarioRepository;
+
+        public LSUsuario(IGenericRepository<EUsuario> usuarioRepository, Mapeo db)
         {
-            _db = db;
+            this._db = db;
+            this._usuarioRepository = usuarioRepository;
         }
 
         public async Task<Response> Login(LoginRequest login)
@@ -35,19 +39,42 @@ namespace lestoma.Logica.LogicaService
         }
         public async Task<Response> Register(EUsuario usuario)
         {
-            throw new NotImplementedException();
+            bool existe = await new DAOUsuario().ExisteCorreo(usuario.Email, _db);
+            if (existe)
+            {
+                _respuesta.Mensaje = "El correo ya esta en uso.";
+            }
+            else
+            {
+                usuario.RolId = (int)TipoRol.Auxiliar;
+                usuario.EstadoId = (int)TipoEstadoUsuario.CheckCuenta;
+                await _usuarioRepository.Create(usuario);
+                _respuesta.Mensaje = "Se ha registrado satisfactoriamente.";
+                _respuesta.IsExito = true;
+            }
+            return _respuesta;
         }
 
         public async Task<Response> ChangePassword(EUsuario usuario)
         {
-            throw new NotImplementedException();
+
+
+            usuario.EstadoId = (int)TipoEstadoUsuario.Activado;
+            await _usuarioRepository.Create(usuario);
+
+            return _respuesta;
         }
 
 
 
         public async Task<Response> RecoverPassword(EUsuario usuario)
         {
-            throw new NotImplementedException();
+            bool existe = await new DAOUsuario().ExisteCorreo(usuario.Email, _db);
+            if (!existe)
+            {
+                _respuesta.Mensaje = "El correo no existe.";
+            }
+            return _respuesta;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using lestoma.CommonUtils.Interfaces;
+using lestoma.CommonUtils.Responses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace lestoma.CommonUtils.Responses
+namespace lestoma.CommonUtils.Services
 {
     public class ApiService : IApiService
     {
@@ -64,7 +65,7 @@ namespace lestoma.CommonUtils.Responses
                 Response respuesta = JsonConvert.DeserializeObject<Response>(jsonString);
                 if (!response.IsSuccessStatusCode)
                 {
-                    return respuesta;
+                    respuesta.IsExito = false;
                 }
                 return respuesta;
             }
@@ -76,7 +77,7 @@ namespace lestoma.CommonUtils.Responses
                     Mensaje = ex.Message
                 };
             }
-        } 
+        }
         #endregion
     }
 }

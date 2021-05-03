@@ -1,16 +1,13 @@
-﻿using lestoma.CommonUtils;
+﻿using AutoMapper;
+using lestoma.CommonUtils;
 using lestoma.CommonUtils.Entities;
 using lestoma.CommonUtils.Responses;
-using lestoma.Data;
-using lestoma.Logica;
 using lestoma.Logica.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -23,12 +20,12 @@ namespace lestoma.Api.Controllers
     public class AccountController : BaseController
     {
         private readonly AppSettings _appSettings;
-        private readonly Mapeo _context;
         private readonly IUsuarioService _usuarioService;
 
-        public AccountController(Mapeo context, IUsuarioService usuarioService, IOptions<AppSettings> appSettings)
+        public AccountController(IUsuarioService usuarioService,
+            IOptions<AppSettings> appSettings, IMapper mapper)
+            : base(mapper)
         {
-            _context = context;
             _usuarioService = usuarioService;
             _appSettings = appSettings.Value;
         }
@@ -37,31 +34,37 @@ namespace lestoma.Api.Controllers
         [HttpGet("Usuarios")]
         public async Task<IActionResult> Lista()
         {
-            List<EUsuario> usuarios = await _context.TablaUsuarios.ToListAsync();
-            return Ok(usuarios);
+
+            return Ok();
         }
         [HttpPost("Login")]
         public async Task<IActionResult> Logeo(LoginRequest logeo)
         {
-            if (ModelState.IsValid)
+            Respuesta = await _usuarioService.Login(logeo);
+            if (Respuesta.Data == null)
             {
-                Respuesta = await _usuarioService.Login(logeo);
-
-                if (Respuesta.Data == null)
-                {
-                    return Unauthorized(Respuesta);
-                }
-
-
-                TokenRequest usuario = new TokenRequest
-                {
-                    Rol = ((EUsuario)Respuesta.Data).Rol.NombreRol,
-                    Token = GetToken((EUsuario)Respuesta.Data)
-                };
-                Respuesta.Data = usuario;
-                return Created(string.Empty, Respuesta);
+                return Unauthorized(Respuesta);
             }
-            return Unauthorized(Respuesta);
+            TokenRequest usuario = new TokenRequest
+            {
+                Rol = ((EUsuario)Respuesta.Data).Rol.NombreRol,
+                Token = GetToken((EUsuario)Respuesta.Data)
+            };
+            Respuesta.Data = usuario;
+            return Ok(Respuesta);
+        }
+
+        [HttpPost("Registro")]
+        public async Task<IActionResult> Registrarse(UsuarioRequest usuario)
+        {
+            var entidad = Mapear<UsuarioRequest, EUsuario>(usuario);
+            Respuesta = await _usuarioService.Register(entidad);
+            if (!Respuesta.IsExito)
+            {
+                return Conflict(Respuesta);
+            }
+            Respuesta.Data = usuario;
+            return Created(string.Empty, Respuesta);
         }
 
         private string GetToken(EUsuario user)

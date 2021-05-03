@@ -87,7 +87,7 @@
                                         Margin="15,0"
                                         HeightRequest="40"
                                         IsPassword="True"
-                                        Placeholder="Password"
+                                        Placeholder="Contraseña"
                                         PlaceholderColor="#606a7b"
                                         Style="{StaticResource BorderlessEntryStyle}"
                                         Text="{Binding Password.Value}"
@@ -126,7 +126,7 @@
                             FontSize="12"
                             HorizontalOptions="End"
                             Style="{StaticResource TransparentButtonStyle}"
-                            Text="FORGOT PASSWORD?"
+                            Text="¿Ha olvidado su contraseña?"
                             TextColor="{DynamicResource Gray-White}" />
 
 

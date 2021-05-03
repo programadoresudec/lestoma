@@ -1,9 +1,7 @@
+using AutoMapper;
+using lestoma.Api.Helpers;
 using lestoma.CommonUtils;
-using lestoma.CommonUtils.Interfaces;
-using lestoma.CommonUtils.Responses;
 using lestoma.Data;
-using lestoma.Logica.Interfaces;
-using lestoma.Logica.LogicaService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,7 +30,7 @@ namespace lestoma.Api
         {
 
             services.AddControllers();
-       
+
 
             services.AddDbContext<Mapeo>(options =>
             {
@@ -102,9 +100,17 @@ namespace lestoma.Api
                     };
                 });
 
+            // Inyección de dependencias a partir de una inversión de control.
+            IoC.AddDependency(services);
 
-            services.AddScoped<IApiService, ApiService>();
-            services.AddScoped<IUsuarioService, LSUsuario>();
+            var mapperConfig = new MapperConfiguration(m =>
+            {
+                m.AddProfile(new AutoMappersProfiles());
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -116,7 +122,7 @@ namespace lestoma.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "lestoma.Api v1"));
             }
-          
+
 
             app.UseHttpsRedirection();
 

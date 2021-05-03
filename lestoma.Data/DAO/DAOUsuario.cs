@@ -1,6 +1,7 @@
 ﻿using lestoma.CommonUtils.Entities;
 using lestoma.CommonUtils.Responses;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,5 +33,12 @@ namespace lestoma.Data.DAO
                 Rol = new ERol { Id = m.roles.Id, NombreRol = m.roles.NombreRol }
             }).FirstOrDefault();
         }
+
+        public async Task<bool> ExisteCorreo(string email, Mapeo db)
+        {
+            return await db.TablaUsuarios.AnyAsync(x => x.Email.Equals(email));
+        }
+
+      
     }
 }

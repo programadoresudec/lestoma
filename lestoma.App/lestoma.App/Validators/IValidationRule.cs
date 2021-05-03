@@ -25,6 +25,7 @@ namespace lestoma.App.Validators
         /// <returns>returns bool value</returns>
         bool Check(T value);
 
+
         #endregion
     }
 }
