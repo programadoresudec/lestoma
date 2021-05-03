@@ -17,6 +17,7 @@ namespace lestoma.App.ViewModels
         #region Fields
 
         private ValidatableObject<string> name;
+        private ValidatableObject<string> lastName;
 
         private ValidatablePair<string> password;
 
@@ -65,6 +66,24 @@ namespace lestoma.App.ViewModels
             }
         }
 
+        public ValidatableObject<string> LastName
+        {
+            get
+            {
+                return this.lastName;
+            }
+
+            set
+            {
+                if (this.lastName == value)
+                {
+                    return;
+                }
+
+                this.SetProperty(ref this.lastName, value);
+            }
+        }
+
         /// <summary>
         /// Gets or sets the property that bounds with an entry that gets the password from users in the Sign Up page.
         /// </summary>
@@ -110,8 +129,9 @@ namespace lestoma.App.ViewModels
         {
             bool isEmail = this.Email.Validate();
             bool isNameValid = this.Name.Validate();
+            bool isLastNameValid = this.LastName.Validate();
             bool isPasswordValid = this.Password.Validate();
-            return isPasswordValid && isNameValid && isEmail;
+            return isPasswordValid && isNameValid && isLastNameValid && isEmail;
         }
 
         /// <summary>
@@ -120,6 +140,7 @@ namespace lestoma.App.ViewModels
         private void InitializeProperties()
         {
             this.Name = new ValidatableObject<string>();
+            this.LastName = new ValidatableObject<string>();
             this.Password = new ValidatablePair<string>();
         }
 
@@ -128,8 +149,8 @@ namespace lestoma.App.ViewModels
         /// </summary>
         private void AddValidationRules()
         {
-
-            this.Name.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Name Required" });
+            this.Name.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Nombre requerido." });
+            this.LastName.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Apellido requerido." });
             this.Password.Item1.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Password Required" });
             this.Password.Item2.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Re-enter Password" });
         }

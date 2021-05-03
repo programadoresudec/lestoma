@@ -77,7 +77,7 @@
                                         x:Name="NameEntry"
                                         Margin="15,0"
                                         HeightRequest="40"
-                                        Placeholder="Name"
+                                        Placeholder="Nombre"
                                         PlaceholderColor="{StaticResource EntryPlaceholderColor}"
                                         Style="{StaticResource BorderlessEntryStyle}"
                                         Text="{Binding Name.Value}"
@@ -107,6 +107,45 @@
                                 VerticalOptions="FillAndExpand" />
                         </StackLayout>
 
+                        <StackLayout>
+                            <!--  Entry to get apellido from user  -->
+                            <border:SfBorder BorderColor="{Binding Source={x:Reference LastNameEntry}, Path=IsFocused, Converter={StaticResource ColorConverter}, ConverterParameter=0}" Style="{StaticResource LoginFormBorderlessEntryBorderStyle}">
+                                <Grid ColumnDefinitions="*, Auto">
+
+                                    <control:BorderlessEntry
+                                        x:Name="LastNameEntry"
+                                        Margin="15,0"
+                                        HeightRequest="40"
+                                        Placeholder="Apellido"
+                                        PlaceholderColor="{StaticResource EntryPlaceholderColor}"
+                                        Style="{StaticResource BorderlessEntryStyle}"
+                                        Text="{Binding LastName.Value}"
+                                        TextColor="{StaticResource Gray-White}">
+                                        <Entry.Behaviors>
+                                            <behaviour:EntryLineValidationBehaviour IsValid="{Binding LastName.IsValid}" />
+                                        </Entry.Behaviors>
+                                    </control:BorderlessEntry>
+
+                                    <!--  Label to display error icon  -->
+                                    <Label
+                                        Grid.Column="1"
+                                        IsVisible="{Binding Path=IsVisible, Source={x:Reference LastNameValidationLabel}}"
+                                        Style="{StaticResource ErrorIconLabelStyle}"
+                                        Text="{StaticResource Error}" />
+                                </Grid>
+                            </border:SfBorder>
+
+                            <!--  Label to display error message  -->
+                            <Label
+                                x:Name="LastNameValidationLabel"
+                                Margin="15,-3,0,0"
+                                IsVisible="{Binding LastName.IsValid, Converter={StaticResource InverseBoolConverter}}"
+                                Style="{StaticResource SimpleLabelStyle}"
+                                Text="{Binding LastName.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+                                TextColor="{DynamicResource Red}"
+                                VerticalOptions="FillAndExpand" />
+                        </StackLayout>
+
                         <!--  Entry to get email ID from user  -->
                         <local:EmailEntry />
 
@@ -120,7 +159,7 @@
                                         Margin="15,0"
                                         HeightRequest="40"
                                         IsPassword="true"
-                                        Placeholder="Password"
+                                        Placeholder="Contraseña"
                                         PlaceholderColor="{StaticResource EntryPlaceholderColor}"
                                         Style="{StaticResource BorderlessEntryStyle}"
                                         Text="{Binding Password.Item1.Value}"
@@ -160,7 +199,7 @@
                                         Margin="15,0"
                                         HeightRequest="40"
                                         IsPassword="true"
-                                        Placeholder="Confirm Password"
+                                        Placeholder="Confirmar contraseña"
                                         PlaceholderColor="{StaticResource EntryPlaceholderColor}"
                                         Style="{StaticResource BorderlessEntryStyle}"
                                         Text="{Binding Password.Item2.Value}"
@@ -195,7 +234,7 @@
                             Command="{Binding SignUpCommand}"
                             HorizontalOptions="FillAndExpand"
                             Style="{StaticResource GradientButtonStyle}"
-                            Text="REGISTER" />
+                            Text="REGISTRARSE" />
                     </StackLayout>
 
                     <StackLayout
@@ -226,18 +265,6 @@
                     </StackLayout>
                 </StackLayout>
             </ScrollView>
-
-            <!--  Close button  -->
-            <buttons:SfButton
-                Margin="8"
-                Command="{Binding BackButtonCommand}"
-                FontSize="20"
-                HorizontalOptions="End"
-                Style="{StaticResource IconButtonStyle}"
-                Text="{StaticResource Close}"
-                TextColor="{DynamicResource Gray-White}"
-                VerticalOptions="Start" />
-
         </Grid>
     </ContentPage.Content>
 </ContentPage>

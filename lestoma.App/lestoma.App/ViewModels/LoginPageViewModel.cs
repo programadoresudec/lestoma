@@ -40,9 +40,6 @@ namespace lestoma.App.ViewModels
             this.LoginCommand = new Command(this.LoginClicked);
             this.SignUpCommand = new Command(this.SignUpClicked);
             this.ForgotPasswordCommand = new Command(this.ForgotPasswordClicked);
-            this.FaceBookLoginCommand = new Command(this.FaceBookClicked);
-            this.TwitterLoginCommand = new Command(this.TwitterClicked);
-            this.GmailLoginCommand = new Command(this.GmailClicked);
         }
 
         #endregion
@@ -189,34 +186,6 @@ namespace lestoma.App.ViewModels
         {
             // Do something
         }
-
-        /// <summary>
-        /// Invoked when facebook login button is clicked.
-        /// </summary>
-        /// <param name="obj">The Object</param>
-        private void FaceBookClicked(object obj)
-        {
-            // Do something
-        }
-
-        /// <summary>
-        /// Invoked when twitter login button is clicked.
-        /// </summary>
-        /// <param name="obj">The Object</param>
-        private void TwitterClicked(object obj)
-        {
-            // Do something
-        }
-
-        /// <summary>
-        /// Invoked when gmail login button is clicked.
-        /// </summary>
-        /// <param name="obj">The Object</param>
-        private void GmailClicked(object obj)
-        {
-            // Do something
-        }
-
         #endregion
     }
 }
