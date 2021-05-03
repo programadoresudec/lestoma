@@ -26,11 +26,11 @@
         <styles:CheckBoxStyles />
     </ResourceDictionary.MergedDictionaries>
 
-    <Color x:Key="PrimaryColor">#f54e5e</Color>
+    <Color x:Key="PrimaryColor">#86e0dc</Color>
     <Color x:Key="PrimaryDarkColor">#d0424f</Color>
     <Color x:Key="PrimaryDarkenColor">#ab3641</Color>
     <Color x:Key="PrimaryLighterColor">#edcacd</Color>
-    <Color x:Key="PrimaryGradient">#e83f94</Color>
+    <Color x:Key="PrimaryGradient">#4acaff</Color>
     <Color x:Key="PrimaryLight">#ffe8f4</Color>
     <Color x:Key="SecondaryGradient">#7644ad</Color>
     <Color x:Key="Secondary">#d54381</Color>

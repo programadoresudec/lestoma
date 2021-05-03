@@ -13,7 +13,7 @@
     xmlns:local="clr-namespace:lestoma.App.Views"
     xmlns:template="clr-namespace:lestoma.App.Views.Templates"
     xmlns:viewModel="clr-namespace:lestoma.App.ViewModels"
-    BackgroundColor="{DynamicResource Gray-200}"
+
     NavigationPage.HasNavigationBar="False">
 
     <ContentPage.Resources>
@@ -24,8 +24,6 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <!--  Binding context for login with social icon page  -->
-    
 
     <ContentPage.Content>
         <Grid>
