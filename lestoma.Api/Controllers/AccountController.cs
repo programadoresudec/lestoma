@@ -30,12 +30,12 @@ namespace lestoma.Api.Controllers
             _appSettings = appSettings.Value;
         }
 
-        [Authorize]
+        [Authorize(Roles ="Administrador")]
         [HttpGet("Usuarios")]
         public async Task<IActionResult> Lista()
         {
-
-            return Ok();
+            Respuesta = await _usuarioService.lista();
+            return Ok(Respuesta);
         }
         [HttpPost("Login")]
         public async Task<IActionResult> Logeo(LoginRequest logeo)
@@ -58,6 +58,9 @@ namespace lestoma.Api.Controllers
         public async Task<IActionResult> Registrarse(UsuarioRequest usuario)
         {
             var entidad = Mapear<UsuarioRequest, EUsuario>(usuario);
+
+
+
             Respuesta = await _usuarioService.Register(entidad);
             if (!Respuesta.IsExito)
             {

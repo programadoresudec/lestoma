@@ -21,7 +21,7 @@ namespace lestoma.CommonUtils.Entities
         [Column("codigo_recuperacion")]
         public string CodigoRecuperacion { get; set; }
         [Column("vencimiento_codigo_recuperacion")]
-        public DateTime FechaVencimientoCodigo { get; set; }
+        public DateTime? FechaVencimientoCodigo { get; set; }
         [Column("rol_id")]
         public int RolId { get; set; }
         [Column("estado_id")]

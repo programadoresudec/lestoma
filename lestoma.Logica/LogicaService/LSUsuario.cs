@@ -76,5 +76,12 @@ namespace lestoma.Logica.LogicaService
             }
             return _respuesta;
         }
+
+        public async Task<Response> lista()
+        {
+           
+            _respuesta.Data = await _usuarioRepository.GetAll();
+            return  _respuesta;
+        }
     }
 }

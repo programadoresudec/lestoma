@@ -8,7 +8,7 @@ namespace lestoma.Api.Helpers
     {
         public AutoMappersProfiles()
         {
-            CreateMap<UsuarioRequest, EUsuario>();
+            CreateMap<UsuarioRequest, EUsuario>();     
         }
     }
 }
