@@ -1,11 +1,12 @@
 ﻿using lestoma.App.Validators;
 using lestoma.App.Validators.Rules;
 using lestoma.App.Views;
-using lestoma.CommonUtils.Entities;
+using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Responses;
+using Plugin.Toast;
 using Prism.Navigation;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -21,6 +22,8 @@ namespace lestoma.App.ViewModels
         #region Fields
         private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
+        private bool _isRunning;
+        private bool _isEnabled;
         private ValidatableObject<string> password;
 
         #endregion
@@ -37,6 +40,7 @@ namespace lestoma.App.ViewModels
             _apiService = apiService;
             this.InitializeProperties();
             this.AddValidationRules();
+            IsEnabled = true;
             this.LoginCommand = new Command(this.LoginClicked);
             this.SignUpCommand = new Command(this.SignUpClicked);
             this.ForgotPasswordCommand = new Command(this.ForgotPasswordClicked);
@@ -66,7 +70,17 @@ namespace lestoma.App.ViewModels
                 this.SetProperty(ref this.password, value);
             }
         }
+        public bool IsRunning
+        {
+            get => _isRunning;
+            set => SetProperty(ref _isRunning, value);
+        }
 
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set => SetProperty(ref _isEnabled, value);
+        }
         #endregion
 
         #region Command
@@ -138,34 +152,44 @@ namespace lestoma.App.ViewModels
         /// <param name="obj">The Object</param>
         private async void LoginClicked(object obj)
         {
-            if (Connectivity.NetworkAccess != NetworkAccess.Internet)
-            {
-
-                await App.Current.MainPage.DisplayAlert("", "", "");
-                return;
-            }
             if (this.AreFieldsValid())
             {
+                IsRunning = true;
+                IsEnabled = false;
+                if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+                {
+                    IsRunning = false;
+                    IsEnabled = true;
+                    CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
+                    return;
+                }
+              
                 string url = App.Current.Resources["UrlAPI"].ToString();
-
                 LoginRequest login = new LoginRequest
                 {
                     Email = this.Email.ToString(),
                     Clave = this.password.ToString()
-
                 };
-
-                var lista = await _apiService.GetListAsync<List<EUsuario>>(url, "Account/Usuarios");
-
                 Response respuesta = await _apiService.PostAsync(url, "Account/Login", login);
+                await Task.Delay(3000);
+                IsRunning = false;
+                IsEnabled = true;
                 if (!respuesta.IsExito)
                 {
-                    await App.Current.MainPage.DisplayAlert("Error", respuesta.Mensaje, "Aceptar");
-                    this.password = null;
+                    CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
                     return;
                 }
                 TokenRequest token = (TokenRequest)respuesta.Data;
-                await App.Current.MainPage.DisplayAlert("Satisfactorio", respuesta.Mensaje, "Aceptar");
+                CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
+                await Task.Delay(1500);
+                if (token.Rol.Equals(TipoRol.Administrador.ToString()))
+                {
+                    await _navigationService.NavigateAsync(nameof(RegistroPage));
+                }
+                else if (token.Rol.Equals(TipoRol.Auxiliar.ToString()))
+                {
+                    await _navigationService.NavigateAsync(nameof(RegistroPage));
+                }
             }
         }
 

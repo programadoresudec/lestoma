@@ -21,8 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Plugin.Toast" Version="2.2.0" />
     <PackageReference Include="Syncfusion.Xamarin.Buttons" Version="19.1.0.56" />
     <PackageReference Include="Syncfusion.Xamarin.Core" Version="19.1.0.56" />
+    <PackageReference Include="Syncfusion.Xamarin.SfBusyIndicator" Version="19.1.0.56" />
     <PackageReference Include="Syncfusion.Xamarin.SfComboBox" Version="19.1.0.56" />
     <PackageReference Include="Syncfusion.Xamarin.SfListView" Version="19.1.0.56" />
     <PackageReference Include="Syncfusion.Xamarin.SfRating" Version="19.1.0.56" />

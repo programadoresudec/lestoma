@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms.Internals;
+﻿using Plugin.Toast;
+using Xamarin.Forms.Internals;
 using Xamarin.Forms.Xaml;
 
 namespace lestoma.App.Views
@@ -13,9 +14,13 @@ namespace lestoma.App.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="LoginPage" /> class.
         /// </summary>
+        /// 
+
+
         public LoginPage()
         {
             this.InitializeComponent();
         }
+
     }
 }
