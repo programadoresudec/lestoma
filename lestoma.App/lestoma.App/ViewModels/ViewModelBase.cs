@@ -39,7 +39,7 @@ namespace lestoma.App.ViewModels
         /// <summary>
         /// Occurs when the property is changed.
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler  PropertyChanged;
 
         #endregion
 

@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
   <item android:drawable="@color/launcher_background"/>
   <item>
-    <bitmap android:gravity="center"
+    <bitmap android:gravity="clip_horizontal"
             android:src="@drawable/splash_fish" />
   </item>
 </layer-list>
