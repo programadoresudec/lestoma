@@ -7,7 +7,7 @@
   <Application.Resources>
 
         <ResourceDictionary>
-            <Color x:Key="BackgroundIndicator">#258d59</Color>
+            <Color x:Key="PrimaryGradient">#4acaff</Color>
             <Color x:Key="TextIndicator">#D9D9D9</Color>
             <x:String x:Key="UrlAPI">https://localhost:44347/</x:String>
             <ResourceDictionary.MergedDictionaries>
