@@ -158,16 +158,16 @@
                     </StackLayout>
                 </ScrollView>
             </Grid>
-            <busyindicator:SfBusyIndicator AnimationType="Cupertino" 
+            <busyindicator:SfBusyIndicator AnimationType="HorizontalPulsingBox" 
                                        AbsoluteLayout.LayoutBounds=".5,.5,.5,.5"
                 	                   AbsoluteLayout.LayoutFlags="All"
-                	                   BackgroundColor="{StaticResource BackgroundIndicator}"
-                                       Opacity=".5"
-                                       TextSize="15"
+                	                   BackgroundColor="{StaticResource PrimaryGradient}"
+                                       Opacity=".3"
+                                       TextSize="14"
                 	                   HorizontalOptions="Center"
                 	                   TextColor="{StaticResource TextIndicator}"
                 	                   IsBusy="{Binding IsRunning}"
-                	                   Title="Cargando información"
+                	                   Title="Validación"
                 	                   VerticalOptions="Center"
                 	                   ViewBoxWidth="80"
                 	                   ViewBoxHeight="80" />
