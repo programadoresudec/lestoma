@@ -40,10 +40,10 @@ namespace lestoma.App.ViewModels
             _apiService = apiService;
             this.InitializeProperties();
             this.AddValidationRules();
-            IsEnabled = true;
-            this.LoginCommand = new Command(this.LoginClicked);
-            this.SignUpCommand = new Command(this.SignUpClicked);
-            this.ForgotPasswordCommand = new Command(this.ForgotPasswordClicked);
+            _isEnabled = true;
+            this.LoginCommand = new Command(this.LoginClicked,CanExecuteClickCommand);
+            this.SignUpCommand = new Command(this.SignUpClicked, CanExecuteClickCommand);
+            this.ForgotPasswordCommand = new Command(this.ForgotPasswordClicked, CanExecuteClickCommand);
         }
 
         #endregion
@@ -78,8 +78,15 @@ namespace lestoma.App.ViewModels
 
         public bool IsEnabled
         {
-            get => _isEnabled;
-            set => SetProperty(ref _isEnabled, value);
+            get { return _isEnabled; }
+            set
+            {
+                _isEnabled = value;
+                ForgotPasswordCommand.ChangeCanExecute();
+                SignUpCommand.ChangeCanExecute();
+                LoginCommand.ChangeCanExecute();
+
+            }
         }
         #endregion
 
@@ -99,22 +106,6 @@ namespace lestoma.App.ViewModels
         /// Gets or sets the command that is executed when the Forgot Password button is clicked.
         /// </summary>
         public Command ForgotPasswordCommand { get; set; }
-
-        /// <summary>
-        /// Gets or sets the command that is executed when the facebook login button is clicked.
-        /// </summary>
-        public Command FaceBookLoginCommand { get; set; }
-
-        /// <summary>
-        /// Gets or sets the command that is executed when the twitter login button is clicked.
-        /// </summary>
-        public Command TwitterLoginCommand { get; set; }
-
-        /// <summary>
-        /// Gets or sets the command that is executed when the gmail login button is clicked.
-        /// </summary>
-        public Command GmailLoginCommand { get; set; }
-
         #endregion
 
         #region methods
@@ -129,7 +120,10 @@ namespace lestoma.App.ViewModels
             bool isPassword = this.Password.Validate();
             return isEmailValid && isPassword;
         }
-
+        bool CanExecuteClickCommand(object arg)
+        {
+            return _isEnabled;
+        }
         /// <summary>
         /// Initializing the properties.
         /// </summary>

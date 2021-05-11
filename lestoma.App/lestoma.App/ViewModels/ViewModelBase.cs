@@ -1,13 +1,10 @@
 ﻿using lestoma.CommonUtils.Interfaces;
-using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using System.Text;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -39,9 +36,11 @@ namespace lestoma.App.ViewModels
         /// <summary>
         /// Occurs when the property is changed.
         /// </summary>
-        public event PropertyChangedEventHandler  PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion
+
+        #region Constructor
 
         public ViewModelBase(INavigationService navigationService, IApiService apiService)
         {
@@ -49,6 +48,7 @@ namespace lestoma.App.ViewModels
             IApiService = apiService;
         }
 
+        #endregion
 
         #region Commands
 

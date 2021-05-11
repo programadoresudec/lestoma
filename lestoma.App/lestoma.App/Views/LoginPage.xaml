@@ -144,7 +144,7 @@
 
                             <Label
                             Style="{StaticResource DescriptionLabelStyle}"
-                            Text="No tienes cuenta?"
+                            Text="¿No tienes cuenta?"
                             TextColor="{DynamicResource Gray-White}"
                             VerticalTextAlignment="Center" />
 
@@ -161,13 +161,13 @@
             <busyindicator:SfBusyIndicator AnimationType="HorizontalPulsingBox" 
                                        AbsoluteLayout.LayoutBounds=".5,.5,.5,.5"
                 	                   AbsoluteLayout.LayoutFlags="All"
-                	                   BackgroundColor="{StaticResource PrimaryGradient}"
-                                       Opacity=".9"
+                	                   BackgroundColor="{StaticResource BackgroundIndicator}"
+                                       Opacity="1.6"
                                        TextSize="14"
                 	                   HorizontalOptions="Center"
                 	                   TextColor="{StaticResource TextIndicator}"
                 	                   IsBusy="{Binding IsRunning}"
-                	                   Title="Validando Informacion"
+                	                   Title="Validando Información"
                 	                   VerticalOptions="Center"
                 	                   ViewBoxWidth="80"
                 	                   ViewBoxHeight="80" />
