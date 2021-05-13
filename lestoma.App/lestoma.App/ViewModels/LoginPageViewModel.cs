@@ -4,8 +4,10 @@ using lestoma.App.Views;
 using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Responses;
+using Newtonsoft.Json.Linq;
 using Plugin.Toast;
 using Prism.Navigation;
+using System;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -165,7 +167,6 @@ namespace lestoma.App.ViewModels
                     Clave = this.password.ToString()
                 };
                 Response respuesta = await _apiService.PostAsync(url, "Account/Login", login);
-                await Task.Delay(3000);
                 IsRunning = false;
                 IsEnabled = true;
                 if (!respuesta.IsExito)
@@ -173,9 +174,9 @@ namespace lestoma.App.ViewModels
                     CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
                     return;
                 }
-                TokenRequest token = (TokenRequest)respuesta.Data;
+                TokenRequest token = ParsearData<TokenRequest>(respuesta);
                 CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
-                await Task.Delay(1500);
+                await Task.Delay(1000);
                 if (token.Rol.Equals(TipoRol.Administrador.ToString()))
                 {
                     await _navigationService.NavigateAsync(nameof(RegistroPage));
@@ -186,6 +187,8 @@ namespace lestoma.App.ViewModels
                 }
             }
         }
+
+      
 
         /// <summary>
         /// Invoked when the Sign Up button is clicked.

@@ -1,4 +1,6 @@
 ﻿using lestoma.CommonUtils.Interfaces;
+using lestoma.CommonUtils.Responses;
+using Newtonsoft.Json.Linq;
 using Prism.Mvvm;
 using Prism.Navigation;
 using System.Collections.Generic;
@@ -128,5 +130,13 @@ namespace lestoma.App.ViewModels
         }
         #endregion
 
+        #region Metodo parsear Data de un JSON OBJECT
+        public T ParsearData<T>(Response respuesta)
+        {
+            JObject Jobject = JObject.FromObject(respuesta);
+            JToken jToken = Jobject.GetValue("Data");
+            return jToken.ToObject<T>();
+        } 
+        #endregion
     }
 }
