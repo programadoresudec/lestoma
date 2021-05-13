@@ -30,7 +30,7 @@ namespace lestoma.Api.Controllers
             _appSettings = appSettings.Value;
         }
 
-        [Authorize(Roles ="Administrador")]
+        [Authorize(Roles = "Administrador")]
         [HttpGet("Usuarios")]
         public async Task<IActionResult> Lista()
         {
@@ -48,7 +48,12 @@ namespace lestoma.Api.Controllers
             TokenRequest usuario = new TokenRequest
             {
                 Rol = ((EUsuario)Respuesta.Data).Rol.NombreRol,
-                Token = GetToken((EUsuario)Respuesta.Data)
+                Token = GetToken((EUsuario)Respuesta.Data),
+                User = new UserApp
+                {
+                    Nombre = ((EUsuario)Respuesta.Data).Nombre,
+                    Apellido = ((EUsuario)Respuesta.Data).Apellido
+                }
             };
             Respuesta.Data = usuario;
             return Ok(Respuesta);
@@ -58,9 +63,6 @@ namespace lestoma.Api.Controllers
         public async Task<IActionResult> Registrarse(UsuarioRequest usuario)
         {
             var entidad = Mapear<UsuarioRequest, EUsuario>(usuario);
-
-
-
             Respuesta = await _usuarioService.Register(entidad);
             if (!Respuesta.IsExito)
             {

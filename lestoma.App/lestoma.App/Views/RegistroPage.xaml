@@ -11,8 +11,8 @@
     xmlns:core="clr-namespace:Syncfusion.XForms.Core;assembly=Syncfusion.Core.XForms"
     xmlns:gradient="clr-namespace:Syncfusion.XForms.Graphics;assembly=Syncfusion.Core.XForms"
     xmlns:local="clr-namespace:lestoma.App.Views"
-    xmlns:viewModel="clr-namespace:lestoma.App.ViewModels"
-    Title="Sign Up"
+    xmlns:viewModel="clr-namespace:lestoma.App.ViewModels" xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms"
+    Title="{Binding Title}"
     BackgroundImageSource="{core:OnPlatformOrientationStringValue Default=LoginBackground.png,
                                                                   iOSPhoneLandscape=LoginBackground-Landscape.png,
                                                                   iOSTabletLandscape=LoginBackground-Landscape.png}"
@@ -28,7 +28,8 @@
 
     <!--  Binding context for sign-up page  -->
     <ContentPage.Content>
-        <Grid>
+        <AbsoluteLayout>
+            <Grid>
             <gradient:SfGradientView Style="{StaticResource BlueGradientStyle}" />
 
             <ScrollView HorizontalOptions="Center">
@@ -46,9 +47,7 @@
                                                                  TabletLandscape='300,50',
                                                                  Desktop='30'}"
                     Spacing="0"
-                    VerticalOptions="FillAndExpand"
-                    WidthRequest="{OnPlatform Default='-1',
-                                              UWP='350'}">
+                    VerticalOptions="FillAndExpand">
                     <StackLayout
                         HorizontalOptions="Center"
                         Spacing="24"
@@ -243,13 +242,7 @@
                         Spacing="1"
                         VerticalOptions="End">
 
-                        <StackLayout.Padding>
-                            <OnIdiom
-                                x:DataType="Thickness"
-                                Default="0, 48, 0, 0"
-                                Phone="0" />
-                        </StackLayout.Padding>
-
+                      
                         <Label
                             Style="{StaticResource DescriptionLabelStyle}"
                             Text="Ya tienes cuenta?"
@@ -266,5 +259,19 @@
                 </StackLayout>
             </ScrollView>
         </Grid>
+        <busyindicator:SfBusyIndicator AnimationType="HorizontalPulsingBox" 
+                                       AbsoluteLayout.LayoutBounds=".5,.5,.5,.5"
+                	                   AbsoluteLayout.LayoutFlags="All"
+                	                   BackgroundColor="{StaticResource BackgroundIndicator}"
+                                       Opacity="0.7"
+                                       TextSize="14"
+                	                   HorizontalOptions="Center"
+                	                   TextColor="{StaticResource TextIndicator}"
+                	                   IsBusy="{Binding IsRunning}"
+                	                   Title="Validando Información"
+                	                   VerticalOptions="Center"
+                	                   ViewBoxWidth="80"
+                	                   ViewBoxHeight="80" />
+        </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>

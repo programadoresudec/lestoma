@@ -38,6 +38,7 @@ namespace lestoma.App.ViewModels
         public LoginPageViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService, apiService)
         {
+            Title = "Iniciar Sesión";
             _navigationService = navigationService;
             _apiService = apiService;
             this.InitializeProperties();
@@ -163,8 +164,8 @@ namespace lestoma.App.ViewModels
                 string url = App.Current.Resources["UrlAPI"].ToString();
                 LoginRequest login = new LoginRequest
                 {
-                    Email = this.Email.ToString(),
-                    Clave = this.password.ToString()
+                    Email = this.Email.Value,
+                    Clave = this.password.Value
                 };
                 Response respuesta = await _apiService.PostAsync(url, "Account/Login", login);
                 IsRunning = false;

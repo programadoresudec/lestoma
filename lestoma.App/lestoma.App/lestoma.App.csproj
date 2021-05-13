@@ -111,9 +111,6 @@
     <EmbeddedResource Update="Views\RegistroPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Templates\SocialIconTemplate.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

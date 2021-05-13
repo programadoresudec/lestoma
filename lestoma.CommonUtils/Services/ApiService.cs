@@ -1,9 +1,7 @@
 ﻿using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Responses;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,16 +24,13 @@ namespace lestoma.CommonUtils.Services
                 var respuesta = JsonConvert.DeserializeObject<Response>(jsonString);
                 if (!response.IsSuccessStatusCode)
                 {
-                    return respuesta;
+                    return new Response
+                    {
+                        IsExito = false,
+                        Mensaje = mostrarMensajePersonalizadoStatus(response.StatusCode, respuesta.Mensaje)
+                    };
                 }
-
-                List<T> lista = JsonConvert.DeserializeObject<List<T>>((string)respuesta.Data);
-                return new Response
-                {
-                    IsExito = respuesta.IsExito,
-                    Mensaje = respuesta.Mensaje,
-                    Data = lista
-                };
+                return respuesta;
             }
             catch (Exception ex)
             {
@@ -72,7 +67,7 @@ namespace lestoma.CommonUtils.Services
                         Mensaje = mostrarMensajePersonalizadoStatus(response.StatusCode, respuesta.Mensaje)
                     };
                 }
-            
+
                 return respuesta;
             }
             catch (Exception ex)
@@ -99,7 +94,7 @@ namespace lestoma.CommonUtils.Services
                 switch (statusCode)
                 {
                     case System.Net.HttpStatusCode.Accepted:
-                        mensaje = "La sollicitud fue aceptada";
+                        mensaje = "La solicitud fue aceptada";
                         break;
                     case System.Net.HttpStatusCode.Ambiguous:
                         mensaje = "url ambiguo";

@@ -11,9 +11,9 @@
     xmlns:core="clr-namespace:Syncfusion.XForms.Core;assembly=Syncfusion.Core.XForms"
     xmlns:gradient="clr-namespace:Syncfusion.XForms.Graphics;assembly=Syncfusion.Core.XForms"
     xmlns:local="clr-namespace:lestoma.App.Views"
-    xmlns:template="clr-namespace:lestoma.App.Views.Templates"
-    xmlns:viewModel="clr-namespace:lestoma.App.ViewModels" xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms"
-    NavigationPage.HasNavigationBar="False">
+    xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms"
+    NavigationPage.HasNavigationBar="False"
+     Title="{Binding Title}">
 
     <ContentPage.Resources>
         <ResourceDictionary>

@@ -7,7 +7,7 @@ namespace lestoma.App.Validators.Rules
     /// </summary>
     /// <typeparam name="T">Not null or empty rule parameter</typeparam>
     [Preserve(AllMembers = true)]
-    public class IsNotEquals<T,O> 
+    public class SizeOfString<T> : IValidationRule<T>
     {
         #region Properties
 
@@ -16,27 +16,23 @@ namespace lestoma.App.Validators.Rules
         /// </summary>
         public string ValidationMessage { get; set; }
 
+
+
         #endregion
 
         #region Methods
 
-        /// <summary>
-        /// Check the Email has null or empty
-        /// </summary>
-        /// <param name="value">The value</param>
-        /// <returns>returns bool value</returns>
-        public bool Check(T value, O value2)
+        public bool Check(T value)
         {
-            if (value == null && value2 == null)
+            if (value == null)
             {
                 return false;
             }
-
             var str = $"{value }";
-            var str2 = $"{value2 }";
-            return str.Equals(str2);
+            bool validarLength = str.Length >= 8 && str.Length <= 30 ? true : false;
+            return validarLength;
         }
-
-        #endregion
     }
+
+    #endregion
 }

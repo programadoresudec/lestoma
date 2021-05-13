@@ -27,11 +27,11 @@ namespace lestoma.Logica.LogicaService
             var user = await new DAOUsuario().Logeo(login, _db);
             if (user == null)
             {
-                _respuesta.Mensaje = "El nombre de la cuenta, correo  y/o la contraseña que has introducido son incorrectos.";
+                _respuesta.Mensaje = "correo y/o contraseña incorrectos.";
             }
             else
             {
-                _respuesta.Mensaje = "Ha iniciado satisfactoriamente al aplicativo.";
+                _respuesta.Mensaje = "Ha iniciado satisfactoriamente.";
                 _respuesta.Data = user;
                 _respuesta.IsExito = true;
             }

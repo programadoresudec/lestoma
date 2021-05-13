@@ -2,7 +2,10 @@
 using lestoma.App.Validators.Rules;
 using lestoma.App.Views;
 using lestoma.CommonUtils.Interfaces;
+using lestoma.CommonUtils.Responses;
+using Plugin.Toast;
 using Prism.Navigation;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -24,6 +27,9 @@ namespace lestoma.App.ViewModels
         private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
 
+        private bool _isRunning;
+        private bool _isEnabled;
+
         #endregion
 
         #region Constructor
@@ -34,12 +40,14 @@ namespace lestoma.App.ViewModels
         public RegistroPageViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService, apiService)
         {
+            Title = "Registrarse";
             _navigationService = navigationService;
             _apiService = apiService;
             this.InitializeProperties();
             this.AddValidationRules();
-            this.LoginCommand = new Command(this.LoginClicked);
-            this.SignUpCommand = new Command(this.SignUpClicked);
+            _isEnabled = true;
+            this.LoginCommand = new Command(this.LoginClicked, CanExecuteClickCommand);
+            this.SignUpCommand = new Command(this.SignUpClicked, CanExecuteClickCommand);
         }
         #endregion
 
@@ -104,6 +112,25 @@ namespace lestoma.App.ViewModels
                 this.SetProperty(ref this.password, value);
             }
         }
+
+        public bool IsRunning
+        {
+            get => _isRunning;
+            set => SetProperty(ref _isRunning, value);
+        }
+
+        public bool IsEnabled
+        {
+            get { return _isEnabled; }
+            set
+            {
+                _isEnabled = value;
+                SignUpCommand.ChangeCanExecute();
+                LoginCommand.ChangeCanExecute();
+
+            }
+        }
+
         #endregion
 
         #region Command
@@ -119,7 +146,7 @@ namespace lestoma.App.ViewModels
         public Command SignUpCommand { get; set; }
         #endregion
 
-        #region Methods
+        #region validaciones
 
         /// <summary>
         /// Initialize whether fieldsvalue are true or false.
@@ -132,6 +159,11 @@ namespace lestoma.App.ViewModels
             bool isLastNameValid = this.LastName.Validate();
             bool isPasswordValid = this.Password.Validate();
             return isPasswordValid && isNameValid && isLastNameValid && isEmail;
+        }
+
+        bool CanExecuteClickCommand(object arg)
+        {
+            return _isEnabled;
         }
 
         /// <summary>
@@ -151,28 +183,55 @@ namespace lestoma.App.ViewModels
         {
             this.Name.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Nombre requerido." });
             this.LastName.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Apellido requerido." });
-            this.Password.Item1.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Password Required" });
-            this.Password.Item2.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Re-enter Password" });
+            this.Password.Item1.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Contraseña requerida." });
+            this.Password.Item1.Validations.Add(new SizeOfString<string> { ValidationMessage = "Debe tener entre 8 y 30 caracteres." });
+            this.Password.Item2.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "confirmar contraseña requerida." });
         }
+        #endregion
 
-        /// <summary>
-        /// Invoked when the Log in button is clicked.
-        /// </summary>
-        /// <param name="obj">The Object</param>
+        #region Methods
+
         private async void LoginClicked(object obj)
         {
             await _navigationService.NavigateAsync(nameof(LoginPage));
         }
 
-        /// <summary>
-        /// Invoked when the Sign Up button is clicked.
-        /// </summary>
-        /// <param name="obj">The Object</param>
-        private void SignUpClicked(object obj)
+        private async void SignUpClicked(object obj)
         {
             if (this.AreFieldsValid())
             {
-                // Do something
+                if (!this.Password.Item1.Value.Equals(this.Password.Item2.Value))
+                {
+                    CrossToastPopUp.Current.ShowToastError("Las contraseñas no son iguales.");
+                    return;
+                }
+                IsRunning = true;
+                IsEnabled = false;
+                if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+                {
+                    IsRunning = false;
+                    IsEnabled = true;
+                    CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
+                    return;
+                }
+                string url = App.Current.Resources["UrlAPI"].ToString();
+                UsuarioRequest usuario = new UsuarioRequest
+                {
+                    Email = this.Email.Value,
+                    Clave = this.Password.Item1.Value,
+                    Apellido = this.LastName.Value,
+                    Nombre = this.Name.Value
+                };
+                Response respuesta = await _apiService.PostAsync(url, "Account/Registro", usuario);
+                IsRunning = false;
+                IsEnabled = true;
+                if (!respuesta.IsExito)
+                {
+                    CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
+                    return;
+                }
+                CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
+                await _navigationService.GoBackAsync();
             }
         }
 
