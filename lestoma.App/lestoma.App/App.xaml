@@ -4,18 +4,20 @@
              xmlns:prism="http://prismlibrary.com"
              xmlns:themes = "clr-namespace:lestoma.App.Themes;assembly=lestoma.App"
              x:Class="lestoma.App.App">
-  <Application.Resources>
+    <Application.Resources>
 
         <ResourceDictionary>
-            <Color x:Key="BackgroundIndicator">#722121</Color>
-            <Color x:Key="TextIndicator">#ffff</Color>
+            <Color x:Key="BackgroundIndicator">#FFFFFF</Color>
+            <Color x:Key="TextIndicator">#000000</Color>
             <x:String x:Key="UrlAPI">http://192.168.0.15:45456/api/</x:String>
             <ResourceDictionary.MergedDictionaries>
                 <themes:LightTheme />
             </ResourceDictionary.MergedDictionaries >
         </ResourceDictionary>
 
-    <!-- Application resource dictionary -->
+        <!-- Application resource dictionary -->
 
-  </Application.Resources>
+    </Application.Resources>
 </prism:PrismApplication>
+
+// e
