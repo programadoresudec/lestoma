@@ -22,7 +22,6 @@ namespace lestoma.App.ViewModels
         private Command<object> backButtonCommand;
 
         protected INavigationService NavigationService { get; private set; }
-        public IApiService IApiService { get; set; }
         private string _title;
         public string Title
         {
@@ -44,10 +43,9 @@ namespace lestoma.App.ViewModels
 
         #region Constructor
 
-        public ViewModelBase(INavigationService navigationService, IApiService apiService)
+        public ViewModelBase(INavigationService navigationService)
         {
             NavigationService = navigationService;
-            IApiService = apiService;
         }
 
         #endregion

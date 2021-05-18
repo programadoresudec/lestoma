@@ -1,5 +1,6 @@
 using lestoma.App.ViewModels;
 using lestoma.App.Views;
+using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Services;
 using Prism;
@@ -27,7 +28,15 @@ namespace lestoma.App
             Syncfusion.Licensing.SyncfusionLicenseProvider.
                RegisterLicense("NDMxODc5QDMxMzkyZTMxMmUzMENoS0RZSTVCbThZYzBtd2tCQjFMb2xnbklkSkFwNXBlWXl3YlZpOE9mQmc9");
             InitializeComponent();
-            await NavigationService.NavigateAsync("NavigationPage/LoginPage");
+
+            if (!MovilSettings.IsLogin)
+            {
+                await NavigationService.NavigateAsync($"NavigationPage/{nameof(LoginPage)}");
+            }
+            else
+            {
+                await NavigationService.NavigateAsync($"{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
+            }
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -35,9 +44,12 @@ namespace lestoma.App
             containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
             containerRegistry.Register<IApiService, ApiService>();
             containerRegistry.RegisterForNavigation<NavigationPage>();
-            containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
             containerRegistry.RegisterForNavigation<RegistroPage, RegistroPageViewModel>();
+            containerRegistry.RegisterForNavigation<AboutPage, AboutPageViewModel>();
+            containerRegistry.RegisterForNavigation<SettingsPage, SettingsPageViewModel>();
+
+            containerRegistry.RegisterForNavigation<AdminMasterDetailPage, AdminMasterDetailPageViewModel>();
         }
     }
 }

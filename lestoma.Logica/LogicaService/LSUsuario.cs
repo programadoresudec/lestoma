@@ -1,17 +1,17 @@
 ﻿using lestoma.CommonUtils.Entities;
 using lestoma.CommonUtils.Enums;
+using lestoma.CommonUtils.Requests;
 using lestoma.CommonUtils.Responses;
 using lestoma.Data;
 using lestoma.Data.DAO;
 using lestoma.Logica.Interfaces;
-using System;
 using System.Threading.Tasks;
 
 namespace lestoma.Logica.LogicaService
 {
     public class LSUsuario : IUsuarioService
     {
-        private readonly Response _respuesta = new Response();
+        private readonly Response _respuesta = new();
         private readonly Mapeo _db;
 
         private IGenericRepository<EUsuario> _usuarioRepository;
@@ -79,9 +79,9 @@ namespace lestoma.Logica.LogicaService
 
         public async Task<Response> lista()
         {
-           
+
             _respuesta.Data = await _usuarioRepository.GetAll();
-            return  _respuesta;
+            return _respuesta;
         }
     }
 }

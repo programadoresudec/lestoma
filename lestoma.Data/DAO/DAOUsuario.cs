@@ -1,7 +1,6 @@
 ﻿using lestoma.CommonUtils.Entities;
-using lestoma.CommonUtils.Responses;
+using lestoma.CommonUtils.Requests;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -39,6 +38,6 @@ namespace lestoma.Data.DAO
             return await db.TablaUsuarios.AnyAsync(x => x.Email.Equals(email));
         }
 
-      
+
     }
 }

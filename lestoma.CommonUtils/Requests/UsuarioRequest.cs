@@ -1,9 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace lestoma.CommonUtils.Responses
+namespace lestoma.CommonUtils.Requests
 {
-    public class LoginRequest
+    public class UsuarioRequest
     {
+        [Required]
+        public string Nombre { get; set; }
+        [Required]
+        public string Apellido { get; set; }
         [Required]
         [EmailAddress]
         public string Email { get; set; }

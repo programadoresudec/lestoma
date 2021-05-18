@@ -1,6 +1,6 @@
 using AutoMapper;
 using lestoma.Api.Helpers;
-using lestoma.CommonUtils;
+using lestoma.CommonUtils.Helpers;
 using lestoma.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -69,7 +69,7 @@ namespace lestoma.Api
                                     Id = "Bearer"
                                 }
                             },
-                            new string[] {}
+                            Array.Empty<string>()
 
                     }
                 });

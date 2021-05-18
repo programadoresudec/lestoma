@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using lestoma.CommonUtils.Entities;
-using lestoma.CommonUtils.Responses;
+using lestoma.CommonUtils.Requests;
 
 namespace lestoma.Api.Helpers
 {
@@ -8,7 +8,7 @@ namespace lestoma.Api.Helpers
     {
         public AutoMappersProfiles()
         {
-            CreateMap<UsuarioRequest, EUsuario>();     
+            CreateMap<UsuarioRequest, EUsuario>();
         }
     }
 }

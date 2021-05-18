@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
-using lestoma.CommonUtils;
 using lestoma.CommonUtils.Entities;
+using lestoma.CommonUtils.Helpers;
+using lestoma.CommonUtils.Requests;
 using lestoma.CommonUtils.Responses;
 using lestoma.Logica.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -45,7 +46,7 @@ namespace lestoma.Api.Controllers
             {
                 return Unauthorized(Respuesta);
             }
-            TokenRequest usuario = new TokenRequest
+            TokenResponse usuario = new()
             {
                 Rol = ((EUsuario)Respuesta.Data).Rol.NombreRol,
                 Token = GetToken((EUsuario)Respuesta.Data),

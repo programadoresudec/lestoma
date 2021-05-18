@@ -2,12 +2,13 @@
 using lestoma.App.Validators.Rules;
 using lestoma.App.Views;
 using lestoma.CommonUtils.Enums;
+using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
+using lestoma.CommonUtils.Requests;
 using lestoma.CommonUtils.Responses;
-using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using Plugin.Toast;
 using Prism.Navigation;
-using System;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -36,7 +37,7 @@ namespace lestoma.App.ViewModels
         /// Initializes a new instance for the <see cref="LoginPageViewModel" /> class.
         /// </summary>
         public LoginPageViewModel(INavigationService navigationService, IApiService apiService)
-            : base(navigationService, apiService)
+            : base(navigationService)
         {
             Title = "Iniciar Sesión";
             _navigationService = navigationService;
@@ -44,7 +45,7 @@ namespace lestoma.App.ViewModels
             this.InitializeProperties();
             this.AddValidationRules();
             _isEnabled = true;
-            this.LoginCommand = new Command(this.LoginClicked,CanExecuteClickCommand);
+            this.LoginCommand = new Command(this.LoginClicked, CanExecuteClickCommand);
             this.SignUpCommand = new Command(this.SignUpClicked, CanExecuteClickCommand);
             this.ForgotPasswordCommand = new Command(this.ForgotPasswordClicked, CanExecuteClickCommand);
         }
@@ -111,7 +112,7 @@ namespace lestoma.App.ViewModels
         public Command ForgotPasswordCommand { get; set; }
         #endregion
 
-        #region methods
+        #region validaciones
 
         /// <summary>
         /// check the validation
@@ -143,6 +144,10 @@ namespace lestoma.App.ViewModels
             this.Password.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Contraseña requerida." });
         }
 
+        #endregion
+
+        #region methods
+
         /// <summary>
         /// Invoked when the Log In button is clicked.
         /// </summary>
@@ -160,7 +165,7 @@ namespace lestoma.App.ViewModels
                     CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
                     return;
                 }
-              
+
                 string url = App.Current.Resources["UrlAPI"].ToString();
                 LoginRequest login = new LoginRequest
                 {
@@ -172,24 +177,30 @@ namespace lestoma.App.ViewModels
                 IsEnabled = true;
                 if (!respuesta.IsExito)
                 {
+                    this.Email.Value = string.Empty;
+                    this.password.Value = string.Empty;
                     CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
                     return;
                 }
-                TokenRequest token = ParsearData<TokenRequest>(respuesta);
+                TokenResponse token = ParsearData<TokenResponse>(respuesta);
+                MovilSettings.Token = JsonConvert.SerializeObject(token);
+                MovilSettings.IsLogin = true;
+                this.password.Value = string.Empty;
                 CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
                 await Task.Delay(1000);
                 if (token.Rol.Equals(TipoRol.Administrador.ToString()))
                 {
-                    await _navigationService.NavigateAsync(nameof(RegistroPage));
+                   await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
                 }
                 else if (token.Rol.Equals(TipoRol.Auxiliar.ToString()))
                 {
-                    await _navigationService.NavigateAsync(nameof(RegistroPage));
+                
+                   
                 }
             }
         }
 
-      
+
 
         /// <summary>
         /// Invoked when the Sign Up button is clicked.

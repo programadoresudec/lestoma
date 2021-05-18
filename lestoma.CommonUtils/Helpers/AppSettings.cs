@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace lestoma.CommonUtils
+namespace lestoma.CommonUtils.Helpers
 {
     public class AppSettings
     {

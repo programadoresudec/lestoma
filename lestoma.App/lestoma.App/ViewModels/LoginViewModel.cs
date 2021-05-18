@@ -22,8 +22,8 @@ namespace lestoma.App.ViewModels
         /// <summary>
         /// Initializes a new instance for the <see cref="LoginViewModel" /> class.
         /// </summary>
-        public LoginViewModel(INavigationService navigationService, IApiService apiService)
-            : base(navigationService, apiService)
+        public LoginViewModel(INavigationService navigationService)
+            : base(navigationService)
         {
             this.InitializeProperties();
             this.AddValidationRules();

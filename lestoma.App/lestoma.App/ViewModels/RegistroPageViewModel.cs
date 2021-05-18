@@ -2,13 +2,15 @@
 using lestoma.App.Validators.Rules;
 using lestoma.App.Views;
 using lestoma.CommonUtils.Interfaces;
+using lestoma.CommonUtils.Requests;
 using lestoma.CommonUtils.Responses;
 using Plugin.Toast;
 using Prism.Navigation;
+using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
-
+    
 namespace lestoma.App.ViewModels
 {
     /// <summary>
@@ -38,7 +40,7 @@ namespace lestoma.App.ViewModels
         /// Initializes a new instance for the <see cref="RegistroPageViewModel" /> class.
         /// </summary>
         public RegistroPageViewModel(INavigationService navigationService, IApiService apiService)
-            : base(navigationService, apiService)
+            : base(navigationService)
         {
             Title = "Registrarse";
             _navigationService = navigationService;
@@ -231,6 +233,7 @@ namespace lestoma.App.ViewModels
                     return;
                 }
                 CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
+                await Task.Delay(1000);
                 await _navigationService.GoBackAsync();
             }
         }
