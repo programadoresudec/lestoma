@@ -186,8 +186,9 @@ namespace lestoma.App.ViewModels
             this.Name.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Nombre requerido." });
             this.LastName.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Apellido requerido." });
             this.Password.Item1.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Contraseña requerida." });
-            this.Password.Item1.Validations.Add(new SizeOfString<string> { ValidationMessage = "Debe tener entre 8 y 30 caracteres." });
+            this.Password.Item1.Validations.Add(new IsLenghtValidRule<string> { ValidationMessage = "Debe tener entre 8 y 30 caracteres.", MaximumLenght = 30, MinimumLenght = 8 });
             this.Password.Item2.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "confirmar contraseña requerida." });
+            this.Password.Validations.Add(new MatchPairValidationRule<string> { ValidationMessage = "La contraseña y la contraseña de confirmación no coinciden." });
         }
         #endregion
 
@@ -202,11 +203,6 @@ namespace lestoma.App.ViewModels
         {
             if (this.AreFieldsValid())
             {
-                if (!this.Password.Item1.Value.Equals(this.Password.Item2.Value))
-                {
-                    CrossToastPopUp.Current.ShowToastError("Las contraseñas no son iguales.");
-                    return;
-                }
                 IsRunning = true;
                 IsEnabled = false;
                 if (Connectivity.NetworkAccess != NetworkAccess.Internet)

@@ -2,9 +2,9 @@
 
 namespace lestoma.App.Views
 {
-    public partial class SettingsPage : ContentPage
+    public partial class PopupVerificarCodigoPage : ContentPage
     {
-        public SettingsPage()
+        public PopupVerificarCodigoPage()
         {
             InitializeComponent();
         }

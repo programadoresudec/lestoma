@@ -7,8 +7,8 @@ namespace lestoma.CommonUtils.Enums
     public enum TipoEstadoUsuario
     {
         ninguno,
-        ChangePass,
         CheckCuenta,
-        Activado
+        Activado,
+        Inactivo
     }
 }

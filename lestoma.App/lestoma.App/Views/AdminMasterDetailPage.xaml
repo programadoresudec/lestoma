@@ -9,6 +9,9 @@
         <ContentPage Title="Menu">
             <StackLayout Padding="20">
                 <!-- TODO: // Update the Layout and add some real menu items  -->
+                <Label FontAttributes="Bold"
+                       FontSize="Large"
+                       Text="{Binding UserApp.FullName}"/>
                 <ListView BackgroundColor="Transparent"
                 	      ItemsSource="{Binding Menus}"
                 	      HasUnevenRows="True"

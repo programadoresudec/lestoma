@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using lestoma.Api.Helpers;
 using lestoma.CommonUtils.Entities;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Requests;
@@ -22,11 +23,12 @@ namespace lestoma.Api.Controllers
     {
         private readonly AppSettings _appSettings;
         private readonly IUsuarioService _usuarioService;
-
+        private readonly IMailHelper _mailHelper;
         public AccountController(IUsuarioService usuarioService,
-            IOptions<AppSettings> appSettings, IMapper mapper)
+            IOptions<AppSettings> appSettings, IMapper mapper, IMailHelper mailHelper)
             : base(mapper)
         {
+            _mailHelper = mailHelper; 
             _usuarioService = usuarioService;
             _appSettings = appSettings.Value;
         }
@@ -38,6 +40,7 @@ namespace lestoma.Api.Controllers
             Respuesta = await _usuarioService.lista();
             return Ok(Respuesta);
         }
+        #region logeo
         [HttpPost("Login")]
         public async Task<IActionResult> Logeo(LoginRequest logeo)
         {
@@ -59,7 +62,9 @@ namespace lestoma.Api.Controllers
             Respuesta.Data = usuario;
             return Ok(Respuesta);
         }
+        #endregion
 
+        #region registrarse
         [HttpPost("Registro")]
         public async Task<IActionResult> Registrarse(UsuarioRequest usuario)
         {
@@ -72,7 +77,24 @@ namespace lestoma.Api.Controllers
             Respuesta.Data = usuario;
             return Created(string.Empty, Respuesta);
         }
+        #endregion
 
+        #region olvido su contraseña
+        [HttpPost("forgotpassword")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest email)
+        {
+            Respuesta = await _usuarioService.ForgotPassword(email);
+            if (!Respuesta.IsExito && Respuesta.Data == null)
+            {
+                return Conflict(Respuesta);
+            }
+            var from = ((EUsuario)Respuesta.Data).Email;
+            var codigo = ((EUsuario)Respuesta.Data).CodigoRecuperacion;
+
+            await _mailHelper.SendCorreo(from, codigo, "Recuperación contraseña");
+            return Created(string.Empty, Respuesta);
+        }
+        #endregion
         private string GetToken(EUsuario user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

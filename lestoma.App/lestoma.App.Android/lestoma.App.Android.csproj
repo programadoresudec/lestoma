@@ -82,6 +82,9 @@
     <PackageReference Include="Syncfusion.Xamarin.SfListView">
       <Version>19.1.0.56</Version>
     </PackageReference>
+    <PackageReference Include="Syncfusion.Xamarin.SfPopupLayout">
+      <Version>19.1.0.56</Version>
+    </PackageReference>
     <PackageReference Include="Syncfusion.Xamarin.SfRating">
       <Version>19.1.0.56</Version>
     </PackageReference>

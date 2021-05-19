@@ -1,10 +1,12 @@
 ﻿using lestoma.CommonUtils.Entities;
 using lestoma.CommonUtils.Enums;
+using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Requests;
 using lestoma.CommonUtils.Responses;
 using lestoma.Data;
 using lestoma.Data.DAO;
 using lestoma.Logica.Interfaces;
+using System;
 using System.Threading.Tasks;
 
 namespace lestoma.Logica.LogicaService
@@ -15,7 +17,6 @@ namespace lestoma.Logica.LogicaService
         private readonly Mapeo _db;
 
         private IGenericRepository<EUsuario> _usuarioRepository;
-
         public LSUsuario(IGenericRepository<EUsuario> usuarioRepository, Mapeo db)
         {
             this._db = db;
@@ -39,8 +40,8 @@ namespace lestoma.Logica.LogicaService
         }
         public async Task<Response> Register(EUsuario usuario)
         {
-            bool existe = await new DAOUsuario().ExisteCorreo(usuario.Email, _db);
-            if (existe)
+            EUsuario existe = await new DAOUsuario().ExisteCorreo(usuario.Email, _db);
+            if (existe == null)
             {
                 _respuesta.Mensaje = "El correo ya esta en uso.";
             }
@@ -58,7 +59,6 @@ namespace lestoma.Logica.LogicaService
         public async Task<Response> ChangePassword(EUsuario usuario)
         {
 
-
             usuario.EstadoId = (int)TipoEstadoUsuario.Activado;
             await _usuarioRepository.Create(usuario);
 
@@ -66,21 +66,35 @@ namespace lestoma.Logica.LogicaService
         }
 
 
-
-        public async Task<Response> RecoverPassword(EUsuario usuario)
-        {
-            bool existe = await new DAOUsuario().ExisteCorreo(usuario.Email, _db);
-            if (!existe)
-            {
-                _respuesta.Mensaje = "El correo no existe.";
-            }
-            return _respuesta;
-        }
-
         public async Task<Response> lista()
         {
 
             _respuesta.Data = await _usuarioRepository.GetAll();
+            return _respuesta;
+        }
+
+        public async Task<Response> ForgotPassword(ForgotPasswordRequest email)
+        {
+            EUsuario user = await new DAOUsuario().ExisteCorreo(email.Email, _db);
+            if (user == null)
+            {
+                _respuesta.Mensaje = "El correo no esta registrado.";
+            }
+
+            else
+            {
+                bool validar;
+                do
+                {
+                    user.CodigoRecuperacion = Reutilizables.generarCodigoVerificacion();
+                    validar = await new DAOUsuario().ExisteCodigoVerificacion(user.CodigoRecuperacion, _db);
+                } while (validar != false);
+                user.FechaVencimientoCodigo = DateTime.Now.AddHours(2);
+                await _usuarioRepository.Update(user);
+                _respuesta.Data = user;
+                _respuesta.IsExito = true;
+                _respuesta.Mensaje = "Revise su correo eléctronico";
+            }
             return _respuesta;
         }
     }

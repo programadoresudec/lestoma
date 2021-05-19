@@ -1,23 +1,21 @@
-﻿using Prism.Navigation;
+﻿using lestoma.App.Views;
+using lestoma.CommonUtils.Helpers;
+using Prism.Navigation;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
 namespace lestoma.App.ViewModels
 {
-    /// <summary>
-    /// ViewModel for Setting page 
-    /// </summary> 
     [Preserve(AllMembers = true)]
     public class SettingsPageViewModel : ViewModelBase
     {
+        private readonly INavigationService _navigationService;
         #region Constructor
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SettingsPageViewModel" /> class
-        /// </summary>
         public SettingsPageViewModel(INavigationService navigationService)
-             : base(navigationService)
+            : base(navigationService)
         {
+            _navigationService = navigationService;
             this.EditProfileCommand = new Command(this.EditProfileClicked);
             this.ChangePasswordCommand = new Command(this.ChangePasswordClicked);
             this.LinkAccountCommand = new Command(this.LinkAccountClicked);
@@ -27,7 +25,6 @@ namespace lestoma.App.ViewModels
             this.FAQCommand = new Command(this.FAQClicked);
             this.LogoutCommand = new Command(this.LogoutClicked);
         }
-
         #endregion
 
         #region Commands
@@ -143,9 +140,12 @@ namespace lestoma.App.ViewModels
         /// Invoked when the logout button is clicked
         /// </summary>
         /// <param name="obj">The object</param>
-        private void LogoutClicked(object obj)
+        private async void LogoutClicked(object obj)
         {
-            // Do something
+            MovilSettings.Token = null;
+            MovilSettings.IsLogin = false;
+            await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(LoginPage)}");
+
         }
 
         #endregion

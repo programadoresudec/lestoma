@@ -10,6 +10,7 @@ namespace lestoma.Api.Helpers
         public static IServiceCollection AddDependency(this IServiceCollection services)
         {
             services.AddScoped<IUsuarioService, LSUsuario>();
+            services.AddScoped<IMailHelper, MailHelper>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             return services;
         }

@@ -10,4 +10,11 @@ namespace lestoma.CommonUtils.Requests
         [Required]
         public string Clave { get; set; }
     }
+
+    public class ForgotPasswordRequest
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+    }
 }

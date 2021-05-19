@@ -10,6 +10,8 @@ namespace lestoma.CommonUtils.Services
 {
     public class ApiService : IApiService
     {
+        public HttpResponseMessage response { get; set; }
+        public Response respuesta { get; set; }
         #region GetList Api service
         public async Task<Response> GetListAsync<T>(string urlBase, string controller)
         {
@@ -19,7 +21,7 @@ namespace lestoma.CommonUtils.Services
                 {
                     BaseAddress = new Uri(urlBase),
                 };
-                HttpResponseMessage response = await client.GetAsync(controller);
+                response = await client.GetAsync(controller);
                 string jsonString = await response.Content.ReadAsStringAsync();
                 var respuesta = JsonConvert.DeserializeObject<Response>(jsonString);
                 if (!response.IsSuccessStatusCode)
@@ -56,9 +58,9 @@ namespace lestoma.CommonUtils.Services
                     BaseAddress = new Uri(urlBase),
                 };
 
-                HttpResponseMessage response = await client.PostAsync(controller, content);
+                response = await client.PostAsync(controller, content);
                 string jsonString = await response.Content.ReadAsStringAsync();
-                Response respuesta = JsonConvert.DeserializeObject<Response>(jsonString);
+                respuesta = JsonConvert.DeserializeObject<Response>(jsonString);
                 if (!response.IsSuccessStatusCode)
                 {
                     return new Response
@@ -75,7 +77,7 @@ namespace lestoma.CommonUtils.Services
                 return new Response
                 {
                     IsExito = false,
-                    Mensaje = ex.Message
+                    Mensaje = response != null ? mostrarMensajePersonalizadoStatus(response.StatusCode, string.Empty) : ex.Message
                 };
             }
         }

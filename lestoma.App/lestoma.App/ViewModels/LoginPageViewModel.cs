@@ -177,14 +177,13 @@ namespace lestoma.App.ViewModels
                 IsEnabled = true;
                 if (!respuesta.IsExito)
                 {
-                    this.Email.Value = string.Empty;
-                    this.password.Value = string.Empty;
                     CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
                     return;
                 }
                 TokenResponse token = ParsearData<TokenResponse>(respuesta);
                 MovilSettings.Token = JsonConvert.SerializeObject(token);
                 MovilSettings.IsLogin = true;
+                this.Password.CleanOnChange = false;
                 this.password.Value = string.Empty;
                 CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
                 await Task.Delay(1000);
@@ -215,9 +214,9 @@ namespace lestoma.App.ViewModels
         /// Invoked when the Forgot Password button is clicked.
         /// </summary>
         /// <param name="obj">The Object</param>
-        private void ForgotPasswordClicked(object obj)
+        private async void ForgotPasswordClicked(object obj)
         {
-            // Do something
+            await _navigationService.NavigateAsync(nameof(ForgotPasswordPage));
         }
         #endregion
     }

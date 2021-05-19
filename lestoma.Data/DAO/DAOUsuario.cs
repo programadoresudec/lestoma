@@ -1,6 +1,7 @@
 ﻿using lestoma.CommonUtils.Entities;
 using lestoma.CommonUtils.Requests;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,6 +27,8 @@ namespace lestoma.Data.DAO
             return lista.Select(m => new EUsuario
 
             {
+                Apellido = m.persona.Apellido,
+                Nombre = m.persona.Nombre,
                 Id = m.persona.Id,
                 Email = m.persona.Email,
                 EstadoUsuario = new EEstadoUsuario { Id = m.estados.Id, DescripcionEstado = m.estados.DescripcionEstado },
@@ -33,11 +36,14 @@ namespace lestoma.Data.DAO
             }).FirstOrDefault();
         }
 
-        public async Task<bool> ExisteCorreo(string email, Mapeo db)
+        public async Task<EUsuario> ExisteCorreo(string email, Mapeo db)
         {
-            return await db.TablaUsuarios.AnyAsync(x => x.Email.Equals(email));
+            return await db.TablaUsuarios.Where(x => x.Email.Equals(email)).FirstOrDefaultAsync();
         }
 
-
+        public async Task<bool> ExisteCodigoVerificacion(string codigoRecuperacion, Mapeo db)
+        {
+            return await db.TablaUsuarios.AnyAsync(x => x.CodigoRecuperacion.Equals(codigoRecuperacion));
+        }
     }
 }
