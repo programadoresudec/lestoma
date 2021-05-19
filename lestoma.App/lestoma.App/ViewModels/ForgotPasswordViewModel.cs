@@ -118,9 +118,7 @@ namespace lestoma.App.ViewModels
                 }
                 CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
                 await Task.Delay(1000);
-
-                popupLayout.Show();
-
+                await _navigationService.NavigateAsync(nameof(ResetPasswordPage));
             }
         }
 

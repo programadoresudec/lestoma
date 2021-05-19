@@ -27,7 +27,7 @@ namespace lestoma.Api.Helpers
                 string port = _configuration["Mail:Port"];
                 string password = _configuration["Mail:Password"];
 
-                string folder = Path.Combine(_env.WebRootPath,"Recursos\\SendMail");
+                 string folder = Path.Combine(_env.WebRootPath,"Recursos\\SendMail");
                 string ruta = Path.Combine(folder, "ChangePassword.html");
 
                 var Emailtemplate = new StreamReader(ruta);
