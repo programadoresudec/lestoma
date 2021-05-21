@@ -172,7 +172,7 @@ namespace lestoma.App.ViewModels
                     Email = this.Email.Value,
                     Clave = this.password.Value
                 };
-                Response respuesta = await _apiService.PostAsync(url, "Account/Login", login);
+                Response respuesta = await _apiService.PostAsync(url, "Account/login", login);
                 IsRunning = false;
                 IsEnabled = true;
                 if (!respuesta.IsExito)

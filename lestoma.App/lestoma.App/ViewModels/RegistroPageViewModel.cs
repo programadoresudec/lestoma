@@ -101,6 +101,7 @@ namespace lestoma.App.ViewModels
         {
             get
             {
+               
                 return this.password;
             }
 
@@ -160,6 +161,7 @@ namespace lestoma.App.ViewModels
             bool isNameValid = this.Name.Validate();
             bool isLastNameValid = this.LastName.Validate();
             bool isPasswordValid = this.Password.Validate();
+
             return isPasswordValid && isNameValid && isLastNameValid && isEmail;
         }
 
@@ -188,7 +190,7 @@ namespace lestoma.App.ViewModels
             this.Password.Item1.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Contraseña requerida." });
             this.Password.Item1.Validations.Add(new IsLenghtValidRule<string> { ValidationMessage = "Debe tener entre 8 y 30 caracteres.", MaximumLenght = 30, MinimumLenght = 8 });
             this.Password.Item2.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "confirmar contraseña requerida." });
-            this.Password.Validations.Add(new MatchPairValidationRule<string> { ValidationMessage = "La contraseña y la contraseña de confirmación no coinciden." });
+            this.Password.Validations.Add(new MatchPairValidationRule<string> { ValidationMessage = "Las contraseñas no coinciden." });
         }
         #endregion
 
@@ -201,6 +203,8 @@ namespace lestoma.App.ViewModels
 
         private async void SignUpClicked(object obj)
         {
+
+
             if (this.AreFieldsValid())
             {
                 IsRunning = true;
@@ -220,7 +224,7 @@ namespace lestoma.App.ViewModels
                     Apellido = this.LastName.Value,
                     Nombre = this.Name.Value
                 };
-                Response respuesta = await _apiService.PostAsync(url, "Account/Registro", usuario);
+                Response respuesta = await _apiService.PostAsync(url, "Account/registro", usuario);
                 IsRunning = false;
                 IsEnabled = true;
                 if (!respuesta.IsExito)

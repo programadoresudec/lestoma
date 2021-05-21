@@ -17,4 +17,13 @@ namespace lestoma.CommonUtils.Requests
         [EmailAddress]
         public string Email { get; set; }
     }
+
+    public class RecoverPasswordRequest
+    {
+        [Required]
+        public string Codigo { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+    }
 }

@@ -30,7 +30,7 @@ namespace lestoma.App.Validators.Rules
                 return false;
             }
             var str = value as string;
-            return (str.Length > MinimumLenght && str.Length <= MaximumLenght);
+            return (str.Length >= MinimumLenght && str.Length <= MaximumLenght);
         }
     }
 

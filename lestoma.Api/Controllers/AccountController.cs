@@ -41,7 +41,7 @@ namespace lestoma.Api.Controllers
             return Ok(Respuesta);
         }
         #region logeo
-        [HttpPost("Login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Logeo(LoginRequest logeo)
         {
             Respuesta = await _usuarioService.Login(logeo);
@@ -65,7 +65,7 @@ namespace lestoma.Api.Controllers
         #endregion
 
         #region registrarse
-        [HttpPost("Registro")]
+        [HttpPost("registro")]
         public async Task<IActionResult> Registrarse(UsuarioRequest usuario)
         {
             var entidad = Mapear<UsuarioRequest, EUsuario>(usuario);
