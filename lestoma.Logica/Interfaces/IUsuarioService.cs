@@ -12,5 +12,6 @@ namespace lestoma.Logica.Interfaces
         Task<Response> ChangePassword(EUsuario usuario);
         Task<Response> lista();
         Task<Response> ForgotPassword(ForgotPasswordRequest email);
+        Task<Response> RecoverPassword(RecoverPasswordRequest recover);
     }
 }

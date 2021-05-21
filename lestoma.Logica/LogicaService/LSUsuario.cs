@@ -97,5 +97,23 @@ namespace lestoma.Logica.LogicaService
             }
             return _respuesta;
         }
+
+        public async Task<Response> RecoverPassword(RecoverPasswordRequest recover)
+        {
+            var user = await new DAOUsuario().UsuarioByCodigoVerificacion(recover.Codigo, _db);
+            if (user == null)
+            {
+                _respuesta.Mensaje = "codigo no valido.";
+            }
+            else
+            {
+                user.CodigoRecuperacion = null;
+                user.Clave = recover.Password;
+                await _usuarioRepository.Update(user);
+                _respuesta.IsExito = true;
+                _respuesta.Mensaje = "la contraseña ha sido restablecida.";
+            }
+            return _respuesta;
+        }
     }
 }

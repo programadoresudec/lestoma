@@ -45,5 +45,10 @@ namespace lestoma.Data.DAO
         {
             return await db.TablaUsuarios.AnyAsync(x => x.CodigoRecuperacion.Equals(codigoRecuperacion));
         }
+
+        public async Task<EUsuario> UsuarioByCodigoVerificacion(string codigo, Mapeo db)
+        {
+            return await db.TablaUsuarios.Where(x => x.CodigoRecuperacion.Equals(codigo)).FirstOrDefaultAsync();
+        }
     }
 }

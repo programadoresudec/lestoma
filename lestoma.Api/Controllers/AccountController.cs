@@ -95,6 +95,19 @@ namespace lestoma.Api.Controllers
             return Created(string.Empty, Respuesta);
         }
         #endregion
+
+        #region reestablecer su contraseña
+        [HttpPost("recoverpassword")]
+        public async Task<IActionResult> ForgotPassword(RecoverPasswordRequest recover)
+        {
+            Respuesta = await _usuarioService.RecoverPassword(recover);
+            if (!Respuesta.IsExito)
+            {
+                return Conflict(Respuesta);
+            }
+            return Created(string.Empty, Respuesta);
+        }
+        #endregion
         private string GetToken(EUsuario user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

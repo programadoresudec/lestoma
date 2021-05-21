@@ -31,7 +31,7 @@ namespace lestoma.App
 
             if (!MovilSettings.IsLogin)
             {
-                await NavigationService.NavigateAsync($"NavigationPage/{nameof(ResetPasswordPage)}");
+                await NavigationService.NavigateAsync($"NavigationPage/{nameof(LoginPage)}");
             }
             else
             {
