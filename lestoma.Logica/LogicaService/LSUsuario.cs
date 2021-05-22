@@ -56,12 +56,20 @@ namespace lestoma.Logica.LogicaService
             return _respuesta;
         }
 
-        public async Task<Response> ChangePassword(EUsuario usuario)
+        public async Task<Response> ChangePassword(ChangePasswordRequest cambiar)
         {
-
-            usuario.EstadoId = (int)TipoEstadoUsuario.Activado;
-            await _usuarioRepository.Create(usuario);
-
+            var user = await _usuarioRepository.GetByIdAsync(cambiar.IdUser);
+            if (user == null || !user.Clave.Equals(cambiar.OldPassword))
+            {
+                _respuesta.Mensaje = "No se pudo actualizar la contraseña";
+            }
+            else
+            {
+                user.Clave = cambiar.NewPassword;
+                await _usuarioRepository.Update(user);
+                _respuesta.Mensaje = "Se actualizo satisfactoriamente.";
+                _respuesta.IsExito = true;
+            }
             return _respuesta;
         }
 
@@ -75,7 +83,7 @@ namespace lestoma.Logica.LogicaService
 
         public async Task<Response> ForgotPassword(ForgotPasswordRequest email)
         {
-            EUsuario user = await new DAOUsuario().ExisteCorreo(email.Email, _db);
+            var user = await new DAOUsuario().ExisteCorreo(email.Email, _db);
             if (user == null)
             {
                 _respuesta.Mensaje = "El correo no esta registrado.";

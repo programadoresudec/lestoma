@@ -1,16 +1,12 @@
-﻿namespace lestoma.CommonUtils.Responses
+﻿using System;
+
+namespace lestoma.CommonUtils.Responses
 {
     public class TokenResponse
     {
-        public string Rol { get; set; }
         public string Token { get; set; }
-        public UserApp User { get; set; }
-    }
-
-    public class UserApp
-    {
-        public string Nombre { get; set; }
-        public string Apellido { get; set; }
-        public string FullName => $"{Nombre} {Apellido}";
+        public DateTime Expiration { get; set; }
+        public DateTime ExpirationLocal => Expiration.ToLocalTime();
+        public UserResponse User { get; set; }
     }
 }

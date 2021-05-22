@@ -17,7 +17,7 @@ namespace lestoma.App.ViewModels
     {
         private readonly INavigationService _navigationService;
         private static AdminMasterDetailPageViewModel _instance;
-        private UserApp _userApp;
+        private UserResponse _userApp;
         public AdminMasterDetailPageViewModel(INavigationService navigationService) : base(navigationService)
         {
             _instance = this;
@@ -31,7 +31,7 @@ namespace lestoma.App.ViewModels
             return _instance;
         }
 
-        public UserApp UserApp
+        public UserResponse UserApp
         {
             get => _userApp;
             set => SetProperty(ref _userApp, value);

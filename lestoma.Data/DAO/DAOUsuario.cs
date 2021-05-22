@@ -31,8 +31,8 @@ namespace lestoma.Data.DAO
                 Nombre = m.persona.Nombre,
                 Id = m.persona.Id,
                 Email = m.persona.Email,
-                EstadoUsuario = new EEstadoUsuario { Id = m.estados.Id, DescripcionEstado = m.estados.DescripcionEstado },
-                Rol = new ERol { Id = m.roles.Id, NombreRol = m.roles.NombreRol }
+                EstadoUsuario = { Id = m.estados.Id, DescripcionEstado = m.estados.DescripcionEstado },
+                Rol = { Id = m.roles.Id, NombreRol = m.roles.NombreRol }
             }).FirstOrDefault();
         }
 

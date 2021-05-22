@@ -9,7 +9,7 @@ namespace lestoma.Logica.Interfaces
     {
         Task<Response> Login(LoginRequest login);
         Task<Response> Register(EUsuario usuario);
-        Task<Response> ChangePassword(EUsuario usuario);
+        Task<Response> ChangePassword(ChangePasswordRequest usuario);
         Task<Response> lista();
         Task<Response> ForgotPassword(ForgotPasswordRequest email);
         Task<Response> RecoverPassword(RecoverPasswordRequest recover);

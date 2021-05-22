@@ -28,9 +28,9 @@ namespace lestoma.CommonUtils.Entities
         public int EstadoId { get; set; }
 
         [NotMapped]
-        public EEstadoUsuario EstadoUsuario { get; set; }
+        public EEstadoUsuario EstadoUsuario { get; set; } = new EEstadoUsuario();
         [NotMapped]
-        public ERol Rol { get; set; }
+        public ERol Rol { get; set; } = new ERol();
 
     }
 }

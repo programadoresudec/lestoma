@@ -21,17 +21,22 @@ namespace lestoma.Api.Controllers
     [ApiController]
     public class AccountController : BaseController
     {
+        #region attributes
         private readonly AppSettings _appSettings;
         private readonly IUsuarioService _usuarioService;
         private readonly IMailHelper _mailHelper;
+        #endregion
+
+        #region Constructor
         public AccountController(IUsuarioService usuarioService,
             IOptions<AppSettings> appSettings, IMapper mapper, IMailHelper mailHelper)
             : base(mapper)
         {
-            _mailHelper = mailHelper; 
+            _mailHelper = mailHelper;
             _usuarioService = usuarioService;
             _appSettings = appSettings.Value;
         }
+        #endregion
 
         [Authorize(Roles = "Administrador")]
         [HttpGet("Usuarios")]
@@ -49,16 +54,7 @@ namespace lestoma.Api.Controllers
             {
                 return Unauthorized(Respuesta);
             }
-            TokenResponse usuario = new()
-            {
-                Rol = ((EUsuario)Respuesta.Data).Rol.NombreRol,
-                Token = GetToken((EUsuario)Respuesta.Data),
-                User = new UserApp
-                {
-                    Nombre = ((EUsuario)Respuesta.Data).Nombre,
-                    Apellido = ((EUsuario)Respuesta.Data).Apellido
-                }
-            };
+            TokenResponse usuario = GetToken((EUsuario)Respuesta.Data);
             Respuesta.Data = usuario;
             return Ok(Respuesta);
         }
@@ -96,7 +92,7 @@ namespace lestoma.Api.Controllers
         }
         #endregion
 
-        #region reestablecer su contraseña
+        #region restablecer la contraseña
         [HttpPost("recoverpassword")]
         public async Task<IActionResult> ForgotPassword(RecoverPasswordRequest recover)
         {
@@ -108,7 +104,22 @@ namespace lestoma.Api.Controllers
             return Created(string.Empty, Respuesta);
         }
         #endregion
-        private string GetToken(EUsuario user)
+
+        #region cambiar la contraseña
+        [HttpPost("changepassword")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordRequest change)
+        {
+            Respuesta = await _usuarioService.ChangePassword(change);
+            if (!Respuesta.IsExito)
+            {
+                return Conflict(Respuesta);
+            }
+            return Created(string.Empty, Respuesta);
+        }
+        #endregion
+
+        #region Generar token JWT
+        private TokenResponse GetToken(EUsuario user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var llave = Encoding.ASCII.GetBytes(_appSettings.Secreto);
@@ -129,8 +140,16 @@ namespace lestoma.Api.Controllers
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(llave), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+
+            TokenResponse userWithToken = new()
+            {
+                Token = tokenHandler.WriteToken(token),
+                Expiration = token.ValidTo,
+                User = Mapear<EUsuario, UserResponse>(user)
+            };
+            return userWithToken;
         }
+        #endregion
     }
 }
 
