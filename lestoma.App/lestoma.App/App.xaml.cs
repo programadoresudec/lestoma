@@ -48,9 +48,10 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<RegistroPage, RegistroPageViewModel>();
             containerRegistry.RegisterForNavigation<AboutPage, AboutPageViewModel>();
             containerRegistry.RegisterForNavigation<ForgotPasswordPage, ForgotPasswordViewModel>();
-            containerRegistry.RegisterForNavigation<AdminMasterDetailPage, AdminMasterDetailPageViewModel>();
+            containerRegistry.RegisterForNavigation<AdminMasterDetailPage, AdminMasterViewModel>();
             containerRegistry.RegisterForNavigation<SettingsPage, SettingsPageViewModel>();
             containerRegistry.RegisterForNavigation<ResetPasswordPage, ResetPasswordViewModel>();
+            containerRegistry.RegisterForNavigation<ChangePasswordPage, ChangePasswordViewModel>();
         }
     }
 }

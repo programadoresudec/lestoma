@@ -61,7 +61,7 @@ namespace lestoma.Logica.LogicaService
             var user = await _usuarioRepository.GetByIdAsync(cambiar.IdUser);
             if (user == null || !user.Clave.Equals(cambiar.OldPassword))
             {
-                _respuesta.Mensaje = "No se pudo actualizar la contraseña";
+                _respuesta.Mensaje = "Verifique la contraseña actual.";
             }
             else
             {

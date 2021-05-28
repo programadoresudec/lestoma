@@ -13,12 +13,12 @@ using System.Linq;
 
 namespace lestoma.App.ViewModels
 {
-    public class AdminMasterDetailPageViewModel : ViewModelBase
+    public class AdminMasterViewModel : BaseViewModel
     {
         private readonly INavigationService _navigationService;
-        private static AdminMasterDetailPageViewModel _instance;
+        private static AdminMasterViewModel _instance;
         private UserResponse _userApp;
-        public AdminMasterDetailPageViewModel(INavigationService navigationService) : base(navigationService)
+        public AdminMasterViewModel(INavigationService navigationService) : base(navigationService)
         {
             _instance = this;
             _navigationService = navigationService;
@@ -26,7 +26,7 @@ namespace lestoma.App.ViewModels
             LoadUser();
         }
         public ObservableCollection<MenuItemViewModel> Menus { get; set; }
-        public static AdminMasterDetailPageViewModel GetInstance()
+        public static AdminMasterViewModel GetInstance()
         {
             return _instance;
         }

@@ -24,7 +24,6 @@ namespace lestoma.App.ViewModels
         private readonly IApiService _apiService;
         private bool _isRunning;
         private bool _isEnabled;
-        SfPopupLayout popupLayout;
         #endregion
 
         #region Constructor
@@ -40,7 +39,6 @@ namespace lestoma.App.ViewModels
             _isEnabled = true;
             this.SignUpCommand = new Command(this.SignUpClicked, CanExecuteClickCommand);
             this.SendCommand = new Command(this.SendClicked, CanExecuteClickCommand);
-            popupLayout = new SfPopupLayout();
         }
 
         #endregion

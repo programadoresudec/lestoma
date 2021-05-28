@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace lestoma.App.ViewModels
 {
-    public class AboutPageViewModel : ViewModelBase
+    public class AboutPageViewModel : BaseViewModel
     {
        
         public AboutPageViewModel(INavigationService navigationService)

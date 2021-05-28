@@ -10,7 +10,7 @@ namespace lestoma.App.ViewModels
     /// ViewModel for login page.
     /// </summary>
     [Preserve(AllMembers = true)]
-    public class LoginViewModel : ViewModelBase
+    public class LoginViewModel : BaseViewModel
     {
         #region Fields
 

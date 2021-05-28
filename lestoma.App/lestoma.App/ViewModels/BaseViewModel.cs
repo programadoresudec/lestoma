@@ -14,7 +14,7 @@ namespace lestoma.App.ViewModels
 {
     [Preserve(AllMembers = true)]
     [DataContract]
-    public class ViewModelBase : BindableBase, IInitialize, INavigationAware, IDestructible, INotifyPropertyChanged
+    public class BaseViewModel : BindableBase, IInitialize, INavigationAware, IDestructible, INotifyPropertyChanged
     {
 
         #region Fields
@@ -43,7 +43,7 @@ namespace lestoma.App.ViewModels
 
         #region Constructor
 
-        public ViewModelBase(INavigationService navigationService)
+        public BaseViewModel(INavigationService navigationService)
         {
             NavigationService = navigationService;
         }

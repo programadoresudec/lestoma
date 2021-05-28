@@ -7,7 +7,7 @@ using Xamarin.Forms.Internals;
 namespace lestoma.App.ViewModels
 {
     [Preserve(AllMembers = true)]
-    public class SettingsPageViewModel : ViewModelBase
+    public class SettingsPageViewModel : BaseViewModel
     {
         private readonly INavigationService _navigationService;
         #region Constructor
@@ -29,117 +29,76 @@ namespace lestoma.App.ViewModels
 
         #region Commands
 
-        /// <summary>
-        /// Gets or sets the command is executed when the edit profile option is clicked.
-        /// </summary>
+       
         public Command EditProfileCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the command is executed when the change password option is clicked.
-        /// </summary>
+    
         public Command ChangePasswordCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the command is executed when the account link option is clicked.
-        /// </summary>
         public Command LinkAccountCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the command is executed when the help option is clicked.
-        /// </summary>
+        
         public Command HelpCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the command is executed when the terms of service option is clicked.
-        /// </summary>
+   
         public Command TermsCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the command is executed when the privacy policy option is clicked.
-        /// </summary>
+   
         public Command PolicyCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the command is executed when the FAQ option is clicked.
-        /// </summary>
+ 
         public Command FAQCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the command is executed when the logout is clicked.
-        /// </summary>
+  
         public Command LogoutCommand { get; set; }
 
         #endregion
 
         #region Methods
 
-        /// <summary>
-        /// Invoked when the edit profile option clicked
-        /// </summary>
-        /// <param name="obj">The object</param>
+
         private void EditProfileClicked(object obj)
         {
             // Do something
         }
 
-        /// <summary>
-        /// Invoked when the change password clicked
-        /// </summary>
-        /// <param name="obj">The object</param>
-        private void ChangePasswordClicked(object obj)
+
+        private async void ChangePasswordClicked(object obj)
         {
-            // Do something
+            await _navigationService.NavigateAsync($"{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(ChangePasswordPage)}");
         }
 
-        /// <summary>
-        /// Invoked when the account link clicked
-        /// </summary>
-        /// <param name="obj">The object</param>
+
         private void LinkAccountClicked(object obj)
         {
             // Do something
         }
 
-        /// <summary>
-        /// Invoked when the terms of service clicked
-        /// </summary>
-        /// <param name="obj">The object</param>
+
         private void TermsServiceClicked(object obj)
         {
             // Do something
         }
 
-        /// <summary>
-        /// Invoked when the privacy and policy clicked
-        /// </summary>
-        /// <param name="obj">The object</param>
+
         private void PrivacyPolicyClicked(object obj)
         {
             // Do something
         }
 
-        /// <summary>
-        /// Invoked when the FAQ clicked
-        /// </summary>
-        /// <param name="obj">The object</param>
+
         private void FAQClicked(object obj)
         {
             // Do something
         }
 
-        /// <summary>
-        /// Invoked when the help option is clicked
-        /// </summary>
-        /// <param name="obj">The object</param>
+
         private void HelpClicked(object obj)
         {
             // Do something
         }
 
-        /// <summary>
-        /// Invoked when the logout button is clicked
-        /// </summary>
-        /// <param name="obj">The object</param>
+
         private async void LogoutClicked(object obj)
         {
             MovilSettings.Token = null;

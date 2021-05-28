@@ -1,11 +1,16 @@
 ﻿using lestoma.App.Validators;
 using lestoma.App.Validators.Rules;
 using lestoma.App.Views;
+using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using lestoma.CommonUtils.Responses;
+using Newtonsoft.Json;
 using Plugin.Toast;
 using Prism.Navigation;
+using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -13,59 +18,43 @@ using Xamarin.Forms.Internals;
 
 namespace lestoma.App.ViewModels
 {
-    /// <summary>
-    /// ViewModel for reset password page.
-    /// </summary>
-    [Preserve(AllMembers = true)]
-    public class ResetPasswordViewModel : BaseViewModel
+    public class ChangePasswordViewModel : BaseViewModel
     {
         #region Fields
-
-        private ValidatablePair<string> password;
-        private ValidatableObject<string> verificationCode;
         private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
-
         private bool _isRunning;
         private bool _isEnabled;
+        private UserResponse _userApp;
+        private ValidatablePair<string> password;
+        private ValidatableObject<string> currentPassword;
         #endregion
 
         #region Constructor
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ResetPasswordViewModel" /> class.
-        /// </summary>
-        public ResetPasswordViewModel(INavigationService navigationService, IApiService apiService)
+        public ChangePasswordViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
+            Title = "Iniciar Sesión";
             _navigationService = navigationService;
             _apiService = apiService;
+            _isEnabled = true;
             this.InitializeProperties();
             this.AddValidationRules();
-            _isEnabled = true;
+            LoadUser();
             this.SubmitCommand = new Command(this.SubmitClicked, CanExecuteClickCommand);
-            this.SignInCommand = new Command(this.SignInClicked, CanExecuteClickCommand);
         }
         #endregion
 
         #region Command
 
-        /// <summary>
-        /// Gets or sets the command that is executed when the Submit button is clicked.
-        /// </summary>
+
         public Command SubmitCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the command that is executed when the Sign Up button is clicked.
-        /// </summary>
-        public Command SignInCommand { get; set; }
         #endregion
 
         #region Public property
 
-        /// <summary>
-        /// Gets or sets the property that bounds with an entry that gets the new password from user in the reset password page.
-        /// </summary>
         public ValidatablePair<string> Password
         {
             get
@@ -84,35 +73,49 @@ namespace lestoma.App.ViewModels
             }
         }
 
-        public ValidatableObject<string> VerificationCode
+        public ValidatableObject<string> CurrentPassword
         {
             get
             {
-                return this.verificationCode;
+                return this.currentPassword;
             }
 
             set
             {
-                if (this.verificationCode == value)
+                if (this.currentPassword == value)
                 {
                     return;
                 }
 
-                this.SetProperty(ref this.verificationCode, value);
+                this.SetProperty(ref this.currentPassword, value);
             }
         }
+
         public bool IsEnabled
         {
             get { return _isEnabled; }
             set
             {
                 _isEnabled = value;
-                SignInCommand.ChangeCanExecute();
                 SubmitCommand.ChangeCanExecute();
 
             }
         }
 
+        public UserResponse UserApp
+        {
+            get => _userApp;
+            set => SetProperty(ref _userApp, value);
+        }
+
+        public void LoadUser()
+        {
+            if (MovilSettings.IsLogin)
+            {
+                TokenResponse token = JsonConvert.DeserializeObject<TokenResponse>(MovilSettings.Token);
+                UserApp = token.User;
+            }
+        }
         public bool IsRunning
         {
             get => _isRunning;
@@ -120,49 +123,37 @@ namespace lestoma.App.ViewModels
         }
         #endregion
 
-        #region Methods
+        #region validaciones
 
-        /// <summary>
-        /// Initialize whether fieldsvalue are true or false.
-        /// </summary>
-        /// <returns>true or false </returns>
         public bool AreFieldsValid()
         {
             bool isPassword = this.Password.Validate();
-            bool isVerificationCodeValid = this.VerificationCode.Validate();
-            return isPassword && isVerificationCodeValid;
+            bool isCurrentPasswordValid = this.CurrentPassword.Validate();
+            return isPassword && isCurrentPasswordValid;
         }
-
         bool CanExecuteClickCommand(object arg)
         {
             return _isEnabled;
         }
-        /// <summary>
-        /// Initializing the properties.
-        /// </summary>
+
         private void InitializeProperties()
         {
-            this.VerificationCode = new ValidatableObject<string>();
             this.Password = new ValidatablePair<string>();
+            this.CurrentPassword = new ValidatableObject<string>();
         }
 
-        /// <summary>
-        /// Validation rule for password
-        /// </summary>
         private void AddValidationRules()
         {
             this.Password.Item1.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Contraseña requerida." });
             this.Password.Item1.Validations.Add(new IsLenghtValidRule<string> { ValidationMessage = "Debe tener entre 8 y 30 caracteres.", MaximumLenght = 30, MinimumLenght = 8 });
             this.Password.Item2.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "confirmar contraseña requerida." });
             this.Password.Validations.Add(new MatchPairValidationRule<string> { ValidationMessage = "Las contraseñas no coinciden." });
-            this.VerificationCode.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Codigo requerido." });
-            this.VerificationCode.Validations.Add(new IsLenghtValidRule<string> { ValidationMessage = "Debe tener 6 caracteres.", MaximumLenght = 6, MinimumLenght = 6 });
+            this.CurrentPassword.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "contraseña actual requerida." });
         }
+        #endregion
 
-        /// <summary>
-        /// Invoked when the Submit button is clicked.
-        /// </summary>
-        /// <param name="obj">The Object</param>
+        #region methods
+
         private async void SubmitClicked(object obj)
         {
             if (this.AreFieldsValid())
@@ -176,13 +167,15 @@ namespace lestoma.App.ViewModels
                     CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
                     return;
                 }
+
                 string url = App.Current.Resources["UrlAPI"].ToString();
-                RecoverPasswordRequest recover = new RecoverPasswordRequest()
+                ChangePasswordRequest cambio = new ChangePasswordRequest
                 {
-                    Codigo = this.VerificationCode.Value,
-                    Password = this.Password.Item1.Value
+                   IdUser = UserApp.Id,
+                   OldPassword = this.CurrentPassword.Value,
+                   NewPassword = this.Password.Item1.Value
                 };
-                Response respuesta = await _apiService.PostAsync(url, "Account/recoverpassword", recover);
+                Response respuesta = await _apiService.PostAsync(url, "Account/changepassword", cambio);
                 IsRunning = false;
                 IsEnabled = true;
                 if (!respuesta.IsExito)
@@ -191,20 +184,10 @@ namespace lestoma.App.ViewModels
                     return;
                 }
                 CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
-                await Task.Delay(1000);
-                await _navigationService.NavigateAsync(nameof(LoginPage));
+                await Task.Delay(2000);
+                await _navigationService.GoBackAsync();
             }
         }
-
-        /// <summary>
-        /// Invoked when the Sign Up button is clicked.
-        /// </summary>
-        /// <param name="obj">The Object</param>
-        private async void SignInClicked(object obj)
-        {
-            await _navigationService.NavigateAsync(nameof(LoginPage));
-        }
-
         #endregion
     }
 }

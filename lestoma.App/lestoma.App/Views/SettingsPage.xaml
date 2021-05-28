@@ -45,7 +45,7 @@
                         FontFamily="Montserrat-Medium"
                         HorizontalOptions="Start"
                         Style="{StaticResource TitleLabelStyle}"
-                        Text="Edit Profile"
+                        Text="Editar Perfil"
                         VerticalOptions="Center" />
                 <!--  Navigation icon  -->
                 <Label
@@ -78,7 +78,7 @@
                         FontFamily="Montserrat-Medium"
                         HorizontalOptions="Start"
                         Style="{StaticResource TitleLabelStyle}"
-                        Text="Change Password"
+                        Text="Cambiar contraseña"
                         VerticalOptions="Center" />
                 <!--  Navigation icon  -->
                 <Label
