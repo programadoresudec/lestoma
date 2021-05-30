@@ -11,9 +11,8 @@ namespace lestoma.CommonUtils.Requests
     {
         public int UsuarioId { get; set; }
         public DetalleBuzon Detalle { get; set; } = new DetalleBuzon();
-        [PesoArchivoValidacion(PesoMaximoEnMegaBytes: 4)]
-        [TipoArchivoValidacion(GrupoTipoArchivo.Imagen)]
-        public IFormFile Imagen { get; set; }
+        public byte[] Imagen { get; set; }
+        public string Extension { get; set; }
     }
 
     public class DetalleBuzon

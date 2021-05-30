@@ -29,13 +29,16 @@ namespace lestoma.Api
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson();
 
 
             services.AddDbContext<Mapeo>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("PostgresConnection"));
             });
+
+
 
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -102,7 +105,7 @@ namespace lestoma.Api
 
             // Inyección de dependencias a partir de una inversión de control.
             IoC.AddDependency(services);
-
+            services.AddHttpContextAccessor();
             var mapperConfig = new MapperConfiguration(m =>
             {
                 m.AddProfile(new AutoMappersProfiles());

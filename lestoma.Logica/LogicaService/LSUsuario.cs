@@ -19,8 +19,8 @@ namespace lestoma.Logica.LogicaService
         private IGenericRepository<EUsuario> _usuarioRepository;
         public LSUsuario(IGenericRepository<EUsuario> usuarioRepository, Mapeo db)
         {
-            this._db = db;
-            this._usuarioRepository = usuarioRepository;
+            _db = db;
+            _usuarioRepository = usuarioRepository;
         }
 
         public async Task<Response> Login(LoginRequest login)
@@ -117,6 +117,7 @@ namespace lestoma.Logica.LogicaService
             {
                 user.CodigoRecuperacion = null;
                 user.Clave = recover.Password;
+                user.FechaVencimientoCodigo = null;
                 await _usuarioRepository.Update(user);
                 _respuesta.IsExito = true;
                 _respuesta.Mensaje = "la contraseña ha sido restablecida.";

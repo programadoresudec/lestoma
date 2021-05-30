@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace lestoma.CommonUtils.Entities
 {
-    [Table("reportes", Schema = "buzon")]
+    [Table("buzon", Schema = "reportes")]
     public class EBuzon
     {
 
@@ -13,7 +13,7 @@ namespace lestoma.CommonUtils.Entities
         public int Id { get; set; }
         [Column("fecha_creacion")]
         public DateTime FechaCreacion { get; set; }
-        [Column("descripcion")]
+        [Column("descripcion", TypeName = "json")]
         public string Descripcion { get; set; }
         [Column("usuario_id")]
         public int UsuarioId { get; set; }

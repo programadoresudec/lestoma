@@ -35,15 +35,13 @@ namespace lestoma.Api.Helpers
 
         }
 
-        public async Task<string> EditarArchivo(byte[] contenido, string extension, string contenedor, string ruta,
-            string contentType)
+        public async Task<string> EditarArchivo(byte[] contenido, string extension, string contenedor, string ruta)
         {
             await BorrarArchivo(ruta, contenedor);
-            return await GuardarArchivo(contenido, extension, contenedor, contentType);
+            return await GuardarArchivo(contenido, extension, contenedor);
         }
 
-        public async Task<string> GuardarArchivo(byte[] contenido, string extension, string contenedor,
-            string contentType)
+        public async Task<string> GuardarArchivo(byte[] contenido, string extension, string contenedor)
         {
             var nombreArchivo = $"{Guid.NewGuid()}{extension}";
             string folder = Path.Combine(env.WebRootPath, contenedor);

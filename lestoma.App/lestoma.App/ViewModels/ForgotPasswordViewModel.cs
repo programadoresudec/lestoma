@@ -27,10 +27,6 @@ namespace lestoma.App.ViewModels
         #endregion
 
         #region Constructor
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ForgotPasswordViewModel" /> class.
-        /// </summary>
         public ForgotPasswordViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
@@ -45,14 +41,9 @@ namespace lestoma.App.ViewModels
 
         #region Command
 
-        /// <summary>
-        /// Gets or sets the command that is executed when the Send button is clicked.
-        /// </summary>
+   
         public Command SendCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the command that is executed when the Sign Up button is clicked.
-        /// </summary>
         public Command SignUpCommand { get; set; }
 
         #endregion
