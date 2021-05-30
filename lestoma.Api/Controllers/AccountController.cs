@@ -29,7 +29,7 @@ namespace lestoma.Api.Controllers
 
         #region Constructor
         public AccountController(IUsuarioService usuarioService,
-            IOptions<AppSettings> appSettings, IMapper mapper, IMailHelper mailHelper)
+            IOptions<AppSettings> appSettings, IMailHelper mailHelper, IMapper mapper)
             : base(mapper)
         {
             _mailHelper = mailHelper;
@@ -106,10 +106,24 @@ namespace lestoma.Api.Controllers
         #endregion
 
         #region cambiar la contraseña
+        [Authorize]
         [HttpPost("changepassword")]
         public async Task<IActionResult> ChangePassword(ChangePasswordRequest change)
         {
             Respuesta = await _usuarioService.ChangePassword(change);
+            if (!Respuesta.IsExito)
+            {
+                return Conflict(Respuesta);
+            }
+            return Created(string.Empty, Respuesta);
+        }
+        #endregion
+
+        #region cambiar el perfil
+        [HttpPost("changeprofile")]
+        public async Task<IActionResult> ChangeProfile(ChangeProfileRequest change)
+        {
+            Respuesta = await _usuarioService.ChangeProfile(change);
             if (!Respuesta.IsExito)
             {
                 return Conflict(Respuesta);
@@ -136,7 +150,7 @@ namespace lestoma.Api.Controllers
                 ),
                 Audience = _appSettings.Audience,
                 Issuer = _appSettings.Issuer,
-                Expires = DateTime.UtcNow.AddMinutes(15),
+                Expires = DateTime.UtcNow.AddDays(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(llave), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

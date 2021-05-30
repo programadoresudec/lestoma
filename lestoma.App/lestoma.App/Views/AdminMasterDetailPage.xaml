@@ -1,47 +1,74 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                  xmlns:prism="http://prismlibrary.com"
+                  xmlns:prism="http://prismlibrary.com" xmlns:gradient="clr-namespace:Syncfusion.XForms.Graphics;assembly=Syncfusion.Core.XForms" 
                   prism:ViewModelLocator.AutowireViewModel="True"
                   x:Class="lestoma.App.Views.AdminMasterDetailPage">
 
     <MasterDetailPage.Master>
         <ContentPage Title="Menu">
-            <StackLayout Padding="20">
-                <!-- TODO: // Update the Layout and add some real menu items  -->
-                <Label FontAttributes="Bold"
-                       FontSize="Large"
-                       Text="{Binding UserApp.FullName}"/>
-                <ListView BackgroundColor="Transparent"
+            <ContentPage.Content>
+                <StackLayout Spacing="0">
+                    <FlexLayout
+                        Direction="Column"
+                        AlignItems="Center">
+                        <Grid>
+                            <gradient:SfGradientView Style="{StaticResource VioletGradientStyle}" />
+                            <ScrollView HorizontalOptions="Center">
+                                <StackLayout Spacing="0">
+                                    <Label Text="Lestoma" Grid.Row="0" HorizontalOptions="Center" 
+                                       Padding="5,20,5,5" FontAttributes="Italic,Bold" 
+                                       TextColor="#c8fff8" FontSize="Title">
+                                    </Label>
+                                    <Label FontAttributes="Bold, Italic"
+                                       FontSize="Large" Grid.Row="1" TextColor="#c8fff8"
+                                       FontFamily="Lobster-Regular" Padding="10" 
+                                       Text="{Binding UserApp.FullName}"/>
+                                </StackLayout>
+                            </ScrollView>
+                        </Grid>
+                    </FlexLayout>
+
+                    <StackLayout Spacing="5">
+                        <Grid>
+                            <gradient:SfGradientView Style="{StaticResource VioletGradientStyle}" Opacity="0.9" />
+                            <StackLayout Padding="20">
+                                <ListView BackgroundColor="Transparent"
                 	      ItemsSource="{Binding Menus}"
                 	      HasUnevenRows="True"
                 	      SeparatorVisibility="None">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <Grid>
-                                    <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding SelectMenuCommand}"/>
-                                    </Grid.GestureRecognizers>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
-                                    </Grid.ColumnDefinitions>
-                                    <Image Grid.Column="0"
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <Grid>
+                                            <Grid.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding SelectMenuCommand}"/>
+                                            </Grid.GestureRecognizers>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+                                            <Image Grid.Column="0"
                                     	   HeightRequest="32"
                                            Margin="5"
                                     	   Source="{Binding Icon}"
                                     	   WidthRequest="32"/>
-                                    <Label Grid.Column="1"
+                                            <Label Grid.Column="1"
                                            FontAttributes="Bold"
                                    	       VerticalOptions="Center"
+                                           FontSize="18"
+                                           TextColor="White"
                                            Text="{Binding Title}"/>
-                                </Grid>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackLayout>
+                                        </Grid>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                            </StackLayout>
+                        </Grid>
+                    </StackLayout>
+                </StackLayout>
+            </ContentPage.Content>
         </ContentPage>
     </MasterDetailPage.Master>
     

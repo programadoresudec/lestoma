@@ -82,11 +82,6 @@ namespace lestoma.App.ViewModels
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Invoked when the Send button is clicked.
-        /// </summary>
-        /// <param name="obj">The Object</param>
         private async void SendClicked(object obj)
         {
             if (this.IsEmailFieldValid())
@@ -120,10 +115,6 @@ namespace lestoma.App.ViewModels
             }
         }
 
-        /// <summary>
-        /// Invoked when the Sign Up button is clicked.
-        /// </summary>
-        /// <param name="obj">The Object</param>
         private async void SignUpClicked(object obj)
         {
             await _navigationService.NavigateAsync(nameof(RegistroPage));

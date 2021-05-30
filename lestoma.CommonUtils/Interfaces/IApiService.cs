@@ -5,7 +5,8 @@ namespace lestoma.CommonUtils.Interfaces
 {
     public interface IApiService
     {
-        Task<Response> GetListAsync<T>(string urlBase, string controller);
+        Task<Response> GetListAsyncWithToken<T>(string urlBase, string controller, string token, bool isLogin);
         Task<Response> PostAsync<T>(string urlBase, string controller, T model);
+        Task<Response> PostAsyncWithToken<T>(string urlBase, string controller, T model, string token, bool isLogin);
     }
 }

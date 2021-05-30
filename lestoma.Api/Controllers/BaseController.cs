@@ -10,7 +10,6 @@ namespace lestoma.Api.Controllers
     {
         public readonly IMapper _mapper;
         public Response Respuesta { get; set; }
-
         public BaseController(IMapper mapper)
         {
             this._mapper = mapper;

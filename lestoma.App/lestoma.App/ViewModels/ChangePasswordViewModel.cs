@@ -8,13 +8,9 @@ using lestoma.CommonUtils.Responses;
 using Newtonsoft.Json;
 using Plugin.Toast;
 using Prism.Navigation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using Xamarin.Forms.Internals;
 
 namespace lestoma.App.ViewModels
 {
@@ -25,7 +21,7 @@ namespace lestoma.App.ViewModels
         private readonly IApiService _apiService;
         private bool _isRunning;
         private bool _isEnabled;
-        private UserResponse _userApp;
+        private TokenResponse _userApp;
         private ValidatablePair<string> password;
         private ValidatableObject<string> currentPassword;
         #endregion
@@ -102,7 +98,7 @@ namespace lestoma.App.ViewModels
             }
         }
 
-        public UserResponse UserApp
+        public TokenResponse UserApp
         {
             get => _userApp;
             set => SetProperty(ref _userApp, value);
@@ -112,8 +108,7 @@ namespace lestoma.App.ViewModels
         {
             if (MovilSettings.IsLogin)
             {
-                TokenResponse token = JsonConvert.DeserializeObject<TokenResponse>(MovilSettings.Token);
-                UserApp = token.User;
+                this.UserApp = JsonConvert.DeserializeObject<TokenResponse>(MovilSettings.Token);
             }
         }
         public bool IsRunning
@@ -171,11 +166,11 @@ namespace lestoma.App.ViewModels
                 string url = App.Current.Resources["UrlAPI"].ToString();
                 ChangePasswordRequest cambio = new ChangePasswordRequest
                 {
-                   IdUser = UserApp.Id,
-                   OldPassword = this.CurrentPassword.Value,
-                   NewPassword = this.Password.Item1.Value
+                    IdUser = UserApp.User.Id,
+                    OldPassword = this.CurrentPassword.Value,
+                    NewPassword = this.Password.Item1.Value
                 };
-                Response respuesta = await _apiService.PostAsync(url, "Account/changepassword", cambio);
+                Response respuesta = await _apiService.PostAsyncWithToken(url, "Account/changepassword", cambio, UserApp.Token, MovilSettings.IsLogin);
                 IsRunning = false;
                 IsEnabled = true;
                 if (!respuesta.IsExito)
@@ -185,7 +180,7 @@ namespace lestoma.App.ViewModels
                 }
                 CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
                 await Task.Delay(2000);
-                await _navigationService.GoBackAsync();
+                await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(SettingsPage)}");
             }
         }
         #endregion

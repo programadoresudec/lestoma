@@ -187,15 +187,7 @@ namespace lestoma.App.ViewModels
                 this.password.Value = string.Empty;
                 CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
                 await Task.Delay(1000);
-                if (token.User.RolId == (int)TipoRol.Administrador)
-                {
-                   await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
-                }
-                else if (token.User.RolId == (int)TipoRol.Auxiliar)
-                {
-                
-                   
-                }
+                await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
             }
         }
 

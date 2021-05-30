@@ -1,12 +1,10 @@
 ﻿using lestoma.App.ItemViewModels;
 using lestoma.App.Views;
+using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Responses;
 using Newtonsoft.Json;
-using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Navigation;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -22,8 +20,8 @@ namespace lestoma.App.ViewModels
         {
             _instance = this;
             _navigationService = navigationService;
-            LoadMenus();
             LoadUser();
+            LoadMenus();
         }
         public ObservableCollection<MenuItemViewModel> Menus { get; set; }
         public static AdminMasterViewModel GetInstance()
@@ -53,7 +51,20 @@ namespace lestoma.App.ViewModels
                 {
                     Icon = "icon_about",
                     PageName = $"{nameof(AboutPage)}",
-                    Title = "acerca"
+                    Title = "acerca de lestoma"
+                },
+
+                  new Menu
+                {
+                    Icon = "icon_acuaponic",
+                    PageName = UserApp.RolId == (int)TipoRol.Administrador ? $"{nameof(AboutPage)}" : $"{nameof(AboutPage)}",
+                    Title = "Laboratorio lestoma"
+                },
+                new Menu
+                {
+                    Icon = UserApp.RolId == (int)TipoRol.Administrador ? "icon_buzon" : "icon_crear_reporte",
+                    PageName = UserApp.RolId == (int)TipoRol.Administrador ? $"{nameof(BuzonDeReportesPage)}" : $"{nameof(CrearReporteDelBuzonPage)}",
+                    Title = UserApp.RolId == (int)TipoRol.Administrador ? "Buzon De Reportes" : "Crear Reporte"
                 },
                 new Menu
                 {
@@ -61,6 +72,7 @@ namespace lestoma.App.ViewModels
                     PageName = $"{nameof(SettingsPage)}",
                     Title ="Configuración"
                 },
+
                  new Menu
                 {
                     Icon = "icon_signOut",

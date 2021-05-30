@@ -1,5 +1,4 @@
-﻿using lestoma.CommonUtils.Interfaces;
-using lestoma.CommonUtils.Responses;
+﻿using lestoma.CommonUtils.Responses;
 using Newtonsoft.Json.Linq;
 using Prism.Mvvm;
 using Prism.Navigation;
@@ -134,7 +133,7 @@ namespace lestoma.App.ViewModels
             JObject Jobject = JObject.FromObject(respuesta);
             JToken jToken = Jobject.GetValue("Data");
             return jToken.ToObject<T>();
-        } 
+        }
         #endregion
     }
 }

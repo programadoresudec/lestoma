@@ -123,5 +123,10 @@ namespace lestoma.Logica.LogicaService
             }
             return _respuesta;
         }
+
+        public Task<Response> ChangeProfile(ChangeProfileRequest change)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

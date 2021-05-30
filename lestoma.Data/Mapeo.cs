@@ -16,5 +16,6 @@ namespace lestoma.Data
         public DbSet<EUsuario> TablaUsuarios { get; set; }
         public DbSet<EEstadoUsuario> TablaEstadosUsuarios { get; set; }
         public DbSet<ERol> TablaRoles { get; set; }
+        public DbSet<EBuzon> TablaBuzonReportes { get; set; }
     }
 }
