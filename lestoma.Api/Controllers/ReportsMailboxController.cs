@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
 using lestoma.Api.Helpers;
+using lestoma.CommonUtils.Entities;
 using lestoma.CommonUtils.Requests;
+using lestoma.CommonUtils.Responses;
 using lestoma.Logica.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace lestoma.Api.Controllers
@@ -28,14 +27,22 @@ namespace lestoma.Api.Controllers
         }
 
         [Authorize]
-        [HttpGet("numeros")]
-        public async Task<IEnumerable> Lista()
+        [HttpGet("listado")]
+        public async Task<IActionResult> Lista()
         {
-          List<int> enteros = new()
-          {
-             5,3,6,7
-          };
-            return enteros;
+            var lista = await _buzonService.Listado();
+            var listadobuzonDTO = Mapear<List<EBuzon>, List<BuzonResponse>>(lista);
+            return Ok(listadobuzonDTO);
+        }
+
+
+        [Authorize]
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetBuzonById(int id)
+        {
+            var buzon = await _buzonService.GetBuzonById(id);
+            var buzonDTO = Mapear<EBuzon, BuzonResponse>(buzon);
+            return Ok(buzonDTO);
         }
 
         [HttpPost("create")]

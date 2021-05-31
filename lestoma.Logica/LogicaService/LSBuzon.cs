@@ -2,8 +2,10 @@
 using lestoma.CommonUtils.Requests;
 using lestoma.CommonUtils.Responses;
 using lestoma.Data;
+using lestoma.Data.DAO;
 using lestoma.Logica.Interfaces;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,6 +40,16 @@ namespace lestoma.Logica.LogicaService
             _respuesta.IsExito = true;
             _respuesta.Mensaje = "Enviado con exito.";
             return _respuesta;
+        }
+
+        public Task<EBuzon> GetBuzonById(int id)
+        {
+            return _buzonRepository.GetByIdAsync(id);
+        }
+
+        public async Task<List<EBuzon>> Listado()
+        {
+            return await new DAOBuzonReportes().ListarBuzonConUsuario(_db);
         }
     }
 }

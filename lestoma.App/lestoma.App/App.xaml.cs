@@ -35,7 +35,7 @@ namespace lestoma.App
             }
             else
             {
-                await NavigationService.NavigateAsync($"{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(CrearReporteDelBuzonPage)}");
+                await NavigationService.NavigateAsync($"{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
             }
         }
 

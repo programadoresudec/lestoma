@@ -1,4 +1,5 @@
-﻿using System;
+﻿using lestoma.CommonUtils.Responses;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,5 +18,7 @@ namespace lestoma.CommonUtils.Entities
         public string Descripcion { get; set; }
         [Column("usuario_id")]
         public int UsuarioId { get; set; }
+        [NotMapped]
+        public UserResponse User { get; set; } = new UserResponse();
     }
 }

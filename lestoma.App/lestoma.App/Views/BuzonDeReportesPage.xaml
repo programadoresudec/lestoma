@@ -1,8 +1,96 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="http://prismlibrary.com"
+             xmlns:prism="http://prismlibrary.com" 
+             xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms" xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="lestoma.App.Views.BuzonDeReportesPage">
-  
+             x:Class="lestoma.App.Views.BuzonDeReportesPage"
+               Title="{Binding Title}">
+    <AbsoluteLayout>
+        <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All" 
+                     Padding="5">
+            <CollectionView ItemsSource="{Binding ReportesDelBuzonView}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectBuzonCommand}"/>
+                            </Grid.GestureRecognizers>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ffimageloading:CachedImage Grid.Column="0"
+                                                        Aspect="AspectFill"
+                                                        Source="{Binding ImageFullPath}" 
+                                                        CacheDuration= "50"
+                                                        Margin="5"
+                                                        RetryCount= "3"
+                                                        RetryDelay= "600"
+                                                        WidthRequest="100"/>
+                            <StackLayout Grid.Column="1"
+                                         VerticalOptions="Center">
+
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="2*" />
+                                        <RowDefinition />
+                                        <RowDefinition Height="100" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Text="Nombre de usuario:" 
+                                       FontAttributes="Bold" Grid.Column="0"
+                                       FontSize="Medium"
+                                       LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding User.FullName}" 
+                                       Grid.Column="1"
+                                       FontSize="Medium"
+                                       LineBreakMode="TailTruncation" />
+
+                                    <Label Text="Titulo:" Grid.Row="1"
+                                       FontAttributes="Bold" Grid.Column="0"
+                                       FontSize="Medium"
+                                       LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding Detalle.Titulo}" 
+                                       FontAttributes="Bold" Grid.Row="1"
+                                       FontSize="Medium" Grid.Column="1"
+                                       LineBreakMode="TailTruncation" />
+                                    <Label Text="Tipo de gravedad:" Grid.Row="2"
+                                       FontAttributes="Bold" Grid.Column="0"
+                                       FontSize="Medium" 
+                                       LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding Detalle.TipoDeGravedad}" 
+                                       FontAttributes="Bold" Grid.Row="2"
+                                       Grid.Column="1"
+                                       FontSize="Medium"
+                                       LineBreakMode="TailTruncation" />
+                                </Grid>
+                            </StackLayout>
+                            <Image Grid.Column="2" 
+                                   Source="icon_more_information" WidthRequest="32" HeightRequest="32"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+        <busyindicator:SfBusyIndicator AnimationType="Gear" 
+                                       AbsoluteLayout.LayoutBounds=".5,.5,.5,.5"
+                	                   AbsoluteLayout.LayoutFlags="All"
+                	                   BackgroundColor="LightCyan"
+                	                   HorizontalOptions="Center"
+                	                   TextColor="Black"
+                	                   IsBusy="{Binding IsRunning}"
+                	                   Title="Cargando..."
+                	                   VerticalOptions="Center"
+                	                   ViewBoxWidth="80"
+                	                   ViewBoxHeight="80" />
+    </AbsoluteLayout>
 </ContentPage>

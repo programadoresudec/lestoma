@@ -47,6 +47,8 @@ namespace lestoma.Logica.LogicaService
             }
             else
             {
+                usuario.Apellido = usuario.Apellido.Trim();
+                usuario.Nombre = usuario.Nombre.Trim();
                 usuario.RolId = (int)TipoRol.Auxiliar;
                 usuario.EstadoId = (int)TipoEstadoUsuario.CheckCuenta;
                 await _usuarioRepository.Create(usuario);
