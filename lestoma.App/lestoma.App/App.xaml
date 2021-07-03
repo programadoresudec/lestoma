@@ -9,7 +9,7 @@
         <ResourceDictionary>
             <Color x:Key="BackgroundIndicator">#FFFFFF</Color>
             <Color x:Key="TextIndicator">#000000</Color>
-            <x:String x:Key="UrlAPI">http://192.168.0.15:45455/api/</x:String>
+            <x:String x:Key="UrlAPI">http://192.168.0.13:45455/api/</x:String>
             <x:String x:Key="UrlNoImage">https://i.postimg.cc/LXmjN3X1/default-Imagen.png</x:String>
             <ResourceDictionary.MergedDictionaries>
                 <themes:LightTheme />
