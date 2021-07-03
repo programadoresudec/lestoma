@@ -103,7 +103,7 @@ namespace lestoma.App.ViewModels
         {
             MovilSettings.Token = null;
             MovilSettings.IsLogin = false;
-            await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(LoginPage)}");
+            await _navigationService.NavigateAsync($"/NavigationPage/{nameof(LoginPage)}");
 
         }
 

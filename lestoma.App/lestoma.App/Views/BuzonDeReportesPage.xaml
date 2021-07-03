@@ -27,7 +27,7 @@
                             </Grid.ColumnDefinitions>
                             <ffimageloading:CachedImage Grid.Column="0"
                                                         Aspect="AspectFill"
-                                                        Source="{Binding ImageFullPath}" 
+                                                        Source="{Binding Detalle.PathImagen}" 
                                                         CacheDuration= "50"
                                                         Margin="5"
                                                         RetryCount= "3"

@@ -56,7 +56,6 @@ namespace lestoma.App.ViewModels
 
         #endregion
 
-
         #region Command
 
 
@@ -152,7 +151,7 @@ namespace lestoma.App.ViewModels
             }
             CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
             await Task.Delay(2000);
-            await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
+            await _navigationService.NavigateAsync($"{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
         }
 
 
