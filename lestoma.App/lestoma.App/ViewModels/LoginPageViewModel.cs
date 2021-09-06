@@ -1,10 +1,11 @@
 ﻿using lestoma.App.Validators;
 using lestoma.App.Validators.Rules;
 using lestoma.App.Views;
+using lestoma.CommonUtils.DTOs;
+using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using lestoma.CommonUtils.Responses;
 using Newtonsoft.Json;
 using Plugin.Toast;
 using Prism.Navigation;
@@ -168,8 +169,10 @@ namespace lestoma.App.ViewModels
                 string url = App.Current.Resources["UrlAPI"].ToString();
                 LoginRequest login = new LoginRequest
                 {
-                    Email = this.Email.Value,
-                    Clave = this.password.Value
+                    Email = Email.Value,
+                    Clave = password.Value,
+                    TipoAplicacion = (int)TipoAplicacion.AppMovil
+
                 };
                 Response respuesta = await _apiService.PostAsync(url, "Account/login", login);
                 IsRunning = false;
@@ -179,11 +182,9 @@ namespace lestoma.App.ViewModels
                     CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
                     return;
                 }
-                TokenResponse token = ParsearData<TokenResponse>(respuesta);
+                TokenDTO token = ParsearData<TokenDTO>(respuesta);
                 MovilSettings.Token = JsonConvert.SerializeObject(token);
                 MovilSettings.IsLogin = true;
-                this.Password.CleanOnChange = false;
-                this.password.Value = string.Empty;
                 CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
                 await Task.Delay(1000);
                 await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");

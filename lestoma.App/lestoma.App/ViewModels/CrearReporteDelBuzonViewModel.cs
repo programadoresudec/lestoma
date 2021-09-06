@@ -1,21 +1,16 @@
 ﻿using lestoma.App.Views;
+using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using lestoma.CommonUtils.Responses;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Plugin.Toast;
-using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Navigation;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -129,13 +124,13 @@ namespace lestoma.App.ViewModels
             {
                 imageArray = _filesHelper.ReadFully(_file.GetStream());
             }
-            TokenResponse UserApp = JsonConvert.DeserializeObject<TokenResponse>(MovilSettings.Token);
+            TokenDTO UserApp = JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token);
             BuzonCreacionRequest buzon = new BuzonCreacionRequest
             {
                 Extension = _file != null ? Path.GetExtension(_file.Path) : string.Empty,
                 UsuarioId = UserApp.User.Id,
                 Imagen = imageArray,
-                Detalle = this.DetalleBuzon
+                Detalle = DetalleBuzon
             };
 
             string url = App.Current.Resources["UrlAPI"].ToString();

@@ -1,16 +1,16 @@
 ﻿using lestoma.App.Validators;
 using lestoma.App.Validators.Rules;
 using lestoma.App.Views;
+using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using lestoma.CommonUtils.Responses;
 using Plugin.Toast;
 using Prism.Navigation;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
-    
+
 namespace lestoma.App.ViewModels
 {
     /// <summary>
@@ -101,7 +101,7 @@ namespace lestoma.App.ViewModels
         {
             get
             {
-               
+
                 return this.password;
             }
 
@@ -219,10 +219,10 @@ namespace lestoma.App.ViewModels
                 string url = App.Current.Resources["UrlAPI"].ToString();
                 UsuarioRequest usuario = new UsuarioRequest
                 {
-                    Email = this.Email.Value,
-                    Clave = this.Password.Item1.Value,
-                    Apellido = this.LastName.Value,
-                    Nombre = this.Name.Value
+                    Email = Email.Value,
+                    Clave = Password.Item1.Value,
+                    Apellido = LastName.Value,
+                    Nombre = Name.Value
                 };
                 Response respuesta = await _apiService.PostAsync(url, "Account/registro", usuario);
                 IsRunning = false;

@@ -1,8 +1,8 @@
 ﻿using lestoma.App.ItemViewModels;
 using lestoma.App.Views;
+using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
-using lestoma.CommonUtils.Responses;
 using Newtonsoft.Json;
 using Prism.Navigation;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ namespace lestoma.App.ViewModels
     {
         private readonly INavigationService _navigationService;
         private static AdminMasterViewModel _instance;
-        private UserResponse _userApp;
+        private UserDTO _userApp;
         public AdminMasterViewModel(INavigationService navigationService) : base(navigationService)
         {
             _instance = this;
@@ -29,7 +29,7 @@ namespace lestoma.App.ViewModels
             return _instance;
         }
 
-        public UserResponse UserApp
+        public UserDTO UserApp
         {
             get => _userApp;
             set => SetProperty(ref _userApp, value);
@@ -39,7 +39,7 @@ namespace lestoma.App.ViewModels
         {
             if (MovilSettings.IsLogin)
             {
-                TokenResponse token = JsonConvert.DeserializeObject<TokenResponse>(MovilSettings.Token);
+                TokenDTO token = JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token);
                 UserApp = token.User;
             }
         }
@@ -63,8 +63,10 @@ namespace lestoma.App.ViewModels
                 new Menu
                 {
                     Icon = UserApp.RolId == (int)TipoRol.Administrador ? "icon_buzon" : "icon_crear_reporte",
-                    PageName = UserApp.RolId == (int)TipoRol.Administrador ? $"{nameof(BuzonDeReportesPage)}" : $"{nameof(CrearReporteDelBuzonPage)}",
-                    Title = UserApp.RolId == (int)TipoRol.Administrador ? "Buzon De Reportes" : "Crear Reporte"
+                    PageName = UserApp.RolId == (int)TipoRol.Administrador || UserApp.RolId == (int)TipoRol.SuperAdministrador 
+                    ? $"{nameof(BuzonDeReportesPage)}" : $"{nameof(CrearReporteDelBuzonPage)}",
+                    Title = UserApp.RolId == (int)TipoRol.Administrador || UserApp.RolId == (int)TipoRol.SuperAdministrador  ? "Buzon De Reportes" 
+                    : "Crear Reporte"
                 },
                 new Menu
                 {

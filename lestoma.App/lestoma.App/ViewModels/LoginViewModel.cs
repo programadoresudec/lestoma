@@ -57,31 +57,24 @@ namespace lestoma.App.ViewModels
 
         #region Methods
 
-        /// <summary>
-        /// This method to validate the email
-        /// </summary>
-        /// <returns>returns bool value</returns>
+     
         public bool IsEmailFieldValid()
         {
             bool isEmailValid = this.Email.Validate();
             return isEmailValid;
         }
 
-        /// <summary>
-        /// Initializing the properties.
-        /// </summary>
+     
         private void InitializeProperties()
         {
-            this.Email = new ValidatableObject<string>();
+           Email = new ValidatableObject<string>();
         }
 
-        /// <summary>
-        /// This method contains the validation rules
-        /// </summary>
+ 
         private void AddValidationRules()
         {
-            this.Email.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "El Email es requerido." });
-            this.Email.Validations.Add(new IsValidEmailRule<string> { ValidationMessage = "Email Invalido." });
+            Email.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "El Email es requerido." });
+            Email.Validations.Add(new IsValidEmailRule<string> { ValidationMessage = "Email Invalido." });
         }
 
         #endregion

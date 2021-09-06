@@ -2,9 +2,6 @@
 using lestoma.CommonUtils.Helpers;
 using Prism.Commands;
 using Prism.Navigation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace lestoma.App.ItemViewModels
 {

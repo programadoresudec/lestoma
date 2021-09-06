@@ -1,10 +1,10 @@
 ﻿using lestoma.App.Validators;
 using lestoma.App.Validators.Rules;
 using lestoma.App.Views;
+using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using lestoma.CommonUtils.Responses;
 using Newtonsoft.Json;
 using Plugin.Toast;
 using Prism.Navigation;
@@ -21,7 +21,7 @@ namespace lestoma.App.ViewModels
         private readonly IApiService _apiService;
         private bool _isRunning;
         private bool _isEnabled;
-        private TokenResponse _userApp;
+        private TokenDTO _userApp;
         private ValidatablePair<string> password;
         private ValidatableObject<string> currentPassword;
         #endregion
@@ -98,7 +98,7 @@ namespace lestoma.App.ViewModels
             }
         }
 
-        public TokenResponse UserApp
+        public TokenDTO UserApp
         {
             get => _userApp;
             set => SetProperty(ref _userApp, value);
@@ -108,7 +108,7 @@ namespace lestoma.App.ViewModels
         {
             if (MovilSettings.IsLogin)
             {
-                this.UserApp = JsonConvert.DeserializeObject<TokenResponse>(MovilSettings.Token);
+                this.UserApp = JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token);
             }
         }
         public bool IsRunning

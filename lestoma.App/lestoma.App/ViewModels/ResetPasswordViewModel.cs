@@ -1,9 +1,9 @@
 ﻿using lestoma.App.Validators;
 using lestoma.App.Validators.Rules;
 using lestoma.App.Views;
+using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using lestoma.CommonUtils.Responses;
 using Plugin.Toast;
 using Prism.Navigation;
 using System.Threading.Tasks;
@@ -179,10 +179,10 @@ namespace lestoma.App.ViewModels
                 string url = App.Current.Resources["UrlAPI"].ToString();
                 RecoverPasswordRequest recover = new RecoverPasswordRequest()
                 {
-                    Codigo = this.VerificationCode.Value,
-                    Password = this.Password.Item1.Value
+                    Codigo = VerificationCode.Value,
+                    Password = Password.Item1.Value
                 };
-                Response respuesta = await _apiService.PostAsync(url, "Account/recoverpassword", recover);
+                Response respuesta = await _apiService.PutAsync(url, "Account/recoverpassword", recover);
                 IsRunning = false;
                 IsEnabled = true;
                 if (!respuesta.IsExito)

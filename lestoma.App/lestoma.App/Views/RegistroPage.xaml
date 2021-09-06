@@ -11,7 +11,8 @@
     xmlns:core="clr-namespace:Syncfusion.XForms.Core;assembly=Syncfusion.Core.XForms"
     xmlns:gradient="clr-namespace:Syncfusion.XForms.Graphics;assembly=Syncfusion.Core.XForms"
     xmlns:local="clr-namespace:lestoma.App.Views"
-    xmlns:viewModel="clr-namespace:lestoma.App.ViewModels" xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms"
+    xmlns:viewModel="clr-namespace:lestoma.App.ViewModels"
+    xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms"
     Title="{Binding Title}"
     BackgroundImageSource="{core:OnPlatformOrientationStringValue Default=LoginBackground.png,
                                                                   iOSPhoneLandscape=LoginBackground-Landscape.png,

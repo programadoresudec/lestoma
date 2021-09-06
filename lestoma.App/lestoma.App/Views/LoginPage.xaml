@@ -11,7 +11,7 @@
     xmlns:core="clr-namespace:Syncfusion.XForms.Core;assembly=Syncfusion.Core.XForms"
     xmlns:gradient="clr-namespace:Syncfusion.XForms.Graphics;assembly=Syncfusion.Core.XForms"
     xmlns:local="clr-namespace:lestoma.App.Views"
-    xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms"
+    xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms" xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
     NavigationPage.HasNavigationBar="False"
      Title="{Binding Title}">
 
@@ -71,28 +71,25 @@
 
                             <StackLayout Grid.Row="3">
                                 <!--  Entry to get password from user  -->
+
                                 <border:SfBorder
                                 BackgroundColor="{DynamicResource Gray-White}"
                                 BorderColor="{Binding Source={x:Reference PasswordEntry}, Path=IsFocused, Converter={StaticResource ColorConverter}, ConverterParameter=3}"
-                                CornerRadius="4"
+                                CornerRadius="4" HeightRequest="60"
                                 Style="{StaticResource LoginFormBorderlessEntryBorderStyle}">
-                                    <Grid ColumnDefinitions="*, Auto">
 
-                                        <control:BorderlessEntry
-                                        x:Name="PasswordEntry"
-                                        Margin="15,0"
-                                        HeightRequest="40"
-                                        IsPassword="True"
-                                        Placeholder="Contraseña"
-                                        PlaceholderColor="#606a7b"
-                                        Style="{StaticResource BorderlessEntryStyle}"
-                                        Text="{Binding Password.Value}"
-                                        TextColor="#333942">
-                                            <Entry.Behaviors>
-                                                <behaviour:EntryLineValidationBehaviour IsValid="{Binding Password.IsValid}" />
-                                            </Entry.Behaviors>
-                                        </control:BorderlessEntry>
-
+                                    <Grid ColumnDefinitions="*, Auto"> 
+                                        <inputLayout:SfTextInputLayout Hint="Contraseña"  FocusedColor="Black"  ContainerBackgroundColor="Transparent"
+                                                   EnablePasswordVisibilityToggle="true"   Margin="10,0,0,0">
+                                            <Entry x:Name="PasswordEntry" Text="{Binding Password.Value}"
+                                                     PlaceholderColor="#606a7b"
+                                                 
+                                                     Style="{StaticResource BorderlessEntryStyle}" IsPassword="True" MaxLength="60" TextColor="#333942">
+                                                <Entry.Behaviors>
+                                                    <behaviour:EntryLineValidationBehaviour IsValid="{Binding Password.IsValid}"/>
+                                                </Entry.Behaviors>
+                                            </Entry>
+                                        </inputLayout:SfTextInputLayout>
                                         <!--  Label to display error icon  -->
                                         <Label
                                         Grid.Column="1"
@@ -101,7 +98,6 @@
                                         Text="{StaticResource Error}" />
                                     </Grid>
                                 </border:SfBorder>
-
                                 <!--  Label to display error message  -->
                                 <Label
                                 x:Name="PasswordValidationLabel"

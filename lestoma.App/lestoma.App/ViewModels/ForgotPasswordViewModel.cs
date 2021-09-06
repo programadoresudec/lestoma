@@ -1,10 +1,9 @@
 ﻿using lestoma.App.Views;
+using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using lestoma.CommonUtils.Responses;
 using Plugin.Toast;
 using Prism.Navigation;
-using Syncfusion.XForms.PopupLayout;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -41,7 +40,7 @@ namespace lestoma.App.ViewModels
 
         #region Command
 
-   
+
         public Command SendCommand { get; set; }
 
         public Command SignUpCommand { get; set; }
@@ -90,9 +89,9 @@ namespace lestoma.App.ViewModels
                 string url = App.Current.Resources["UrlAPI"].ToString();
                 ForgotPasswordRequest email = new ForgotPasswordRequest
                 {
-                    Email = this.Email.Value,
+                    Email = Email.Value,
                 };
-                Response respuesta = await _apiService.PostAsync(url, "Account/forgotpassword", email);
+                Response respuesta = await _apiService.PutAsync(url, "Account/forgotpassword", email);
                 IsRunning = false;
                 IsEnabled = true;
                 if (!respuesta.IsExito)

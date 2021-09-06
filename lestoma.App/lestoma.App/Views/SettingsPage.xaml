@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
-             xmlns:controls="clr-namespace:lestoma.App.Controls"
+    
              xmlns:effectView="clr-namespace:Syncfusion.XForms.EffectsView;assembly=Syncfusion.Core.XForms"
-             xmlns:viewModel="clr-namespace:lestoma.App.ViewModels"
+             xmlns:viewModel="clr-namespace:lestoma.App.ViewModels" 
+             xmlns:controls="clr-namespace:lestoma.App.Controls"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="lestoma.App.Views.SettingsPage"
               BackgroundColor="{DynamicResource Gray-100}">

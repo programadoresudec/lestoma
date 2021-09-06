@@ -1,4 +1,4 @@
-﻿using lestoma.CommonUtils.Responses;
+﻿using lestoma.CommonUtils.DTOs;
 using Newtonsoft.Json.Linq;
 using Prism.Mvvm;
 using Prism.Navigation;

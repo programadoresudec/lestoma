@@ -6,7 +6,7 @@
     xmlns:behaviour="clr-namespace:lestoma.App.Behaviors"
     xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms"
     xmlns:control="clr-namespace:lestoma.App.Controls"
-    xmlns:converter="clr-namespace:lestoma.App.Converters">
+    xmlns:converter="clr-namespace:lestoma.App.Converters" xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms">
 
     <ContentView.Resources>
         <ResourceDictionary>
@@ -21,27 +21,21 @@
             <border:SfBorder
                 BackgroundColor="{DynamicResource Gray-White}"
                 BorderColor="{Binding Path=IsFocused, Source={x:Reference EmailEntry}, Converter={x:StaticResource ColorConverter}, ConverterParameter=3}"
-                CornerRadius="4"
+                CornerRadius="4" HeightRequest="60"
                 Style="{StaticResource LoginFormBorderlessEntryBorderStyle}">
 
                 <Grid ColumnDefinitions="*, Auto">
-
-                    <control:BorderlessEntry
-                        x:Name="EmailEntry"
-                        Margin="15,0"
-                        HeightRequest="40"
-                        Keyboard="Email"
-                        Placeholder="Email"
-                        PlaceholderColor="#606a7b"
-                        Style="{StaticResource BorderlessEntryStyle}"
-                        Text="{Binding Email.Value}"
-                        TextColor="#333942">
-                        <Entry.Behaviors>
-                            <behaviour:EntryLineValidationBehaviour IsValid="{Binding Email.IsValid}" />
-                        </Entry.Behaviors>
-                    </control:BorderlessEntry>
+                    <inputLayout:SfTextInputLayout Hint="Email"  FocusedColor="Black" ContainerBackgroundColor="Transparent"
+                                                   Margin="10,0,0,0">
+                        <Entry x:Name="EmailEntry" Text="{Binding Password.Value}"
+                                                     PlaceholderColor="#606a7b" Keyboard="Email"
+                                                     Style="{StaticResource BorderlessEntryStyle}" IsPassword="True" MaxLength="60" TextColor="#333942">
+                            <Entry.Behaviors>
+                                <behaviour:EntryLineValidationBehaviour IsValid="{Binding Email.IsValid}"/>
+                            </Entry.Behaviors>
+                        </Entry>
+                    </inputLayout:SfTextInputLayout>
                     <!--  Login entry label  -->
-
                     <Label
                         Grid.Column="1"
                         IsVisible="{Binding Path=IsVisible, Source={x:Reference ValidationLabel}}"

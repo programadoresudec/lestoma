@@ -1,7 +1,7 @@
 ﻿using lestoma.App.ItemViewModels;
+using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
-using lestoma.CommonUtils.Responses;
 using Newtonsoft.Json;
 using Plugin.Toast;
 using Prism.Navigation;
@@ -18,7 +18,7 @@ namespace lestoma.App.ViewModels
         private readonly IApiService _apiService;
         private bool _isRunning;
         private ObservableCollection<BuzonItemViewModel> _reportesDelBuzonView;
-        private List<BuzonResponse> _reportesDelBuzon;
+        private List<BuzonDTO> _reportesDelBuzon;
 
         public BuzonDeReportesViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
@@ -50,8 +50,8 @@ namespace lestoma.App.ViewModels
 
             IsRunning = true;
             string url = App.Current.Resources["UrlAPI"].ToString();
-            TokenResponse UserApp = JsonConvert.DeserializeObject<TokenResponse>(MovilSettings.Token);
-            Response response = await _apiService.GetListAsyncWithToken<List<BuzonResponse>>(url, "ReportsMailbox/listado",
+            TokenDTO UserApp = JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token);
+            Response response = await _apiService.GetListAsyncWithToken<List<BuzonDTO>>(url, "ReportsMailbox/listado",
                 UserApp.Token, MovilSettings.IsLogin);
 
             IsRunning = false;
@@ -62,7 +62,7 @@ namespace lestoma.App.ViewModels
                 return;
             }
 
-            _reportesDelBuzon = (List<BuzonResponse>)response.Data;
+            _reportesDelBuzon = (List<BuzonDTO>)response.Data;
             MostrarReportes();
         }
 
