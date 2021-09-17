@@ -6,6 +6,7 @@ using Plugin.CurrentActivity;
 using Plugin.Permissions;
 using Prism;
 using Prism.Ioc;
+using Prism.Plugin.Popups;
 using System;
 
 namespace lestoma.App.Droid
@@ -21,9 +22,8 @@ namespace lestoma.App.Droid
             base.OnCreate(savedInstanceState);
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            Syncfusion.XForms.Android.PopupLayout.SfPopupLayoutRenderer.Init();
+            global::Rg.Plugins.Popup.Popup.Init(this);
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init(true);
-
             #if DEBUG
             GetAppHash();
             #endif
@@ -59,8 +59,11 @@ namespace lestoma.App.Droid
             PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+        public override void OnBackPressed()
+        {
+            PopupPlugin.OnBackPressed();
+        }
     }
-
     public class AndroidInitializer : IPlatformInitializer
     {
         public void RegisterTypes(IContainerRegistry containerRegistry)

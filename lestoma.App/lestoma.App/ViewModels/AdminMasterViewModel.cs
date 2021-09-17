@@ -1,5 +1,7 @@
 ﻿using lestoma.App.ItemViewModels;
 using lestoma.App.Views;
+using lestoma.App.Views.Account;
+using lestoma.App.Views.Buzon;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
@@ -63,9 +65,9 @@ namespace lestoma.App.ViewModels
                 new Menu
                 {
                     Icon = UserApp.RolId == (int)TipoRol.Administrador ? "icon_buzon" : "icon_crear_reporte",
-                    PageName = UserApp.RolId == (int)TipoRol.Administrador || UserApp.RolId == (int)TipoRol.SuperAdministrador 
+                    PageName = UserApp.RolId == (int)TipoRol.Administrador || UserApp.RolId == (int)TipoRol.SuperAdministrador
                     ? $"{nameof(BuzonDeReportesPage)}" : $"{nameof(CrearReporteDelBuzonPage)}",
-                    Title = UserApp.RolId == (int)TipoRol.Administrador || UserApp.RolId == (int)TipoRol.SuperAdministrador  ? "Buzon De Reportes" 
+                    Title = UserApp.RolId == (int)TipoRol.Administrador || UserApp.RolId == (int)TipoRol.SuperAdministrador  ? "Buzon De Reportes"
                     : "Crear Reporte"
                 },
                 new Menu
@@ -78,7 +80,7 @@ namespace lestoma.App.ViewModels
                  new Menu
                 {
                     Icon = "icon_signOut",
-                    PageName = $"{nameof(LoginPage)}",
+                    PageName = $"{nameof(SignOutPopupPage)}",
                     Title ="Cerrar Sesión"
                 }
 
