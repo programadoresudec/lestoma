@@ -1,10 +1,15 @@
 using lestoma.App.ViewModels;
+using lestoma.App.ViewModels.Account;
+using lestoma.App.ViewModels.Buzon;
 using lestoma.App.Views;
+using lestoma.App.Views.Account;
+using lestoma.App.Views.Buzon;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Services;
 using Prism;
 using Prism.Ioc;
+using Prism.Plugin.Popups;
 using Xamarin.Essentials.Implementation;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms;
@@ -45,6 +50,8 @@ namespace lestoma.App
             containerRegistry.Register<IApiService, ApiService>();
             containerRegistry.Register<IFilesHelper, FilesHelper>();
             containerRegistry.RegisterForNavigation<NavigationPage>();
+            containerRegistry.RegisterPopupNavigationService();
+            containerRegistry.RegisterPopupDialogService();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
             containerRegistry.RegisterForNavigation<MandarTramar,MandarTramaViewModel>();
             containerRegistry.RegisterForNavigation<RegistroPage, RegistroPageViewModel>();
@@ -56,6 +63,7 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<ChangePasswordPage, ChangePasswordViewModel>();
             containerRegistry.RegisterForNavigation<BuzonDeReportesPage, BuzonDeReportesViewModel>();
             containerRegistry.RegisterForNavigation<CrearReporteDelBuzonPage, CrearReporteDelBuzonViewModel>();
+            containerRegistry.RegisterForNavigation<SignOutPopupPage, SignOutPopupPageViewModel>();
         }
     }
 }

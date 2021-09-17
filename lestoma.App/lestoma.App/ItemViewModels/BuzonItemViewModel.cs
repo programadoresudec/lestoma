@@ -1,13 +1,10 @@
-﻿using lestoma.CommonUtils.Responses;
+﻿using lestoma.CommonUtils.DTOs;
 using Prism.Commands;
 using Prism.Navigation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace lestoma.App.ItemViewModels
 {
-    public class BuzonItemViewModel: BuzonResponse
+    public class BuzonItemViewModel : BuzonDTO
     {
         private readonly INavigationService _navigationService;
 
