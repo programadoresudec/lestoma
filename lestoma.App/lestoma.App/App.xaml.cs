@@ -31,7 +31,7 @@ namespace lestoma.App
 
             if (!MovilSettings.IsLogin)
             {
-                await NavigationService.NavigateAsync($"NavigationPage/{nameof(LoginPage)}");
+                await NavigationService.NavigateAsync($"NavigationPage/{nameof(MandarTramar)}");
             }
             else
             {
@@ -46,6 +46,7 @@ namespace lestoma.App
             containerRegistry.Register<IFilesHelper, FilesHelper>();
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
+            containerRegistry.RegisterForNavigation<MandarTramar,MandarTramaViewModel>();
             containerRegistry.RegisterForNavigation<RegistroPage, RegistroPageViewModel>();
             containerRegistry.RegisterForNavigation<AboutPage, AboutPageViewModel>();
             containerRegistry.RegisterForNavigation<ForgotPasswordPage, ForgotPasswordViewModel>();
