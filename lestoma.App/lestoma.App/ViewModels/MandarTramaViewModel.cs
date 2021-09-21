@@ -2,10 +2,8 @@
 using Java.Util;
 using Prism.Navigation;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -65,7 +63,7 @@ namespace lestoma.App.ViewModels
             set => SetProperty(ref _trama, value);
         }
 
-        public void Connect()
+        public async void Connect()
         {
             //Iniciamos la conexion con el arduino
             BluetoothDevice device = mBluetoothAdapter.GetRemoteDevice(address);
@@ -79,7 +77,7 @@ namespace lestoma.App.ViewModels
                 btSocket = device.CreateRfcommSocketToServiceRecord(MY_UUID);
                 //Conectamos el socket
                 btSocket.Connect();
-                System.Console.WriteLine("Conexion Correcta");
+                await Application.Current.MainPage.DisplayAlert("bien", "conexion establecida", "OK");
             }
             catch (System.Exception e)
             {
@@ -89,11 +87,12 @@ namespace lestoma.App.ViewModels
                 {
                     btSocket.Close();
                 }
-                catch (System.Exception)
+                catch (System.Exception ex)
                 {
-                    System.Console.WriteLine("Imposible Conectar");
+                    await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+
                 }
-                System.Console.WriteLine("Socket Creado");
+                Debug.WriteLine("socket establecido");
             }
             //Una vez conectados al bluetooth mandamos llamar el metodo que generara el hilo
             //que recibira los datos del arduino
@@ -165,17 +164,20 @@ namespace lestoma.App.ViewModels
             if (!mBluetoothAdapter.Enable())
             {
                 await Application.Current.MainPage.DisplayAlert("Bluetooth", "Bluetooth desactivado", "OK");
+                return;
 
             }
             //verificamos que no sea nulo el sensor
             if (mBluetoothAdapter == null)
             {
                 await Application.Current.MainPage.DisplayAlert("Bluetooth", "Bluetooth No Existe o esta Ocupado", "OK");
+                return;
             }
         }
 
         private async void MandarRespuestaClicked()
         {
+        
             CheckBt();
             Connect();
             dataToSend = new Java.Lang.String(Trama);

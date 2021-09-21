@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup" 
+                 xmlns:prism="http://prismlibrary.com"
+                 xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms"
+                 CloseWhenBackgroundIsClicked="False"
+                 prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="lestoma.App.Views.LoadingPopupPage">
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="CenterAndExpand">
+            <busyindicator:SfBusyIndicator x:Name="BusyIndicator"
+                                        AnimationType="HorizontalPulsingBox" 
+                                       AbsoluteLayout.LayoutBounds=".5,.5,.5,.5"
+                	                   AbsoluteLayout.LayoutFlags="All"
+                	                   BackgroundColor="{StaticResource BackgroundIndicator}"
+                                       Opacity="0.9"
+                                       TextSize="14"
+                	                   HorizontalOptions="Center"
+                	                   TextColor="{StaticResource TextIndicator}"
+                	                   IsBusy="True"
+                	                   VerticalOptions="Center"
+                	                   ViewBoxWidth="80"
+                	                   ViewBoxHeight="80" />
+        </StackLayout>
+    </ContentPage.Content>
+</pages:PopupPage>

@@ -3,6 +3,7 @@ using lestoma.App.ViewModels.Account;
 using lestoma.App.ViewModels.Buzon;
 using lestoma.App.Views;
 using lestoma.App.Views.Account;
+using lestoma.App.Views.Actividades;
 using lestoma.App.Views.Buzon;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
@@ -10,6 +11,7 @@ using lestoma.CommonUtils.Services;
 using Prism;
 using Prism.Ioc;
 using Prism.Plugin.Popups;
+using System.IO;
 using Xamarin.Essentials.Implementation;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms;
@@ -23,6 +25,9 @@ namespace lestoma.App
 {
     public partial class App
     {
+        public string DbPathSqlLite { get; set; } = 
+            Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "lestoma.db");
+
         public App(IPlatformInitializer initializer)
             : base(initializer)
         {
@@ -31,12 +36,12 @@ namespace lestoma.App
         protected override async void OnInitialized()
         {
             Syncfusion.Licensing.SyncfusionLicenseProvider.
-               RegisterLicense("NDMxODc5QDMxMzkyZTMxMmUzMENoS0RZSTVCbThZYzBtd2tCQjFMb2xnbklkSkFwNXBlWXl3YlZpOE9mQmc9");
+               RegisterLicense("NTAyMTU0QDMxMzkyZTMyMmUzMGFpUGh6YlNOa3dqb1R5ZEZ3OS9YN3NEQ3dpd2dmSW1zditpUGl5MXZHb289");
             InitializeComponent();
 
             if (!MovilSettings.IsLogin)
             {
-                await NavigationService.NavigateAsync($"NavigationPage/{nameof(MandarTramar)}");
+                await NavigationService.NavigateAsync($"NavigationPage/{nameof(LoginPage)}");
             }
             else
             {
@@ -53,7 +58,7 @@ namespace lestoma.App
             containerRegistry.RegisterPopupNavigationService();
             containerRegistry.RegisterPopupDialogService();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
-            containerRegistry.RegisterForNavigation<MandarTramar,MandarTramaViewModel>();
+            containerRegistry.RegisterForNavigation<MandarTramar, MandarTramaViewModel>();
             containerRegistry.RegisterForNavigation<RegistroPage, RegistroPageViewModel>();
             containerRegistry.RegisterForNavigation<AboutPage, AboutPageViewModel>();
             containerRegistry.RegisterForNavigation<ForgotPasswordPage, ForgotPasswordViewModel>();
@@ -64,6 +69,9 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<BuzonDeReportesPage, BuzonDeReportesViewModel>();
             containerRegistry.RegisterForNavigation<CrearReporteDelBuzonPage, CrearReporteDelBuzonViewModel>();
             containerRegistry.RegisterForNavigation<SignOutPopupPage, SignOutPopupPageViewModel>();
+            containerRegistry.RegisterForNavigation<LoadingPopupPage>();
+            containerRegistry.RegisterForNavigation<ActividadPage, ActividadViewModel>();
+            containerRegistry.RegisterForNavigation<CrearOrEditActividadPage, CrearOrEditActividadViewModel>();
         }
     }
 }

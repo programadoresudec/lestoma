@@ -10,6 +10,7 @@ using lestoma.CommonUtils.Requests;
 using Newtonsoft.Json;
 using Plugin.Toast;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -161,7 +162,8 @@ namespace lestoma.App.ViewModels.Account
             {
                 if (AreFieldsValid())
                 {
-                    IsRunning = true;
+                    await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
+
                     IsEnabled = false;
                     if (Connectivity.NetworkAccess != NetworkAccess.Internet)
                     {
@@ -201,7 +203,10 @@ namespace lestoma.App.ViewModels.Account
             {
                 Debug.WriteLine(ex.Message);
             }
-
+            finally
+            {
+                await _navigationService.ClearPopupStackAsync();
+            }
         }
 
 
