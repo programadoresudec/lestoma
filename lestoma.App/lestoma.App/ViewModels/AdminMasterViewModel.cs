@@ -1,6 +1,7 @@
 ﻿using lestoma.App.ItemViewModels;
 using lestoma.App.Views;
 using lestoma.App.Views.Account;
+using lestoma.App.Views.Actividades;
 using lestoma.App.Views.Buzon;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
@@ -18,7 +19,7 @@ namespace lestoma.App.ViewModels
         private readonly INavigationService _navigationService;
         private static AdminMasterViewModel _instance;
         private UserDTO _userApp;
-        public AdminMasterViewModel(INavigationService navigationService) 
+        public AdminMasterViewModel(INavigationService navigationService)
             : base(navigationService)
         {
             _instance = this;
@@ -57,7 +58,7 @@ namespace lestoma.App.ViewModels
                     Title = "acerca de lestoma"
                 },
 
-                  new Menu
+                new Menu
                 {
                     Icon = "icon_acuaponic",
                     PageName = UserApp.RolId == (int)TipoRol.Administrador ? $"{nameof(AboutPage)}" : $"{nameof(AboutPage)}",
@@ -71,21 +72,45 @@ namespace lestoma.App.ViewModels
                     Title = UserApp.RolId == (int)TipoRol.Administrador || UserApp.RolId == (int)TipoRol.SuperAdministrador  ? "Buzon De Reportes"
                     : "Crear Reporte"
                 },
-                new Menu
-                {
-                    Icon = "icon_settings",
-                    PageName = $"{nameof(SettingsPage)}",
-                    Title ="Configuración"
-                },
-
-                 new Menu
-                {
-                    Icon = "icon_signOut",
-                    PageName = $"{nameof(SignOutPopupPage)}",
-                    Title ="Cerrar Sesión"
-                }
 
             };
+
+            if (UserApp.RolId == (int)TipoRol.SuperAdministrador)
+            {
+                List<Menu> menuSuperAdmin = new List<Menu>
+            {
+                new Menu
+                {
+                    Icon =  "icon_actividad",
+                    PageName = $"{nameof(ActividadPage)}",
+                    Title = "Actividades"
+                },
+                new Menu
+                {
+                    Icon = "icon_upa",
+                    PageName = $"{nameof(AboutPage)}",
+                    Title = "Upas"
+                }
+            };
+                menus.AddRange(menuSuperAdmin);
+            }
+
+
+            Menu settings = new Menu
+            {
+                Icon = "icon_settings",
+                PageName = $"{nameof(SettingsPage)}",
+                Title = "Configuración"
+            };
+            menus.Add(settings);
+            Menu signout = new Menu
+            {
+                Icon = "icon_signOut",
+                PageName = $"{nameof(SignOutPopupPage)}",
+                Title = "Cerrar Sesión"
+            };
+            menus.Add(signout);
+
 
             Menus = new ObservableCollection<MenuItemViewModel>(
                 menus.Select(m => new MenuItemViewModel(_navigationService)

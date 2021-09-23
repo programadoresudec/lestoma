@@ -52,7 +52,7 @@ namespace lestoma.App.ViewModels.Buzon
             string url = App.Current.Resources["UrlAPI"].ToString();
             TokenDTO UserApp = JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token);
             Response response = await _apiService.GetListAsyncWithToken<List<BuzonDTO>>(url, "ReportsMailbox/listado",
-                UserApp.Token, MovilSettings.IsLogin);
+                UserApp.Token);
 
             IsRunning = false;
 

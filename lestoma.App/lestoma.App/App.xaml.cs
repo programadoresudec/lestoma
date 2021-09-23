@@ -1,4 +1,4 @@
-using lestoma.App.ViewModels;
+using lestoma.App.ViewModels.Actividades;
 using lestoma.App.ViewModels.Account;
 using lestoma.App.ViewModels.Buzon;
 using lestoma.App.Views;
@@ -15,6 +15,7 @@ using System.IO;
 using Xamarin.Essentials.Implementation;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms;
+using lestoma.App.ViewModels;
 
 [assembly: ExportFont("Montserrat-Bold.ttf", Alias = "Montserrat-Bold")]
 [assembly: ExportFont("Montserrat-Medium.ttf", Alias = "Montserrat-Medium")]
@@ -25,7 +26,7 @@ namespace lestoma.App
 {
     public partial class App
     {
-        public string DbPathSqlLite { get; set; } = 
+        public static string DbPathSqlLite { get; set; } =
             Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "lestoma.db");
 
         public App(IPlatformInitializer initializer)
@@ -70,8 +71,8 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<CrearReporteDelBuzonPage, CrearReporteDelBuzonViewModel>();
             containerRegistry.RegisterForNavigation<SignOutPopupPage, SignOutPopupPageViewModel>();
             containerRegistry.RegisterForNavigation<LoadingPopupPage>();
-            containerRegistry.RegisterForNavigation<ActividadPage, ActividadViewModel>();
-            containerRegistry.RegisterForNavigation<CrearOrEditActividadPage, CrearOrEditActividadViewModel>();
+            containerRegistry.RegisterForNavigation<ActividadPage, ActividadPageViewModel>();
+            containerRegistry.RegisterForNavigation<CrearOrEditActividadPage, CrearOrEditActividadPageViewModel>();
         }
     }
 }

@@ -171,7 +171,7 @@ namespace lestoma.App.ViewModels.Account
                     OldPassword = this.CurrentPassword.Value,
                     NewPassword = this.Password.Item1.Value
                 };
-                Response respuesta = await _apiService.PostAsyncWithToken(url, "Account/changepassword", cambio, UserApp.Token, MovilSettings.IsLogin);
+                Response respuesta = await _apiService.PostAsyncWithToken(url, "Account/changepassword", cambio, UserApp.Token);
                 IsRunning = false;
                 IsEnabled = true;
                 if (!respuesta.IsExito)
