@@ -1,13 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:lestoma.App.ViewModels" x:DataType="viewmodels:MandarTramaViewModel"
              x:Class="lestoma.App.Views.MandarTramar">
     <ContentPage.Content>
         <StackLayout>
             <Entry x:Name="trama" Text="{Binding Trama}" Placeholder="envie la trama.">
 
             </Entry>
-            <Button Text="Enviar"  BackgroundColor="green" TextColor="White" Command="{Binding MandarRespuestaCommand}">
+            <Button Text="Conectar"  BackgroundColor="green" TextColor="White" Command="{Binding ConnectionBluetoothCommand}">
+
+            </Button>
+            <Button Text="Enviar trama" BackgroundColor="green" TextColor="White" Command="{Binding MandarRespuestaCommand}">
 
             </Button>
         </StackLayout>

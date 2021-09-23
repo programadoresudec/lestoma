@@ -1,9 +1,13 @@
 ﻿using Android.Bluetooth;
+using Java.IO;
 using Java.Util;
+using Plugin.Toast;
 using Prism.Navigation;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -11,6 +15,11 @@ namespace lestoma.App.ViewModels
 {
     public class MandarTramaViewModel : BaseViewModel
     {
+        private CancellationTokenSource _cancellationToken { get; set; }
+
+        public string MessageToSend { get; set; }
+
+
         private readonly INavigationService _navigationService;
         private string _trama;
         private Java.Lang.String dataToSend;
@@ -18,13 +27,22 @@ namespace lestoma.App.ViewModels
         private BluetoothSocket btSocket = null;
         private Stream outStream = null;
         private Stream inStream = null;
+        BluetoothServerSocket bthServerSocket = null;
         private static string address = "00:21:13:00:92:B8";
         private static UUID MY_UUID = UUID.FromString("00001101-0000-1000-8000-00805F9B34FB");
+        BluetoothAdapter adapter = BluetoothAdapter.DefaultAdapter;
         public MandarTramaViewModel(INavigationService navigationService) :
         base(navigationService)
         {
             _navigationService = navigationService;
+            _cancellationToken = new CancellationTokenSource();
+            ConnectionBluetoothCommand = new Command(ConectarBluetoothClicked);
             MandarRespuestaCommand = new Command(MandarRespuestaClicked);
+        }
+
+        private async void MandarRespuestaClicked(object obj)
+        {
+            await MandarTrama();
         }
 
         private async Task writeDataAsync(Java.Lang.String data)
@@ -77,12 +95,15 @@ namespace lestoma.App.ViewModels
                 btSocket = device.CreateRfcommSocketToServiceRecord(MY_UUID);
                 //Conectamos el socket
                 btSocket.Connect();
-                await Application.Current.MainPage.DisplayAlert("bien", "conexion establecida", "OK");
+                if (btSocket.IsConnected)
+                {
+                    await Application.Current.MainPage.DisplayAlert("bien", "conexion establecida", "OK");
+                }
             }
             catch (System.Exception e)
             {
                 //en caso de generarnos error cerramos el socket
-                Console.WriteLine(e.Message);
+                System.Console.WriteLine(e.Message);
                 try
                 {
                     btSocket.Close();
@@ -112,7 +133,7 @@ namespace lestoma.App.ViewModels
             }
             catch (System.IO.IOException ex)
             {
-                Console.WriteLine(ex.Message);
+                System.Console.WriteLine(ex.Message);
             }
             //Creamos un hilo que estara corriendo en background el cual verificara si hay algun dato
             //por parte del arduino
@@ -154,6 +175,7 @@ namespace lestoma.App.ViewModels
                 }
             });
         }
+
         //Metodo de verificacion del sensor Bluetooth
         private async void CheckBt()
         {
@@ -174,17 +196,87 @@ namespace lestoma.App.ViewModels
                 return;
             }
         }
-
-        private async void MandarRespuestaClicked()
+        private void writeData(Java.Lang.String data)
         {
-        
+            //Extraemos el stream de salida
+            try
+            {
+                outStream = btSocket.OutputStream;
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine("Error al enviar" + e.Message);
+            }
+
+            //creamos el string que enviaremos
+            Java.Lang.String message = data;
+
+            //lo convertimos en bytes
+            byte[] msgBuffer = message.GetBytes();
+
+            try
+            {
+                //Escribimos en el buffer el arreglo que acabamos de generar
+                outStream.Write(msgBuffer, 0, msgBuffer.Length);
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine("Error al enviar" + e.Message);
+            }
+        }
+        private void ConectarBluetoothClicked()
+        {
             CheckBt();
             Connect();
-            dataToSend = new Java.Lang.String(Trama);
-            beginListenForData();
-            await writeDataAsync(dataToSend);
         }
 
+
+        private async Task MandarTrama()
+        {
+            while (_cancellationToken.IsCancellationRequested == false)
+            {
+                try
+                {
+                    if (btSocket != null)
+                    {
+                        Debug.Write("Connected");
+                        if (btSocket.IsConnected)
+                        {
+                            var mReader = new InputStreamReader(btSocket.InputStream);
+                            var buffer = new BufferedReader(mReader);
+
+                            while (_cancellationToken.IsCancellationRequested == false)
+                            {
+                                if (!string.IsNullOrWhiteSpace(Trama))
+                                {
+                                    var chars = Trama.ToCharArray();
+                                    var bytes = new List<byte>();
+
+                                    foreach (var character in chars)
+                                    {
+                                        bytes.Add((byte)character);
+                                    }
+
+                                    await btSocket.OutputStream.WriteAsync(bytes.ToArray(), 0, bytes.Count);
+                                    CrossToastPopUp.Current.ShowToastSuccess($"trama: {Trama} enviada");
+
+                                    Trama = string.Empty;
+                                    _cancellationToken.Cancel();
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.Write(ex);
+                    Debug.Write(ex.Message);
+                }
+            }
+            _cancellationToken = new CancellationTokenSource();
+        }
         public Command MandarRespuestaCommand { get; set; }
+        public Command ConnectionBluetoothCommand { get; set; }
+
     }
 }

@@ -16,6 +16,8 @@ using Xamarin.Essentials.Implementation;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms;
 using lestoma.App.ViewModels;
+using lestoma.App.Views.Upas;
+using lestoma.App.ViewModels.Upas;
 
 [assembly: ExportFont("Montserrat-Bold.ttf", Alias = "Montserrat-Bold")]
 [assembly: ExportFont("Montserrat-Medium.ttf", Alias = "Montserrat-Medium")]
@@ -42,7 +44,7 @@ namespace lestoma.App
 
             if (!MovilSettings.IsLogin)
             {
-                await NavigationService.NavigateAsync($"NavigationPage/{nameof(LoginPage)}");
+                await NavigationService.NavigateAsync($"NavigationPage/{nameof(MandarTramar)}");
             }
             else
             {
@@ -73,6 +75,7 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<LoadingPopupPage>();
             containerRegistry.RegisterForNavigation<ActividadPage, ActividadPageViewModel>();
             containerRegistry.RegisterForNavigation<CrearOrEditActividadPage, CrearOrEditActividadPageViewModel>();
+            containerRegistry.RegisterForNavigation<UpaPage, UpaPageViewModel>();
         }
     }
 }

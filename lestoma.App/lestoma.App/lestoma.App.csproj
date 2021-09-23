@@ -147,13 +147,14 @@
     <EmbeddedResource Update="Views\LoadingPopupPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Views\Upas\UpaPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="ViewModels\UpasActividades\" />
-    <Folder Include="ViewModels\Upas\" />
     <Folder Include="Views\UpasActividades\" />
-    <Folder Include="Views\Upas\" />
   </ItemGroup>
 
   <ItemGroup>

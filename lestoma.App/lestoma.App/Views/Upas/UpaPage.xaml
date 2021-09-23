@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com" 
+             xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms" xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="lestoma.App.Views.Upas.UpaPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="icon_plus.png" Command="{Binding AddCommand}"/>
+    </ContentPage.ToolbarItems>
+    <StackLayout>
+       
+
+        <syncfusion:SfListView  x:Name="LV_Actividades" AllowSwiping="True" SwipeOffset="360" SwipeThreshold="30" 
+                                ItemsSource="{Binding Upas}" 
+                            TapCommand="{Binding EditCommand}" 
+                                    AutoFitMode="Height" SelectionBackgroundColor="Transparent" >
+            <syncfusion:SfListView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="5,10,5,10" CornerRadius="10" BackgroundColor="AliceBlue">
+                        <StackLayout Orientation="Horizontal">
+                            <StackLayout VerticalOptions="Center" HorizontalOptions="StartAndExpand">
+                                <Label Text="{Binding Nombre}" FontSize="Small"
+                                           TextColor="Black"/>
+                                <Label Text="{Binding CantidadActividades}" FontSize="Small"
+                                           TextColor="Black"/>  
+                            </StackLayout>
+                        </StackLayout>
+                    </Frame>
+                </DataTemplate>
+            </syncfusion:SfListView.ItemTemplate>
+            <syncfusion:SfListView.RightSwipeTemplate>
+                <DataTemplate x:Name="RightSwipeTemplate">
+                    <Grid BackgroundColor="Transparent" HorizontalOptions="Fill" VerticalOptions="Fill">
+                        <Grid VerticalOptions="Center" HorizontalOptions="Center">
+                            <button:SfButton x:Name="button" HeightRequest="35" WidthRequest="35" 
+                                         Grid.Row="0" Text="Button" BackgroundColor="Transparent"
+                                         Command="{Binding DeleteCommand}" ImageSource="icon_delete.png" ShowIcon="True">
+                            </button:SfButton>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </syncfusion:SfListView.RightSwipeTemplate>
+        </syncfusion:SfListView>
+    </StackLayout>
+</ContentPage>
