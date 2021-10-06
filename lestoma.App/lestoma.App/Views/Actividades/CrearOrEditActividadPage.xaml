@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com" xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" 
              xmlns:control="clr-namespace:lestoma.App.Controls" xmlns:behaviour="clr-namespace:lestoma.App.Behaviors" 
-             xmlns:converter="clr-namespace:lestoma.App.Converters" xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms" xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:converter="clr-namespace:lestoma.App.Converters" xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms" 
+             xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="lestoma.App.Views.Actividades.CrearOrEditActividadPage">
     <ContentPage.Resources>
@@ -14,6 +15,15 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <StackLayout VerticalOptions="CenterAndExpand" Margin="15" Padding="10" Spacing="8">
+        <!--  Label to display error message  -->
+        <Label 
+            x:Name="NombreValidationLabel"
+            Margin="15,-3,0,0"
+            IsVisible="{Binding Model.Nombre.IsValid, Converter={StaticResource InverseBoolConverter}}"
+            Style="{StaticResource SimpleLabelStyle}"
+            Text="{Binding Model.Nombre.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+            TextColor="{DynamicResource Red}"
+            VerticalOptions="FillAndExpand" />
         <border:SfBorder
             BackgroundColor="{DynamicResource Gray-White}"
             BorderColor="{Binding Source={x:Reference NombreEntry}, Path=IsFocused, Converter={StaticResource ColorConverter},
@@ -30,7 +40,7 @@
                 HeightRequest="60"
                 PlaceholderColor="{StaticResource EntryPlaceholderColor}"
                 Style="{StaticResource BorderlessEntryStyle}"
-                Text="{Binding Model.Nombre.Value}"
+                Text="{Binding Actividad.Nombre}"
                 TextColor="Black">
                         <Entry.Behaviors>
                             <behaviour:EntryLineValidationBehaviour IsValid="{Binding Model.Nombre.IsValid}" />
@@ -44,15 +54,7 @@
                        Text="{StaticResource Error}" />
             </Grid>
         </border:SfBorder>
-        <!--  Label to display error message  -->
-        <Label 
-            x:Name="NombreValidationLabel"
-            Margin="15,-3,0,0"
-            IsVisible="{Binding Model.Nombre.IsValid, Converter={StaticResource InverseBoolConverter}}"
-            Style="{StaticResource SimpleLabelStyle}"
-            Text="{Binding Model.Nombre.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
-            TextColor="{DynamicResource Red}"
-            VerticalOptions="FillAndExpand" />
+        
         <buttons:SfButton
             HorizontalOptions="CenterAndExpand"
             Command="{Binding CreateOrEditCommand}"

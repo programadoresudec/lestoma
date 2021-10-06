@@ -1,4 +1,6 @@
 ﻿using lestoma.CommonUtils.DTOs;
+using lestoma.CommonUtils.Helpers;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Prism.Mvvm;
 using Prism.Navigation;
@@ -19,6 +21,7 @@ namespace lestoma.App.ViewModels
         #region Fields
 
         private Command<object> backButtonCommand;
+        private bool isBusy;
 
         protected INavigationService NavigationService { get; private set; }
         private string _title;
@@ -27,15 +30,29 @@ namespace lestoma.App.ViewModels
             get { return _title; }
             set { SetProperty(ref _title, value); }
         }
+        public int PageSize { get; set; } = 5;
+        public int TotalItems { get; set; }
+
+        private int _page = 1;
+        public int Page
+        {
+            get { return _page; }
+            set { SetProperty(ref _page, value); }
+        }
+
+
+        public bool IsBusy
+        {
+            get { return isBusy; }
+            set { SetProperty(ref isBusy, value); }
+        }
 
 
         #endregion
 
         #region Event handler
 
-        /// <summary>
-        /// Occurs when the property is changed.
-        /// </summary>
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion
@@ -51,9 +68,6 @@ namespace lestoma.App.ViewModels
 
         #region Commands
 
-        /// <summary>
-        /// Gets the command that will be executed when an item is selected.
-        /// </summary>
         public Command<object> BackButtonCommand
         {
             get
@@ -66,10 +80,7 @@ namespace lestoma.App.ViewModels
 
         #region Methods
 
-        /// <summary>
-        /// The PropertyChanged event occurs when changing the value of property.
-        /// </summary>
-        /// <param name="propertyName">The PropertyName</param>
+    
         protected void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -88,10 +99,7 @@ namespace lestoma.App.ViewModels
             return true;
         }
 
-        /// <summary>
-        /// Invoked when an back button is clicked.
-        /// </summary>
-        /// <param name="obj">The Object</param>
+ 
         private void BackButtonClicked(object obj)
         {
             if (Device.RuntimePlatform == Device.UWP && Application.Current.MainPage.Navigation.NavigationStack.Count > 1)
@@ -134,6 +142,10 @@ namespace lestoma.App.ViewModels
             JToken jToken = Jobject.GetValue("Data");
             return jToken.ToObject<T>();
         }
+
+
+        public string URL => Prism.PrismApplicationBase.Current.Resources["UrlAPI"].ToString();
+        public TokenDTO TokenUser => !string.IsNullOrEmpty(MovilSettings.Token) ? JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token) : null;
         #endregion
     }
 }

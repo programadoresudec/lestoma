@@ -1,17 +1,15 @@
 ﻿using lestoma.App.Models;
-using lestoma.App.Validators.Rules;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
+using lestoma.DatabaseOffline.Interfaces;
+using lestoma.DatabaseOffline.Logica;
 using Newtonsoft.Json;
 using Plugin.Toast;
-using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Navigation;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -23,55 +21,76 @@ namespace lestoma.App.ViewModels.Actividades
         private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         private ParametrosModel _model;
-
+        private ActividadRequest _actividad;
         public CrearOrEditActividadPageViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
             _navigationService = navigationService;
             _apiService = apiService;
+            _actividad = new ActividadRequest();
             _model = new ParametrosModel();
             _model.AddValidationRules();
-            CreateOrEditCommand = new Command(createOrEditarClicked);
+            CreateOrEditCommand = new Command(CreateOrEditarClicked);
         }
 
-        private async void createOrEditarClicked(object obj)
+        private void CargarDatos()
+        {
+            Model.Nombre.Value = Actividad != null ? Actividad.Nombre : string.Empty;
+        }
+
+        private async void CreateOrEditarClicked(object obj)
         {
             try
             {
+                CargarDatos();
                 if (_model.AreFieldsValid())
                 {
-
+                    ActividadRequest request = new ActividadRequest
+                    {
+                        Id = Actividad.Id > 0 ? Actividad.Id : 0,
+                        Nombre = _model.Nombre.Value
+                    };
                     if (!_apiService.CheckConnection())
                     {
-                        return;
+                        LSActividad _actividadOfflineService = new LSActividad(App.DbPathSqlLite);
+                        await _actividadOfflineService.CrearAsync(request);
                     }
                     else
                     {
                         string url = Prism.PrismApplicationBase.Current.Resources["UrlAPI"].ToString();
-
-                        ActividadRequest request = new ActividadRequest
-                        {
-                            Nombre = _model.Nombre.Value
-                        };
                         TokenDTO UserApp = JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token);
-                        Response respuesta = await _apiService.PostAsyncWithToken(url, "Actividad/crear", request, UserApp.Token);
-                        if (!respuesta.IsExito)
+
+                        if (Actividad.Id == 0)
                         {
-                            CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
-                            return;
+                            Response respuesta = await _apiService.PostAsyncWithToken(url, "Actividad/crear", request, UserApp.Token);
+                            if (!respuesta.IsExito)
+                            {
+                                CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
+                                return;
+                            }
+                            CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
+                            await Task.Delay(2000);
                         }
-                        CrossToastPopUp.Current.ShowToastSuccess( respuesta.Mensaje);
-                        await Task.Delay(2000);
+                        else
+                        {
+                            Response respuesta = await _apiService.PutAsyncWithToken(url, "Actividad/editar", request, UserApp.Token);
+                            if (!respuesta.IsExito)
+                            {
+                                CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
+                                return;
+                            }
+                            CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
+                            await Task.Delay(2000);
+                        }
                         await _navigationService.GoBackAsync(null, useModalNavigation: true, true);
                     }
 
                 }
-               
-            }
-            catch (Exception)
-            {
 
-                throw;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
             }
             finally
             {
@@ -80,15 +99,20 @@ namespace lestoma.App.ViewModels.Actividades
 
         }
 
+        public ActividadRequest Actividad
+        {
+            get => _actividad;
+            set
+            {
+                SetProperty(ref _actividad, value);
+            }
+        }
+
         public ParametrosModel Model
         {
             get => _model;
             set
             {
-                if (_model == value)
-                {
-                    return;
-                }
                 SetProperty(ref _model, value);
             }
         }
@@ -99,8 +123,7 @@ namespace lestoma.App.ViewModels.Actividades
             base.OnNavigatedTo(parameters);
             if (parameters.ContainsKey("actividad"))
             {
-                var parametros = parameters.GetValue<ActividadRequest>("actividad");
-                Model.Nombre.Value = parametros.Nombre;
+                Actividad = parameters.GetValue<ActividadRequest>("actividad");
             }
         }
     }

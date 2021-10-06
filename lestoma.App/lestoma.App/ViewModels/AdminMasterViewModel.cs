@@ -3,6 +3,7 @@ using lestoma.App.Views;
 using lestoma.App.Views.Account;
 using lestoma.App.Views.Actividades;
 using lestoma.App.Views.Buzon;
+using lestoma.App.Views.Upas;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
@@ -88,7 +89,7 @@ namespace lestoma.App.ViewModels
                 new Menu
                 {
                     Icon = "icon_upa",
-                    PageName = $"{nameof(AboutPage)}",
+                    PageName = $"{nameof(UpaPage)}",
                     Title = "Upas"
                 }
             };

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\lestomaAPI\lestoma.CommonUtils\lestoma.CommonUtils.csproj" />
+    <ProjectReference Include="..\..\lestomaAPI\lestoma.Entidades\lestoma.Entidades.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="lestoma.Entidades">
+      <HintPath>..\..\lestomaAPI\Entidades\bin\Debug\net5.0\ref\lestoma.Entidades.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

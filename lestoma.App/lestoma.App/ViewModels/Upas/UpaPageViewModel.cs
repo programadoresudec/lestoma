@@ -5,14 +5,11 @@ using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Newtonsoft.Json;
 using Plugin.Toast;
-using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Navigation;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Upas
@@ -22,17 +19,85 @@ namespace lestoma.App.ViewModels.Upas
         private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         private ObservableCollection<UpaRequest> _upas;
-        
-        
-        public UpaPageViewModel(INavigationService navigationService, IApiService apiService): 
+
+
+        public UpaPageViewModel(INavigationService navigationService, IApiService apiService) :
             base(navigationService)
         {
             _navigationService = navigationService;
             _apiService = apiService;
-            loadUpas();
+            _upas = new ObservableCollection<UpaRequest>();
+            LoadUpas();
+            LoadMoreItemsCommand = new Command<object>(LoadMoreItems, CanLoadMoreItems);
+        }
+        public ObservableCollection<UpaRequest> Upas
+        {
+            get => _upas;
+            set => SetProperty(ref _upas, value);
+        }
+        private async void LoadMoreItems(object obj)
+        {
+
+            try
+            {
+                IsBusy = true;
+                await Task.Delay(1000);
+                addUpas();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
-        private async void loadUpas()
+        private async void addUpas()
+        {
+            string url = Prism.PrismApplicationBase.Current.Resources["UrlAPI"].ToString();
+            TokenDTO UserApp = JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token);
+            Response response = await _apiService.GetPaginadoAsyncWithToken<UpaRequest>(url,
+                $"Upas/paginar?Page={Page}&&PageSize={PageSize}", UserApp.Token);
+            if (!response.IsExito)
+            {
+                CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
+                return;
+            }
+            Paginador<UpaRequest> paginador = (Paginador<UpaRequest>)response.Data;
+            if (paginador.HasNextPage)
+            {
+
+                Page += 1;
+                foreach (var item in paginador.Datos)
+                {
+                    Upas.Add(item);
+                }
+
+            }
+            if (Upas.Count < TotalItems)
+            {
+                if (paginador.HasPreviousPage == true && paginador.HasNextPage == false)
+                {
+                    foreach (var item in paginador.Datos)
+                    {
+                        Upas.Add(item);
+                    }
+                }
+            }
+        }
+        private bool CanLoadMoreItems(object obj)
+        {
+
+            if (Upas.Count >= TotalItems)
+                return false;
+            return true;
+        }
+
+        public Command<object> LoadMoreItemsCommand { get; set; }
+
+        private async void LoadUpas()
         {
             try
             {
@@ -42,16 +107,7 @@ namespace lestoma.App.ViewModels.Upas
                     CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
                     return;
                 }
-                string url = Prism.PrismApplicationBase.Current.Resources["UrlAPI"].ToString();
-                TokenDTO UserApp = JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token);
-                Response response = await _apiService.GetListAsyncWithToken<List<UpaRequest>>(url,
-                    "Upas/listado", UserApp.Token);
-                if (!response.IsExito)
-                {
-                    CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
-                    return;
-                }
-                Upas = new ObservableCollection<UpaRequest>((List<UpaRequest>)response.Data);
+                ConsumoService();
             }
             catch (Exception ex)
             {
@@ -63,11 +119,39 @@ namespace lestoma.App.ViewModels.Upas
             }
         }
 
-        public ObservableCollection<UpaRequest> Upas
+        private async void ConsumoService()
         {
-            get => _upas;
-            set => SetProperty(ref _upas, value);
+            string url = Prism.PrismApplicationBase.Current.Resources["UrlAPI"].ToString();
+            TokenDTO UserApp = JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token);
+            Response response = await _apiService.GetPaginadoAsyncWithToken<UpaRequest>(url,
+                $"Upas/paginar?Page={Page}&&PageSize={PageSize}", UserApp.Token);
+            if (!response.IsExito)
+            {
+                CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
+                return;
+            }
+            Paginador<UpaRequest> paginador = (Paginador<UpaRequest>)response.Data;
+            TotalItems = paginador.TotalDatos;
+            if (paginador.HasNextPage)
+            {
+                Page += 1;
+                if (Upas.Count > 0)
+                {
+                    foreach (var item in paginador.Datos)
+                    {
+                        Upas.Add(item);
+                    }
+                }
+                else
+                {
+                    Upas = new ObservableCollection<UpaRequest>(paginador.Datos);
+                }
+            }
+
+
         }
+
+
 
     }
 }

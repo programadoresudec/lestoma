@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="http://prismlibrary.com" xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms" xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:prism="http://prismlibrary.com" 
+             xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms" 
+             xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="lestoma.App.Views.Actividades.ActividadPage"
              Title="Actividades">
@@ -9,9 +11,11 @@
         <ToolbarItem IconImageSource="icon_plus.png" Command="{Binding AddCommand}"/>
     </ContentPage.ToolbarItems>
 
-    <syncfusion:SfListView  x:Name="LV_Actividades" AllowSwiping="True" SwipeOffset="360" SwipeThreshold="30" SwipeEnded="LV_Actividades_SwipeEnded" ItemsSource="{Binding Actividades}" 
-                            TapCommand="{Binding EditCommand}" 
-                                    AutoFitMode="Height" SelectionBackgroundColor="Transparent" >
+    <syncfusion:SfListView  x:Name="LV_Actividades" AllowSwiping="True" SwipeOffset="100"
+                             ItemsSource="{Binding Actividades}"
+                            TapCommand="{Binding EditCommand}" SwipeEnded="LV_Actividades_SwipeEnded"
+                                    AutoFitMode="Height" SelectionBackgroundColor="Transparent">
+
         <syncfusion:SfListView.ItemTemplate>
             <DataTemplate>
                 <Frame Margin="5,10,5,10" CornerRadius="10" BackgroundColor="AliceBlue">
@@ -29,8 +33,10 @@
                 <Grid BackgroundColor="Transparent" HorizontalOptions="Fill" VerticalOptions="Fill">
                     <Grid VerticalOptions="Center" HorizontalOptions="Center">
                         <button:SfButton x:Name="button" HeightRequest="35" WidthRequest="35" 
-                                         Grid.Row="0" Text="Button" BackgroundColor="Transparent"
-                                         Command="{Binding DeleteCommand}" ImageSource="icon_delete.png" ShowIcon="True">
+                                         Grid.Row="0" Text="Button" BackgroundColor="Transparent"  Clicked="button_Clicked"
+                                         ImageSource="icon_delete.png" ShowIcon="True">
+
+                           
                         </button:SfButton>
                     </Grid>
                 </Grid>

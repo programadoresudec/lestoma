@@ -1,10 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="App.xaml.cs~RF281281b.TMP" />
     <None Remove="Resources\Fonts\Montserrat-Bold.ttf" />
     <None Remove="Resources\Fonts\Montserrat-Medium.ttf" />
     <None Remove="Resources\Fonts\Montserrat-Regular.ttf" />
@@ -21,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Plugin.Toast" Version="2.2.0" />
     <PackageReference Include="Prism.Plugin.Popups" Version="8.0.76" />
@@ -38,10 +40,7 @@
     <PackageReference Include="Xamarin.Forms" Version="4.8.0.1821" />
     <PackageReference Include="Xamarin.Essentials.Interfaces" Version="1.7.0" />
     <PackageReference Include="Prism.DryIoc.Forms" Version="8.0.0.1909" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\lestomaAPI\lestoma.CommonUtils\lestoma.CommonUtils.csproj" />
+    <PackageReference Include="Xamarin.Forms.BehaviorsPack" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -158,6 +157,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\lestomaAPI\lestoma.CommonUtils\lestoma.CommonUtils.csproj" />
+    <ProjectReference Include="..\..\lestoma.DatabaseOffline\lestoma.DatabaseOffline.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="lestoma.Entidades">
+      <HintPath>..\..\..\lestomaAPI\Entidades\bin\Debug\net5.0\ref\lestoma.Entidades.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Android">
       <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v10.0\Mono.Android.dll</HintPath>
     </Reference>

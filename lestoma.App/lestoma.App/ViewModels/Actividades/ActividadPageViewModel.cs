@@ -1,19 +1,17 @@
-﻿using lestoma.App.Views;
+﻿using AutoMapper;
+using lestoma.App.Views;
 using lestoma.App.Views.Actividades;
 using lestoma.CommonUtils.DTOs;
-using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using Newtonsoft.Json;
+using lestoma.DatabaseOffline.Interfaces;
+using lestoma.DatabaseOffline.Logica;
 using Plugin.Toast;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
-using Syncfusion.SfBusyIndicator.XForms;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Actividades
@@ -29,15 +27,43 @@ namespace lestoma.App.ViewModels.Actividades
             _navigationService = navigationService;
             _apiService = apiService;
             EditCommand = new Command<object>(ActividadSelected, CanNavigate);
-            DeleteCommand = new Command(DeleteClicked);
-            loadActividades();
+            LoadActividades();
         }
 
-        private void DeleteClicked()
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            base.OnNavigatedTo(parameters);
+            RefreshActividades();
+        }
+        public async void DeleteClicked()
         {
             if (ItemDelete != null)
             {
-
+                try
+                {
+                    await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
+                    if (!_apiService.CheckConnection())
+                    {
+                        CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
+                        return;
+                    }
+                    Response response = await _apiService.DeleteAsyncWithToken(URL,
+                        "Actividad", ItemDelete.Id, TokenUser.Token);
+                    if (!response.IsExito)
+                    {
+                        CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
+                        return;
+                    }
+                    CrossToastPopUp.Current.ShowToastSuccess(response.Mensaje);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+                finally
+                {
+                    await _navigationService.ClearPopupStackAsync();
+                }
             }
         }
 
@@ -45,7 +71,6 @@ namespace lestoma.App.ViewModels.Actividades
         {
             return true;
         }
-        public Command DeleteCommand { get; set; }
         public Command EditCommand { get; set; }
 
         public Command AddCommand
@@ -54,7 +79,7 @@ namespace lestoma.App.ViewModels.Actividades
             {
                 return new Command(async () =>
                 {
-                    await Prism.PrismApplicationBase.Current.MainPage.Navigation.PushModalAsync(new CrearOrEditActividadPage());
+                    await _navigationService.NavigateAsync(nameof(CrearOrEditActividadPage), null, useModalNavigation: true, true);
 
                 });
             }
@@ -70,7 +95,7 @@ namespace lestoma.App.ViewModels.Actividades
             {
                 { "actividad", actividad }
             };
-            await Prism.PrismApplicationBase.Current.MainPage.Navigation.PushModalAsync(new CrearOrEditActividadPage());
+            await _navigationService.NavigateAsync(nameof(CrearOrEditActividadPage), parameters, useModalNavigation: true, true);
 
         }
 
@@ -79,28 +104,28 @@ namespace lestoma.App.ViewModels.Actividades
             get => _actividades;
             set => SetProperty(ref _actividades, value);
         }
-        public ActividadRequest ItemDelete { get; set; }
+        public ActividadRequest ItemDelete { get; set; } 
 
-        private async void loadActividades()
+
+        public void RefreshActividades()
+        {
+            try
+            {
+                InsertarListadoActividades();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
+        }
+
+        public async void LoadActividades()
         {
             try
             {
                 await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-                if (!_apiService.CheckConnection())
-                {
-                    CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
-                    return;
-                }
-                string url = Prism.PrismApplicationBase.Current.Resources["UrlAPI"].ToString();
-                TokenDTO UserApp = JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token);
-                Response response = await _apiService.GetListAsyncWithToken<List<ActividadRequest>>(url,
-                    "Actividad/listado", UserApp.Token);
-                if (!response.IsExito)
-                {
-                    CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
-                    return;
-                }
-                Actividades = new ObservableCollection<ActividadRequest>((List<ActividadRequest>)response.Data);
+                InsertarListadoActividades();
             }
             catch (Exception ex)
             {
@@ -110,6 +135,36 @@ namespace lestoma.App.ViewModels.Actividades
             {
                 await _navigationService.ClearPopupStackAsync();
             }
+        }
+
+        private async void InsertarListadoActividades()
+        {
+            if (!_apiService.CheckConnection())
+            {
+                LSActividad _actividadOfflineService = new LSActividad(App.DbPathSqlLite);
+                var query = await _actividadOfflineService.GetAll();
+                if (query.Count > 0)
+                {
+                    Actividades = new ObservableCollection<ActividadRequest>(query);
+                }
+            }
+            else
+            {
+                Response response = await _apiService.GetListAsyncWithToken<List<ActividadRequest>>(URL,
+              "Actividad/listado", TokenUser.Token);
+                if (!response.IsExito)
+                {
+                    CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
+                    return;
+                }
+                if (response.Data == null)
+                {
+                    Actividades = new ObservableCollection<ActividadRequest>();
+                    return;
+                }
+                Actividades = new ObservableCollection<ActividadRequest>((List<ActividadRequest>)response.Data);
+            }
+
         }
     }
 }

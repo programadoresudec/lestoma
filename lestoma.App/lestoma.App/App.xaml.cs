@@ -1,13 +1,21 @@
-using lestoma.App.ViewModels.Actividades;
+using lestoma.App.ViewModels;
 using lestoma.App.ViewModels.Account;
+using lestoma.App.ViewModels.Actividades;
 using lestoma.App.ViewModels.Buzon;
+using lestoma.App.ViewModels.Upas;
 using lestoma.App.Views;
 using lestoma.App.Views.Account;
 using lestoma.App.Views.Actividades;
 using lestoma.App.Views.Buzon;
+using lestoma.App.Views.Upas;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
+using lestoma.CommonUtils.Requests;
 using lestoma.CommonUtils.Services;
+using lestoma.DatabaseOffline;
+using lestoma.DatabaseOffline.Interfaces;
+using lestoma.DatabaseOffline.Logica;
+using lestoma.DatabaseOffline.Repository;
 using Prism;
 using Prism.Ioc;
 using Prism.Plugin.Popups;
@@ -15,9 +23,6 @@ using System.IO;
 using Xamarin.Essentials.Implementation;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms;
-using lestoma.App.ViewModels;
-using lestoma.App.Views.Upas;
-using lestoma.App.ViewModels.Upas;
 
 [assembly: ExportFont("Montserrat-Bold.ttf", Alias = "Montserrat-Bold")]
 [assembly: ExportFont("Montserrat-Medium.ttf", Alias = "Montserrat-Medium")]
@@ -44,7 +49,7 @@ namespace lestoma.App
 
             if (!MovilSettings.IsLogin)
             {
-                await NavigationService.NavigateAsync($"NavigationPage/{nameof(MandarTramar)}");
+                await NavigationService.NavigateAsync($"NavigationPage/{nameof(LoginPage)}");
             }
             else
             {
@@ -57,6 +62,13 @@ namespace lestoma.App
             containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
             containerRegistry.Register<IApiService, ApiService>();
             containerRegistry.Register<IFilesHelper, FilesHelper>();
+
+            #region injecciones de database offline
+            containerRegistry.Register(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            containerRegistry.Register<ActividadRepository>();
+            #endregion
+
+            #region Navegaciones
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterPopupNavigationService();
             containerRegistry.RegisterPopupDialogService();
@@ -76,6 +88,7 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<ActividadPage, ActividadPageViewModel>();
             containerRegistry.RegisterForNavigation<CrearOrEditActividadPage, CrearOrEditActividadPageViewModel>();
             containerRegistry.RegisterForNavigation<UpaPage, UpaPageViewModel>();
+            #endregion
         }
     }
 }
