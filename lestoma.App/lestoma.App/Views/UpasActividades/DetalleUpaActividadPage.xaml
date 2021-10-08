@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+              xmlns:prism="http://prismlibrary.com" 
+              prism:ViewModelLocator.AutowireViewModel="True"
+             xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms" 
+             xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:helper="clr-namespace:Syncfusion.ListView.XForms.Helpers;assembly=Syncfusion.SfListView.XForms"
+             x:Class="lestoma.App.Views.UpasActividades.DetalleUpaActividadPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="icon_plus.png" Command="{Binding AddCommand}"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <helper:InverseBoolConverter x:Key="inverseBoolConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <syncfusion:SfListView x:Name="LV_detalleUpasActividades"   
+                             LoadMoreOption="Auto" AllowSwiping="True" SwipeOffset="100" SwipeEnded="LV_detalleUpasActividades_SwipeEnded"
+                             LoadMoreCommand="{Binding LoadMoreItemsCommand}" IsBusy="{Binding IsBusy}" ItemSize="150" AutoFitMode="DynamicHeight"
+                             LoadMoreCommandParameter="{Binding Source={x:Reference Name=LV_detalleUpasActividades}}"
+                             ItemsSource="{Binding DetalleUpasActividades}" SelectionBackgroundColor="Transparent">
+        <syncfusion:SfListView.ItemTemplate>
+            <DataTemplate>
+                <Frame Margin="5,10,5,10" CornerRadius="10" BackgroundColor="AliceBlue">
+                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                        <Label Text="{Binding User.FullName}" FontSize="Small"
+                                           TextColor="Black"/>
+                        <Label Text="{Binding Upa.Nombre}" FontSize="Small"
+                                           TextColor="Black"/>
+                        <StackLayout Orientation="Vertical" Spacing="20" HorizontalOptions="End" VerticalOptions="CenterAndExpand">
+                            <CollectionView ItemsSource="{Binding Actividades}">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Frame Margin="2" CornerRadius="10" BackgroundColor="Black">
+                                            <Label 
+                                                Text="{Binding Nombre}"
+                                                 FontAttributes="Bold" TextColor="White" />
+                                        </Frame>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </StackLayout>
+                    </StackLayout>
+                </Frame>
+            </DataTemplate>
+        </syncfusion:SfListView.ItemTemplate>
+        <syncfusion:SfListView.LoadMoreTemplate>
+            <DataTemplate>
+                <Grid>
+                    <Label Text="Load More Items" TextColor="Black" BackgroundColor="AliceBlue"
+                           HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                           IsVisible="{Binding IsBusy, Converter={StaticResource inverseBoolConverter}, Source={x:Reference Name=LV_detalleUpasActividades}}" />
+                    <syncfusion:LoadMoreIndicator Color="Red" IsRunning="{Binding IsBusy, Source={x:Reference Name=LV_detalleUpasActividades}}"
+                                                  IsVisible="{Binding IsBusy, Source={x:Reference Name=LV_detalleUpasActividades}}" VerticalOptions="Center"/>
+                </Grid>
+            </DataTemplate>
+        </syncfusion:SfListView.LoadMoreTemplate>
+        <syncfusion:SfListView.RightSwipeTemplate>
+            <DataTemplate x:Name="RightSwipeTemplate">
+                <Grid BackgroundColor="Transparent" HorizontalOptions="Fill" VerticalOptions="Fill">
+                    <Grid VerticalOptions="Center" HorizontalOptions="Center">
+                        <button:SfButton x:Name="button" HeightRequest="35" WidthRequest="35" 
+                                         Grid.Row="0" Text="Button" BackgroundColor="Transparent"
+                                         Command="{Binding DeleteCommand}" ImageSource="icon_delete.png" ShowIcon="True">
+                        </button:SfButton>
+                    </Grid>
+                </Grid>
+            </DataTemplate>
+        </syncfusion:SfListView.RightSwipeTemplate>
+    </syncfusion:SfListView>
+
+</ContentPage>

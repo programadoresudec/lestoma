@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using lestoma.App.Views;
+﻿using lestoma.App.Views;
 using lestoma.App.Views.Actividades;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using lestoma.DatabaseOffline.Interfaces;
 using lestoma.DatabaseOffline.Logica;
 using Plugin.Toast;
 using Prism.Navigation;
@@ -16,12 +14,12 @@ using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Actividades
 {
-    public class ActividadPageViewModel : BaseViewModel
+    public class ActividadViewModel : BaseViewModel
     {
         private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         private ObservableCollection<ActividadRequest> _actividades;
-        public ActividadPageViewModel(INavigationService navigationService, IApiService apiService)
+        public ActividadViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
             _navigationService = navigationService;
@@ -104,7 +102,7 @@ namespace lestoma.App.ViewModels.Actividades
             get => _actividades;
             set => SetProperty(ref _actividades, value);
         }
-        public ActividadRequest ItemDelete { get; set; } 
+        public ActividadRequest ItemDelete { get; set; }
 
 
         public void RefreshActividades()

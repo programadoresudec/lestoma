@@ -8,12 +8,12 @@ using Xamarin.Forms.Internals;
 namespace lestoma.App.ViewModels.Account
 {
     [Preserve(AllMembers = true)]
-    public class SettingsPageViewModel : BaseViewModel
+    public class SettingsViewModel : BaseViewModel
     {
         private readonly INavigationService _navigationService;
         #region Constructor
 
-        public SettingsPageViewModel(INavigationService navigationService)
+        public SettingsViewModel(INavigationService navigationService)
             : base(navigationService)
         {
             _navigationService = navigationService;

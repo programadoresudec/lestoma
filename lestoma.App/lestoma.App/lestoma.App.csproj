@@ -146,14 +146,15 @@
     <EmbeddedResource Update="Views\LoadingPopupPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Views\UpasActividades\DetalleUpaActividadPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Upas\CreateOrEditUpaPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\Upas\UpaPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ViewModels\UpasActividades\" />
-    <Folder Include="Views\UpasActividades\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -162,9 +163,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="lestoma.Entidades">
-      <HintPath>..\..\..\lestomaAPI\Entidades\bin\Debug\net5.0\ref\lestoma.Entidades.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.Android">
       <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v10.0\Mono.Android.dll</HintPath>
     </Reference>

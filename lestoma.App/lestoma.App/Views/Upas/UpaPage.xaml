@@ -4,7 +4,7 @@
              xmlns:prism="http://prismlibrary.com" 
              xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
              xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" xmlns:helper="clr-namespace:lestoma.App.Converters"
-             prism:ViewModelLocator.AutowireViewModel="True"
+             prism:ViewModelLocator.AutowireViewModel="True" Title="Upas"
              x:Class="lestoma.App.Views.Upas.UpaPage">
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="icon_plus.png" Command="{Binding AddCommand}"/>
@@ -15,14 +15,12 @@
             <helper:InverseBoolConverter x:Key="inverseBoolConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <syncfusion:SfListView x:Name="listView" ItemSize="100"
+    <syncfusion:SfListView x:Name="LV_upas" ItemSize="100"
                              LoadMoreOption="Auto" AllowSwiping="True" SwipeOffset="100"
-                             LoadMoreCommand="{Binding LoadMoreItemsCommand}" IsBusy="{Binding IsBusy}"
-                             LoadMoreCommandParameter="{Binding Source={x:Reference Name=listView}}"
+                             LoadMoreCommand="{Binding LoadMoreItemsCommand}" SwipeEnded="LV_upas_SwipeEnded" IsBusy="{Binding IsBusy}"
+                             LoadMoreCommandParameter="{Binding Source={x:Reference Name=LV_upas}}"
                              ItemsSource="{Binding Upas}" SelectionBackgroundColor="Transparent">
-        <syncfusion:SfListView.Behaviors>
-            <prism:EventToCommandBehavior EventName="SwipeEnded" Command="{Binding ItemCommand}" EventArgsParameterPath="ItemData"/>
-        </syncfusion:SfListView.Behaviors>
+       
         <syncfusion:SfListView.ItemTemplate>
             <DataTemplate>
                 <Frame Margin="5,10,5,10" CornerRadius="10" BackgroundColor="AliceBlue">
@@ -42,8 +40,9 @@
                 <Grid>
                     <Label Text="Load More Items" TextColor="Black" BackgroundColor="AliceBlue"
                            HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
-                           IsVisible="{Binding IsBusy, Converter={StaticResource inverseBoolConverter}, Source={x:Reference Name=listView}}" />
-                    <syncfusion:LoadMoreIndicator Color="Red" IsRunning="{Binding IsBusy, Source={x:Reference Name=listView}}" IsVisible="{Binding IsBusy, Source={x:Reference Name=listView}}" VerticalOptions="Center"/>
+                           IsVisible="{Binding IsBusy, Converter={StaticResource inverseBoolConverter}, Source={x:Reference Name=LV_upas}}" />
+                    <syncfusion:LoadMoreIndicator Color="Red" IsRunning="{Binding IsBusy, Source={x:Reference Name=LV_upas}}"
+                                                  IsVisible="{Binding IsBusy, Source={x:Reference Name=LV_upas}}" VerticalOptions="Center"/>
                 </Grid>
             </DataTemplate>
         </syncfusion:SfListView.LoadMoreTemplate>
@@ -51,9 +50,9 @@
             <DataTemplate x:Name="RightSwipeTemplate">
                 <Grid BackgroundColor="Transparent" HorizontalOptions="Fill" VerticalOptions="Fill">
                     <Grid VerticalOptions="Center" HorizontalOptions="Center">
-                        <button:SfButton x:Name="button" HeightRequest="35" WidthRequest="35" 
+                        <button:SfButton x:Name="Bt_eliminar" HeightRequest="35" WidthRequest="35" 
                                          Grid.Row="0" Text="Button" BackgroundColor="Transparent"
-                                         Command="{Binding DeleteCommand}" ImageSource="icon_delete.png" ShowIcon="True">
+                                         Clicked="Bt_eliminar_Clicked" ImageSource="icon_delete.png" ShowIcon="True">
                         </button:SfButton>
                     </Grid>
                 </Grid>

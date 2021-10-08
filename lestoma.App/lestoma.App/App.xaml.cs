@@ -3,18 +3,17 @@ using lestoma.App.ViewModels.Account;
 using lestoma.App.ViewModels.Actividades;
 using lestoma.App.ViewModels.Buzon;
 using lestoma.App.ViewModels.Upas;
+using lestoma.App.ViewModels.UpasActividades;
 using lestoma.App.Views;
 using lestoma.App.Views.Account;
 using lestoma.App.Views.Actividades;
 using lestoma.App.Views.Buzon;
 using lestoma.App.Views.Upas;
+using lestoma.App.Views.UpasActividades;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
-using lestoma.CommonUtils.Requests;
 using lestoma.CommonUtils.Services;
 using lestoma.DatabaseOffline;
-using lestoma.DatabaseOffline.Interfaces;
-using lestoma.DatabaseOffline.Logica;
 using lestoma.DatabaseOffline.Repository;
 using Prism;
 using Prism.Ioc;
@@ -78,17 +77,19 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<AboutPage, AboutPageViewModel>();
             containerRegistry.RegisterForNavigation<ForgotPasswordPage, ForgotPasswordViewModel>();
             containerRegistry.RegisterForNavigation<AdminMasterDetailPage, AdminMasterViewModel>();
-            containerRegistry.RegisterForNavigation<SettingsPage, SettingsPageViewModel>();
+            containerRegistry.RegisterForNavigation<SettingsPage, SettingsViewModel>();
             containerRegistry.RegisterForNavigation<ResetPasswordPage, ResetPasswordViewModel>();
             containerRegistry.RegisterForNavigation<ChangePasswordPage, ChangePasswordViewModel>();
             containerRegistry.RegisterForNavigation<BuzonDeReportesPage, BuzonDeReportesViewModel>();
             containerRegistry.RegisterForNavigation<CrearReporteDelBuzonPage, CrearReporteDelBuzonViewModel>();
-            containerRegistry.RegisterForNavigation<SignOutPopupPage, SignOutPopupPageViewModel>();
+            containerRegistry.RegisterForNavigation<SignOutPopupPage, SignOutPopupViewModel>();
             containerRegistry.RegisterForNavigation<LoadingPopupPage>();
-            containerRegistry.RegisterForNavigation<ActividadPage, ActividadPageViewModel>();
-            containerRegistry.RegisterForNavigation<CrearOrEditActividadPage, CrearOrEditActividadPageViewModel>();
-            containerRegistry.RegisterForNavigation<UpaPage, UpaPageViewModel>();
+            containerRegistry.RegisterForNavigation<ActividadPage, ActividadViewModel>();
+            containerRegistry.RegisterForNavigation<CrearOrEditActividadPage, CrearOrEditActividadViewModel>();
+            containerRegistry.RegisterForNavigation<UpaPage, UpaViewModel>();
+            containerRegistry.RegisterForNavigation<DetalleUpaActividadPage, DetalleUpaActividadViewModel>();
             #endregion
+            containerRegistry.RegisterForNavigation<CreateOrEditUpaPage, CreateOrEditUpaViewModel>();
         }
     }
 }

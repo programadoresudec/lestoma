@@ -12,6 +12,7 @@ namespace lestoma.DatabaseOffline
         public DatabaseOffline(string dbPath)
         {
             _databasePath = dbPath;
+            Database.EnsureDeleted();
             Database.EnsureCreated();
         }
         #endregion
@@ -31,6 +32,9 @@ namespace lestoma.DatabaseOffline
         #region DBSET tablas 
 
         public DbSet<EActividad> TablaActividades { get; set; }
+        public DbSet<EUpaActividad> TablaUpasConActividades { get; set; }
+        public DbSet<EUpa> TablaUpas { get; set; }
+
 
         #endregion
     }

@@ -22,7 +22,7 @@ namespace lestoma.App.ViewModels
 
         private readonly INavigationService _navigationService;
         private string _trama;
-        private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
+        private BluetoothAdapter mBluetoothAdapter = null;
         private BluetoothSocket btSocket = null;
         private static string address = "00:21:13:00:92:B8";
         private static UUID MY_UUID = UUID.FromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -57,33 +57,28 @@ namespace lestoma.App.ViewModels
             mBluetoothAdapter.CancelDiscovery();
             try
             {
+                if (btSocket == null)
+                {
+                    btSocket = device.CreateRfcommSocketToServiceRecord(MY_UUID);
+                    //Conectamos el socket
+                }
                 //Inicamos el socket de comunicacion con el arduino
-                btSocket = device.CreateRfcommSocketToServiceRecord(MY_UUID);
-                //Conectamos el socket
-                btSocket.Connect();
+                await btSocket.ConnectAsync();
                 if (btSocket.IsConnected)
                 {
-                    await Application.Current.MainPage.DisplayAlert("bien", "conexion establecida", "OK");
+                    CrossToastPopUp.Current.ShowToastSuccess($"Conexión Establecida", Plugin.Toast.Abstractions.ToastLength.Long);
                 }
             }
-            catch (System.Exception e)
+            catch (Exception ex)
             {
                 //en caso de generarnos error cerramos el socket
-                System.Console.WriteLine(e.Message);
-                try
-                {
-                    btSocket.Close();
-                }
-                catch (System.Exception ex)
-                {
-                    await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
-
-                }
-                Debug.WriteLine("socket establecido");
+                Debug.WriteLine(ex.Message);
+                CrossToastPopUp.Current.ShowToastError($"Error: {ex.Message}");
+                btSocket.Close();
             }
         }
 
-      
+
 
         //Metodo de verificacion del sensor Bluetooth
         private async void CheckBt()
@@ -147,6 +142,7 @@ namespace lestoma.App.ViewModels
                             }
                         }
                     }
+                    _cancellationToken.Cancel();
                 }
                 catch (Exception ex)
                 {

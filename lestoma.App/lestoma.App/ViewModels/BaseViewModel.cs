@@ -110,6 +110,10 @@ namespace lestoma.App.ViewModels
             {
                 Application.Current.MainPage.Navigation.PopAsync();
             }
+            else if (Device.RuntimePlatform != Device.UWP && Application.Current.MainPage.Navigation.ModalStack.Count > 0)
+            {
+                Application.Current.MainPage.Navigation.PopModalAsync();
+            }
         }
 
 

@@ -5,10 +5,10 @@ using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Account
 {
-    public class SignOutPopupPageViewModel : BaseViewModel
+    public class SignOutPopupViewModel : BaseViewModel
     {
         private readonly INavigationService _navigationService;
-        public SignOutPopupPageViewModel(INavigationService navigationService)
+        public SignOutPopupViewModel(INavigationService navigationService)
             : base(navigationService)
         {
             _navigationService = navigationService;

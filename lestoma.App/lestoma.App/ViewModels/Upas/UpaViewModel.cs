@@ -1,4 +1,5 @@
 ﻿using lestoma.App.Views;
+using lestoma.App.Views.Upas;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
@@ -14,14 +15,14 @@ using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Upas
 {
-    public class UpaPageViewModel : BaseViewModel
+    public class UpaViewModel : BaseViewModel
     {
         private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         private ObservableCollection<UpaRequest> _upas;
 
 
-        public UpaPageViewModel(INavigationService navigationService, IApiService apiService) :
+        public UpaViewModel(INavigationService navigationService, IApiService apiService) :
             base(navigationService)
         {
             _navigationService = navigationService;
@@ -35,6 +36,18 @@ namespace lestoma.App.ViewModels.Upas
             get => _upas;
             set => SetProperty(ref _upas, value);
         }
+        public Command AddCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    await _navigationService.NavigateAsync(nameof(CreateOrEditUpaPage), null, useModalNavigation: true, true);
+
+                });
+            }
+        }
+
         private async void LoadMoreItems(object obj)
         {
 
@@ -42,7 +55,7 @@ namespace lestoma.App.ViewModels.Upas
             {
                 IsBusy = true;
                 await Task.Delay(1000);
-                addUpas();
+                AddUpas();
             }
             catch (Exception ex)
             {
@@ -54,7 +67,7 @@ namespace lestoma.App.ViewModels.Upas
             }
         }
 
-        private async void addUpas()
+        private async void AddUpas()
         {
             string url = Prism.PrismApplicationBase.Current.Resources["UrlAPI"].ToString();
             TokenDTO UserApp = JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token);
@@ -147,11 +160,10 @@ namespace lestoma.App.ViewModels.Upas
                     Upas = new ObservableCollection<UpaRequest>(paginador.Datos);
                 }
             }
-
-
+            else if (paginador.HasNextPage == false && paginador.HasPreviousPage == false)
+            {
+                Upas = new ObservableCollection<UpaRequest>(paginador.Datos);
+            }
         }
-
-
-
     }
 }

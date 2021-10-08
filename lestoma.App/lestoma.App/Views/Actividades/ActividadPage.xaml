@@ -32,8 +32,8 @@
             <DataTemplate x:Name="RightSwipeTemplate">
                 <Grid BackgroundColor="Transparent" HorizontalOptions="Fill" VerticalOptions="Fill">
                     <Grid VerticalOptions="Center" HorizontalOptions="Center">
-                        <button:SfButton x:Name="button" HeightRequest="35" WidthRequest="35" 
-                                         Grid.Row="0" Text="Button" BackgroundColor="Transparent"  Clicked="button_Clicked"
+                        <button:SfButton x:Name="BT_eliminar" HeightRequest="35" WidthRequest="35" 
+                                         Grid.Row="0" Text="Button" BackgroundColor="Transparent"  Clicked="BT_eliminar_Clicked"
                                          ImageSource="icon_delete.png" ShowIcon="True">
 
                            

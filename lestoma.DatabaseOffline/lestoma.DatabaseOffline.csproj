@@ -15,10 +15,4 @@
     <ProjectReference Include="..\..\lestomaAPI\lestoma.Entidades\lestoma.Entidades.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="lestoma.Entidades">
-      <HintPath>..\..\lestomaAPI\Entidades\bin\Debug\net5.0\ref\lestoma.Entidades.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

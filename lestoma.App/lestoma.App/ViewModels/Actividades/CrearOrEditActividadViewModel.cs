@@ -3,7 +3,6 @@ using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using lestoma.DatabaseOffline.Interfaces;
 using lestoma.DatabaseOffline.Logica;
 using Newtonsoft.Json;
 using Plugin.Toast;
@@ -16,13 +15,13 @@ using Xamarin.Forms;
 namespace lestoma.App.ViewModels.Actividades
 {
 
-    public class CrearOrEditActividadPageViewModel : BaseViewModel
+    public class CrearOrEditActividadViewModel : BaseViewModel
     {
         private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         private ParametrosModel _model;
         private ActividadRequest _actividad;
-        public CrearOrEditActividadPageViewModel(INavigationService navigationService, IApiService apiService)
+        public CrearOrEditActividadViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
             _navigationService = navigationService;
@@ -91,12 +90,7 @@ namespace lestoma.App.ViewModels.Actividades
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-            }
-            finally
-            {
-
-            }
-
+            }  
         }
 
         public ActividadRequest Actividad
@@ -124,6 +118,11 @@ namespace lestoma.App.ViewModels.Actividades
             if (parameters.ContainsKey("actividad"))
             {
                 Actividad = parameters.GetValue<ActividadRequest>("actividad");
+                Title = "Editar";
+            }
+            else
+            {
+                Title = "Crear";
             }
         }
     }

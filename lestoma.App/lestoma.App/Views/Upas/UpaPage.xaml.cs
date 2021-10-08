@@ -8,5 +8,15 @@ namespace lestoma.App.Views.Upas
         {
             InitializeComponent();
         }
+
+        private void LV_upas_SwipeEnded(object sender, Syncfusion.ListView.XForms.SwipeEndedEventArgs e)
+        {
+
+        }
+
+        private void Bt_eliminar_Clicked(object sender, System.EventArgs e)
+        {
+
+        }
     }
 }

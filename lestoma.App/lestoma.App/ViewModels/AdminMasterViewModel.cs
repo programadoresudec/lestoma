@@ -4,6 +4,7 @@ using lestoma.App.Views.Account;
 using lestoma.App.Views.Actividades;
 using lestoma.App.Views.Buzon;
 using lestoma.App.Views.Upas;
+using lestoma.App.Views.UpasActividades;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
@@ -85,6 +86,18 @@ namespace lestoma.App.ViewModels
                     Icon =  "icon_actividad",
                     PageName = $"{nameof(ActividadPage)}",
                     Title = "Actividades"
+                },
+                  new Menu
+                {
+                    Icon =  "",
+                    PageName = $"{nameof(MandarTramar)}",
+                    Title = "Mandar trama"
+                },
+                    new Menu
+                {
+                    Icon =  "icon_detalles",
+                    PageName = $"{nameof(DetalleUpaActividadPage)}",
+                    Title = "Detalle de upas con actividades"
                 },
                 new Menu
                 {
