@@ -3,8 +3,8 @@ using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.MyException;
 using lestoma.CommonUtils.Requests;
 using lestoma.DatabaseOffline.Interfaces;
+using lestoma.DatabaseOffline.Models;
 using lestoma.DatabaseOffline.Repository;
-using lestoma.Entidades.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +40,7 @@ namespace lestoma.DatabaseOffline.Logica
             bool existe = await _actividadRepository.ExisteActividad(entidad.Nombre);
             if (!existe)
             {
-                var actividad = _mapper.Map<EActividad>(entidad);
+                var actividad = _mapper.Map<ActividadModel>(entidad);
                 await _actividadRepository.Create(actividad);
                 _respuesta.IsExito = true;
                 _respuesta.StatusCode = (int)HttpStatusCode.Created;
@@ -71,9 +71,10 @@ namespace lestoma.DatabaseOffline.Logica
             throw new NotImplementedException();
         }
 
-        public IQueryable<ActividadRequest> GetPaginado()
+        public async Task MergeEntity(List<ActividadRequest> listado)
         {
-            throw new NotImplementedException();
+            var actividades = _mapper.Map<List<ActividadModel>>(listado);
+            await _actividadRepository.MergeEntity(actividades);
         }
     }
 }

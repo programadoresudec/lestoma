@@ -1,10 +1,10 @@
-﻿using lestoma.Entidades.Models;
+﻿using lestoma.DatabaseOffline.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace lestoma.DatabaseOffline.Repository
 {
-    public class ActividadRepository : GenericRepository<EActividad>
+    public class ActividadRepository : GenericRepository<ActividadModel>
     {
         private readonly DatabaseOffline _db;
 

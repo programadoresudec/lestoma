@@ -1,8 +1,10 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace lestoma.DatabaseOffline
@@ -22,6 +24,35 @@ namespace lestoma.DatabaseOffline
         public async Task<IEnumerable<T>> GetAll()
         {
             return await _entities.ToListAsync();
+        }
+        public async Task MergeEntity(List<T> ListadoEntidad)
+        {
+
+
+            CancellationTokenSource tcs = new CancellationTokenSource();
+            CancellationToken token = new CancellationToken();
+            try
+            {
+                await _context.BulkSynchronizeAsync(ListadoEntidad, token);
+            }
+            catch (Exception ex)
+            {
+
+                var SQLiteException = GetInnerException<SqliteException>(ex);
+                if (SQLiteException != null)
+                {
+                    throw new Exception($"{nameof(ListadoEntidad)} no se ha podido crear: {SQLiteException}");
+                }
+                else
+                {
+                    throw new Exception($"{nameof(ListadoEntidad)} no se ha podido crear: {ex.Message}");
+                }
+            }
+            finally
+            {
+                tcs.Cancel();
+
+            }
         }
 
         public IQueryable<T> GetAllPaginado()

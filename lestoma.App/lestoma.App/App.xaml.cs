@@ -90,6 +90,7 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<DetalleUpaActividadPage, DetalleUpaActividadViewModel>();
             #endregion
             containerRegistry.RegisterForNavigation<CreateOrEditUpaPage, CreateOrEditUpaViewModel>();
+            containerRegistry.RegisterForNavigation<CreateOrEditDetalleUpaActividadPage, CreateOrEditDetalleUpaActividadViewModel>();
         }
     }
 }

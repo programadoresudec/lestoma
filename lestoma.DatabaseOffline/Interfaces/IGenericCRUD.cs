@@ -13,6 +13,6 @@ namespace lestoma.DatabaseOffline.Interfaces
         Task<Response> ActualizarAsync(T entidad);
         Task EliminarAsync(object id);
         Task<List<T>> GetAll();
-        IQueryable<T> GetPaginado();
+        Task MergeEntity(List<T> entidad);
     }
 }
