@@ -1,12 +1,13 @@
 ﻿using Android.Bluetooth;
 using Java.IO;
 using Java.Util;
+using lestoma.CRC.Helpers;
 using Plugin.Toast;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -15,23 +16,21 @@ namespace lestoma.App.ViewModels
 {
     public class MandarTramaViewModel : BaseViewModel
     {
-        private CancellationTokenSource _cancellationToken { get; set; }
+        CancellationTokenSource tcs = new CancellationTokenSource();
+        CancellationToken token = new CancellationToken();
 
         public string MessageToSend { get; set; }
 
 
         private readonly INavigationService _navigationService;
         private string _trama;
-        private BluetoothAdapter mBluetoothAdapter = null;
         private BluetoothSocket btSocket = null;
         private static string address = "00:21:13:00:92:B8";
         private static UUID MY_UUID = UUID.FromString("00001101-0000-1000-8000-00805F9B34FB");
-        BluetoothAdapter adapter = BluetoothAdapter.DefaultAdapter;
         public MandarTramaViewModel(INavigationService navigationService) :
         base(navigationService)
         {
             _navigationService = navigationService;
-            _cancellationToken = new CancellationTokenSource();
             ConnectionBluetoothCommand = new Command(ConectarBluetoothClicked);
             MandarRespuestaCommand = new Command(MandarRespuestaClicked);
         }
@@ -49,14 +48,20 @@ namespace lestoma.App.ViewModels
 
         public async void Connect()
         {
-            //Iniciamos la conexion con el arduino
-            BluetoothDevice device = mBluetoothAdapter.GetRemoteDevice(address);
-            System.Console.WriteLine("Conexion en curso" + device);
-
-            //Indicamos al adaptador que ya no sea visible
-            mBluetoothAdapter.CancelDiscovery();
             try
             {
+                if (mBluetoothAdapter == null)
+                {
+                    CrossToastPopUp.Current.ShowToastError("Tiene que prender el bluetooth", Plugin.Toast.Abstractions.ToastLength.Long);
+                    return;
+                }
+                //Iniciamos la conexion con el arduino
+                BluetoothDevice device = mBluetoothAdapter.GetRemoteDevice(address);
+                System.Console.WriteLine("Conexion en curso" + device);
+
+                //Indicamos al adaptador que ya no sea visible
+                mBluetoothAdapter.CancelDiscovery();
+
                 if (btSocket == null)
                 {
                     btSocket = device.CreateRfcommSocketToServiceRecord(MY_UUID);
@@ -66,7 +71,7 @@ namespace lestoma.App.ViewModels
                 await btSocket.ConnectAsync();
                 if (btSocket.IsConnected)
                 {
-                    CrossToastPopUp.Current.ShowToastSuccess($"Conexión Establecida", Plugin.Toast.Abstractions.ToastLength.Long);
+                    CrossToastPopUp.Current.ShowToastSuccess("Conexión Establecida", Plugin.Toast.Abstractions.ToastLength.Long);
                 }
             }
             catch (Exception ex)
@@ -78,79 +83,62 @@ namespace lestoma.App.ViewModels
             }
         }
 
-
-
-        //Metodo de verificacion del sensor Bluetooth
-        private async void CheckBt()
-        {
-            //asignamos el sensor bluetooth con el que vamos a trabajar
-            mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-
-            //Verificamos que este habilitado
-            if (!mBluetoothAdapter.Enable())
-            {
-                await Application.Current.MainPage.DisplayAlert("Bluetooth", "Bluetooth desactivado", "OK");
-                return;
-
-            }
-            //verificamos que no sea nulo el sensor
-            if (mBluetoothAdapter == null)
-            {
-                await Application.Current.MainPage.DisplayAlert("Bluetooth", "Bluetooth No Existe o esta Ocupado", "OK");
-                return;
-            }
-        }
         private void ConectarBluetoothClicked()
         {
-            CheckBt();
             Connect();
         }
 
 
         private async Task MandarTrama()
         {
-            while (_cancellationToken.IsCancellationRequested == false)
+            try
             {
-                try
+                if (btSocket != null)
                 {
-                    if (btSocket != null)
+                    Debug.Write("Connected");
+                    if (btSocket.IsConnected)
                     {
-                        Debug.Write("Connected");
-                        if (btSocket.IsConnected)
+                        var mReader = new InputStreamReader(btSocket.InputStream);
+                        var buffer = new BufferedReader(mReader);
+
+                        if (!string.IsNullOrWhiteSpace(Trama))
                         {
-                            var mReader = new InputStreamReader(btSocket.InputStream);
-                            var buffer = new BufferedReader(mReader);
+                            var chars = Trama.ToCharArray();
+                            var bytes = new List<byte>();
 
-                            while (_cancellationToken.IsCancellationRequested == false)
+                            foreach (var character in chars)
                             {
-                                if (!string.IsNullOrWhiteSpace(Trama))
+                                bytes.Add((byte)character);
+                            }
+                            await btSocket.OutputStream.WriteAsync(bytes.ToArray(), 0, bytes.Count, token);
+                            CrossToastPopUp.Current.ShowToastSuccess($"trama: {Trama} enviada");
+                            byte[] bytesMOdbus = CalcularCRCHelper.CalculateCrc16Modbus(Trama);
+                            List<string> bytesString = new List<string>();
+
+                            for (int i = 0; i < bytesMOdbus.Length; i++)
+                            {
+                                bytesString.Add(bytesMOdbus[i].ToString());
+                                if (i == 1)
                                 {
-                                    var chars = Trama.ToCharArray();
-                                    var bytes = new List<byte>();
-
-                                    foreach (var character in chars)
-                                    {
-                                        bytes.Add((byte)character);
-                                    }
-
-                                    await btSocket.OutputStream.WriteAsync(bytes.ToArray(), 0, bytes.Count);
-                                    CrossToastPopUp.Current.ShowToastSuccess($"trama: {Trama} enviada");
-
-                                    Trama = string.Empty;
-                                    _cancellationToken.Cancel();
+                                    bytesString.Insert(0, bytesMOdbus[i].ToString());
                                 }
                             }
+                            await Application.Current.MainPage.DisplayAlert("Modbus", $"{bytesString.ElementAt(0)} - {bytesString.ElementAt(1)}", "OK");
+                            Trama = string.Empty;
                         }
                     }
-                    _cancellationToken.Cancel();
-                }
-                catch (Exception ex)
-                {
-                    Debug.Write(ex);
-                    Debug.Write(ex.Message);
                 }
             }
-            _cancellationToken = new CancellationTokenSource();
+
+            catch (Exception ex)
+            {
+                Debug.Write(ex);
+                Debug.Write(ex.Message);
+            }
+            finally
+            {
+                tcs.Cancel();
+            }
         }
         public Command MandarRespuestaCommand { get; set; }
         public Command ConnectionBluetoothCommand { get; set; }

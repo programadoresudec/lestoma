@@ -4,6 +4,13 @@
              xmlns:prism="http://prismlibrary.com"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="lestoma.App.Views.MandarTramar">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="bluetooth.png" Order="Primary" Command="{Binding ActivarBluetoothCommand}"/>
+        <ToolbarItem Text="Ayuda"
+                 Order="Secondary"/>
+        <ToolbarItem Text="Cerrar Sesión" Command="{Binding OnSignOutCommand}"
+                 Order="Secondary"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
             <Entry x:Name="trama" Text="{Binding Trama}" Placeholder="envie la trama.">

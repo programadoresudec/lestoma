@@ -162,6 +162,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\lestomaAPI\lestoma.CommonUtils\lestoma.CommonUtils.csproj" />
+    <ProjectReference Include="..\..\..\lestomaAPI\lestoma.CRC\lestoma.CRC.csproj" />
     <ProjectReference Include="..\..\lestoma.DatabaseOffline\lestoma.DatabaseOffline.csproj" />
   </ItemGroup>
 

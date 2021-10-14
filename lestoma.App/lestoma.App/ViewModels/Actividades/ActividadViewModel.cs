@@ -150,10 +150,7 @@ namespace lestoma.App.ViewModels.Actividades
             {
                 Response response = await _apiService.GetListAsyncWithToken<List<ActividadRequest>>(URL,
               "Actividad/listado", TokenUser.Token);
-                var query = await _actividadOfflineService.GetAll();
                 await _actividadOfflineService.MergeEntity((List<ActividadRequest>)response.Data);
-                var query2 = await _actividadOfflineService.GetAll();
-
                 if (!response.IsExito)
                 {
                     CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
