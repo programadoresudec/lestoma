@@ -74,7 +74,7 @@ namespace lestoma.DatabaseOffline.Logica
         public async Task MergeEntity(List<ActividadRequest> listado)
         {
             var actividades = _mapper.Map<List<ActividadModel>>(listado);
-            await _actividadRepository.MergeEntity(actividades);
+            await _actividadRepository.Merge(actividades);
         }
     }
 }

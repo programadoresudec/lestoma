@@ -10,7 +10,7 @@ namespace lestoma.DatabaseOffline
         Task<T> GetById(object id);
         Task Update(T entidad);
         Task Delete(T entidad);
-        IQueryable<T> GetAllPaginado();
+        Task Merge(List<T> ListadoEntidad);
         Task<IEnumerable<T>> GetAll();
     }
 }

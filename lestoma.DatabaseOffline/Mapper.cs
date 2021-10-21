@@ -11,8 +11,7 @@ namespace lestoma.DatabaseOffline
         {
             var mapperConfiguration = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<ActividadModel, ActividadRequest>();
-                cfg.CreateMap<ActividadRequest, ActividadModel>();
+                cfg.CreateMap<ActividadModel, ActividadRequest>().ReverseMap();
             });
 
             return mapperConfiguration.CreateMapper();
