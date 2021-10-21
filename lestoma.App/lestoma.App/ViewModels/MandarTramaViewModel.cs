@@ -9,6 +9,7 @@ using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,12 +21,9 @@ namespace lestoma.App.ViewModels
     {
         CancellationTokenSource tcs = new CancellationTokenSource();
         CancellationToken token = new CancellationToken();
-
-        public string MessageToSend { get; set; }
-
-
         private readonly INavigationService _navigationService;
         private string _trama;
+        private string _tramaRecibida;
         private BluetoothSocket btSocket = null;
         private static string address = "00:21:13:00:92:B8";
         private static UUID MY_UUID = UUID.FromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -47,7 +45,11 @@ namespace lestoma.App.ViewModels
             get => _trama;
             set => SetProperty(ref _trama, value);
         }
-
+        public string TramaRecibida
+        {
+            get => _tramaRecibida;
+            set => SetProperty(ref _tramaRecibida, value);
+        }
         public async void Connect()
         {
 
@@ -82,6 +84,7 @@ namespace lestoma.App.ViewModels
             }
             catch (Exception ex)
             {
+
                 //en caso de generarnos error cerramos el socket
                 Debug.WriteLine(ex.Message);
                 CrossToastPopUp.Current.ShowToastError($"Error: {ex.Message}");
@@ -99,6 +102,7 @@ namespace lestoma.App.ViewModels
         }
 
 
+
         private async Task MandarTrama()
         {
             try
@@ -111,31 +115,41 @@ namespace lestoma.App.ViewModels
                         var mReader = new InputStreamReader(btSocket.InputStream);
                         var buffer = new BufferedReader(mReader);
 
-                        if (!string.IsNullOrWhiteSpace(_trama))
+                        if (!string.IsNullOrWhiteSpace(Trama))
                         {
 
                             var bytes = new List<byte>();
-                            byte[] bytesMOdbus = CalcularCRCHelper.CalculateCrc16Modbus(_trama);
+                            byte[] bytesMOdbus = CalcularCRCHelper.CalculateCrc16Modbus(Trama);
 
                             var resultado = new List<byte>();
                             resultado.Add(bytesMOdbus.ElementAt(1));
                             resultado.Add(bytesMOdbus.ElementAt(0));
 
                             string hexa = HexaToByteHelper.ByteArrayToHexString(resultado.ToArray());
-                            _trama = _trama.Insert(_trama.Length, hexa);
-                            var chars = _trama.ToCharArray();
+                            Trama = Trama.Insert(Trama.Length, hexa);
+                            var chars = Trama.ToCharArray();
                             foreach (var character in chars)
                             {
                                 bytes.Add((byte)character);
                             }
                             await btSocket.OutputStream.WriteAsync(bytes.ToArray(), 0, bytes.Count, token);
-                            CrossToastPopUp.Current.ShowToastSuccess($"trama: {_trama} enviada");
-                            _trama = string.Empty;
+
+
+                            CrossToastPopUp.Current.ShowToastSuccess($"trama: {Trama} enviada");
+                            Trama = string.Empty;
+
+                            byte[] bufferRecibido = new byte[10];  // buffer store for the stream     
+                            int recibido = 0; // bytes returned from read()
+
+                            recibido += await btSocket.InputStream.ReadAsync(bufferRecibido);
+                            if (recibido > 0)
+                            {
+                                TramaRecibida = HexaToByteHelper.ByteArrayToHexString(bufferRecibido);
+                            }
                         }
                     }
                 }
             }
-
             catch (Exception ex)
             {
                 Debug.Write(ex);

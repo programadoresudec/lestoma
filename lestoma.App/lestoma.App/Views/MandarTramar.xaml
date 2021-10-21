@@ -22,6 +22,9 @@
             <Button Text="Enviar trama" BackgroundColor="green" TextColor="White" Command="{Binding MandarRespuestaCommand}">
 
             </Button>
+            <Label Text="{Binding TramaRecibida}" TextColor="Black" FontSize="Large" HorizontalTextAlignment="Center">
+                
+            </Label>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
