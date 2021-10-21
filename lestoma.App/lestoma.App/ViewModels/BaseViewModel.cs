@@ -91,7 +91,7 @@ namespace lestoma.App.ViewModels
         }
         public Command ActivarBluetoothCommand { get; }
 
-        private async void OnBluetoothClicked()
+        public async void OnBluetoothClicked()
         {
             mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
             //Verificamos que este habilitado
