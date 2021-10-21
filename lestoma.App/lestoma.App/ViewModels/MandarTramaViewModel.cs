@@ -1,9 +1,11 @@
 ﻿using Android.Bluetooth;
 using Java.IO;
 using Java.Util;
+using lestoma.App.Views;
 using lestoma.CRC.Helpers;
 using Plugin.Toast;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -48,9 +50,13 @@ namespace lestoma.App.ViewModels
 
         public async void Connect()
         {
+
+            await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Conectando..."));
             try
             {
-                if (mBluetoothAdapter == null)
+                btSocket = null;
+                mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
+                if (!mBluetoothAdapter.IsEnabled)
                 {
                     CrossToastPopUp.Current.ShowToastError("Tiene que prender el bluetooth", Plugin.Toast.Abstractions.ToastLength.Long);
                     return;
@@ -71,7 +77,7 @@ namespace lestoma.App.ViewModels
                 await btSocket.ConnectAsync();
                 if (btSocket.IsConnected)
                 {
-                    CrossToastPopUp.Current.ShowToastSuccess("Conexión Establecida", Plugin.Toast.Abstractions.ToastLength.Long);
+                    CrossToastPopUp.Current.ShowToastSuccess("Conexión Establecida.", Plugin.Toast.Abstractions.ToastLength.Long);
                 }
             }
             catch (Exception ex)
@@ -80,6 +86,10 @@ namespace lestoma.App.ViewModels
                 Debug.WriteLine(ex.Message);
                 CrossToastPopUp.Current.ShowToastError($"Error: {ex.Message}");
                 btSocket.Close();
+            }
+            finally
+            {
+                await _navigationService.ClearPopupStackAsync();
             }
         }
 
@@ -101,30 +111,26 @@ namespace lestoma.App.ViewModels
                         var mReader = new InputStreamReader(btSocket.InputStream);
                         var buffer = new BufferedReader(mReader);
 
-                        if (!string.IsNullOrWhiteSpace(Trama))
+                        if (!string.IsNullOrWhiteSpace(_trama))
                         {
-                            var chars = Trama.ToCharArray();
-                            var bytes = new List<byte>();
 
+                            var bytes = new List<byte>();
+                            byte[] bytesMOdbus = CalcularCRCHelper.CalculateCrc16Modbus(_trama);
+
+                            var resultado = new List<byte>();
+                            resultado.Add(bytesMOdbus.ElementAt(1));
+                            resultado.Add(bytesMOdbus.ElementAt(0));
+
+                            string hexa = HexaToByteHelper.ByteArrayToHexString(resultado.ToArray());
+                            _trama = _trama.Insert(_trama.Length, hexa);
+                            var chars = _trama.ToCharArray();
                             foreach (var character in chars)
                             {
                                 bytes.Add((byte)character);
                             }
                             await btSocket.OutputStream.WriteAsync(bytes.ToArray(), 0, bytes.Count, token);
-                            CrossToastPopUp.Current.ShowToastSuccess($"trama: {Trama} enviada");
-                            byte[] bytesMOdbus = CalcularCRCHelper.CalculateCrc16Modbus(Trama);
-                            List<string> bytesString = new List<string>();
-
-                            for (int i = 0; i < bytesMOdbus.Length; i++)
-                            {
-                                bytesString.Add(bytesMOdbus[i].ToString());
-                                if (i == 1)
-                                {
-                                    bytesString.Insert(0, bytesMOdbus[i].ToString());
-                                }
-                            }
-                            await Application.Current.MainPage.DisplayAlert("Modbus", $"{bytesString.ElementAt(0)} - {bytesString.ElementAt(1)}", "OK");
-                            Trama = string.Empty;
+                            CrossToastPopUp.Current.ShowToastSuccess($"trama: {_trama} enviada");
+                            _trama = string.Empty;
                         }
                     }
                 }
