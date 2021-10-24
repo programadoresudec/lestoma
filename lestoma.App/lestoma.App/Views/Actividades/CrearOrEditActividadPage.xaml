@@ -4,7 +4,7 @@
              xmlns:prism="http://prismlibrary.com" xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" 
              xmlns:control="clr-namespace:lestoma.App.Controls" xmlns:behaviour="clr-namespace:lestoma.App.Behaviors" 
              xmlns:converter="clr-namespace:lestoma.App.Converters" xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms" 
-             xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" 
+             xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="lestoma.App.Views.Actividades.CrearOrEditActividadPage">
     <ContentPage.Resources>
@@ -60,7 +60,6 @@
                        Text="{StaticResource Error}" />
                 </Grid>
             </border:SfBorder>
-
             <buttons:SfButton
             HorizontalOptions="CenterAndExpand"
             Command="{Binding CreateOrEditCommand}"

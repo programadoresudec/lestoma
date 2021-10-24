@@ -1,8 +1,151 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="http://prismlibrary.com"
-             prism:ViewModelLocator.AutowireViewModel="True"
+             xmlns:prism="http://prismlibrary.com" xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
+             xmlns:control="clr-namespace:lestoma.App.Controls" xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms"
+             xmlns:behaviour="clr-namespace:lestoma.App.Behaviors" xmlns:converter="clr-namespace:lestoma.App.Converters"
+             xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms"
+             prism:ViewModelLocator.AutowireViewModel="True"  xmlns:ListCollection="clr-namespace:System.Collections.Generic;assembly=netstandard" xmlns:upas="clr-namespace:lestoma.App.ViewModels.Upas" x:DataType="upas:CreateOrEditUpaViewModel"
              x:Class="lestoma.App.Views.Upas.CreateOrEditUpaPage">
-  
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converter:BooleanToColorConverter x:Key="ColorConverter" />
+            <converter:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <converter:NameValidationConverter x:Key="FirstValidationErrorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <StackLayout>
+        <StackLayout BackgroundColor="{StaticResource PantoneVerdeDark}" Orientation="Horizontal">
+            <buttons:SfButton BackgroundColor="Transparent" HorizontalOptions="Start" Margin="10" VerticalOptions="CenterAndExpand"
+                                      ShowIcon="True" ImageSource="icon_leftarrow.png" Command="{Binding BackButtonCommand}"/>
+            <Label Text="{Binding Title}" FontSize="20" TextColor="White" FontAttributes="Bold" VerticalOptions="CenterAndExpand"/>
+        </StackLayout>
+        <StackLayout VerticalOptions="CenterAndExpand" Margin="15" Padding="10" Spacing="8">
+            <!--  nombre upa  -->
+            <Label 
+            x:Name="NombreValidationLabel"
+            Margin="15,-3,0,0"
+            IsVisible="{Binding Model.Nombre.IsValid, Converter={StaticResource InverseBoolConverter}}"
+            Style="{StaticResource SimpleLabelStyle}"
+            Text="{Binding Model.Nombre.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+            TextColor="{DynamicResource Red}"
+            VerticalOptions="FillAndExpand" />
+            <border:SfBorder BackgroundColor="{DynamicResource Gray-White}"
+            BorderColor="{Binding Source={x:Reference NombreEntry}, Path=IsFocused, Converter={StaticResource ColorConverter}, ConverterParameter=0}"
+            CornerRadius="4" HeightRequest="60" Style="{StaticResource LoginFormBorderlessEntryBorderStyle}">
+                <Grid ColumnDefinitions="*, Auto">
+                    <inputLayout:SfTextInputLayout Hint="Nombre UPA"  FocusedColor="Black" ContainerBackgroundColor="Transparent"
+                                                   Margin="10,0,0,0">
+                        <control:BorderlessEntry
+                            x:Name="NombreEntry"
+                            Margin="15,0" 
+                            MaxLength="60" 
+                          
+                            PlaceholderColor="{StaticResource EntryPlaceholderColor}"
+                            Style="{StaticResource BorderlessEntryStyle}"
+                            Text="{Binding Upa.Nombre}"
+                            TextColor="Black">
+                            <Entry.Behaviors>
+                                <behaviour:EntryLineValidationBehaviour IsValid="{Binding Model.Nombre.IsValid}" />
+                            </Entry.Behaviors>
+                        </control:BorderlessEntry>
+                    </inputLayout:SfTextInputLayout>
+                    <Label Grid.Column="1"
+                       IsVisible="{Binding Path=IsVisible, Source={x:Reference NombreValidationLabel}}"
+                       Style="{StaticResource ErrorIconLabelStyle}"
+                       Text="{StaticResource Error}" />
+                </Grid>
+            </border:SfBorder>
+            <!--  nombre upa  -->
+
+            <!--  descripcion upa -->
+            <Label 
+            x:Name="descripcionValidationLabel"
+            Margin="15,-3,0,0"
+            IsVisible="{Binding Model.Descripcion.IsValid, Converter={StaticResource InverseBoolConverter}}"
+            Style="{StaticResource SimpleLabelStyle}"
+            Text="{Binding Model.Descripcion.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+            TextColor="{DynamicResource Red}"
+            VerticalOptions="FillAndExpand" />
+            <border:SfBorder BackgroundColor="{DynamicResource Gray-White}"
+            BorderColor="{Binding Source={x:Reference DescripcionEntry}, Path=IsFocused, Converter={StaticResource ColorConverter}, ConverterParameter=0}"
+            CornerRadius="4" Style="{StaticResource LoginFormBorderlessEntryBorderStyle}">
+                <Grid ColumnDefinitions="*, Auto">
+                    <inputLayout:SfTextInputLayout Hint="Descripción" FocusedColor="Black" ContainerBackgroundColor="Transparent"
+                                                   Margin="10,0,0,0">
+                        <control:BorderlessEditor
+                            x:Name="DescripcionEntry"
+                            Margin="15,0" 
+                            MaxLength="500" 
+                            AutoSize="TextChanges"
+                            PlaceholderColor="{StaticResource EntryPlaceholderColor}"
+                            Style="{StaticResource BorderlessEntryStyle}"
+                            Text="{Binding Upa.Descripcion}"
+                            TextColor="Black">
+                            <Editor.Behaviors>
+                                <behaviour:EditorLineValidationBehaviour IsValid="{Binding Model.Descripcion.IsValid}" />
+                            </Editor.Behaviors>
+                        </control:BorderlessEditor>
+                    </inputLayout:SfTextInputLayout>
+                    <Label Grid.Column="1"
+                       IsVisible="{Binding Path=IsVisible, Source={x:Reference descripcionValidationLabel}}"
+                       Style="{StaticResource ErrorIconLabelStyle}"
+                       Text="{StaticResource Error}" />
+                </Grid>
+            </border:SfBorder>
+
+            <!--  descripcion upa -->
+
+            <!--  cantidad upa -->
+            <!--  descripcion upa -->
+            <Label 
+            x:Name="cantidadValidationLabel"
+            Margin="15,-3,0,0"
+            IsVisible="{Binding Model.CantidadActividades.IsValid, Converter={StaticResource InverseBoolConverter}}"
+            Style="{StaticResource SimpleLabelStyle}"
+            Text="{Binding Model.CantidadActividades.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+            TextColor="{DynamicResource Red}"
+            VerticalOptions="FillAndExpand" />
+            <border:SfBorder BackgroundColor="{DynamicResource Gray-White}"
+            BorderColor="{Binding Source={x:Reference cantidadEntry}, Path=IsFocused, Converter={StaticResource ColorConverter}, ConverterParameter=0}"
+            CornerRadius="4" HeightRequest="80" Style="{StaticResource LoginFormBorderlessEntryBorderStyle}">
+                <Grid ColumnDefinitions="*, Auto">
+                    <inputLayout:SfTextInputLayout Hint="cantidad de actividades" HeightRequest="80" ContainerBackgroundColor="Transparent" 
+                                                   Margin="10,0,0,0">
+                        <Picker x:Name="cantidadEntry" TextColor="Black" Style="{StaticResource BorderlessEntryStyle}" Margin="15,0" 
+                                SelectedItem="{Binding Upa.CantidadActividades}">
+                            <Picker.Behaviors>
+                                <behaviour:PickerLineValidationBehaviour IsValid="{Binding Model.CantidadActividades.IsValid}" />
+                            </Picker.Behaviors>
+                            <Picker.ItemsSource>
+                                <ListCollection:List x:TypeArguments="x:Int16">
+                                    <x:Int16>1</x:Int16>
+                                    <x:Int16>2</x:Int16>
+                                    <x:Int16>3</x:Int16>
+                                    <x:Int16>4</x:Int16>
+                                    <x:Int16>5</x:Int16>
+                                    <x:Int16>6</x:Int16>
+                                    <x:Int16>7</x:Int16>
+                                    <x:Int16>8</x:Int16>
+                                </ListCollection:List>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </inputLayout:SfTextInputLayout>
+                    <Label Grid.Column="1"
+                       IsVisible="{Binding Path=IsVisible, Source={x:Reference cantidadValidationLabel}}"
+                       Style="{StaticResource ErrorIconLabelStyle}"
+                       Text="{StaticResource Error}" />
+                </Grid>
+            </border:SfBorder>
+            <!--  cantidad upa -->
+            <buttons:SfButton
+            HorizontalOptions="CenterAndExpand"
+            Command="{Binding CreateOrEditCommand}"
+             CornerRadius="4" Margin="15"
+             Style="{StaticResource GradientButtonStyle}"
+             Text="Guardar" />
+        </StackLayout>
+    </StackLayout>
 </ContentPage>
+    

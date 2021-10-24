@@ -1,8 +1,5 @@
 ﻿using lestoma.App.Validators;
 using lestoma.App.Validators.Rules;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace lestoma.App.Models
 {

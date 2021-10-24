@@ -15,22 +15,66 @@
             <helper:InverseBoolConverter x:Key="inverseBoolConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <syncfusion:SfListView x:Name="LV_upas" ItemSize="100"
+    <syncfusion:SfListView x:Name="LV_upas" AutoFitMode="DynamicHeight"
                              LoadMoreOption="Auto" AllowSwiping="True" SwipeOffset="100"
                              LoadMoreCommand="{Binding LoadMoreItemsCommand}" SwipeEnded="LV_upas_SwipeEnded" IsBusy="{Binding IsBusy}"
-                             LoadMoreCommandParameter="{Binding Source={x:Reference Name=LV_upas}}"
+                             LoadMoreCommandParameter="{Binding Source={x:Reference Name=LV_upas}}" TapCommand="{Binding EditCommand}"
                              ItemsSource="{Binding Upas}" SelectionBackgroundColor="Transparent">
        
         <syncfusion:SfListView.ItemTemplate>
             <DataTemplate>
                 <Frame Margin="5,10,5,10" CornerRadius="10" BackgroundColor="AliceBlue">
-                    <StackLayout Orientation="Horizontal">
-                        <StackLayout VerticalOptions="Center" HorizontalOptions="StartAndExpand">
-                            <Label Text="{Binding Nombre}" FontSize="Small"
-                                           TextColor="Black"/>
-                            <Label Text="{Binding CantidadActividades}" FontSize="Small"
-                                           TextColor="Black"/>
-                        </StackLayout>
+                    <StackLayout Orientation="Vertical">
+                        <Label Text="{Binding Nombre}" FontSize="Body"
+                                           TextColor="{x:DynamicResource PantoneVerdeSecond}" FontAttributes="Bold"/>
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Cantidad actividades: " FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                    <Span Text="{Binding CantidadActividades}" TextColor="Black" FontSize="Small" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Fecha ultimo acceso: " FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                    <Span Text="{Binding FechaCreacion}" TextColor="Black" FontSize="Small" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="IP: " FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                    <Span Text="{Binding Ip}" TextColor="Black" FontSize="Small" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Usuario ultimo acceso: " FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                    <Span Text="{Binding Session}" TextColor="Black" FontSize="Small" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Tipo Aplicación ultimo acceso: " FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                    <Span Text="{Binding TipoDeAplicacion}" TextColor="Black" FontSize="Small" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Descripción: " FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                    <Span Text="{Binding Descripcion}" TextColor="Black" FontSize="Small" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
                     </StackLayout>
                 </Frame>
             </DataTemplate>
@@ -41,7 +85,7 @@
                     <Label Text="Load More Items" TextColor="Black" BackgroundColor="AliceBlue"
                            HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
                            IsVisible="{Binding IsBusy, Converter={StaticResource inverseBoolConverter}, Source={x:Reference Name=LV_upas}}" />
-                    <syncfusion:LoadMoreIndicator Color="Red" IsRunning="{Binding IsBusy, Source={x:Reference Name=LV_upas}}"
+                    <syncfusion:LoadMoreIndicator Color="{StaticResource PantoneVerdeSecond}" IsRunning="{Binding IsBusy, Source={x:Reference Name=LV_upas}}"
                                                   IsVisible="{Binding IsBusy, Source={x:Reference Name=LV_upas}}" VerticalOptions="Center"/>
                 </Grid>
             </DataTemplate>

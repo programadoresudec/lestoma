@@ -60,10 +60,8 @@ namespace lestoma.App.ViewModels.UpasActividades
 
         private async void ConsumoService()
         {
-            string url = Prism.PrismApplicationBase.Current.Resources["UrlAPI"].ToString();
-            TokenDTO UserApp = JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token);
-            Response response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(url,
-                $"UpasActividades/paginar?Page={Page}&&PageSize={PageSize}", UserApp.Token);
+            Response response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(URL,
+                $"UpasActividades/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
             if (!response.IsExito)
             {
                 CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);

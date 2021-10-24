@@ -6,6 +6,6 @@
              x:Class="lestoma.App.Views.AboutPage"
               Title="Acerca de Lestoma">
     <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-        <Label Text="Welcome to Xamarin Forms and Prism!" />
+        <Label Text="Welcome to Xamarin Forms and Prism! FFD" />
     </StackLayout>
 </ContentPage>

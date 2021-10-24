@@ -1,10 +1,8 @@
 ﻿using lestoma.App.Models;
 using lestoma.CommonUtils.DTOs;
-using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using lestoma.DatabaseOffline.Logica;
-using Newtonsoft.Json;
 using Plugin.Toast;
 using Prism.Navigation;
 using System;
@@ -31,7 +29,7 @@ namespace lestoma.App.ViewModels.Actividades
             _model.AddValidationRules();
             CreateOrEditCommand = new Command(CreateOrEditarClicked);
         }
-
+        public Command CreateOrEditCommand { get; set; }
         private void CargarDatos()
         {
             Model.Nombre.Value = Actividad != null ? Actividad.Nombre : string.Empty;
@@ -56,12 +54,10 @@ namespace lestoma.App.ViewModels.Actividades
                     }
                     else
                     {
-                        string url = Prism.PrismApplicationBase.Current.Resources["UrlAPI"].ToString();
-                        TokenDTO UserApp = JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token);
 
                         if (Actividad.Id == 0)
                         {
-                            Response respuesta = await _apiService.PostAsyncWithToken(url, "Actividad/crear", request, UserApp.Token);
+                            Response respuesta = await _apiService.PostAsyncWithToken(URL, "actividades/crear", request, TokenUser.Token);
                             if (!respuesta.IsExito)
                             {
                                 CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
@@ -72,7 +68,7 @@ namespace lestoma.App.ViewModels.Actividades
                         }
                         else
                         {
-                            Response respuesta = await _apiService.PutAsyncWithToken(url, "Actividad/editar", request, UserApp.Token);
+                            Response respuesta = await _apiService.PutAsyncWithToken(URL, "actividades/editar", request, TokenUser.Token);
                             if (!respuesta.IsExito)
                             {
                                 CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
@@ -83,14 +79,13 @@ namespace lestoma.App.ViewModels.Actividades
                         }
                         await _navigationService.GoBackAsync(null, useModalNavigation: true, true);
                     }
-
                 }
 
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-            }  
+            }
         }
 
         public ActividadRequest Actividad
@@ -111,7 +106,7 @@ namespace lestoma.App.ViewModels.Actividades
             }
         }
 
-        public Command CreateOrEditCommand { get; set; }
+
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);

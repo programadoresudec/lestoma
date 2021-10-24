@@ -149,7 +149,7 @@ namespace lestoma.App.ViewModels.Actividades
             else
             {
                 Response response = await _apiService.GetListAsyncWithToken<List<ActividadRequest>>(URL,
-              "Actividad/listado", TokenUser.Token);
+              "actividades/listado", TokenUser.Token);
                 await _actividadOfflineService.MergeEntity((List<ActividadRequest>)response.Data);
                 if (!response.IsExito)
                 {
