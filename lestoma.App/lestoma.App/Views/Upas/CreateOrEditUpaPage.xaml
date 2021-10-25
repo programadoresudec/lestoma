@@ -5,8 +5,8 @@
              xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
              xmlns:control="clr-namespace:lestoma.App.Controls" xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms"
              xmlns:behaviour="clr-namespace:lestoma.App.Behaviors" xmlns:converter="clr-namespace:lestoma.App.Converters"
-             xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms"
-             prism:ViewModelLocator.AutowireViewModel="True"  xmlns:ListCollection="clr-namespace:System.Collections.Generic;assembly=netstandard" xmlns:upas="clr-namespace:lestoma.App.ViewModels.Upas" x:DataType="upas:CreateOrEditUpaViewModel"
+             prism:ViewModelLocator.AutowireViewModel="True"  xmlns:ListCollection="clr-namespace:System.Collections.Generic;assembly=netstandard"
+             xmlns:upas="clr-namespace:lestoma.App.ViewModels.Upas" x:DataType="upas:CreateOrEditUpaViewModel"
              x:Class="lestoma.App.Views.Upas.CreateOrEditUpaPage">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -96,9 +96,7 @@
             </border:SfBorder>
 
             <!--  descripcion upa -->
-
             <!--  cantidad upa -->
-            <!--  descripcion upa -->
             <Label 
             x:Name="cantidadValidationLabel"
             Margin="15,-3,0,0"

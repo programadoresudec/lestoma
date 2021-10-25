@@ -27,7 +27,19 @@ namespace lestoma.App.ViewModels.Actividades
             EditCommand = new Command<object>(ActividadSelected, CanNavigate);
             LoadActividades();
         }
+        public Command EditCommand { get; set; }
 
+        public Command AddCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    await _navigationService.NavigateAsync(nameof(CrearOrEditActividadPage), null, useModalNavigation: true, true);
+
+                });
+            }
+        }
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
@@ -69,19 +81,7 @@ namespace lestoma.App.ViewModels.Actividades
         {
             return true;
         }
-        public Command EditCommand { get; set; }
-
-        public Command AddCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    await _navigationService.NavigateAsync(nameof(CrearOrEditActividadPage), null, useModalNavigation: true, true);
-
-                });
-            }
-        }
+     
         private async void ActividadSelected(object objeto)
         {
             var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;

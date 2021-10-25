@@ -30,12 +30,34 @@ namespace lestoma.App.ViewModels.UpasActividades
         }
 
         public Command<object> LoadMoreItemsCommand { get; }
+        public Command AddCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    await _navigationService.NavigateAsync(nameof(CreateOrEditDetalleUpaActividadViewModel));
+                });
+            }
+        }
         public ObservableCollection<DetalleUpaActividadDTO> DetalleUpasActividades
         {
             get => _detalleUpaActividad;
             set => SetProperty(ref _detalleUpaActividad, value);
         }
+        private async void DetalleSelected(object objeto)
+        {
+            var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
+            var detalleUpaActividad = lista.ItemData as DetalleUpaActividadDTO;
 
+            if (detalleUpaActividad == null)
+                return;
+            var parameters = new NavigationParameters
+            {
+                { "upa", detalleUpaActividad }
+            };
+            await _navigationService.NavigateAsync(nameof(CreateOrEditDetalleUpaActividadViewModel), parameters);
+        }
         private async void LoadDetalle()
         {
             try

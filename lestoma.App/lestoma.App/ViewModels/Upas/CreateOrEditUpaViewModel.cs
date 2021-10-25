@@ -20,7 +20,7 @@ namespace lestoma.App.ViewModels.Upas
         private readonly IApiService _apiService;
         private UpaModel _model;
         private UpaRequest _upa;
-        public Command CreateOrEditCommand { get; }
+  
 
         public CreateOrEditUpaViewModel(INavigationService navigationService, IApiService apiService)
            : base(navigationService)
@@ -49,6 +49,8 @@ namespace lestoma.App.ViewModels.Upas
                 SetProperty(ref _model, value);
             }
         }
+        public Command CreateOrEditCommand { get; }
+
         private void CargarDatos()
         {
             Model.Nombre.Value = Upa != null ? Upa.Nombre : string.Empty;

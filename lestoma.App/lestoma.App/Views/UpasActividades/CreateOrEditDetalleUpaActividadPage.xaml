@@ -1,8 +1,60 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="http://prismlibrary.com"
+             xmlns:prism="http://prismlibrary.com" xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms" 
+             xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" 
+             xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" 
+             xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms" xmlns:behaviour="clr-namespace:lestoma.App.Behaviors"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="lestoma.App.Views.UpasActividades.CreateOrEditDetalleUpaActividadPage">
-  
+    <StackLayout VerticalOptions="Start" HorizontalOptions="Start" Padding="30">
+        <ScrollView>
+            <StackLayout>
+
+
+            <Label x:Name="usuarioValidationLabel"
+            Margin="15,-3,0,0"
+            IsVisible="{Binding Model.CantidadActividades.IsValid, Converter={StaticResource InverseBoolConverter}}"
+            Style="{StaticResource SimpleLabelStyle}"
+            Text="{Binding Model.CantidadActividades.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+            TextColor="{DynamicResource Red}"
+            VerticalOptions="FillAndExpand" />
+                <border:SfBorder BackgroundColor="{DynamicResource Gray-White}"
+            BorderColor="{Binding Source={x:Reference usuarioEntry}, Path=IsFocused, Converter={StaticResource ColorConverter}, ConverterParameter=0}"
+            CornerRadius="4" HeightRequest="80" Style="{StaticResource LoginFormBorderlessEntryBorderStyle}">
+                    <Grid ColumnDefinitions="*, Auto">
+                        <inputLayout:SfTextInputLayout Hint="usuarios" HeightRequest="80" ContainerBackgroundColor="Transparent" 
+                                                   Margin="10,0,0,0">
+                            <Picker x:Name="usuarioEntry" TextColor="Black" Style="{StaticResource BorderlessEntryStyle}" Margin="15,0" 
+                                SelectedItem="{Binding Usuario}" ItemsSource="{Binding UsuariosLista}">
+                                <Picker.Behaviors>
+                                    <behaviour:PickerLineValidationBehaviour IsValid="{Binding Model.Usuario.IsValid}" />
+                                </Picker.Behaviors>
+                            </Picker>
+                        </inputLayout:SfTextInputLayout>
+                        <Label Grid.Column="1"
+                       IsVisible="{Binding Path=IsVisible, Source={x:Reference usuarioValidationLabel}}"
+                       Style="{StaticResource ErrorIconLabelStyle}"
+                       Text="{StaticResource Error}" />
+                    </Grid>
+                </border:SfBorder>
+                <combobox:SfComboBox HeightRequest="40" x:Name="comboBox" DropDownItemHeight="50" DisplayMemberPath="Nombre" IsEditableMode="True"
+                                      MultiSelectMode="Token" TokensWrapMode="Wrap" DataSource="{Binding Actividades}">
+                    <combobox:SfComboBox.TokenSettings>
+                        <combobox:TokenSettings FontSize="16" BackgroundColor="White" 
+                                        TextColor="Black" SelectedBackgroundColor="#ffffe0" DeleteButtonColor="{StaticResource PantoneVerdeSecond}"
+                                        IsCloseButtonVisible="true" 
+                                        CornerRadius="15" DeleteButtonPlacement="Right">
+                        </combobox:TokenSettings>
+                    </combobox:SfComboBox.TokenSettings>
+                </combobox:SfComboBox>
+            </StackLayout>
+        </ScrollView>
+        <buttons:SfButton
+            HorizontalOptions="CenterAndExpand"
+            Command="{Binding CreateOrEditCommand}"
+             CornerRadius="4" Margin="15"
+             Style="{StaticResource GradientButtonStyle}"
+             Text="Guardar" />
+    </StackLayout>
 </ContentPage>
