@@ -8,5 +8,10 @@ namespace lestoma.App.Views.UpasActividades
         {
             InitializeComponent();
         }
+
+        private void chipsActividades_ItemRemoved(object sender, Syncfusion.Buttons.XForms.SfChip.ItemRemovedEventArgs e)
+        {
+
+        }
     }
 }

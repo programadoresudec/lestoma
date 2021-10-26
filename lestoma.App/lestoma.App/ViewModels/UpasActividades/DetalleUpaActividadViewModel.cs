@@ -1,8 +1,8 @@
 ﻿using lestoma.App.Views;
+using lestoma.App.Views.UpasActividades;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
-using Newtonsoft.Json;
 using Plugin.Toast;
 using Prism.Navigation;
 using System;
@@ -18,7 +18,7 @@ namespace lestoma.App.ViewModels.UpasActividades
         private INavigationService _navigationService;
         private IApiService _apiService;
         private ObservableCollection<DetalleUpaActividadDTO> _detalleUpaActividad;
-
+        private bool _isVisible;
         public DetalleUpaActividadViewModel(INavigationService navigationService, IApiService apiService) :
         base(navigationService)
         {
@@ -27,23 +27,36 @@ namespace lestoma.App.ViewModels.UpasActividades
             _detalleUpaActividad = new ObservableCollection<DetalleUpaActividadDTO>();
             LoadDetalle();
             LoadMoreItemsCommand = new Command<object>(LoadMoreItems, CanLoadMoreItems);
+            EditCommand = new Command<object>(DetalleSelected, CanNavigate);
+          
         }
-
-        public Command<object> LoadMoreItemsCommand { get; }
         public Command AddCommand
         {
             get
             {
                 return new Command(async () =>
                 {
-                    await _navigationService.NavigateAsync(nameof(CreateOrEditDetalleUpaActividadViewModel));
+                    await _navigationService.NavigateAsync(nameof(CreateOrEditDetalleUpaActividadPage));
                 });
             }
         }
+        public Command EditCommand { get; set; }
+        public Command<object> LoadMoreItemsCommand { get; }
+
         public ObservableCollection<DetalleUpaActividadDTO> DetalleUpasActividades
         {
             get => _detalleUpaActividad;
             set => SetProperty(ref _detalleUpaActividad, value);
+        }
+
+        public bool IsVisible
+        {
+            get => _isVisible;
+            set => SetProperty(ref _isVisible, value);
+        }
+        private bool CanNavigate(object arg)
+        {
+            return true;
         }
         private async void DetalleSelected(object objeto)
         {
@@ -54,7 +67,7 @@ namespace lestoma.App.ViewModels.UpasActividades
                 return;
             var parameters = new NavigationParameters
             {
-                { "upa", detalleUpaActividad }
+                { "detalleUpaActividad", detalleUpaActividad }
             };
             await _navigationService.NavigateAsync(nameof(CreateOrEditDetalleUpaActividadViewModel), parameters);
         }
@@ -83,10 +96,15 @@ namespace lestoma.App.ViewModels.UpasActividades
         private async void ConsumoService()
         {
             Response response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(URL,
-                $"UpasActividades/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
+                $"detalle-upas-actividades/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
             if (!response.IsExito)
             {
                 CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
+                return;
+            }
+            else if (response.Data == null)
+            {
+                IsVisible = true;
                 return;
             }
             Paginador<DetalleUpaActividadDTO> paginador = (Paginador<DetalleUpaActividadDTO>)response.Data;
@@ -126,6 +144,12 @@ namespace lestoma.App.ViewModels.UpasActividades
             try
             {
                 IsBusy = true;
+                if (!_apiService.CheckConnection())
+                {
+                    CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
+                    IsBusy = false;
+                    return;
+                }
                 await Task.Delay(1000);
                 AddUpasConActividades();
             }
@@ -141,13 +165,17 @@ namespace lestoma.App.ViewModels.UpasActividades
 
         private async void AddUpasConActividades()
         {
-            string url = Prism.PrismApplicationBase.Current.Resources["UrlAPI"].ToString();
-            TokenDTO UserApp = JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token);
-            Response response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(url,
-                $"UpasActividades/paginar?Page={Page}&&PageSize={PageSize}", UserApp.Token);
+
+            Response response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(URL,
+                $"detalle-upas-actividades/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
             if (!response.IsExito)
             {
                 CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
+                return;
+            }
+            else if (response.Data == null)
+            {
+                IsVisible = true;
                 return;
             }
             Paginador<DetalleUpaActividadDTO> paginador = (Paginador<DetalleUpaActividadDTO>)response.Data;
