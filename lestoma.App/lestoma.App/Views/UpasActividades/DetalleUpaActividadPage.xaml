@@ -21,31 +21,85 @@
                FontSize="Large" TextColor="{Binding PantoneVerdeSecond}"></Label>
         
         <syncfusion:SfListView x:Name="LV_detalleUpasActividades"   
-                             LoadMoreOption="Auto" AllowSwiping="True" SwipeOffset="100" SwipeEnded="LV_detalleUpasActividades_SwipeEnded"
-                             LoadMoreCommand="{Binding LoadMoreItemsCommand}" IsBusy="{Binding IsBusy}"  AutoFitMode="DynamicHeight"
+                             LoadMoreOption="Auto" AllowSwiping="True"  SwipeOffset="100" SwipeEnded="LV_detalleUpasActividades_SwipeEnded"
+                             LoadMoreCommand="{Binding LoadMoreItemsCommand}" IsBusy="{Binding IsBusy}" AutoFitMode="DynamicHeight"
                              LoadMoreCommandParameter="{Binding Source={x:Reference Name=LV_detalleUpasActividades}}" TapCommand="{Binding EditCommand}"
                              ItemsSource="{Binding DetalleUpasActividades}" SelectionBackgroundColor="Transparent">
             <syncfusion:SfListView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Margin="5,10,5,10" CornerRadius="10" BackgroundColor="AliceBlue">
-                        <StackLayout Orientation="Horizontal" VerticalOptions="Center">
-                            <Label Text="{Binding User.FullName}" FontSize="Small"
-                                           TextColor="Black"/>
-                            <Label Text="{Binding Upa.Nombre}" FontSize="Small"
-                                           TextColor="Black"/>
-                            <StackLayout Orientation="Vertical" Spacing="20" HorizontalOptions="End" VerticalOptions="CenterAndExpand">
-                                <CollectionView ItemsSource="{Binding Actividades}">
+                    <Frame Margin="5,10,5,10" CornerRadius="10" Padding="5" BackgroundColor="AliceBlue">
+                        <StackLayout Orientation="Vertical" VerticalOptions="Center">
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Nombre Usuario: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" FontAttributes="Bold"/>
+                                        <Span Text="{Binding User.FullName}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Nombre Upa: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" FontAttributes="Bold"/>
+                                        <Span Text="{Binding Upa.Nombre}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label Text="Actividades" FontSize="Small" FontAttributes="Bold"
+                                           TextColor="{StaticResource PantoneVerdeSecond}"/>
+                            <StackLayout>
+                                <CollectionView ItemsSource="{Binding Actividades}" HeightRequest="130" VerticalScrollBarVisibility="Always">
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate>
-                                            <Frame Margin="2" CornerRadius="10" BackgroundColor="Black">
-                                                <Label 
-                                                Text="{Binding Nombre}"
-                                                 FontAttributes="Bold" TextColor="White" />
-                                            </Frame>
+                                            <Label>
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="• " FontSize="Large" TextColor="{StaticResource PantoneVerdeSecond}" 
+                                                              FontAttributes="Bold"/>
+                                                        <Span Text="{Binding Nombre}" TextColor="Black" FontSize="Small" />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
                                         </DataTemplate>
                                     </CollectionView.ItemTemplate>
                                 </CollectionView>
                             </StackLayout>
+                           
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Fecha ultimo acceso: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" 
+                                              FontAttributes="Bold"/>
+                                        <Span Text="{Binding FechaCreacion}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="IP: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" FontAttributes="Bold"/>
+                                        <Span Text="{Binding Ip}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Usuario ultimo acceso: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" 
+                                              FontAttributes="Bold"/>
+                                        <Span Text="{Binding Session}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Tipo Aplicación ultimo acceso: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" 
+                                              FontAttributes="Bold"/>
+                                        <Span Text="{Binding TipoDeAplicacion}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
                         </StackLayout>
                     </Frame>
                 </DataTemplate>
@@ -56,7 +110,7 @@
                         <Label Text="Load More Items" TextColor="Black" BackgroundColor="AliceBlue"
                            HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
                            IsVisible="{Binding IsBusy, Converter={StaticResource inverseBoolConverter}, Source={x:Reference Name=LV_detalleUpasActividades}}" />
-                        <syncfusion:LoadMoreIndicator Color="Red" IsRunning="{Binding IsBusy, Source={x:Reference Name=LV_detalleUpasActividades}}"
+                        <syncfusion:LoadMoreIndicator Color="{StaticResource PantoneVerdeSecond}" IsRunning="{Binding IsBusy, Source={x:Reference Name=LV_detalleUpasActividades}}"
                                                   IsVisible="{Binding IsBusy, Source={x:Reference Name=LV_detalleUpasActividades}}" VerticalOptions="Center"/>
                     </Grid>
                 </DataTemplate>

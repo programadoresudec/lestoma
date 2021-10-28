@@ -5,7 +5,6 @@
              xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" 
              xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" 
              xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms"
-             xmlns:behaviour="clr-namespace:lestoma.App.Behaviors"
              xmlns:cards="clr-namespace:Syncfusion.XForms.Cards;assembly=Syncfusion.Cards.XForms" xmlns:converter="clr-namespace:lestoma.App.Converters"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="lestoma.App.Views.UpasActividades.CreateOrEditDetalleUpaActividadPage">
@@ -24,9 +23,9 @@
                                  Converter={StaticResource ColorConverter}, ConverterParameter=0}"
                                  CornerRadius="4" HeightRequest="80" Style="{StaticResource LoginFormBorderlessEntryBorderStyle}">
                     <Grid ColumnDefinitions="*, Auto">
-                        <inputLayout:SfTextInputLayout Hint="usuarios" HeightRequest="80" ContainerBackgroundColor="Transparent" 
+                        <inputLayout:SfTextInputLayout Hint="usuarios" HeightRequest="80"  IsEnabled="{Binding IsEdit}" ContainerBackgroundColor="Transparent" 
                                                    Margin="10,0,0,0">
-                            <Picker x:Name="usuarioEntry" TextColor="Black"  IsEnabled="{Binding isEdit}" ItemDisplayBinding="{Binding Nombre}" 
+                            <Picker x:Name="usuarioEntry" TextColor="Black"  ItemDisplayBinding="{Binding FullName}" 
                                     Style="{StaticResource BorderlessEntryStyle}" Margin="15,0" 
                                 SelectedItem="{Binding User}" ItemsSource="{Binding Usuarios}">
                             </Picker>
@@ -39,40 +38,51 @@
                                  Converter={StaticResource ColorConverter}, ConverterParameter=0}"
                                  CornerRadius="4" HeightRequest="80" Style="{StaticResource LoginFormBorderlessEntryBorderStyle}">
                     <Grid ColumnDefinitions="*, Auto">
-                        <inputLayout:SfTextInputLayout Hint="Upas" HeightRequest="80" ContainerBackgroundColor="Transparent" 
+                        <inputLayout:SfTextInputLayout Hint="Upas" HeightRequest="80" IsEnabled="{Binding IsEdit}" ContainerBackgroundColor="Transparent" 
                                                    Margin="10,0,0,0">
-                            <Picker x:Name="upaEntry" IsEnabled="{Binding isEdit}" TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
+                            <Picker x:Name="upaEntry" TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
                                     Style="{StaticResource BorderlessEntryStyle}" Margin="15,0" 
                                 SelectedItem="{Binding Upa}" ItemsSource="{Binding Upas}">
                             </Picker>
                         </inputLayout:SfTextInputLayout>
                     </Grid>
                 </border:SfBorder>
-                <combobox:SfComboBox EnableAutoSize="True" x:Name="comboBox" DisplayMemberPath="Nombre" IsEditableMode="True"
-                                      MultiSelectMode="Token" TokensWrapMode="Wrap" DataSource="{Binding Actividades}">
-                    <combobox:SfComboBox.TokenSettings>
-                        <combobox:TokenSettings FontSize="16" BackgroundColor="White" 
+                <inputLayout:SfTextInputLayout Hint="Actividades" ContainerBackgroundColor="Transparent" 
+                                                   Margin="10,0,0,0">
+                    <combobox:SfComboBox EnableAutoSize="True" x:Name="comboBoxActividades" AllowFiltering="true" ComboBoxMode="SuggestAppend"
+                                         DisplayMemberPath="Nombre" IsEditableMode="True" NoResultsFoundText="Actividad no encontrada." 
+                                     DataSource="{Binding Actividades}" >
+                        <combobox:SfComboBox.Behaviors>
+                            <prism:EventToCommandBehavior EventName="SelectionChanging"
+                                          Command="{Binding ItemSelectCommand}" EventArgsParameterPath="Value" />
+                        </combobox:SfComboBox.Behaviors>
+                        <combobox:SfComboBox.TokenSettings>
+                            <combobox:TokenSettings FontSize="16" BackgroundColor="White" 
                                         TextColor="Black" SelectedBackgroundColor="#ffffe0" DeleteButtonColor="{StaticResource PantoneVerdeSecond}"
                                         IsCloseButtonVisible="true" 
                                         CornerRadius="15" DeleteButtonPlacement="Right">
-                        </combobox:TokenSettings>
-                    </combobox:SfComboBox.TokenSettings>
-                </combobox:SfComboBox>
+                            </combobox:TokenSettings>
+                        </combobox:SfComboBox.TokenSettings>
+                    </combobox:SfComboBox>
+                </inputLayout:SfTextInputLayout>
                 <cards:SfCardView Margin="20" Padding="15,0,15,0" IsVisible="{Binding IsVisibleActividades}" CornerRadius="30,30,30,30">
                     <StackLayout Spacing="20" VerticalOptions="Center" Padding="10"  IsVisible="{Binding IsVisibleActividades}">
-                        <Label Text="Actividades agregadas"   IsVisible="{Binding IsVisibleActividades}" TextColor="Black"
-                               FontSize="Medium" FontFamily="" FontAttributes="Bold"/>
+                        <Label Text="Actividades agregadas"   IsVisible="{Binding IsVisibleActividades}" TextColor="{StaticResource PantoneVerdeSecond}"
+                               FontSize="Medium"  FontAttributes="Bold"/>
                         <StackLayout>
                             <buttons:SfChipGroup x:Name="chipsActividades"
-				             ItemsSource="{Binding ActividadesAdd}" 
-				             ChipPadding="10,10,0,0" 
-                             IsVisible="{Binding IsVisibleActividades}"
-                             ChipBackgroundColor="White"
+				            ItemsSource="{Binding ActividadesAdd}" 
+				            ChipPadding="10,10,0,0" 
+                            ChipBackgroundColor="{StaticResource PantoneAmarilloLight}"
                             ChipTextColor="Black"
                             ChipTextSize="Small"
                             CloseButtonColor="{StaticResource PantoneVerdeSecond}"
-                            ItemRemoved="chipsActividades_ItemRemoved"
                        	    DisplayMemberPath="Nombre">
+                                <buttons:SfChipGroup.Behaviors>
+                                    <prism:EventToCommandBehavior EventName="ItemRemoved"
+                                          Command="{Binding ItemRemoveCommand}" EventArgsParameterPath="RemovedItem" />
+                                </buttons:SfChipGroup.Behaviors>
+                                
                                 <buttons:SfChipGroup.ChipLayout>
                                     <FlexLayout 
                                         HorizontalOptions="Start"

@@ -1,4 +1,12 @@
-﻿using Xamarin.Forms;
+﻿using lestoma.App.ViewModels.UpasActividades;
+using lestoma.CommonUtils.DTOs;
+using lestoma.CommonUtils.Interfaces;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Prism.Navigation;
+using System;
+using System.Diagnostics;
+using Xamarin.Forms;
 
 namespace lestoma.App.Views.UpasActividades
 {
@@ -7,11 +15,6 @@ namespace lestoma.App.Views.UpasActividades
         public CreateOrEditDetalleUpaActividadPage()
         {
             InitializeComponent();
-        }
-
-        private void chipsActividades_ItemRemoved(object sender, Syncfusion.Buttons.XForms.SfChip.ItemRemovedEventArgs e)
-        {
-
         }
     }
 }

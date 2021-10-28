@@ -28,7 +28,7 @@ namespace lestoma.App.ViewModels.UpasActividades
             LoadDetalle();
             LoadMoreItemsCommand = new Command<object>(LoadMoreItems, CanLoadMoreItems);
             EditCommand = new Command<object>(DetalleSelected, CanNavigate);
-          
+
         }
         public Command AddCommand
         {
@@ -69,7 +69,7 @@ namespace lestoma.App.ViewModels.UpasActividades
             {
                 { "detalleUpaActividad", detalleUpaActividad }
             };
-            await _navigationService.NavigateAsync(nameof(CreateOrEditDetalleUpaActividadViewModel), parameters);
+            await _navigationService.NavigateAsync(nameof(CreateOrEditDetalleUpaActividadPage), parameters);
         }
         private async void LoadDetalle()
         {

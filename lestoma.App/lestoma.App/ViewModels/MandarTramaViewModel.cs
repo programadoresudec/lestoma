@@ -126,12 +126,30 @@ namespace lestoma.App.ViewModels
                             resultado.Add(bytesMOdbus.ElementAt(0));
 
                             string hexa = HexaToByteHelper.ByteArrayToHexString(resultado.ToArray());
-                            Trama = Trama.Insert(Trama.Length, hexa);
-                            var chars = Trama.ToCharArray();
-                            foreach (var character in chars)
+
+                            for (int i = 1; i < hexa.Length + 1; i++)
                             {
-                                bytes.Add((byte)character);
+                                if (i % 2 == 0)
+                                {
+                                    hexa = hexa.Insert(i, " ");
+                                    break;
+                                }
                             }
+
+                            Trama = Trama.Insert(Trama.Length, $" {hexa}");
+
+
+
+                            string[] listaTramas = Trama.Split(" ");
+                            // ajustar en 2 bytes cada caracter
+                            System.Text.ASCIIEncoding codificador = new System.Text.ASCIIEncoding();
+               
+                            foreach (var item in listaTramas)
+                            {
+                                var letra = HexaToByteHelper.StringToByteArray(item);
+                                bytes.Add(letra.ElementAt(0));
+                            }
+
                             await btSocket.OutputStream.WriteAsync(bytes.ToArray(), 0, bytes.Count, token);
 
 
