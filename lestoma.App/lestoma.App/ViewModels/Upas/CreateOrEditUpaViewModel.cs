@@ -20,7 +20,7 @@ namespace lestoma.App.ViewModels.Upas
         private readonly IApiService _apiService;
         private UpaModel _model;
         private UpaRequest _upa;
-  
+
 
         public CreateOrEditUpaViewModel(INavigationService navigationService, IApiService apiService)
            : base(navigationService)
@@ -81,7 +81,7 @@ namespace lestoma.App.ViewModels.Upas
                 {
                     UpaRequest request = new UpaRequest
                     {
-                        Id = Upa.Id > 0 ? Upa.Id : 0,
+                        Id = Upa.Id == Guid.Empty ? Guid.Empty : Upa.Id,
                         Nombre = _model.Nombre.Value.Trim(),
                         Descripcion = _model.Descripcion.Value.Trim(),
                         CantidadActividades = (short)Convert.ToInt32(_model.CantidadActividades.Value)
@@ -94,8 +94,8 @@ namespace lestoma.App.ViewModels.Upas
                     else
                     {
                         await _navigationService.NavigateAsync($"{nameof(LoadingPopupPage)}");
-                      
-                        if (Upa.Id == 0)
+
+                        if (Upa.Id != Guid.Empty)
                         {
                             Response respuesta = await _apiService.PostAsyncWithToken(URL, "upas/crear", request, TokenUser.Token);
                             if (!respuesta.IsExito)
@@ -128,7 +128,7 @@ namespace lestoma.App.ViewModels.Upas
             {
                 await _navigationService.ClearPopupStackAsync();
                 Debug.WriteLine(ex.Message);
-            } 
+            }
         }
     }
 }

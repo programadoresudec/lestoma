@@ -44,7 +44,7 @@ namespace lestoma.App.ViewModels.Actividades
                 {
                     ActividadRequest request = new ActividadRequest
                     {
-                        Id = Actividad.Id > 0 ? Actividad.Id : 0,
+                        Id = Actividad.Id != Guid.Empty ? Actividad.Id : Guid.Empty,
                         Nombre = _model.Nombre.Value
                     };
                     if (!_apiService.CheckConnection())
@@ -55,7 +55,7 @@ namespace lestoma.App.ViewModels.Actividades
                     else
                     {
 
-                        if (Actividad.Id == 0)
+                        if (Actividad.Id != Guid.Empty)
                         {
                             Response respuesta = await _apiService.PostAsyncWithToken(URL, "actividades/crear", request, TokenUser.Token);
                             if (!respuesta.IsExito)

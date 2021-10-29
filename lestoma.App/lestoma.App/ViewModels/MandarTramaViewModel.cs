@@ -9,7 +9,6 @@ using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -138,12 +137,10 @@ namespace lestoma.App.ViewModels
 
                             Trama = Trama.Insert(Trama.Length, $" {hexa}");
 
-
-
                             string[] listaTramas = Trama.Split(" ");
                             // ajustar en 2 bytes cada caracter
                             System.Text.ASCIIEncoding codificador = new System.Text.ASCIIEncoding();
-               
+
                             foreach (var item in listaTramas)
                             {
                                 var letra = HexaToByteHelper.StringToByteArray(item);
@@ -156,14 +153,7 @@ namespace lestoma.App.ViewModels
                             CrossToastPopUp.Current.ShowToastSuccess($"trama: {Trama} enviada");
                             Trama = string.Empty;
 
-                            byte[] bufferRecibido = new byte[10];  // buffer store for the stream     
-                            int recibido = 0; // bytes returned from read()
-
-                            recibido += await btSocket.InputStream.ReadAsync(bufferRecibido);
-                            if (recibido > 0)
-                            {
-                                TramaRecibida = HexaToByteHelper.ByteArrayToHexString(bufferRecibido);
-                            }
+                            await ReceivedData();
                         }
                     }
                 }
@@ -176,6 +166,30 @@ namespace lestoma.App.ViewModels
             finally
             {
                 tcs.Cancel();
+            }
+        }
+
+        private async Task ReceivedData()
+        {
+            var inStream = btSocket.InputStream;
+            byte[] bufferRecibido = new byte[10];  // buffer store for the stream     
+            int recibido = 0; // bytes returned from read()
+            while (true)
+            {
+                try
+                {
+                    recibido += await inStream.ReadAsync(bufferRecibido, 0, bufferRecibido.Length);
+                    if (recibido == 10)
+                    {
+                        TramaRecibida = HexaToByteHelper.ByteArrayToHexString(bufferRecibido);
+                        break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine("no se pudo recibir la data." + e.Message);
+                    break;
+                }
             }
         }
         public Command MandarRespuestaCommand { get; set; }
