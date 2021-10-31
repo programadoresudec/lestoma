@@ -95,7 +95,7 @@ namespace lestoma.App.ViewModels.Upas
                     {
                         await _navigationService.NavigateAsync($"{nameof(LoadingPopupPage)}");
 
-                        if (Upa.Id != Guid.Empty)
+                        if (Upa.Id == Guid.Empty)
                         {
                             Response respuesta = await _apiService.PostAsyncWithToken(URL, "upas/crear", request, TokenUser.Token);
                             if (!respuesta.IsExito)

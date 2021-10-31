@@ -37,6 +37,7 @@ namespace lestoma.App.ViewModels.Actividades
 
         private async void CreateOrEditarClicked(object obj)
         {
+            Response respuesta = new Response();
             try
             {
                 CargarDatos();
@@ -50,35 +51,28 @@ namespace lestoma.App.ViewModels.Actividades
                     if (!_apiService.CheckConnection())
                     {
                         LSActividad _actividadOfflineService = new LSActividad(App.DbPathSqlLite);
-                        await _actividadOfflineService.CrearAsync(request);
+                        respuesta = await _actividadOfflineService.CrearAsync(request);
                     }
                     else
                     {
 
-                        if (Actividad.Id != Guid.Empty)
+                        if (Actividad.Id == Guid.Empty)
                         {
-                            Response respuesta = await _apiService.PostAsyncWithToken(URL, "actividades/crear", request, TokenUser.Token);
-                            if (!respuesta.IsExito)
-                            {
-                                CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
-                                return;
-                            }
-                            CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
-                            await Task.Delay(2000);
+                            respuesta = await _apiService.PostAsyncWithToken(URL, "actividades/crear", request, TokenUser.Token);
                         }
                         else
                         {
-                            Response respuesta = await _apiService.PutAsyncWithToken(URL, "actividades/editar", request, TokenUser.Token);
-                            if (!respuesta.IsExito)
-                            {
-                                CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
-                                return;
-                            }
-                            CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
-                            await Task.Delay(2000);
+                            respuesta = await _apiService.PutAsyncWithToken(URL, "actividades/editar", request, TokenUser.Token);
                         }
-                        await _navigationService.GoBackAsync(null, useModalNavigation: true, true);
                     }
+                    if (!respuesta.IsExito)
+                    {
+                        CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
+                        return;
+                    }
+                    CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
+                    await Task.Delay(2000);
+                    await _navigationService.GoBackAsync(null, useModalNavigation: true, true);
                 }
 
             }

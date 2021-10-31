@@ -13,6 +13,6 @@ namespace lestoma.DatabaseOffline.Interfaces
         Task<Response> ActualizarAsync(T entidad);
         Task EliminarAsync(object id);
         Task<List<T>> GetAll();
-        Task MergeEntity(List<T> entidad);
+        void MergeEntity(List<T> entidad);
     }
 }

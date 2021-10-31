@@ -1,4 +1,5 @@
 ﻿using Android.Bluetooth;
+
 using Java.IO;
 using Java.Util;
 using lestoma.App.Views;
@@ -32,13 +33,19 @@ namespace lestoma.App.ViewModels
             _navigationService = navigationService;
             ConnectionBluetoothCommand = new Command(ConectarBluetoothClicked);
             MandarRespuestaCommand = new Command(MandarRespuestaClicked);
+            RecibirRespuestaCommand = new Command(RecibirRespuestaClicked);
         }
-
-        private async void MandarRespuestaClicked(object obj)
+        public Command MandarRespuestaCommand { get; set; }
+        public Command RecibirRespuestaCommand { get; set; }
+        public Command ConnectionBluetoothCommand { get; set; }
+        private async void MandarRespuestaClicked()
         {
             await MandarTrama();
         }
-
+        private async void RecibirRespuestaClicked()
+        {
+            await ReceivedData();
+        }
         public string Trama
         {
             get => _trama;
@@ -55,7 +62,6 @@ namespace lestoma.App.ViewModels
             await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Conectando..."));
             try
             {
-                btSocket = null;
                 mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
                 if (!mBluetoothAdapter.IsEnabled)
                 {
@@ -68,17 +74,25 @@ namespace lestoma.App.ViewModels
 
                 //Indicamos al adaptador que ya no sea visible
                 mBluetoothAdapter.CancelDiscovery();
-
                 if (btSocket == null)
                 {
                     btSocket = device.CreateRfcommSocketToServiceRecord(MY_UUID);
-                    //Conectamos el socket
+                    await btSocket.ConnectAsync();
+                    if (btSocket.IsConnected)
+                    {
+                        CrossToastPopUp.Current.ShowToastSuccess("Conexión Establecida.", Plugin.Toast.Abstractions.ToastLength.Long);
+                    }
                 }
-                //Inicamos el socket de comunicacion con el arduino
-                await btSocket.ConnectAsync();
-                if (btSocket.IsConnected)
+                else
                 {
-                    CrossToastPopUp.Current.ShowToastSuccess("Conexión Establecida.", Plugin.Toast.Abstractions.ToastLength.Long);
+                    //Inicamos el socket de comunicacion con el arduino
+                    btSocket.Close();
+                    btSocket = device.CreateRfcommSocketToServiceRecord(MY_UUID);
+                    await btSocket.ConnectAsync();
+                    if (btSocket.IsConnected)
+                    {
+                        CrossToastPopUp.Current.ShowToastSuccess("Conexión Establecida.", Plugin.Toast.Abstractions.ToastLength.Long);
+                    }
                 }
             }
             catch (Exception ex)
@@ -111,8 +125,6 @@ namespace lestoma.App.ViewModels
                     Debug.Write("Connected");
                     if (btSocket.IsConnected)
                     {
-                        var mReader = new InputStreamReader(btSocket.InputStream);
-                        var buffer = new BufferedReader(mReader);
 
                         if (!string.IsNullOrWhiteSpace(Trama))
                         {
@@ -152,7 +164,6 @@ namespace lestoma.App.ViewModels
 
                             CrossToastPopUp.Current.ShowToastSuccess($"trama: {Trama} enviada");
                             Trama = string.Empty;
-
                             await ReceivedData();
                         }
                     }
@@ -162,6 +173,7 @@ namespace lestoma.App.ViewModels
             {
                 Debug.Write(ex);
                 Debug.Write(ex.Message);
+                btSocket.Close();
             }
             finally
             {
@@ -171,29 +183,44 @@ namespace lestoma.App.ViewModels
 
         private async Task ReceivedData()
         {
-            var inStream = btSocket.InputStream;
-            byte[] bufferRecibido = new byte[10];  // buffer store for the stream     
-            int recibido = 0; // bytes returned from read()
-            while (true)
+            if (btSocket == null)
             {
-                try
+                CrossToastPopUp.Current.ShowToastError($"Error: Conectese al bluetooth correspondiente.");
+                return;
+            }
+            else
+            {
+                var inputstream = btSocket.InputStream;
+                byte[] bufferRecibido = new byte[10];  // buffer store for the stream
+                List<byte> tramaCompleta = new List<byte>();
+
+                int recibido = 0; // bytes returned from read()
+                await Task.Run(async () =>
                 {
-                    recibido += await inStream.ReadAsync(bufferRecibido, 0, bufferRecibido.Length);
-                    if (recibido == 10)
+                    while (true)
                     {
-                        TramaRecibida = HexaToByteHelper.ByteArrayToHexString(bufferRecibido);
-                        break;
+                        try
+                        {
+                            recibido = await inputstream.ReadAsync(bufferRecibido, 0, bufferRecibido.Length);
+
+                            if (recibido > 0)
+                            {
+                                byte[] rebuf2 = new byte[recibido];
+                                Array.Copy(bufferRecibido, 0, rebuf2, 0, recibido);
+                                TramaRecibida += HexaToByteHelper.ByteArrayToHexString(rebuf2);
+                            }
+                            Thread.Sleep(100);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine("no se pudo recibir la data." + e.Message);
+                            btSocket.Close();
+                            break;
+                        }
                     }
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine("no se pudo recibir la data." + e.Message);
-                    break;
-                }
+                });
             }
         }
-        public Command MandarRespuestaCommand { get; set; }
-        public Command ConnectionBluetoothCommand { get; set; }
 
     }
 }

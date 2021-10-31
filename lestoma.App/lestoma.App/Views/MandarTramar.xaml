@@ -22,6 +22,10 @@
             <Button Text="Enviar trama" BackgroundColor="green" TextColor="White" Command="{Binding MandarRespuestaCommand}">
 
             </Button>
+            <Button Text="Recibir trama" BackgroundColor="green" TextColor="White" Command="{Binding RecibirRespuestaCommand}">
+
+            </Button>
+
             <Label Text="{Binding TramaRecibida}" TextColor="Black" FontSize="Large" HorizontalTextAlignment="Center">
                 
             </Label>

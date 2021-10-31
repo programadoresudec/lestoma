@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,7 +31,7 @@ namespace lestoma.DatabaseOffline
 
         public async Task Create(T entidad)
         {
-            if (entidad == null) throw new ArgumentNullException($"{nameof(entidad)} no debe ser nula");
+            if (entidad == null) Debug.WriteLine($"{nameof(entidad)} no debe ser nula");
             try
             {
                 _context.Add(entidad);
@@ -41,11 +42,11 @@ namespace lestoma.DatabaseOffline
                 var SQLiteException = GetInnerException<SqliteException>(ex);
                 if (SQLiteException != null)
                 {
-                    throw new Exception($"{nameof(entidad)} no se ha podido crear: {SQLiteException}");
+                    Debug.WriteLine($"{nameof(entidad)} no se ha podido mezclar: {SQLiteException.Message}");
                 }
                 else
                 {
-                    throw new Exception($"{nameof(entidad)} no se ha podido crear: {ex.Message}");
+                    Debug.WriteLine($"{nameof(entidad)} no se ha podido mezclar: {ex.Message}");
                 }
             }
         }
@@ -63,11 +64,11 @@ namespace lestoma.DatabaseOffline
                 var SQLiteException = GetInnerException<SqliteException>(ex);
                 if (SQLiteException != null)
                 {
-                    throw new Exception($"{nameof(entidad)} no se ha podido actualizar: {SQLiteException}");
+                    Debug.WriteLine($"{nameof(entidad)} no se ha podido mezclar: {SQLiteException.Message}");
                 }
                 else
                 {
-                    throw new Exception($"{nameof(entidad)} no se ha podido actualizar: {ex.Message}");
+                    Debug.WriteLine($"{nameof(entidad)} no se ha podido mezclar: {ex.Message}");
                 }
             }
         }
@@ -85,21 +86,19 @@ namespace lestoma.DatabaseOffline
                 var SQLiteException = GetInnerException<SqliteException>(ex);
                 if (SQLiteException != null)
                 {
-                    throw new Exception($"{nameof(entidad)} no se ha podido eliminar: {SQLiteException}");
+                    Debug.WriteLine($"{nameof(entidad)} no se ha podido mezclar: {SQLiteException.Message}");
                 }
                 else
                 {
-                    throw new Exception($"{nameof(entidad)} no se ha podido eliminar: {ex.Message}");
+                    Debug.WriteLine($"{nameof(entidad)} no se ha podido mezclar: {ex.Message}");
                 }
             }
         }
-        public async Task Merge(List<T> ListadoEntidad)
+        public void Merge(List<T> ListadoEntidad)
         {
-            CancellationTokenSource tcs = new CancellationTokenSource();
-            CancellationToken token = new CancellationToken();
             try
             {
-                await _context.BulkSynchronizeAsync(ListadoEntidad, token);
+                _context.BulkSynchronize(ListadoEntidad);
             }
             catch (Exception ex)
             {
@@ -107,16 +106,12 @@ namespace lestoma.DatabaseOffline
                 var SQLiteException = GetInnerException<SqliteException>(ex);
                 if (SQLiteException != null)
                 {
-                    throw new Exception($"{nameof(ListadoEntidad)} no se ha podido crear: {SQLiteException}");
+                    Debug.WriteLine($"{nameof(ListadoEntidad)} no se ha podido mezclar: {SQLiteException.Message}");
                 }
                 else
                 {
-                    throw new Exception($"{nameof(ListadoEntidad)} no se ha podido crear: {ex.Message}");
+                    Debug.WriteLine($"{nameof(ListadoEntidad)} no se ha podido mezclar: {ex.Message}");
                 }
-            }
-            finally
-            {
-                tcs.Cancel();
             }
         }
         public static TException GetInnerException<TException>(Exception exception)

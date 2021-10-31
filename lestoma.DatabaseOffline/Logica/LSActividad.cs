@@ -41,6 +41,7 @@ namespace lestoma.DatabaseOffline.Logica
             if (!existe)
             {
                 var actividad = _mapper.Map<ActividadModel>(entidad);
+                actividad.Id = Guid.NewGuid();
                 await _actividadRepository.Create(actividad);
                 _respuesta.IsExito = true;
                 _respuesta.StatusCode = (int)HttpStatusCode.Created;
@@ -48,7 +49,7 @@ namespace lestoma.DatabaseOffline.Logica
             }
             else
             {
-                throw new HttpStatusCodeException(HttpStatusCode.Conflict, "El nombre ya está en uso utilice otro.");
+                _respuesta.Mensaje = "El nombre ya está en uso utilice otro.";
             }
             return _respuesta;
 
@@ -71,10 +72,10 @@ namespace lestoma.DatabaseOffline.Logica
             throw new NotImplementedException();
         }
 
-        public async Task MergeEntity(List<ActividadRequest> listado)
+        public void MergeEntity(List<ActividadRequest> listado)
         {
             var actividades = _mapper.Map<List<ActividadModel>>(listado);
-            await _actividadRepository.Merge(actividades);
+             _actividadRepository.Merge(actividades);
         }
     }
 }

@@ -19,11 +19,13 @@ namespace lestoma.App.ViewModels.Actividades
         private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         private ObservableCollection<ActividadRequest> _actividades;
+        private LSActividad _actividadOfflineService;
         public ActividadViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
             _navigationService = navigationService;
             _apiService = apiService;
+            _actividadOfflineService = new LSActividad(App.DbPathSqlLite);
             EditCommand = new Command<object>(ActividadSelected, CanNavigate);
             LoadActividades();
         }
@@ -58,11 +60,16 @@ namespace lestoma.App.ViewModels.Actividades
                         return;
                     }
                     Response response = await _apiService.DeleteAsyncWithToken(URL,
-                        "Actividad", ItemDelete.Id, TokenUser.Token);
+                        "actividades", ItemDelete.Id, TokenUser.Token);
                     if (!response.IsExito)
                     {
                         CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
                         return;
+                    }
+                    Response response1 = await _apiService.GetListAsyncWithToken<List<ActividadRequest>>(URL, "actividades/listado", TokenUser.Token);
+                    if (response.IsExito)
+                    {
+                        _actividadOfflineService.MergeEntity((List<ActividadRequest>)response1.Data);
                     }
                     CrossToastPopUp.Current.ShowToastSuccess(response.Mensaje);
                 }
@@ -81,7 +88,7 @@ namespace lestoma.App.ViewModels.Actividades
         {
             return true;
         }
-     
+
         private async void ActividadSelected(object objeto)
         {
             var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
@@ -137,20 +144,12 @@ namespace lestoma.App.ViewModels.Actividades
 
         private async void InsertarListadoActividades()
         {
-            LSActividad _actividadOfflineService = new LSActividad(App.DbPathSqlLite);
-            if (!_apiService.CheckConnection())
+            if (_apiService.CheckConnection())
             {
+                Response response = await _apiService.GetListAsyncWithToken<List<ActividadRequest>>(URL, "actividades/listado", TokenUser.Token);
+                _actividadOfflineService.MergeEntity((List<ActividadRequest>)response.Data);
                 var query = await _actividadOfflineService.GetAll();
-                if (query.Count > 0)
-                {
-                    Actividades = new ObservableCollection<ActividadRequest>(query);
-                }
-            }
-            else
-            {
-                Response response = await _apiService.GetListAsyncWithToken<List<ActividadRequest>>(URL,
-              "actividades/listado", TokenUser.Token);
-                await _actividadOfflineService.MergeEntity((List<ActividadRequest>)response.Data);
+                await _apiService.PostAsyncWithToken(URL, "actividades/merge", query, TokenUser.Token);
                 if (!response.IsExito)
                 {
                     CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
@@ -162,6 +161,14 @@ namespace lestoma.App.ViewModels.Actividades
                     return;
                 }
                 Actividades = new ObservableCollection<ActividadRequest>((List<ActividadRequest>)response.Data);
+            }
+            else
+            {
+                var query = await _actividadOfflineService.GetAll();
+                if (query.Count > 0)
+                {
+                    Actividades = new ObservableCollection<ActividadRequest>(query);
+                }
             }
 
         }
