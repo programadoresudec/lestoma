@@ -43,7 +43,7 @@ namespace lestoma.App
         protected override async void OnInitialized()
         {
             Syncfusion.Licensing.SyncfusionLicenseProvider.
-               RegisterLicense("NTAyMTU0QDMxMzkyZTMyMmUzMGFpUGh6YlNOa3dqb1R5ZEZ3OS9YN3NEQ3dpd2dmSW1zditpUGl5MXZHb289");
+               RegisterLicense("NTI5MzU5QDMxMzkyZTMzMmUzMGZ5cEJxMUFDNHhqS0hEVlVHU3NCTHNsUTNGOGpEM015bjVJQ05hUkpXOWM9");
             InitializeComponent();
 
             if (!MovilSettings.IsLogin)

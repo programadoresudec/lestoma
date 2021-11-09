@@ -9,6 +9,7 @@ using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using Xamarin.Forms;
@@ -123,8 +124,6 @@ namespace lestoma.App.ViewModels
 
             return true;
         }
-
-
         private void BackButtonClicked(object obj)
         {
             if (Device.RuntimePlatform == Device.UWP && Application.Current.MainPage.Navigation.NavigationStack.Count > 1)

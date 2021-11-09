@@ -5,7 +5,18 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="lestoma.App.Views.AboutPage"
               Title="Acerca de Lestoma">
-    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-        <Label Text="Welcome to lestoma udec" />
+    <StackLayout Padding="10">
+        <Entry x:Name="trama" Text="{Binding Trama}" Placeholder="envie la trama.">
+
+        </Entry>
+        <Button Text="Conectar"  BackgroundColor="{StaticResource PantoneVerdeDark}" TextColor="White" Command="{Binding ConnectionBluetoothCommand}">
+
+        </Button>
+        <Button Text="Enviar trama" BackgroundColor="{StaticResource PantoneVerdeDark}" TextColor="White" Command="{Binding MandarRespuestaCommand}">
+
+        </Button>
+        <Label Text="{Binding TramaRecibida,StringFormat='Temperatura agua: {}'}" TextColor="Black" FontSize="Large" HorizontalTextAlignment="Center">
+
+        </Label>
     </StackLayout>
 </ContentPage>

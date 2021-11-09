@@ -77,25 +77,25 @@
       <Version>8.0.76</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Xamarin.Buttons">
-      <Version>19.2.0.62</Version>
+      <Version>19.3.0.48</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Xamarin.Cards">
-      <Version>19.2.0.62</Version>
+      <Version>19.3.0.48</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Xamarin.Core">
-      <Version>19.2.0.62</Version>
+      <Version>19.3.0.48</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Xamarin.SfBusyIndicator">
-      <Version>19.2.0.62</Version>
+      <Version>19.3.0.48</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Xamarin.SfComboBox">
-      <Version>19.2.0.62</Version>
+      <Version>19.3.0.48</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Xamarin.SfListView">
-      <Version>19.2.0.62</Version>
+      <Version>19.3.0.48</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Xamarin.SfMaskedEdit">
-      <Version>19.2.0.62</Version>
+      <Version>19.3.0.48</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.v4">
       <Version>28.0.0.3</Version>

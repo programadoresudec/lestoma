@@ -1,7 +1,5 @@
 ﻿using lestoma.DatabaseOffline.Models;
-using lestoma.Entidades.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace lestoma.DatabaseOffline
 {

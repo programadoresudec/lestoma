@@ -3,6 +3,7 @@
 using Java.IO;
 using Java.Util;
 using lestoma.App.Views;
+using lestoma.CommonUtils.Helpers;
 using lestoma.CRC.Helpers;
 using Plugin.Toast;
 using Prism.Navigation;
@@ -33,7 +34,7 @@ namespace lestoma.App.ViewModels
             _navigationService = navigationService;
             ConnectionBluetoothCommand = new Command(ConectarBluetoothClicked);
             MandarRespuestaCommand = new Command(MandarRespuestaClicked);
-            RecibirRespuestaCommand = new Command(RecibirRespuestaClicked);
+
         }
         public Command MandarRespuestaCommand { get; set; }
         public Command RecibirRespuestaCommand { get; set; }
@@ -42,10 +43,7 @@ namespace lestoma.App.ViewModels
         {
             await MandarTrama();
         }
-        private async void RecibirRespuestaClicked()
-        {
-            await ReceivedData();
-        }
+
         public string Trama
         {
             get => _trama;
@@ -136,7 +134,7 @@ namespace lestoma.App.ViewModels
                             resultado.Add(bytesMOdbus.ElementAt(1));
                             resultado.Add(bytesMOdbus.ElementAt(0));
 
-                            string hexa = HexaToByteHelper.ByteArrayToHexString(resultado.ToArray());
+                            string hexa = Reutilizables.ByteArrayToHexString(resultado.ToArray());
 
                             for (int i = 1; i < hexa.Length + 1; i++)
                             {
@@ -155,7 +153,7 @@ namespace lestoma.App.ViewModels
 
                             foreach (var item in listaTramas)
                             {
-                                var letra = HexaToByteHelper.StringToByteArray(item);
+                                var letra = Reutilizables.StringToByteArray(item);
                                 bytes.Add(letra.ElementAt(0));
                             }
 
@@ -183,6 +181,7 @@ namespace lestoma.App.ViewModels
 
         private async Task ReceivedData()
         {
+            string tramaHexa = string.Empty;
             if (btSocket == null)
             {
                 CrossToastPopUp.Current.ShowToastError($"Error: Conectese al bluetooth correspondiente.");
@@ -192,7 +191,7 @@ namespace lestoma.App.ViewModels
             {
                 var inputstream = btSocket.InputStream;
                 byte[] bufferRecibido = new byte[10];  // buffer store for the stream
-                List<byte> tramaCompleta = new List<byte>();
+                List<string> tramaDividida = new List<string>();
 
                 int recibido = 0; // bytes returned from read()
                 await Task.Run(async () =>
@@ -207,7 +206,11 @@ namespace lestoma.App.ViewModels
                             {
                                 byte[] rebuf2 = new byte[recibido];
                                 Array.Copy(bufferRecibido, 0, rebuf2, 0, recibido);
-                                TramaRecibida += HexaToByteHelper.ByteArrayToHexString(rebuf2);
+                                tramaHexa += Reutilizables.ByteArrayToHexString(rebuf2);
+                                if (tramaHexa.Length == 20)
+                                {
+                                    break;
+                                }
                             }
                             Thread.Sleep(100);
                         }
@@ -218,9 +221,30 @@ namespace lestoma.App.ViewModels
                             break;
                         }
                     }
-                });
-            }
-        }
+                    tramaDividida = Split(tramaHexa, 2).ToList();
 
+                    List<byte> temperatura = new List<byte>();
+
+                    for (int i = 0; i < tramaDividida.Count; i++)
+                    {
+                        if (i == 4 || i == 5 || i == 6 || i == 7)
+                        {
+                            byte[] byteTemperatura = new byte[1];
+                            byteTemperatura = Reutilizables.StringToByteArray(tramaDividida[i]);
+                            temperatura.Add(byteTemperatura.ElementAt(0));
+                        }
+                    }
+                    TramaRecibida = Reutilizables.ByteToIEEEFloatingPoint(temperatura.ToArray()).ToString();
+                });
+
+            }
+
+        }
+        public static IEnumerable<string> Split(string str, int chunkSize)
+        {
+            return Enumerable.Range(0, str.Length / chunkSize)
+                .Select(i => str.Substring(i * chunkSize, chunkSize));
+        }
     }
+
 }
