@@ -12,6 +12,7 @@ namespace lestoma.DatabaseOffline
         public DatabaseOffline(string dbPath)
         {
             _databasePath = dbPath;
+            Database.EnsureDeleted();
             Database.EnsureCreated();
         }
         #endregion

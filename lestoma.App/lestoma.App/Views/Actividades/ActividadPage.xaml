@@ -21,8 +21,40 @@
                 <Frame Margin="5,10,5,10" CornerRadius="10" BackgroundColor="AliceBlue">
                     <StackLayout Orientation="Horizontal">
                         <StackLayout VerticalOptions="Center" HorizontalOptions="StartAndExpand">
-                            <Label Text="{Binding Nombre}" FontSize="Small"
-                                           TextColor="Black"/>
+                            <Label Text="{Binding Nombre}" FontSize="Body"
+                                           TextColor="{x:DynamicResource PantoneVerdeSecond}" FontAttributes="Bold"/>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Fecha ultimo acceso: " FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                        <Span Text="{Binding FechaCreacion}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="IP: " FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                        <Span Text="{Binding Ip}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Usuario ultimo acceso: " FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                        <Span Text="{Binding Session}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Tipo Aplicación ultimo acceso: " FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                        <Span Text="{Binding TipoDeAplicacion}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
                         </StackLayout>
                     </StackLayout>
                 </Frame>

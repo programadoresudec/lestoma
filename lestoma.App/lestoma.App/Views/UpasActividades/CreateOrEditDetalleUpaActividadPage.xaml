@@ -6,7 +6,7 @@
              xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" 
              xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms"
              xmlns:cards="clr-namespace:Syncfusion.XForms.Cards;assembly=Syncfusion.Cards.XForms" xmlns:converter="clr-namespace:lestoma.App.Converters"
-             prism:ViewModelLocator.AutowireViewModel="True"
+             prism:ViewModelLocator.AutowireViewModel="True" Title="Crear detalle"
              x:Class="lestoma.App.Views.UpasActividades.CreateOrEditDetalleUpaActividadPage">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -56,13 +56,6 @@
                             <prism:EventToCommandBehavior EventName="SelectionChanging"
                                           Command="{Binding ItemSelectCommand}" EventArgsParameterPath="Value" />
                         </combobox:SfComboBox.Behaviors>
-                        <combobox:SfComboBox.TokenSettings>
-                            <combobox:TokenSettings FontSize="16" BackgroundColor="White" 
-                                        TextColor="Black" SelectedBackgroundColor="#ffffe0" DeleteButtonColor="{StaticResource PantoneVerdeSecond}"
-                                        IsCloseButtonVisible="true" 
-                                        CornerRadius="15" DeleteButtonPlacement="Right">
-                            </combobox:TokenSettings>
-                        </combobox:SfComboBox.TokenSettings>
                     </combobox:SfComboBox>
                 </inputLayout:SfTextInputLayout>
                 <cards:SfCardView Margin="20" Padding="15,0,15,0" IsVisible="{Binding IsVisibleActividades}" CornerRadius="30,30,30,30">

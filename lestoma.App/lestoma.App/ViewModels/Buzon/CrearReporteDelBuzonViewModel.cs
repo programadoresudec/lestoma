@@ -41,10 +41,10 @@ namespace lestoma.App.ViewModels.Buzon
             _filesHelper = filesHelper;
             Title = "Crear Reporte";
             IsEnabled = true;
-            Image = App.Current.Resources["UrlNoImage"].ToString();
-            this.SendReportCommand = new Command(this.SendClicked);
-            this.ChangeImageCommand = new Command(this.ChangeImageAsync);
-            this.DetalleBuzon = new DetalleBuzon();
+            Image = "DefaultImagen.png";
+            SendReportCommand = new Command(SendClicked);
+            ChangeImageCommand = new Command(ChangeImageAsync);
+            DetalleBuzon = new DetalleBuzon();
             LoadTiposDeGravedadAsync();
         }
 
@@ -203,8 +203,5 @@ namespace lestoma.App.ViewModels.Buzon
             }
         }
         #endregion
-
-
-
     }
 }

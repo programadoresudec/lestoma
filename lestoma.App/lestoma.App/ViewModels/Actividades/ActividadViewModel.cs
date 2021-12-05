@@ -18,7 +18,7 @@ namespace lestoma.App.ViewModels.Actividades
     {
         private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
-        private ObservableCollection<ActividadRequest> _actividades;
+        private ObservableCollection<ActividadDTO> _actividades;
         private LSActividad _actividadOfflineService;
         public ActividadViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
@@ -66,10 +66,10 @@ namespace lestoma.App.ViewModels.Actividades
                         CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
                         return;
                     }
-                    Response response1 = await _apiService.GetListAsyncWithToken<List<ActividadRequest>>(URL, "actividades/listado", TokenUser.Token);
+                    Response response1 = await _apiService.GetListAsyncWithToken<List<ActividadDTO>>(URL, "actividades/listado", TokenUser.Token);
                     if (response.IsExito)
                     {
-                        _actividadOfflineService.MergeEntity((List<ActividadRequest>)response1.Data);
+                        _actividadOfflineService.MergeEntity((List<ActividadDTO>)response1.Data);
                     }
                     CrossToastPopUp.Current.ShowToastSuccess(response.Mensaje);
                 }
@@ -92,24 +92,30 @@ namespace lestoma.App.ViewModels.Actividades
         private async void ActividadSelected(object objeto)
         {
             var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
-            var actividad = lista.ItemData as ActividadRequest;
+            var actividad = lista.ItemData as ActividadDTO;
 
             if (actividad == null)
                 return;
+
+            ActividadRequest request = new ActividadRequest
+            {
+                Id = actividad.Id,
+                Nombre = actividad.Nombre
+            };
             var parameters = new NavigationParameters
             {
-                { "actividad", actividad }
+                { "actividad", request }
             };
             await _navigationService.NavigateAsync(nameof(CrearOrEditActividadPage), parameters, useModalNavigation: true, true);
 
         }
 
-        public ObservableCollection<ActividadRequest> Actividades
+        public ObservableCollection<ActividadDTO> Actividades
         {
             get => _actividades;
             set => SetProperty(ref _actividades, value);
         }
-        public ActividadRequest ItemDelete { get; set; }
+        public ActividadDTO ItemDelete { get; set; }
 
 
         public void RefreshActividades()
@@ -146,8 +152,8 @@ namespace lestoma.App.ViewModels.Actividades
         {
             if (_apiService.CheckConnection())
             {
-                Response response = await _apiService.GetListAsyncWithToken<List<ActividadRequest>>(URL, "actividades/listado", TokenUser.Token);
-                _actividadOfflineService.MergeEntity((List<ActividadRequest>)response.Data);
+                Response response = await _apiService.GetListAsyncWithToken<List<ActividadDTO>>(URL, "actividades/listado", TokenUser.Token);
+                _actividadOfflineService.MergeEntity((List<ActividadDTO>)response.Data);
                 var query = await _actividadOfflineService.GetAll();
                 await _apiService.PostAsyncWithToken(URL, "actividades/merge", query, TokenUser.Token);
                 if (!response.IsExito)
@@ -157,17 +163,17 @@ namespace lestoma.App.ViewModels.Actividades
                 }
                 if (response.Data == null)
                 {
-                    Actividades = new ObservableCollection<ActividadRequest>();
+                    Actividades = new ObservableCollection<ActividadDTO>();
                     return;
                 }
-                Actividades = new ObservableCollection<ActividadRequest>((List<ActividadRequest>)response.Data);
+                Actividades = new ObservableCollection<ActividadDTO>((List<ActividadDTO>)response.Data);
             }
             else
             {
                 var query = await _actividadOfflineService.GetAll();
                 if (query.Count > 0)
                 {
-                    Actividades = new ObservableCollection<ActividadRequest>(query);
+                    Actividades = new ObservableCollection<ActividadDTO>(query);
                 }
             }
 

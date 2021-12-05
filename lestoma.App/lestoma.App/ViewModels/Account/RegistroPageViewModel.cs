@@ -1,11 +1,15 @@
 ﻿using lestoma.App.Validators;
 using lestoma.App.Validators.Rules;
+using lestoma.App.Views;
 using lestoma.App.Views.Account;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Plugin.Toast;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
+using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -203,38 +207,44 @@ namespace lestoma.App.ViewModels.Account
 
         private async void SignUpClicked(object obj)
         {
-
-
-            if (this.AreFieldsValid())
+            await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Registrando..."));
+            try
             {
-                IsRunning = true;
-                IsEnabled = false;
-                if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+                if (AreFieldsValid())
                 {
+                    IsRunning = true;
+                    IsEnabled = false;
+                    if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+                    {
+                        IsRunning = false;
+                        IsEnabled = true;
+                        CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
+                        return;
+                    }
+                    UsuarioRequest usuario = new UsuarioRequest
+                    {
+                        Email = Email.Value,
+                        Clave = Password.Item1.Value,
+                        Apellido = LastName.Value,
+                        Nombre = Name.Value
+                    };
+                    Response respuesta = await _apiService.PostAsync(URL, "Account/registro", usuario);
                     IsRunning = false;
                     IsEnabled = true;
-                    CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
-                    return;
+                    if (!respuesta.IsExito)
+                    {
+                        CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
+                        return;
+                    }
+                    CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
+                    await Task.Delay(2000);
+                    await _navigationService.ClearPopupStackAsync();
+                    await _navigationService.GoBackAsync();
                 }
-                string url = App.Current.Resources["UrlAPI"].ToString();
-                UsuarioRequest usuario = new UsuarioRequest
-                {
-                    Email = Email.Value,
-                    Clave = Password.Item1.Value,
-                    Apellido = LastName.Value,
-                    Nombre = Name.Value
-                };
-                Response respuesta = await _apiService.PostAsync(url, "Account/registro", usuario);
-                IsRunning = false;
-                IsEnabled = true;
-                if (!respuesta.IsExito)
-                {
-                    CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
-                    return;
-                }
-                CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
-                await Task.Delay(1000);
-                await _navigationService.GoBackAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
             }
         }
 

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using lestoma.CommonUtils.DTOs;
-using lestoma.CommonUtils.MyException;
 using lestoma.CommonUtils.Requests;
 using lestoma.DatabaseOffline.Interfaces;
 using lestoma.DatabaseOffline.Models;
@@ -13,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace lestoma.DatabaseOffline.Logica
 {
-    public class LSActividad : IGenericCRUD<ActividadRequest>
+    public class LSActividad : IActividadService
     {
         private readonly Response _respuesta = new Response();
         public readonly IMapper _mapper = Mapper.CreateMapper();
@@ -34,7 +33,11 @@ namespace lestoma.DatabaseOffline.Logica
         {
             throw new NotImplementedException();
         }
-
+        public void MergeEntity(List<ActividadDTO> listado)
+        {
+            var actividades = _mapper.Map<List<ActividadModel>>(listado);
+            _actividadRepository.Merge(actividades);
+        }
         public async Task<Response> CrearAsync(ActividadRequest entidad)
         {
             bool existe = await _actividadRepository.ExisteActividad(entidad.Nombre);
@@ -55,27 +58,20 @@ namespace lestoma.DatabaseOffline.Logica
 
         }
 
-        public Task EliminarAsync(object id)
+        public Task EliminarAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<Response> GetByIdAsync(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<List<ActividadRequest>> GetAll()
+        public async Task<List<ActividadDTO>> GetAll()
         {
             var query = await _actividadRepository.GetAll();
-            var listado = _mapper.Map<List<ActividadRequest>>(query.ToList());
+            var listado = _mapper.Map<List<ActividadDTO>>(query.ToList());
             return listado;
-        }
-
-        public Task<Response> GetByIdAsync(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void MergeEntity(List<ActividadRequest> listado)
-        {
-            var actividades = _mapper.Map<List<ActividadModel>>(listado);
-             _actividadRepository.Merge(actividades);
         }
     }
 }

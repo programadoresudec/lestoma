@@ -1,9 +1,6 @@
-﻿using AutoMapper;
-using lestoma.App.ViewModels.Actividades;
+﻿using lestoma.App.ViewModels.Actividades;
+using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
-using lestoma.CommonUtils.Requests;
-using lestoma.DatabaseOffline.Interfaces;
-using lestoma.DatabaseOffline.Logica;
 using Prism.Navigation;
 using Xamarin.Forms;
 
@@ -27,7 +24,7 @@ namespace lestoma.App.Views.Actividades
         {
             if (e.SwipeOffset >= 100)
             {
-                _viewModel.ItemDelete = e.ItemData as ActividadRequest;
+                _viewModel.ItemDelete = e.ItemData as ActividadDTO;
             }
         }
 

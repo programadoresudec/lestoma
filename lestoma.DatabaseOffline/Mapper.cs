@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Requests;
 using lestoma.DatabaseOffline.Models;
 using lestoma.Entidades.Models;
@@ -12,6 +13,7 @@ namespace lestoma.DatabaseOffline
             var mapperConfiguration = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<ActividadModel, ActividadRequest>().ReverseMap();
+                cfg.CreateMap<ActividadModel, ActividadDTO>().ReverseMap();
             });
 
             return mapperConfiguration.CreateMapper();
