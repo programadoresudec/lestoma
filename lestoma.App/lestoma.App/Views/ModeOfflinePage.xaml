@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             prism:ViewModelLocator.AutowireViewModel="True"
+            xmlns:ffimageloadingsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
+             NavigationPage.HasNavigationBar="False"
+             x:Class="lestoma.App.Views.ModeOfflinePage">
+    <ContentPage.Content>
+        <StackLayout Spacing="10"
+                VerticalOptions="Center" Margin="20">
+            <StackLayout>
+                <!--  Display the svg illustration image  -->
+                <ffimageloadingsvg:SvgCachedImage                                  
+                                       Source="Icon_Mode_Offline.svg"
+                                       Aspect="AspectFill"
+                                       WidthRequest="300" 
+                                       FlexLayout.AlignSelf="Center"/>
+                <!--  Label to display header  -->
+                <Label
+                    Margin="0,32,0,8"
+                    FontSize="20"
+                    Style="{StaticResource HeaderLabel}"
+                    Text="¡Advertencia!"
+                    TextColor="#333942"
+                    VerticalTextAlignment="Center" />
+
+                <!--  Label to display content  -->
+                <Label
+                    Margin="8,0,8,0"
+                    FontSize="16"
+                    Style="{StaticResource HeaderLabel}"
+                    Text="No tiene Conexión a Internet}"
+                    TextColor="#333942"
+                    VerticalTextAlignment="Center" />
+            </StackLayout>
+
+            <!--  Try again button  -->
+            <Button x:Name="BT_Verificar"
+                Grid.Row="1"
+                Margin="0,10,0,24"
+                TextColor="White"
+                CornerRadius="10"
+                Clicked="BT_Verificar_Clicked"
+                BackgroundColor="{StaticResource PantoneVerdeDark}"
+                Text="Ir A Modo Offline"
+                VerticalOptions="End"
+                WidthRequest="245" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

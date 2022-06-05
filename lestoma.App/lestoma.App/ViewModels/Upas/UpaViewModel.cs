@@ -17,15 +17,11 @@ namespace lestoma.App.ViewModels.Upas
 {
     public class UpaViewModel : BaseViewModel
     {
-        private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         private ObservableCollection<UpaDTO> _upas;
-
-
         public UpaViewModel(INavigationService navigationService, IApiService apiService) :
             base(navigationService)
         {
-            _navigationService = navigationService;
             _apiService = apiService;
             _upas = new ObservableCollection<UpaDTO>();
             EditCommand = new Command<object>(UpaSelected, CanNavigate);

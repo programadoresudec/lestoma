@@ -4,14 +4,16 @@ using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Plugin.Toast;
 using Prism.Mvvm;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -27,7 +29,7 @@ namespace lestoma.App.ViewModels
         private Command<object> backButtonCommand;
         private bool isBusy;
         public BluetoothAdapter mBluetoothAdapter { get; set; }
-        protected INavigationService NavigationService { get; private set; }
+        protected INavigationService _navigationService { get; private set; }
         private string _title;
         public string Title
         {
@@ -59,7 +61,7 @@ namespace lestoma.App.ViewModels
 
         public BaseViewModel(INavigationService navigationService)
         {
-            NavigationService = navigationService;
+            _navigationService = navigationService;
             ActivarBluetoothCommand = new Command(OnBluetoothClicked);
         }
 
@@ -80,7 +82,7 @@ namespace lestoma.App.ViewModels
             {
                 return new Command(async () =>
                 {
-                    await NavigationService.NavigateAsync(nameof(SignOutPopupPage));
+                    await _navigationService.NavigateAsync(nameof(SignOutPopupPage));
                 });
             }
         }
@@ -106,6 +108,10 @@ namespace lestoma.App.ViewModels
 
         #region Methods
 
+        protected async Task ClosePopup()
+        {
+            await _navigationService.ClearPopupStackAsync();
+        }
 
         protected void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -139,7 +145,16 @@ namespace lestoma.App.ViewModels
                 Application.Current.MainPage.Navigation.PopModalAsync();
             }
         }
+        public static object GetInternalProperty(Type type, object obj, string propertyName)
+        {
+            var property = type.GetTypeInfo().GetDeclaredProperty(propertyName);
+            if (property != null)
+            {
+                return property.GetValue(obj);
+            }
 
+            return null;
+        }
         public virtual void Initialize(INavigationParameters parameters)
         {
 
@@ -172,6 +187,31 @@ namespace lestoma.App.ViewModels
 
         public string URL => Prism.PrismApplicationBase.Current.Resources["UrlAPI"].ToString();
         public TokenDTO TokenUser => !string.IsNullOrEmpty(MovilSettings.Token) ? JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token) : null;
+        #endregion
+
+
+        #region Alerts de CrossToastPopUp
+        protected void AlertNoInternetConnection()
+        {
+            CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.", 
+                Plugin.Toast.Abstractions.ToastLength.Long);
+
+        }
+        protected void AlertError(string Error = "")
+        {
+            CrossToastPopUp.Current.ShowToastError($"ERROR {Error}", Plugin.Toast.Abstractions.ToastLength.Long);
+
+        }
+        protected void AlertWarning(string mensaje = "")
+        {
+            CrossToastPopUp.Current.ShowToastWarning($"{mensaje}", Plugin.Toast.Abstractions.ToastLength.Long);
+
+        }
+
+        protected void AlertSuccess(string mensaje = "EXITO")
+        {
+            CrossToastPopUp.Current.ShowToastSuccess($"{mensaje}", Plugin.Toast.Abstractions.ToastLength.Long);
+        }
         #endregion
     }
 }

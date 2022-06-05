@@ -21,7 +21,6 @@ namespace lestoma.App.ViewModels.Buzon
     {
         #region Fields
         private readonly IApiService _apiService;
-        private readonly INavigationService _navigationService;
         private readonly IFilesHelper _filesHelper;
         private bool _isRunning;
         private ImageSource _image;
@@ -36,7 +35,6 @@ namespace lestoma.App.ViewModels.Buzon
         public CrearReporteDelBuzonViewModel(INavigationService navigationService, IApiService apiService, IFilesHelper filesHelper)
               : base(navigationService)
         {
-            _navigationService = navigationService;
             _apiService = apiService;
             _filesHelper = filesHelper;
             Title = "Crear Reporte";

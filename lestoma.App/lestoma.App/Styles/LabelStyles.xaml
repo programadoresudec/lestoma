@@ -13,7 +13,11 @@
         <Setter Property="FontFamily" Value="Montserrat-SemiBold" />
         <Setter Property="LineHeight" Value="{OnPlatform Android=1.5, Default=-1}" />
     </Style>
-
+    <Style TargetType="Label" x:Key="HeaderLabel">
+        <Setter Property="FontSize" Value="Large" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="Margin" Value="20" />
+    </Style>
     <!--  Common style for Description labels  -->
     <Style x:Key="DescriptionLabelStyle" TargetType="Label">
         <Setter Property="FontSize" Value="14" />

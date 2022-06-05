@@ -19,6 +19,7 @@ using Prism;
 using Prism.Ioc;
 using Prism.Plugin.Popups;
 using System.IO;
+using Xamarin.Essentials;
 using Xamarin.Essentials.Implementation;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms;
@@ -45,15 +46,22 @@ namespace lestoma.App
             Syncfusion.Licensing.SyncfusionLicenseProvider.
                RegisterLicense("NTI5MzU5QDMxMzkyZTMzMmUzMGZ5cEJxMUFDNHhqS0hEVlVHU3NCTHNsUTNGOGpEM015bjVJQ05hUkpXOWM9");
             InitializeComponent();
-
-            if (!MovilSettings.IsLogin)
+            if (VersionTracking.IsFirstLaunchEver)
             {
-                await NavigationService.NavigateAsync($"NavigationPage/{nameof(LoginPage)}");
+                await NavigationService.NavigateAsync($"NavigationPage/{nameof(OnBoardingPage)}");
             }
             else
             {
-                await NavigationService.NavigateAsync($"{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
+                if (!MovilSettings.IsLogin)
+                {
+                    await NavigationService.NavigateAsync($"NavigationPage/{nameof(LoginPage)}");
+                }
+                else
+                {
+                    await NavigationService.NavigateAsync($"{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
+                }
             }
+
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -88,9 +96,12 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<CrearOrEditActividadPage, CrearOrEditActividadViewModel>();
             containerRegistry.RegisterForNavigation<UpaPage, UpaViewModel>();
             containerRegistry.RegisterForNavigation<DetalleUpaActividadPage, DetalleUpaActividadViewModel>();
-            #endregion
             containerRegistry.RegisterForNavigation<CreateOrEditUpaPage, CreateOrEditUpaViewModel>();
             containerRegistry.RegisterForNavigation<CreateOrEditDetalleUpaActividadPage, CreateOrEditDetalleUpaActividadViewModel>();
+            containerRegistry.RegisterForNavigation<OnBoardingPage, OnBoardingPageViewModel>();
+            #endregion
+
+            containerRegistry.RegisterForNavigation<ModeOfflinePage, ModeOfflinePageViewModel>();
         }
     }
 }

@@ -16,18 +16,14 @@ namespace lestoma.App.ViewModels.Upas
 {
     public class CreateOrEditUpaViewModel : BaseViewModel
     {
-        private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         private UpaModel _model;
         private UpaRequest _upa;
-
-
         public CreateOrEditUpaViewModel(INavigationService navigationService, IApiService apiService)
            : base(navigationService)
         {
             _model = new UpaModel();
             _model.AddValidationRules();
-            _navigationService = navigationService;
             _apiService = apiService;
             _upa = new UpaRequest();
             CreateOrEditCommand = new Command(CreateOrEditarClicked);
@@ -54,7 +50,8 @@ namespace lestoma.App.ViewModels.Upas
         private void CargarDatos()
         {
             Model.Nombre.Value = Upa != null ? Upa.Nombre : string.Empty;
-            Model.CantidadActividades.Value = Upa == null ? string.Empty : Upa.CantidadActividades > 0 ? Upa.CantidadActividades.ToString() : string.Empty;
+            Model.CantidadActividades.Value = Upa == null ? string.Empty : Upa.CantidadActividades
+                > 0 ? Upa.CantidadActividades.ToString() : string.Empty;
             Model.Descripcion.Value = Upa != null ? Upa.Descripcion : string.Empty;
         }
 

@@ -21,5 +21,13 @@ namespace lestoma.App.Views
             BusyIndicator.AnimationType = AnimationTypes.HorizontalPulsingBox;
 
         }
+
+        public LoadingPopupPage()
+        {
+            InitializeComponent();
+            BusyIndicator.Title = "Cargando...";
+            BusyIndicator.AnimationType = AnimationTypes.HorizontalPulsingBox;
+
+        }
     }
 }

@@ -48,14 +48,8 @@ namespace lestoma.App.ViewModels.Actividades
                         Id = Actividad.Id != Guid.Empty ? Actividad.Id : Guid.Empty,
                         Nombre = _model.Nombre.Value
                     };
-                    if (!_apiService.CheckConnection())
+                    if (_apiService.CheckConnection())
                     {
-                        LSActividad _actividadOfflineService = new LSActividad(App.DbPathSqlLite);
-                        respuesta = await _actividadOfflineService.CrearAsync(request);
-                    }
-                    else
-                    {
-
                         if (Actividad.Id == Guid.Empty)
                         {
                             respuesta = await _apiService.PostAsyncWithToken(URL, "actividades/crear", request, TokenUser.Token);
@@ -64,6 +58,11 @@ namespace lestoma.App.ViewModels.Actividades
                         {
                             respuesta = await _apiService.PutAsyncWithToken(URL, "actividades/editar", request, TokenUser.Token);
                         }
+                    }
+                    else
+                    {
+                        LSActividad _actividadOfflineService = new LSActividad(App.DbPathSqlLite);
+                        respuesta = await _actividadOfflineService.CrearAsync(request); 
                     }
                     if (!respuesta.IsExito)
                     {
