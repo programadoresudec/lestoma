@@ -8,13 +8,12 @@ using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Newtonsoft.Json;
-using Plugin.Toast;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Diagnostics;
+using System.Net;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -105,46 +104,52 @@ namespace lestoma.App.ViewModels.Account
         #region methods 
         private async void LoginClicked(object obj)
         {
+
             if (AreFieldsValid())
             {
                 try
                 {
-                    await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Iniciando Sesión..."));
-
-                    if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+                    if (_apiService.CheckConnection())
                     {
-                        CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
-                        return;
+                        await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Iniciando Sesión..."));
+                        LoginRequest login = new LoginRequest
+                        {
+                            Email = Email.Value,
+                            Clave = password.Value,
+                            TipoAplicacion = (int)TipoAplicacion.AppMovil
+
+                        };
+                        Response respuesta = await _apiService.PostAsync(URL, "Account/login", login);
+                        if (!respuesta.IsExito)
+                        {
+                            if (respuesta.StatusCode == (int)HttpStatusCode.Unauthorized)
+                            {
+                                AlertWarning(respuesta.Mensaje);
+                            }
+                            else
+                            {
+                                AlertError(respuesta.Mensaje);
+                            }
+                            await ClosePopup();
+                            return;
+                        }
+                        TokenDTO token = ParsearData<TokenDTO>(respuesta);
+                        MovilSettings.Token = JsonConvert.SerializeObject(token);
+                        MovilSettings.IsLogin = true;
+                        AlertSuccess(respuesta.Mensaje);
+                        await Task.Delay(1000);
+                        await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
+                        await ClosePopup();
+                    }
+                    else
+                    {
+                        AlertNoInternetConnection();
                     }
 
-                    string url = Prism.PrismApplicationBase.Current.Resources["UrlAPI"].ToString();
-                    LoginRequest login = new LoginRequest
-                    {
-                        Email = Email.Value,
-                        Clave = password.Value,
-                        TipoAplicacion = (int)TipoAplicacion.AppMovil
-
-                    };
-                    Response respuesta = await _apiService.PostAsync(url, "Account/login", login);
-                    if (!respuesta.IsExito)
-                    {
-                        CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
-                        return;
-                    }
-                    TokenDTO token = ParsearData<TokenDTO>(respuesta);
-                    MovilSettings.Token = JsonConvert.SerializeObject(token);
-                    MovilSettings.IsLogin = true;
-                    CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
-                    await Task.Delay(1000);
-                    await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
-                }
-                finally
-                {
-                    await _navigationService.ClearPopupStackAsync();
                 }
             }
         }

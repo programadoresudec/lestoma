@@ -61,6 +61,11 @@ namespace lestoma.App.ViewModels.UpasActividades
                     var obj = Actividades.Where(x => x.Id == actividad.Id).FirstOrDefault();
                     Actividades.Remove(obj);
                     IsVisibleActividades = true;
+                    Page currentPage = Application.Current.MainPage;
+                    var comboBox = currentPage.FindByName<Syncfusion.XForms.ComboBox.SfComboBox>("comboBoxActividades");
+                    var entry = currentPage.FindByName<Entry>("PassEntry");
+
+                    comboBox.SelectedIndex = -1;
                 }
             }
             catch (Exception ex)
@@ -71,18 +76,27 @@ namespace lestoma.App.ViewModels.UpasActividades
         private void ItemRemoveClicked(object param)
         {
             try
+            //
             {
-                var actividad = param as NameDTO;
-                if (actividad != null)
+                var sfChip = param as Syncfusion.XForms.Buttons.SfChip;
+                if (sfChip != null)
                 {
-                    var obj = ActividadesAdd.Where(x => x.Id == actividad.Id).FirstOrDefault();
-                    ActividadesAdd.Remove(obj);
-                    Actividades.Add(actividad);
-                    if (ActividadesAdd.Count == 0)
+                    var dataContext = GetInternalProperty(typeof(Syncfusion.XForms.Buttons.SfChip), sfChip, "DataContext");
+                    var removeActividad = dataContext;
+                    var json = JsonConvert.SerializeObject(removeActividad);
+                    json = json.TrimStart(new char[] { '[' }).TrimEnd(new char[] { ']' });
+                    var actividad = JsonConvert.DeserializeObject<NameDTO>(json);
+                    if (actividad != null)
                     {
-                        IsVisibleActividades = false;
+                        var obj = ActividadesAdd.Where(x => x.Id == actividad.Id).FirstOrDefault();
+                        ActividadesAdd.Remove(obj);
+                        Actividades.Add(actividad);
+                        if (ActividadesAdd.Count == 0)
+                        {
+                            IsVisibleActividades = false;
+                        }
                     }
-                }
+                }  
             }
             catch (Exception ex)
             {

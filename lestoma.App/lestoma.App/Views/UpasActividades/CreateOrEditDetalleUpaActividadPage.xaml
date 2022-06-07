@@ -18,6 +18,7 @@
     <StackLayout VerticalOptions="Start" HorizontalOptions="Start" Padding="30">
         <ScrollView>
             <StackLayout>
+                <Entry x:Name="PassEntry"></Entry>
                 <border:SfBorder BackgroundColor="{DynamicResource Gray-White}"
                                  BorderColor="{Binding Source={x:Reference usuarioEntry}, Path=IsFocused, 
                                  Converter={StaticResource ColorConverter}, ConverterParameter=0}"
@@ -47,11 +48,11 @@
                         </inputLayout:SfTextInputLayout>
                     </Grid>
                 </border:SfBorder>
-                <inputLayout:SfTextInputLayout Hint="Actividades" ContainerBackgroundColor="Transparent" 
+                <inputLayout:SfTextInputLayout Hint="Actividades" x:Name="InputComboBox" ContainerBackgroundColor="Transparent" 
                                                    Margin="10,0,0,0">
                     <combobox:SfComboBox EnableAutoSize="True" x:Name="comboBoxActividades" AllowFiltering="true" ComboBoxMode="SuggestAppend"
                                          DisplayMemberPath="Nombre" IsEditableMode="True" NoResultsFoundText="Actividad no encontrada." 
-                                     DataSource="{Binding Actividades}" >
+                                     DataSource="{Binding Actividades}"  >
                         <combobox:SfComboBox.Behaviors>
                             <prism:EventToCommandBehavior EventName="SelectionChanging"
                                           Command="{Binding ItemSelectCommand}" EventArgsParameterPath="Value" />

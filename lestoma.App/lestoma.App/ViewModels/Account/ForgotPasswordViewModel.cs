@@ -1,11 +1,11 @@
-﻿using lestoma.App.Views.Account;
+﻿using lestoma.App.Views;
+using lestoma.App.Views.Account;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using Plugin.Toast;
 using Prism.Navigation;
-using System.Threading.Tasks;
-using Xamarin.Essentials;
+using Rg.Plugins.Popup.Services;
+using System.Diagnostics;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -21,8 +21,6 @@ namespace lestoma.App.ViewModels.Account
         #region Fields
         private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
-        private bool _isRunning;
-        private bool _isEnabled;
         #endregion
 
         #region Constructor
@@ -31,9 +29,8 @@ namespace lestoma.App.ViewModels.Account
         {
             _navigationService = navigationService;
             _apiService = apiService;
-            _isEnabled = true;
-            this.SignUpCommand = new Command(this.SignUpClicked, CanExecuteClickCommand);
-            this.SendCommand = new Command(this.SendClicked, CanExecuteClickCommand);
+            this.SignUpCommand = new Command(this.SignUpClicked);
+            this.SendCommand = new Command(this.SendClicked);
         }
 
         #endregion
@@ -47,61 +44,41 @@ namespace lestoma.App.ViewModels.Account
 
         #endregion
 
-        #region Properties
-        public bool IsRunning
-        {
-            get => _isRunning;
-            set => SetProperty(ref _isRunning, value);
-        }
-
-        public bool IsEnabled
-        {
-            get { return _isEnabled; }
-            set
-            {
-                _isEnabled = value;
-                SignUpCommand.ChangeCanExecute();
-                SendCommand.ChangeCanExecute();
-            }
-        }
-        bool CanExecuteClickCommand(object arg)
-        {
-            return _isEnabled;
-        }
-
-        #endregion
-
         #region Methods
         private async void SendClicked(object obj)
         {
             if (this.IsEmailFieldValid())
             {
-                IsRunning = true;
-                IsEnabled = false;
-                if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+                try
                 {
-                    IsRunning = false;
-                    IsEnabled = true;
-                    CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
-                    return;
+                    if (_apiService.CheckConnection())
+                    {
+                        await PopupNavigation.Instance.PushAsync(new LoadingPopupPage());
+                        ForgotPasswordRequest email = new ForgotPasswordRequest
+                        {
+                            Email = Email.Value,
+                        };
+                        Response respuesta = await _apiService.PutAsync(URL, "Account/forgotpassword", email);
+                        if (!respuesta.IsExito)
+                        {
+                            AlertError(respuesta.Mensaje);
+                            await ClosePopup();
+                            return;
+                        }
+                        AlertSuccess(respuesta.Mensaje);
+                        await _navigationService.NavigateAsync($"{nameof(ResetPasswordPage)}");
+                        await ClosePopup();
+                    }
+                    else
+                    {
+                        AlertNoInternetConnection();
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
                 }
 
-                string url = App.Current.Resources["UrlAPI"].ToString();
-                ForgotPasswordRequest email = new ForgotPasswordRequest
-                {
-                    Email = Email.Value,
-                };
-                Response respuesta = await _apiService.PutAsync(url, "Account/forgotpassword", email);
-                IsRunning = false;
-                IsEnabled = true;
-                if (!respuesta.IsExito)
-                {
-                    CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
-                    return;
-                }
-                CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
-                await Task.Delay(1000);
-                await _navigationService.NavigateAsync($"{nameof(ResetPasswordPage)}");
             }
         }
 

@@ -18,14 +18,12 @@ namespace lestoma.App.ViewModels
 {
     public class AdminMasterViewModel : BaseViewModel
     {
-        private readonly INavigationService _navigationService;
         private static AdminMasterViewModel _instance;
         private UserDTO _userApp;
         public AdminMasterViewModel(INavigationService navigationService)
             : base(navigationService)
         {
             _instance = this;
-            _navigationService = navigationService;
             LoadUser();
             LoadMenus();
         }

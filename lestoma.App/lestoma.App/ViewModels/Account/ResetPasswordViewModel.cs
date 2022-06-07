@@ -1,14 +1,13 @@
 ﻿using lestoma.App.Validators;
 using lestoma.App.Validators.Rules;
+using lestoma.App.Views;
 using lestoma.App.Views.Account;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using Plugin.Toast;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using System.Diagnostics;
-using System.Threading.Tasks;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -32,9 +31,6 @@ namespace lestoma.App.ViewModels.Account
         private string _codeSix;
         private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
-
-        private bool _isRunning;
-        private bool _isEnabled;
         #endregion
 
         #region Constructor
@@ -49,9 +45,8 @@ namespace lestoma.App.ViewModels.Account
             _apiService = apiService;
             this.InitializeProperties();
             this.AddValidationRules();
-            _isEnabled = true;
-            this.SubmitCommand = new Command(this.SubmitClicked, CanExecuteClickCommand);
-            this.SignInCommand = new Command(this.SignInClicked, CanExecuteClickCommand);
+            this.SubmitCommand = new Command(this.SubmitClicked);
+            this.SignInCommand = new Command(this.SignInClicked);
         }
         #endregion
 
@@ -108,24 +103,6 @@ namespace lestoma.App.ViewModels.Account
                 this.SetProperty(ref this.verificationCode, value);
             }
         }
-        public bool IsEnabled
-        {
-            get { return _isEnabled; }
-            set
-            {
-                _isEnabled = value;
-                SignInCommand.ChangeCanExecute();
-                SubmitCommand.ChangeCanExecute();
-
-            }
-        }
-
-        public bool IsRunning
-        {
-            get => _isRunning;
-            set => SetProperty(ref _isRunning, value);
-        }
-
         public string CodeOne
         {
             get => _codeOne;
@@ -171,11 +148,6 @@ namespace lestoma.App.ViewModels.Account
             bool isVerificationCodeValid = this.VerificationCode.Validate();
             return isPassword && isVerificationCodeValid;
         }
-
-        bool CanExecuteClickCommand(object arg)
-        {
-            return _isEnabled;
-        }
         /// <summary>
         /// Initializing the properties.
         /// </summary>
@@ -209,38 +181,33 @@ namespace lestoma.App.ViewModels.Account
                 VerificationCode.Value = $"{CodeOne}{CodeTwo}{CodeThree}{CodeFour}{CodeFive}{CodeSix}";
                 if (AreFieldsValid())
                 {
-                    IsRunning = true;
-                    IsEnabled = false;
-                    if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+                    await PopupNavigation.Instance.PushAsync(new LoadingPopupPage());
+                    if (_apiService.CheckConnection())
                     {
-                        IsRunning = false;
-                        IsEnabled = true;
-                        CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
-                        return;
+                        RecoverPasswordRequest recover = new RecoverPasswordRequest()
+                        {
+                            Codigo = VerificationCode.Value,
+                            Password = Password.Item1.Value
+                        };
+                        Response respuesta = await _apiService.PutAsync(URL, "Account/recoverpassword", recover);
+                        if (!respuesta.IsExito)
+                        {
+                            AlertError(respuesta.Mensaje);
+                            await ClosePopup();
+                            return;
+                        }
+                        AlertSuccess(respuesta.Mensaje);
+                        await _navigationService.NavigateAsync(nameof(LoginPage));
+                        await ClosePopup();
                     }
-                    string url = App.Current.Resources["UrlAPI"].ToString();
-                    RecoverPasswordRequest recover = new RecoverPasswordRequest()
+                    else
                     {
-                        Codigo = VerificationCode.Value,
-                        Password = Password.Item1.Value
-                    };
-                    Response respuesta = await _apiService.PutAsync(url, "Account/recoverpassword", recover);
-                    IsRunning = false;
-                    IsEnabled = true;
-                    if (!respuesta.IsExito)
-                    {
-                        CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
-                        return;
+                        AlertNoInternetConnection();
                     }
-                    CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
-                    await Task.Delay(1000);
-                    await _navigationService.NavigateAsync(nameof(LoginPage));
                 }
-
             }
             catch (System.Exception ex)
             {
-
                 Debug.WriteLine(ex.Message);
             }
         }

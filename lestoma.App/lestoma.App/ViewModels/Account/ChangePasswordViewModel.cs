@@ -7,10 +7,10 @@ using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Newtonsoft.Json;
-using Plugin.Toast;
 using Prism.Navigation;
-using System.Threading.Tasks;
-using Xamarin.Essentials;
+using Rg.Plugins.Popup.Services;
+using System;
+using System.Diagnostics;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Account
@@ -20,8 +20,6 @@ namespace lestoma.App.ViewModels.Account
         #region Fields
         private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
-        private bool _isRunning;
-        private bool _isEnabled;
         private TokenDTO _userApp;
         private ValidatablePair<string> password;
         private ValidatableObject<string> currentPassword;
@@ -35,16 +33,14 @@ namespace lestoma.App.ViewModels.Account
             Title = "Iniciar Sesión";
             _navigationService = navigationService;
             _apiService = apiService;
-            _isEnabled = true;
             this.InitializeProperties();
             this.AddValidationRules();
             LoadUser();
-            this.SubmitCommand = new Command(this.SubmitClicked, CanExecuteClickCommand);
+            this.SubmitCommand = new Command(this.SubmitClicked);
         }
         #endregion
 
         #region Command
-
 
         public Command SubmitCommand { get; set; }
 
@@ -87,18 +83,6 @@ namespace lestoma.App.ViewModels.Account
                 this.SetProperty(ref this.currentPassword, value);
             }
         }
-
-        public bool IsEnabled
-        {
-            get { return _isEnabled; }
-            set
-            {
-                _isEnabled = value;
-                SubmitCommand.ChangeCanExecute();
-
-            }
-        }
-
         public TokenDTO UserApp
         {
             get => _userApp;
@@ -112,11 +96,6 @@ namespace lestoma.App.ViewModels.Account
                 this.UserApp = JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token);
             }
         }
-        public bool IsRunning
-        {
-            get => _isRunning;
-            set => SetProperty(ref _isRunning, value);
-        }
         #endregion
 
         #region validaciones
@@ -126,10 +105,6 @@ namespace lestoma.App.ViewModels.Account
             bool isPassword = this.Password.Validate();
             bool isCurrentPasswordValid = this.CurrentPassword.Validate();
             return isPassword && isCurrentPasswordValid;
-        }
-        bool CanExecuteClickCommand(object arg)
-        {
-            return _isEnabled;
         }
 
         private void InitializeProperties()
@@ -154,34 +129,37 @@ namespace lestoma.App.ViewModels.Account
         {
             if (this.AreFieldsValid())
             {
-                IsRunning = true;
-                IsEnabled = false;
-                if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+                try
                 {
-                    IsRunning = false;
-                    IsEnabled = true;
-                    CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
-                    return;
+                    if (_apiService.CheckConnection())
+                    {
+                        await PopupNavigation.Instance.PushAsync(new LoadingPopupPage());
+                        ChangePasswordRequest cambio = new ChangePasswordRequest
+                        {
+                            IdUser = UserApp.User.Id,
+                            OldPassword = this.CurrentPassword.Value,
+                            NewPassword = this.Password.Item1.Value
+                        };
+                        Response respuesta = await _apiService.PostAsyncWithToken(URL, "Account/changepassword", cambio, UserApp.Token);
+                        if (!respuesta.IsExito)
+                        {
+                            AlertError(respuesta.Mensaje);
+                            await ClosePopup();
+                            return;
+                        }
+                        AlertSuccess(respuesta.Mensaje);
+                        await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(SettingsPage)}");
+                        await ClosePopup();
+                    }
+                    else
+                    {
+                        AlertNoInternetConnection();
+                    }
                 }
-
-                string url = App.Current.Resources["UrlAPI"].ToString();
-                ChangePasswordRequest cambio = new ChangePasswordRequest
+                catch (Exception ex)
                 {
-                    IdUser = UserApp.User.Id,
-                    OldPassword = this.CurrentPassword.Value,
-                    NewPassword = this.Password.Item1.Value
-                };
-                Response respuesta = await _apiService.PostAsyncWithToken(url, "Account/changepassword", cambio, UserApp.Token);
-                IsRunning = false;
-                IsEnabled = true;
-                if (!respuesta.IsExito)
-                {
-                    CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
-                    return;
+                    Debug.WriteLine(ex.Message);
                 }
-                CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
-                await Task.Delay(2000);
-                await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(SettingsPage)}");
             }
         }
         #endregion

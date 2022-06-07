@@ -5,13 +5,10 @@ using lestoma.App.Views.Account;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using Plugin.Toast;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -24,18 +21,11 @@ namespace lestoma.App.ViewModels.Account
     public class RegistroPageViewModel : LoginViewModel
     {
         #region Fields
-
         private ValidatableObject<string> name;
         private ValidatableObject<string> lastName;
-
         private ValidatablePair<string> password;
-
         private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
-
-        private bool _isRunning;
-        private bool _isEnabled;
-
         #endregion
 
         #region Constructor
@@ -50,10 +40,9 @@ namespace lestoma.App.ViewModels.Account
             _navigationService = navigationService;
             _apiService = apiService;
             this.InitializeProperties();
-            this.AddValidationRules();
-            _isEnabled = true;
-            this.LoginCommand = new Command(this.LoginClicked, CanExecuteClickCommand);
-            this.SignUpCommand = new Command(this.SignUpClicked, CanExecuteClickCommand);
+            this.AddValidationRules();       
+            this.LoginCommand = new Command(this.LoginClicked);
+            this.SignUpCommand = new Command(this.SignUpClicked);
         }
         #endregion
 
@@ -119,25 +108,6 @@ namespace lestoma.App.ViewModels.Account
                 this.SetProperty(ref this.password, value);
             }
         }
-
-        public bool IsRunning
-        {
-            get => _isRunning;
-            set => SetProperty(ref _isRunning, value);
-        }
-
-        public bool IsEnabled
-        {
-            get { return _isEnabled; }
-            set
-            {
-                _isEnabled = value;
-                SignUpCommand.ChangeCanExecute();
-                LoginCommand.ChangeCanExecute();
-
-            }
-        }
-
         #endregion
 
         #region Command
@@ -168,12 +138,6 @@ namespace lestoma.App.ViewModels.Account
 
             return isPasswordValid && isNameValid && isLastNameValid && isEmail;
         }
-
-        bool CanExecuteClickCommand(object arg)
-        {
-            return _isEnabled;
-        }
-
         /// <summary>
         /// Initializing the properties.
         /// </summary>
@@ -207,44 +171,41 @@ namespace lestoma.App.ViewModels.Account
 
         private async void SignUpClicked(object obj)
         {
-            if (AreFieldsValid())
+            try
             {
-                try
+                if (AreFieldsValid())
                 {
-                    await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Registrando..."));
-                    IsRunning = true;
-                    IsEnabled = false;
-                    if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+                    if (_apiService.CheckConnection())
                     {
-                        IsRunning = false;
-                        IsEnabled = true;
-                        CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
-                        return;
+                        await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Registrando..."));
+                        UsuarioRequest usuario = new UsuarioRequest
+                        {
+                            Email = Email.Value,
+                            Clave = Password.Item1.Value,
+                            Apellido = LastName.Value,
+                            Nombre = Name.Value
+                        };
+                        Response respuesta = await _apiService.PostAsync(URL, "Account/registro", usuario);
+                        if (!respuesta.IsExito)
+                        {
+                            AlertError(respuesta.Mensaje);
+                            await ClosePopup();
+                            return;
+                        }
+                        AlertSuccess(respuesta.Mensaje);
+                        await ClosePopup();
+                        await _navigationService.GoBackAsync();
                     }
-                    UsuarioRequest usuario = new UsuarioRequest
+                    else
                     {
-                        Email = Email.Value,
-                        Clave = Password.Item1.Value,
-                        Apellido = LastName.Value,
-                        Nombre = Name.Value
-                    };
-                    Response respuesta = await _apiService.PostAsync(URL, "Account/registro", usuario);
-                    IsRunning = false;
-                    IsEnabled = true;
-                    if (!respuesta.IsExito)
-                    {
-                        CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
-                        return;
+                        AlertNoInternetConnection();
                     }
-                    CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
-                    await Task.Delay(2000);
-                    await _navigationService.ClearPopupStackAsync();
-                    await _navigationService.GoBackAsync();
                 }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                AlertError(ex.Message);
             }
         }
 

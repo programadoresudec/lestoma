@@ -1,5 +1,7 @@
 ﻿using lestoma.DatabaseOffline.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace lestoma.DatabaseOffline
 {
@@ -12,7 +14,6 @@ namespace lestoma.DatabaseOffline
         public DatabaseOffline(string dbPath)
         {
             _databasePath = dbPath;
-            Database.EnsureDeleted();
             Database.EnsureCreated();
         }
         #endregion
@@ -27,7 +28,10 @@ namespace lestoma.DatabaseOffline
         }
         #endregion
 
-
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            return base.SaveChangesAsync(cancellationToken);
+        }
 
         #region DBSET tablas 
 

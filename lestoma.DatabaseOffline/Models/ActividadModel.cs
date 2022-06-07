@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace lestoma.DatabaseOffline.Models
 {
     [Table("actividad")]
-    public class ActividadModel : ECamposAuditoria
+    public class ActividadModel : CamposAuditoriaModel
     {
         [Key]
         [Column("id")]

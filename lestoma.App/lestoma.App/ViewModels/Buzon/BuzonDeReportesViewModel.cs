@@ -14,7 +14,6 @@ namespace lestoma.App.ViewModels.Buzon
 {
     public class BuzonDeReportesViewModel : BaseViewModel
     {
-        private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         private bool _isRunning;
         private ObservableCollection<BuzonItemViewModel> _reportesDelBuzonView;
@@ -23,7 +22,6 @@ namespace lestoma.App.ViewModels.Buzon
         public BuzonDeReportesViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
-            _navigationService = navigationService;
             _apiService = apiService;
             Title = "Listado de buzón de reportes";
             LoadBuzonDeReportesAsync();
