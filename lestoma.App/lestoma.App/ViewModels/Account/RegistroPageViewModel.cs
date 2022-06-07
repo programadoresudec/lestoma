@@ -207,11 +207,11 @@ namespace lestoma.App.ViewModels.Account
 
         private async void SignUpClicked(object obj)
         {
-            await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Registrando..."));
-            try
+            if (AreFieldsValid())
             {
-                if (AreFieldsValid())
+                try
                 {
+                    await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Registrando..."));
                     IsRunning = true;
                     IsEnabled = false;
                     if (Connectivity.NetworkAccess != NetworkAccess.Internet)
@@ -241,10 +241,10 @@ namespace lestoma.App.ViewModels.Account
                     await _navigationService.ClearPopupStackAsync();
                     await _navigationService.GoBackAsync();
                 }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
             }
         }
 

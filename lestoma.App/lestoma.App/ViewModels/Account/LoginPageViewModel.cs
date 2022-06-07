@@ -90,7 +90,7 @@ namespace lestoma.App.ViewModels.Account
             bool isPassword = Password.Validate();
             return isEmailValid && isPassword;
         }
-   
+
         private void InitializeProperties()
         {
             Password = new ValidatableObject<string>();
@@ -105,18 +105,18 @@ namespace lestoma.App.ViewModels.Account
         #region methods 
         private async void LoginClicked(object obj)
         {
-            try
+            if (AreFieldsValid())
             {
-                await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Iniciando Sesión...")); 
-                if (AreFieldsValid())
+                try
                 {
-                  
+                    await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Iniciando Sesión..."));
+
                     if (Connectivity.NetworkAccess != NetworkAccess.Internet)
                     {
                         CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
                         return;
                     }
-                    
+
                     string url = Prism.PrismApplicationBase.Current.Resources["UrlAPI"].ToString();
                     LoginRequest login = new LoginRequest
                     {
@@ -138,14 +138,14 @@ namespace lestoma.App.ViewModels.Account
                     await Task.Delay(1000);
                     await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
                 }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
-            finally
-            {
-                await _navigationService.ClearPopupStackAsync();
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+                finally
+                {
+                    await _navigationService.ClearPopupStackAsync();
+                }
             }
         }
         private async void SignUpClicked(object obj)
