@@ -31,22 +31,30 @@ namespace lestoma.App.ViewModels
                 new OnboardingModel
                 {
                     Title = "Bienvenido a \n LESTOMA",
-                    Content = "Aplicativo para Monitoreo de lugares acuaponicos.",
-                    ImageUrl = "ilust1.svg"
+                    Content = "Aplicativo para Monitoreo y Control de Sistemas Auaponicos.",
+                    ImageUrl = "Logolestoma.svg"
                 },
                 new OnboardingModel
                 {
-                    Title = "Registrate como Auxiliar",
-                    Content = " bla bla bla",
+                    Title = "Registrate",
+                    Content = "Para que comencemos!!!",
                     ImageUrl = "ilust2.svg"
                 },
                 new OnboardingModel
                 {
-                    Title = "optimiza y bla bla",
-                    Content = "*********",
-                    ImageUrl = "ilust3.svg"
+                    Title = "Controla y Monitorea tu Sistema",
+                    Content = "Ahora es mas Facil",
+                    ImageUrl = "monitoreo.svg"
+                },
+                new OnboardingModel
+                {
+                    Title = "Una solución Eficiente",
+                    Content = "Universidad De Cundinamarca",
+                    ImageUrl = "EscudoCundinamarca.svg"
                 }
+
             };
+
         }
 
         private void InitializeSkipCommand()

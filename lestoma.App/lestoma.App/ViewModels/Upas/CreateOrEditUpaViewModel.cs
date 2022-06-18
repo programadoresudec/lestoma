@@ -1,10 +1,8 @@
 ﻿using lestoma.App.Models;
 using lestoma.App.Views;
 using lestoma.CommonUtils.DTOs;
-using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using Newtonsoft.Json;
 using Plugin.Toast;
 using Prism.Navigation;
 using System;
