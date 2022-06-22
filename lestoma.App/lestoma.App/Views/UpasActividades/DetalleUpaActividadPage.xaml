@@ -70,7 +70,7 @@
                                     <FormattedString>
                                         <Span Text="Fecha ultimo acceso: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" 
                                               FontAttributes="Bold"/>
-                                        <Span Text="{Binding FechaCreacion}" TextColor="Black" FontSize="Small" />
+                                        <Span Text="{Binding FechaCreacionServer}" TextColor="Black" FontSize="Small" />
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>

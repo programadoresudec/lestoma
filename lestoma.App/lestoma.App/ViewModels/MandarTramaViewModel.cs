@@ -1,6 +1,4 @@
 ﻿using Android.Bluetooth;
-
-using Java.IO;
 using Java.Util;
 using lestoma.App.Views;
 using lestoma.CommonUtils.Helpers;
@@ -22,7 +20,6 @@ namespace lestoma.App.ViewModels
     {
         CancellationTokenSource tcs = new CancellationTokenSource();
         CancellationToken token = new CancellationToken();
-        private readonly INavigationService _navigationService;
         private string _trama;
         private string _tramaRecibida;
         private BluetoothSocket btSocket = null;
@@ -31,7 +28,6 @@ namespace lestoma.App.ViewModels
         public MandarTramaViewModel(INavigationService navigationService) :
         base(navigationService)
         {
-            _navigationService = navigationService;
             ConnectionBluetoothCommand = new Command(ConectarBluetoothClicked);
             MandarRespuestaCommand = new Command(MandarRespuestaClicked);
 
@@ -246,5 +242,4 @@ namespace lestoma.App.ViewModels
                 .Select(i => str.Substring(i * chunkSize, chunkSize));
         }
     }
-
 }

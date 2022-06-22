@@ -193,7 +193,7 @@ namespace lestoma.App.ViewModels
         #region Alerts de CrossToastPopUp
         protected void AlertNoInternetConnection()
         {
-            CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.", 
+            CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.",
                 Plugin.Toast.Abstractions.ToastLength.Long);
 
         }
