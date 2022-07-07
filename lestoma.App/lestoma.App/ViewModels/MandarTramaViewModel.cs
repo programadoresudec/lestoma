@@ -1,6 +1,4 @@
 ﻿using Android.Bluetooth;
-
-using Java.IO;
 using Java.Util;
 using lestoma.App.Views;
 using lestoma.CommonUtils.Helpers;
@@ -97,7 +95,7 @@ namespace lestoma.App.ViewModels
             {
 
                 //en caso de generarnos error cerramos el socket
-                Debug.WriteLine(ex.Message);
+                LestomaLog.Error(ex.Message);
                 CrossToastPopUp.Current.ShowToastError($"Error: {ex.Message}");
                 btSocket.Close();
             }

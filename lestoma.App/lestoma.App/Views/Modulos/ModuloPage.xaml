@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:prism="http://prismlibrary.com"
+                xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms" 
+                xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" 
+             prism:ViewModelLocator.AutowireViewModel="True"
+                x:Class="lestoma.App.Views.Modulos.ModuloPage"
+             Title="Modulos">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="icon_plus.png" Command="{Binding AddCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <syncfusion:SfListView  x:Name="LV_Actividades" AllowSwiping="True" SwipeOffset="100"
+                             ItemsSource="{Binding Modulos}"
+                            TapCommand="{Binding EditCommand}" SwipeEnded="LV_Actividades_SwipeEnded"
+                                    AutoFitMode="Height" SelectionBackgroundColor="Transparent">
+
+        <syncfusion:SfListView.ItemTemplate>
+            <DataTemplate>
+                <Frame Margin="5,10,5,10" CornerRadius="10" BackgroundColor="AliceBlue">
+                    <StackLayout Orientation="Horizontal">
+                        <StackLayout VerticalOptions="Center" HorizontalOptions="StartAndExpand">
+                            <Label Text="{Binding Nombre}" FontSize="Body"
+                                           TextColor="{x:DynamicResource PantoneVerdeSecond}" FontAttributes="Bold"/>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Fecha ultimo acceso: " FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                        <Span Text="{Binding FechaCreacionServer}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="IP: " FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                        <Span Text="{Binding Ip}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Usuario ultimo acceso: " FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                        <Span Text="{Binding Session}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Tipo Aplicación ultimo acceso: " FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                        <Span Text="{Binding TipoDeAplicacion}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </StackLayout>
+                    </StackLayout>
+                </Frame>
+            </DataTemplate>
+        </syncfusion:SfListView.ItemTemplate>
+        <syncfusion:SfListView.RightSwipeTemplate>
+            <DataTemplate x:Name="RightSwipeTemplate">
+                <Grid BackgroundColor="Transparent" HorizontalOptions="Fill" VerticalOptions="Fill">
+                    <Grid VerticalOptions="Center" HorizontalOptions="Center">
+                        <button:SfButton x:Name="BT_eliminar" HeightRequest="35" WidthRequest="35" 
+                                         Grid.Row="0" Text="Button" BackgroundColor="Transparent"  Clicked="BT_eliminar_Clicked"
+                                         ImageSource="icon_delete.png" ShowIcon="True">
+
+
+                        </button:SfButton>
+                    </Grid>
+                </Grid>
+            </DataTemplate>
+        </syncfusion:SfListView.RightSwipeTemplate>
+    </syncfusion:SfListView>
+</ContentPage>

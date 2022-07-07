@@ -1,4 +1,5 @@
-﻿using Android.Runtime;
+﻿
+using Android.Runtime;
 using Xamarin.Forms;
 
 namespace lestoma.App.Behaviors

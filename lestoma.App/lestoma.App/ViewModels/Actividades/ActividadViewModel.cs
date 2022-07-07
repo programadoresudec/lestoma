@@ -136,7 +136,10 @@ namespace lestoma.App.ViewModels.Actividades
             try
             {
                 await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-                InsertarListadoActividades();
+                if (_apiService.CheckConnection())
+                {
+                    InsertarListadoActividades();
+                }
             }
             catch (Exception ex)
             {
@@ -150,33 +153,15 @@ namespace lestoma.App.ViewModels.Actividades
 
         private async void InsertarListadoActividades()
         {
-            if (_apiService.CheckConnection())
+            Actividades = new ObservableCollection<ActividadDTO>();
+            Response response = await _apiService.GetListAsyncWithToken<List<ActividadDTO>>(URL, "actividades/listado", TokenUser.Token);
+            if (response.IsExito)
             {
-                Response response = await _apiService.GetListAsyncWithToken<List<ActividadDTO>>(URL, "actividades/listado", TokenUser.Token);
-                _actividadOfflineService.MergeEntity((List<ActividadDTO>)response.Data);
-                var query = await _actividadOfflineService.GetAll();
-                await _apiService.PostAsyncWithToken(URL, "actividades/merge", query, TokenUser.Token);
-                if (!response.IsExito)
-                {
-                    CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
-                    return;
-                }
-                if (response.Data == null)
-                {
-                    Actividades = new ObservableCollection<ActividadDTO>();
-                    return;
-                }
-                Actividades = new ObservableCollection<ActividadDTO>((List<ActividadDTO>)response.Data);
+                var listado = (List<ActividadDTO>)response.Data;
+                Actividades = new ObservableCollection<ActividadDTO>(listado);
             }
-            else
-            {
-                var query = await _actividadOfflineService.GetAll();
-                if (query.Count > 0)
-                {
-                    Actividades = new ObservableCollection<ActividadDTO>(query);
-                }
-            }
-
+          
+         
         }
     }
 }

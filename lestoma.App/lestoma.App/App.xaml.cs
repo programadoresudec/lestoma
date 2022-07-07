@@ -2,12 +2,14 @@ using lestoma.App.ViewModels;
 using lestoma.App.ViewModels.Account;
 using lestoma.App.ViewModels.Actividades;
 using lestoma.App.ViewModels.Buzon;
+using lestoma.App.ViewModels.Modulos;
 using lestoma.App.ViewModels.Upas;
 using lestoma.App.ViewModels.UpasActividades;
 using lestoma.App.Views;
 using lestoma.App.Views.Account;
 using lestoma.App.Views.Actividades;
 using lestoma.App.Views.Buzon;
+using lestoma.App.Views.Modulos;
 using lestoma.App.Views.Upas;
 using lestoma.App.Views.UpasActividades;
 using lestoma.CommonUtils.Helpers;
@@ -99,9 +101,13 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<CreateOrEditUpaPage, CreateOrEditUpaViewModel>();
             containerRegistry.RegisterForNavigation<CreateOrEditDetalleUpaActividadPage, CreateOrEditDetalleUpaActividadViewModel>();
             containerRegistry.RegisterForNavigation<OnBoardingPage, OnBoardingPageViewModel>();
+            containerRegistry.RegisterForNavigation<ModeOfflinePage, ModeOfflinePageViewModel>();
+            containerRegistry.RegisterForNavigation<ModuloPage, ModuloViewModel>();
+            containerRegistry.RegisterForNavigation<CreateOrEditModuloPage, CreateOrEditModuloViewModel>();
+
             #endregion
 
-            containerRegistry.RegisterForNavigation<ModeOfflinePage, ModeOfflinePageViewModel>();
+
         }
     }
 }
