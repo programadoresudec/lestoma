@@ -1,19 +1,14 @@
-﻿using lestoma.App.Helpers;
-using lestoma.App.Views;
+﻿using lestoma.App.Views;
 using lestoma.App.Views.Modulos;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Plugin.Toast;
-using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text.Json;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Modulos
@@ -132,6 +127,7 @@ namespace lestoma.App.ViewModels.Modulos
                             "modulos", ItemDelete.Id, TokenUser.Token);
                         if (!response.IsExito)
                         {
+
                             CrossToastPopUp.Current.ShowToastError($"ERROR: {response.Mensaje}", Plugin.Toast.Abstractions.ToastLength.Long);
                             return;
                         }

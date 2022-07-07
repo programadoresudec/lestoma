@@ -179,12 +179,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Mono.Android">
-      <HintPath>C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v10.0\Mono.Android.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="Styles\NavigationStyles.xaml.cs">
       <DependentUpon>NavigationStyles.xaml</DependentUpon>
     </Compile>
@@ -193,6 +187,12 @@
   <ItemGroup>
     <Folder Include="Views\Componentes\" />
     <Folder Include="Views\Reportes\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Mono.Android">
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v10.0\Mono.Android.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
