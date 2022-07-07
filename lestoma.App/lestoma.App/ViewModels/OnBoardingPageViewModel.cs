@@ -31,7 +31,7 @@ namespace lestoma.App.ViewModels
                 new OnboardingModel
                 {
                     Title = "Bienvenido a \n LESTOMA",
-                    Content = "Aplicativo para Monitoreo y Control de Sistemas Auaponicos.",
+                    Content = "Aplicativo para Monitoreo y Control de Sistemas Acuaponicos.",
                     ImageUrl = "Logolestoma.svg"
                 },
                 new OnboardingModel
