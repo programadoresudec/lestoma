@@ -1,8 +1,68 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                xmlns:prism="http://prismlibrary.com"
-                prism:ViewModelLocator.AutowireViewModel="True"
+                xmlns:prism="http://prismlibrary.com" xmlns:converter="clr-namespace:lestoma.App.Converters" xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms" xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" xmlns:control="clr-namespace:lestoma.App.Controls" xmlns:behaviour="clr-namespace:lestoma.App.Behaviors"
+             prism:ViewModelLocator.AutowireViewModel="True"
                 x:Class="lestoma.App.Views.Modulos.CreateOrEditModuloPage">
-  
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converter:BooleanToColorConverter x:Key="ColorConverter" />
+            <converter:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <converter:NameValidationConverter x:Key="FirstValidationErrorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <StackLayout>
+        <StackLayout BackgroundColor="{StaticResource PantoneVerdeDark}" Orientation="Horizontal">
+            <buttons:SfButton BackgroundColor="Transparent" HorizontalOptions="Start" Margin="10" VerticalOptions="CenterAndExpand"
+                                      ShowIcon="True" ImageSource="icon_leftarrow.png" Command="{Binding BackButtonCommand}"/>
+            <Label Text="{Binding Title}" FontSize="20" TextColor="White" FontAttributes="Bold" VerticalOptions="CenterAndExpand"/>
+        </StackLayout>
+        <StackLayout VerticalOptions="CenterAndExpand" Margin="15" Padding="10" Spacing="8">
+            <!--  Label to display error message  -->
+            <Label 
+            x:Name="NombreValidationLabel"
+            Margin="15,-3,0,0"
+            IsVisible="{Binding Model.Nombre.IsValid, Converter={StaticResource InverseBoolConverter}}"
+            Style="{StaticResource SimpleLabelStyle}"
+            Text="{Binding Model.Nombre.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+            TextColor="{DynamicResource Red}"
+            VerticalOptions="FillAndExpand" />
+            <border:SfBorder
+            BackgroundColor="{DynamicResource Gray-White}"
+            BorderColor="{Binding Source={x:Reference NombreEntry}, Path=IsFocused, Converter={StaticResource ColorConverter},
+                ConverterParameter=0}"
+            CornerRadius="4" HeightRequest="60"
+            Style="{StaticResource LoginFormBorderlessEntryBorderStyle}">
+                <Grid ColumnDefinitions="*, Auto">
+                    <inputLayout:SfTextInputLayout Hint="Nombre Modulo"  FocusedColor="#0450C2"
+                     ContainerType="Outlined" ContainerBackgroundColor="#E6EEF9"  Margin="10,0,0,0">
+                        <control:BorderlessEntry
+                x:Name="NombreEntry"
+                Margin="15,0"
+                MaxLength="60" 
+                HeightRequest="60"
+                PlaceholderColor="{StaticResource EntryPlaceholderColor}"
+                Style="{StaticResource BorderlessEntryStyle}"
+                Text="{Binding Modulo.Nombre}"
+                TextColor="Black">
+                            <Entry.Behaviors>
+                                <behaviour:EntryLineValidationBehaviour IsValid="{Binding Model.Nombre.IsValid}" />
+                            </Entry.Behaviors>
+                        </control:BorderlessEntry>
+                    </inputLayout:SfTextInputLayout>
+                    <!--  Label to display error icon  -->
+                    <Label Grid.Column="1"
+                       IsVisible="{Binding Path=IsVisible, Source={x:Reference NombreValidationLabel}}"
+                       Style="{StaticResource ErrorIconLabelStyle}"
+                       Text="{StaticResource Error}" />
+                </Grid>
+            </border:SfBorder>
+            <buttons:SfButton
+            HorizontalOptions="CenterAndExpand"
+            Command="{Binding CreateOrEditCommand}"
+             CornerRadius="4"
+             Style="{StaticResource GradientButtonStyle}"
+             Text="Guardar" />
+        </StackLayout>
+    </StackLayout>
 </ContentPage>

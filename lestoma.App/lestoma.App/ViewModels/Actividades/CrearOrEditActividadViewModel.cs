@@ -2,12 +2,9 @@
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using lestoma.DatabaseOffline.Logica;
-using Plugin.Toast;
 using Prism.Navigation;
 using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Actividades
@@ -59,18 +56,12 @@ namespace lestoma.App.ViewModels.Actividades
                             respuesta = await _apiService.PutAsyncWithToken(URL, "actividades/editar", request, TokenUser.Token);
                         }
                     }
-                    else
-                    {
-                        LSActividad _actividadOfflineService = new LSActividad(App.DbPathSqlLite);
-                        respuesta = await _actividadOfflineService.CrearAsync(request); 
-                    }
                     if (!respuesta.IsExito)
                     {
-                        CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
+                        AlertWarning(respuesta.Mensaje);
                         return;
                     }
-                    CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
-                    await Task.Delay(2000);
+                    AlertSuccess(respuesta.Mensaje);
                     await _navigationService.GoBackAsync(null, useModalNavigation: true, true);
                 }
 

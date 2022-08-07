@@ -1,12 +1,11 @@
-﻿using lestoma.Entidades.Models;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace lestoma.DatabaseOffline.Models
+namespace lestoma.DatabaseOffline.ModelsOffline
 {
-    [Table("actividad")]
-    public class ActividadModel : CamposAuditoriaModel
+    [Table("upa")]
+    public class UpaOffline : CamposAuditoriaOffline
     {
         [Key]
         [Column("id")]

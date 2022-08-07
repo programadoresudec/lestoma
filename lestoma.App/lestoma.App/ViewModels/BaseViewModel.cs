@@ -189,7 +189,6 @@ namespace lestoma.App.ViewModels
         public TokenDTO TokenUser => !string.IsNullOrEmpty(MovilSettings.Token) ? JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token) : null;
         #endregion
 
-
         #region Alerts de CrossToastPopUp
         protected void AlertNoInternetConnection()
         {

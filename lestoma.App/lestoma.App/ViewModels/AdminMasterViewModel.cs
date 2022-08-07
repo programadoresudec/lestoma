@@ -3,6 +3,7 @@ using lestoma.App.Views;
 using lestoma.App.Views.Account;
 using lestoma.App.Views.Actividades;
 using lestoma.App.Views.Buzon;
+using lestoma.App.Views.Modulos;
 using lestoma.App.Views.Upas;
 using lestoma.App.Views.UpasActividades;
 using lestoma.CommonUtils.DTOs;
@@ -84,6 +85,12 @@ namespace lestoma.App.ViewModels
                     Icon =  "icon_actividad",
                     PageName = $"{nameof(ActividadPage)}",
                     Title = "Actividades"
+                },
+                 new Menu
+                {
+                    Icon =  "icon_module",
+                    PageName = $"{nameof(ModuloPage)}",
+                    Title = "Modulos"
                 },
                   new Menu
                 {

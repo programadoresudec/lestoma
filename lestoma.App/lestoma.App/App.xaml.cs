@@ -15,8 +15,9 @@ using lestoma.App.Views.UpasActividades;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Services;
-using lestoma.DatabaseOffline;
-using lestoma.DatabaseOffline.Repository;
+using lestoma.DatabaseOffline.IConfiguration;
+using lestoma.DatabaseOffline.Repositories.IRepository;
+using lestoma.DatabaseOffline.Repositories.Repository;
 using Prism;
 using Prism.Ioc;
 using Prism.Plugin.Popups;
@@ -70,11 +71,11 @@ namespace lestoma.App
         {
             containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
             containerRegistry.Register<IApiService, ApiService>();
+ 
             containerRegistry.Register<IFilesHelper, FilesHelper>();
 
-            #region injecciones de database offline
-            containerRegistry.Register(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            containerRegistry.Register<ActividadRepository>();
+            #region injection UnitOfwork
+            containerRegistry.Register<IUnitOfWork, UnitOfWork>();
             #endregion
 
             #region Navegaciones

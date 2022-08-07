@@ -3,8 +3,6 @@ using lestoma.App.Views.Actividades;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using lestoma.DatabaseOffline.Logica;
-using Plugin.Toast;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
@@ -19,13 +17,11 @@ namespace lestoma.App.ViewModels.Actividades
         private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         private ObservableCollection<ActividadDTO> _actividades;
-        private LSActividad _actividadOfflineService;
         public ActividadViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
             _navigationService = navigationService;
             _apiService = apiService;
-            _actividadOfflineService = new LSActividad(App.DbPathSqlLite);
             EditCommand = new Command<object>(ActividadSelected, CanNavigate);
             LoadActividades();
         }
@@ -54,24 +50,23 @@ namespace lestoma.App.ViewModels.Actividades
                 try
                 {
                     await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-                    if (!_apiService.CheckConnection())
+                    if (_apiService.CheckConnection())
                     {
-                        CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
-                        return;
-                    }
-                    Response response = await _apiService.DeleteAsyncWithToken(URL,
+                        Response response = await _apiService.DeleteAsyncWithToken(URL,
                         "actividades", ItemDelete.Id, TokenUser.Token);
-                    if (!response.IsExito)
-                    {
-                        CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
-                        return;
+                        if (response.IsExito)
+                        {
+                            AlertSuccess(response.Mensaje);
+                        }
+                        else
+                        {
+                            AlertWarning(response.Mensaje);
+                        }
                     }
-                    Response response1 = await _apiService.GetListAsyncWithToken<List<ActividadDTO>>(URL, "actividades/listado", TokenUser.Token);
-                    if (response.IsExito)
+                    else
                     {
-                        _actividadOfflineService.MergeEntity((List<ActividadDTO>)response1.Data);
+                        AlertNoInternetConnection();
                     }
-                    CrossToastPopUp.Current.ShowToastSuccess(response.Mensaje);
                 }
                 catch (Exception ex)
                 {
@@ -160,8 +155,6 @@ namespace lestoma.App.ViewModels.Actividades
                 var listado = (List<ActividadDTO>)response.Data;
                 Actividades = new ObservableCollection<ActividadDTO>(listado);
             }
-          
-         
         }
     }
 }

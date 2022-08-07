@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace lestoma.DatabaseOffline.Models
+namespace lestoma.DatabaseOffline.ModelsOffline
 {
-    public class CamposAuditoriaModel
+    public class CamposAuditoriaOffline
     {
         [Column("ip")]
         public string Ip { get; set; }
@@ -14,6 +14,6 @@ namespace lestoma.DatabaseOffline.Models
         [Column("tipo_de_aplicacion")]
         public string TipoDeAplicacion { get; set; }
         [Column("fecha_creacion")]
-        public string FechaCreacion { get; set; }
+        public string FechaCreacionServer { get; set; }
     }
 }

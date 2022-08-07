@@ -27,7 +27,7 @@ namespace lestoma.App.ViewModels.UpasActividades
         private bool _isvisible;
         private bool _isEdit = true;
         private ObservableCollection<NameDTO> _actividades;
-        public ObservableCollection<NameDTO> _ActividadesAdd; 
+        public ObservableCollection<NameDTO> _ActividadesAdd;
         private DetalleUpaActividadDTO _detalleUpaActividad;
         public CreateOrEditDetalleUpaActividadViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
@@ -96,7 +96,7 @@ namespace lestoma.App.ViewModels.UpasActividades
                             IsVisibleActividades = false;
                         }
                     }
-                }  
+                }
             }
             catch (Exception ex)
             {
@@ -122,7 +122,7 @@ namespace lestoma.App.ViewModels.UpasActividades
             get => _user;
             set => SetProperty(ref _user, value);
         }
-     
+
         public NameDTO Upa
         {
             get => _upa;
@@ -144,7 +144,7 @@ namespace lestoma.App.ViewModels.UpasActividades
             set => SetProperty(ref _actividades, value);
 
         }
-       
+
         public bool IsVisibleActividades
         {
             get => _isvisible;
@@ -187,7 +187,7 @@ namespace lestoma.App.ViewModels.UpasActividades
                 var listadoActividades = (List<NameDTO>)response.Data;
 
                 Response response1 = await _apiService.GetListAsyncWithToken<List<UserDTO>>(URL,
-                    "usuarios/listado-nombres", TokenUser.Token);
+                    "usuarios/activos", TokenUser.Token);
                 var listadoUsuarios = (List<UserDTO>)response1.Data;
 
                 Response response2 = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,

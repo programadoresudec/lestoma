@@ -13,7 +13,6 @@ using Rg.Plugins.Popup.Services;
 using System;
 using System.Diagnostics;
 using System.Net;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -137,7 +136,6 @@ namespace lestoma.App.ViewModels.Account
                         MovilSettings.Token = JsonConvert.SerializeObject(token);
                         MovilSettings.IsLogin = true;
                         AlertSuccess(respuesta.Mensaje);
-                        await Task.Delay(1000);
                         await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
                         await ClosePopup();
                     }
@@ -150,6 +148,7 @@ namespace lestoma.App.ViewModels.Account
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
+                    await ClosePopup();
                 }
             }
         }
