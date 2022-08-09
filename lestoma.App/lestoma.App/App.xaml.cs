@@ -16,8 +16,6 @@ using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Services;
 using lestoma.DatabaseOffline.IConfiguration;
-using lestoma.DatabaseOffline.Repositories.IRepository;
-using lestoma.DatabaseOffline.Repositories.Repository;
 using Prism;
 using Prism.Ioc;
 using Prism.Plugin.Popups;
@@ -71,7 +69,7 @@ namespace lestoma.App
         {
             containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
             containerRegistry.Register<IApiService, ApiService>();
- 
+
             containerRegistry.Register<IFilesHelper, FilesHelper>();
 
             #region injection UnitOfwork
