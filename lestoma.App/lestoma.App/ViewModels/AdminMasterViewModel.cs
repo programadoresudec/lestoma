@@ -4,6 +4,7 @@ using lestoma.App.Views.Account;
 using lestoma.App.Views.Actividades;
 using lestoma.App.Views.Buzon;
 using lestoma.App.Views.Modulos;
+using lestoma.App.Views.Reportes;
 using lestoma.App.Views.Upas;
 using lestoma.App.Views.UpasActividades;
 using lestoma.CommonUtils.DTOs;
@@ -79,41 +80,56 @@ namespace lestoma.App.ViewModels
             if (UserApp.RolId == (int)TipoRol.SuperAdministrador)
             {
                 List<Menu> menuSuperAdmin = new List<Menu>
-            {
-                new Menu
                 {
-                    Icon =  "icon_actividad",
-                    PageName = $"{nameof(ActividadPage)}",
-                    Title = "Actividades"
-                },
-                 new Menu
-                {
-                    Icon =  "icon_module",
-                    PageName = $"{nameof(ModuloPage)}",
-                    Title = "Modulos"
-                },
-                  new Menu
-                {
-                    Icon =  "",
-                    PageName = $"{nameof(MandarTramar)}",
-                    Title = "Mandar trama"
-                },
                     new Menu
-                {
-                    Icon =  "icon_detalles",
-                    PageName = $"{nameof(DetalleUpaActividadPage)}",
-                    Title = "Detalle de upas con actividades"
-                },
-                new Menu
-                {
-                    Icon = "icon_upa",
-                    PageName = $"{nameof(UpaPage)}",
-                    Title = "Upas"
-                }
-            };
+                    {
+                        Icon =  "icon_actividad",
+                        PageName = $"{nameof(ActividadPage)}",
+                        Title = "Actividades"
+                    },
+                     new Menu
+                    {
+                        Icon =  "icon_module",
+                        PageName = $"{nameof(ModuloPage)}",
+                        Title = "Modulos"
+                    },
+                      new Menu
+                    {
+                        Icon =  "",
+                        PageName = $"{nameof(MandarTramar)}",
+                        Title = "Mandar trama"
+                    },
+                    new Menu
+                    {
+                        Icon = "icon_upa",
+                        PageName = $"{nameof(UpaPage)}",
+                        Title = "Upas"
+                    },
+                     new Menu
+                    {
+                        Icon =  "icon_detalles",
+                        PageName = $"{nameof(DetalleUpaActividadPage)}",
+                        Title = "Detalle de upas con actividades"
+                    },
+                     new Menu
+                    {
+                        Icon = "icon_generate_report",
+                        PageName = $"{nameof(MenuReportsPage)}",
+                        Title = "Generación de reportes"
+                    }
+                };
                 menus.AddRange(menuSuperAdmin);
             }
 
+            else if (UserApp.RolId == (int)TipoRol.Administrador)
+            {
+                menus.Add(new Menu
+                {
+                    Icon = "icon_generate_report",
+                    PageName = $"{nameof(MenuReportsPage)}",
+                    Title = "Generación de reportes"
+                });
+            }
 
             Menu settings = new Menu
             {

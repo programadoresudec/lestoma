@@ -37,7 +37,7 @@ namespace lestoma.DatabaseOffline
 
         public DbSet<ActividadOffline> TablaActividades { get; set; }
         public DbSet<ModuloOffline> TablaModulos { get; set; }
-        public DbSet<LaboratorioOffline> TablaLaboratorio{ get; set; }
+        public DbSet<LaboratorioOffline> TablaLaboratorio { get; set; }
         public DbSet<UpaOffline> TablaUpas { get; set; }
         public DbSet<ComponenteOffline> TablaComponentes { get; set; }
         #endregion

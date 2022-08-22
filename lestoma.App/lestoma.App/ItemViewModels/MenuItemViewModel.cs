@@ -37,7 +37,14 @@ namespace lestoma.App.ItemViewModels
             }
             else
             {
-                await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{PageName}");
+                if (PageName.StartsWith("Report"))
+                {
+                    await _navigationService.NavigateAsync($"{PageName}");
+                }
+                else
+                {
+                    await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{PageName}");
+                }    
             }
         }
     }

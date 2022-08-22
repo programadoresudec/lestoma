@@ -25,6 +25,8 @@ namespace lestoma.App.ViewModels
         private BluetoothSocket btSocket = null;
         private static string address = "00:21:13:00:92:B8";
         private static UUID MY_UUID = UUID.FromString("00001101-0000-1000-8000-00805F9B34FB");
+
+        [Obsolete]
         public MandarTramaViewModel(INavigationService navigationService) :
         base(navigationService)
         {
@@ -50,6 +52,8 @@ namespace lestoma.App.ViewModels
             get => _tramaRecibida;
             set => SetProperty(ref _tramaRecibida, value);
         }
+
+        [Obsolete]
         public async void Connect()
         {
 
@@ -103,6 +107,7 @@ namespace lestoma.App.ViewModels
             }
         }
 
+        [Obsolete]
         private void ConectarBluetoothClicked()
         {
             Connect();

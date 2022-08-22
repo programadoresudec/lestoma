@@ -1,4 +1,5 @@
 ﻿using Android.Bluetooth;
+using Android.OS;
 using lestoma.App.Views.Account;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
@@ -50,6 +51,13 @@ namespace lestoma.App.ViewModels
 
         #endregion
 
+        #region Variables globales que quedan en persistencia
+        public string URL => Prism.PrismApplicationBase.Current.Resources["UrlAPI"].ToString();
+        public TokenDTO TokenUser => !string.IsNullOrEmpty(MovilSettings.Token) ? JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token) : null;
+
+        public int Rol => TokenUser != null ? TokenUser.User.RolId : 0;
+        #endregion
+
         #region Event handler
 
 
@@ -90,13 +98,18 @@ namespace lestoma.App.ViewModels
 
         public async void OnBluetoothClicked()
         {
+
+#pragma warning disable CS0618 // Type or member is obsolete
             mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
+#pragma warning restore CS0618 // Type or member is obsolete
             //Verificamos que este habilitado
+#pragma warning disable CS0618 // Type or member is obsolete
             if (!mBluetoothAdapter.Enable())
             {
                 await Application.Current.MainPage.DisplayAlert("Bluetooth", "Bluetooth desactivado", "OK");
                 return;
             }
+#pragma warning restore CS0618 // Type or member is obsolete
             //verificamos que no sea nulo el sensor
             if (mBluetoothAdapter == null)
             {
@@ -184,9 +197,6 @@ namespace lestoma.App.ViewModels
             return jToken.ToObject<T>();
         }
 
-
-        public string URL => Prism.PrismApplicationBase.Current.Resources["UrlAPI"].ToString();
-        public TokenDTO TokenUser => !string.IsNullOrEmpty(MovilSettings.Token) ? JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token) : null;
         #endregion
 
         #region Alerts de CrossToastPopUp

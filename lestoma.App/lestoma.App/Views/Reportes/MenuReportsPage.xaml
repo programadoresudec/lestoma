@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:prism="http://prismlibrary.com" xmlns:gradient="clr-namespace:Syncfusion.XForms.Graphics;assembly=Syncfusion.Core.XForms"
+             prism:ViewModelLocator.AutowireViewModel="True" Title="Generación de reportes"
+            x:Class="lestoma.App.Views.Reportes.MenuReportsPage">
+    <ContentPage.Content>
+        <ListView BackgroundColor="Transparent" VerticalOptions="Center" HorizontalOptions="Center"
+                	      ItemsSource="{Binding MenuReport}"
+                	      HasUnevenRows="True" 
+                	      SeparatorVisibility="None">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Frame Margin="30,30" BackgroundColor="{StaticResource PantoneVerdeThird}" HasShadow="True">
+                            <Grid HorizontalOptions="Center" BackgroundColor="Transparent">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer  Command="{Binding SelectMenuCommand}"/>
+                                </Grid.GestureRecognizers>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Column="0"
+                                           Grid.Row="0"
+                                    	   HeightRequest="128"
+                                    	   Source="{Binding Icon}"
+                                    	   WidthRequest="128"/>
+                                <Label Grid.Column="0"
+                                            Grid.Row="1"
+                                           FontAttributes="Bold"
+                                           FontSize="Large"
+                                           TextColor="White"
+                                           Text="{Binding Title}"/>
+                            </Grid>
+                        </Frame>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </ContentPage.Content>
+</ContentPage>
