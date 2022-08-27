@@ -1,8 +1,10 @@
 ﻿using lestoma.App.Views;
+using lestoma.App.Views.Account;
 using lestoma.App.Views.UpasActividades;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
+using lestoma.CommonUtils.Requests.Filters;
 using Plugin.Toast;
 using Prism.Navigation;
 using System;
@@ -15,20 +17,19 @@ namespace lestoma.App.ViewModels.UpasActividades
 {
     public class DetalleUpaActividadViewModel : BaseViewModel
     {
-        private INavigationService _navigationService;
         private IApiService _apiService;
         private ObservableCollection<DetalleUpaActividadDTO> _detalleUpaActividad;
         private bool _isVisible;
+        private Command<object> itemTap;
         public DetalleUpaActividadViewModel(INavigationService navigationService, IApiService apiService) :
         base(navigationService)
         {
-            _navigationService = navigationService;
             _apiService = apiService;
             _detalleUpaActividad = new ObservableCollection<DetalleUpaActividadDTO>();
             LoadDetalle();
             LoadMoreItemsCommand = new Command<object>(LoadMoreItems, CanLoadMoreItems);
             EditCommand = new Command<object>(DetalleSelected, CanNavigate);
-
+            SeeActivitiesCommand = new Command<object>(OnSeeActivity, CanNavigate);
         }
         public Command AddCommand
         {
@@ -91,6 +92,23 @@ namespace lestoma.App.ViewModels.UpasActividades
             {
                 await _navigationService.ClearPopupStackAsync();
             }
+        }
+        public Command<object> SeeActivitiesCommand
+        {
+            get => itemTap;
+            set => SetProperty(ref itemTap, value);
+        }
+
+        private async void OnSeeActivity(object obj)
+        {
+            DetalleUpaActividadDTO detalle = (DetalleUpaActividadDTO)obj;
+            if (detalle == null)
+                return;
+            var parameters = new NavigationParameters
+            {
+                { "filtroUserUpa", new UpaUserFilterRequest{UpaId = detalle.UpaId, UsuarioId = detalle.UsuarioId } }
+            };
+            await _navigationService.NavigateAsync($"{nameof(ActividadesByUsuarioPopupPage)}", parameters);
         }
 
         private async void ConsumoService()
@@ -167,7 +185,7 @@ namespace lestoma.App.ViewModels.UpasActividades
         {
 
             Response response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(URL,
-                $"detalle-upas-actividades/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
+                $"detalle-upas-actividades/paginar  ", TokenUser.Token);
             if (!response.IsExito)
             {
                 CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);

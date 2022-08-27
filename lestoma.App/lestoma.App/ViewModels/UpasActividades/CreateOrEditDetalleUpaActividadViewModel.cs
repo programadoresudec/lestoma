@@ -1,4 +1,5 @@
-﻿using lestoma.App.Views;
+﻿using Android.Widget;
+using lestoma.App.Views;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
@@ -176,52 +177,60 @@ namespace lestoma.App.ViewModels.UpasActividades
         {
             try
             {
-                if (!_apiService.CheckConnection())
+                if (_apiService.CheckConnection())
                 {
-                    CrossToastPopUp.Current.ShowToastError("Error no hay conexión a internet.");
-                    return;
-                }
+                    Response response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
+                           "actividades/listado-nombres", TokenUser.Token);
+                    var listadoActividades = (List<NameDTO>)response.Data;
 
-                Response response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
-                    "actividades/listado-nombres", TokenUser.Token);
-                var listadoActividades = (List<NameDTO>)response.Data;
+                    Response response1 = await _apiService.GetListAsyncWithToken<List<UserDTO>>(URL,
+                        "usuarios/activos", TokenUser.Token);
+                    var listadoUsuarios = (List<UserDTO>)response1.Data;
 
-                Response response1 = await _apiService.GetListAsyncWithToken<List<UserDTO>>(URL,
-                    "usuarios/activos", TokenUser.Token);
-                var listadoUsuarios = (List<UserDTO>)response1.Data;
+                    Response response2 = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
+                        "upas/listado-nombres", TokenUser.Token);
+                    var listadoUpas = (List<NameDTO>)response2.Data;
 
-                Response response2 = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
-                    "upas/listado-nombres", TokenUser.Token);
-                var listadoUpas = (List<NameDTO>)response2.Data;
-
-                Upas = new ObservableCollection<NameDTO>(listadoUpas);
-                Usuarios = new ObservableCollection<UserDTO>(listadoUsuarios);
-                if (detalleUpaActividad == null)
-                {
-                    Actividades = new ObservableCollection<NameDTO>(listadoActividades);
+                    Upas = new ObservableCollection<NameDTO>(listadoUpas);
+                    Usuarios = new ObservableCollection<UserDTO>(listadoUsuarios);
+                    if (detalleUpaActividad == null)
+                    {
+                        Actividades = new ObservableCollection<NameDTO>(listadoActividades);
+                    }
+                    else
+                    {
+                        IsVisibleActividades = true;
+                        IsEdit = false;
+                        Upa = listadoUpas.Where(x => x.Id == detalleUpaActividad.UpaId).FirstOrDefault();
+                        User = listadoUsuarios.Where(x => x.Id == detalleUpaActividad.UsuarioId).FirstOrDefault();
+                        Response response3 = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
+                          $"detalle-upas-actividades/lista-actividades-by-upa-usuario?UpaId={Upa.Id}&UsuarioId={User.Id}", TokenUser.Token);
+                        if (response.IsExito)
+                        {
+                            var listado = (List<NameDTO>)response.Data;
+                            Actividades = new ObservableCollection<NameDTO>(listadoActividades);
+                            foreach (var item in listado)
+                            {
+                                var actividad = Actividades.Where(x => x.Id == item.Id).FirstOrDefault();
+                                Actividades.Remove(actividad);
+                            }
+                            if (Actividades.Count == 0)
+                            {
+                                Actividades = new ObservableCollection<NameDTO>();
+                            }
+                            else
+                            {
+                            
+                            }
+                            ActividadesAdd = new ObservableCollection<NameDTO>(listado);
+                        }
+                    }
                 }
                 else
                 {
-                    IsVisibleActividades = true;
-                    IsEdit = false;
-                    Upa = listadoUpas.Where(x => x.Id == detalleUpaActividad.UpaId).FirstOrDefault();
-                    User = listadoUsuarios.Where(x => x.Id == detalleUpaActividad.UsuarioId).FirstOrDefault();
-
-                    foreach (var item in detalleUpaActividad.Actividades)
-                    {
-                        var actividad = listadoActividades.Where(x => x.Id == item.Id).FirstOrDefault();
-                        listadoActividades.Remove(actividad);
-                    }
-                    Actividades = new ObservableCollection<NameDTO>(listadoActividades);
-                    foreach (var item in detalleUpaActividad.Actividades)
-                    {
-                        ActividadesAdd.Add(new NameDTO
-                        {
-                            Id = item.Id,
-                            Nombre = item.Nombre
-                        });
-                    }
+                    AlertNoInternetConnection();
                 }
+
             }
             catch (Exception ex)
             {
@@ -234,59 +243,24 @@ namespace lestoma.App.ViewModels.UpasActividades
         {
             try
             {
-                if (!_apiService.CheckConnection())
+                if (_apiService.CheckConnection())
                 {
-                    CrossToastPopUp.Current.ShowToastError("Error no hay conexión a internet.");
-                    return;
-                }
+                    await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
 
-
-                await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-
-                if (DetalleUpaActividad == null)
-                {
-                    var detalle = new CrearDetalleUpaActividadRequest
+                    if (DetalleUpaActividad == null)
                     {
-                        UpaId = Upa.Id,
-                        UsuarioId = User.Id
-                    };
-                    foreach (var item in ActividadesAdd)
-                    {
-                        detalle.Actividades.Add(new ActividadRequest
-                        {
-                            Id = item.Id,
-                            Nombre = item.Nombre
-                        });
+                        Crear();
                     }
-
-                    var response = await _apiService.PostAsyncWithToken(URL, "detalle-upas-actividades/crear", detalle, TokenUser.Token);
-                    if (!response.IsExito)
+                    else
                     {
-                        CrossToastPopUp.Current.ShowToastError(response.Mensaje);
-                        return;
+                        editar();
                     }
-
-                    CrossToastPopUp.Current.ShowToastSuccess(response.Mensaje);
-                    await Task.Delay(2000);
-                    await _navigationService.GoBackAsync();
                 }
                 else
                 {
-                    foreach (var item in ActividadesAdd)
-                    {
-                        foreach (var item1 in DetalleUpaActividad.Actividades)
-                        {
-                            if (item.Id != item1.Id)
-                            {
-                                DetalleUpaActividad.Actividades.Add(new ActividadRequest
-                                {
-                                    Id = item.Id,
-                                    Nombre = item.Nombre
-                                });
-                            }
-                        }
-                    }
+                    AlertNoInternetConnection();
                 }
+
             }
             catch (Exception ex)
             {
@@ -297,6 +271,62 @@ namespace lestoma.App.ViewModels.UpasActividades
                 await _navigationService.ClearPopupStackAsync();
             }
 
+        }
+
+        private async void Crear()
+        {
+            var detalle = new CrearDetalleUpaActividadRequest
+            {
+                UpaId = Upa.Id,
+                UsuarioId = User.Id
+            };
+            foreach (var item in ActividadesAdd)
+            {
+                detalle.Actividades.Add(new ActividadRequest
+                {
+                    Id = item.Id,
+                    Nombre = item.Nombre
+                });
+            }
+
+            var response = await _apiService.PostAsyncWithToken(URL, "detalle-upas-actividades/crear", detalle, TokenUser.Token);
+            if (response.IsExito)
+            {
+                AlertSuccess(response.Mensaje);
+                await _navigationService.GoBackAsync();
+            }
+            else
+            {
+                AlertWarning(response.Mensaje);
+            }
+        }
+
+        private async void editar()
+        {
+            var detalle = new CrearDetalleUpaActividadRequest
+            {
+                UpaId = Upa.Id,
+                UsuarioId = User.Id
+            };
+            foreach (var item in ActividadesAdd)
+            {
+                detalle.Actividades.Add(new ActividadRequest
+                {
+                    Id = item.Id,
+                    Nombre = item.Nombre
+                });
+            }
+
+            var response = await _apiService.PutAsyncWithToken(URL, "detalle-upas-actividades/editar", detalle, TokenUser.Token);
+            if (response.IsExito)
+            {
+                AlertSuccess(response.Mensaje);
+                await _navigationService.GoBackAsync();
+            }
+            else
+            {
+                AlertWarning(response.Mensaje);
+            }
         }
     }
 }

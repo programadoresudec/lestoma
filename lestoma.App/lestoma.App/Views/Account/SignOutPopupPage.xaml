@@ -6,7 +6,6 @@
              xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup" 
                  xmlns:cards="clr-namespace:Syncfusion.XForms.Cards;assembly=Syncfusion.Cards.XForms"
                  prism:ViewModelLocator.AutowireViewModel="True"
-                 
              x:Class="lestoma.App.Views.Account.SignOutPopupPage">
     <popup:PopupPage.Animation>
         <animations:ScaleAnimation DurationIn="400"

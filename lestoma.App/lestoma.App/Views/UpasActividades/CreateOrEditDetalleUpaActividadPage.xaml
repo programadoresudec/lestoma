@@ -18,7 +18,6 @@
     <StackLayout VerticalOptions="Start" HorizontalOptions="Start" Padding="30">
         <ScrollView>
             <StackLayout>
-                <Entry x:Name="PassEntry"></Entry>
                 <border:SfBorder BackgroundColor="{DynamicResource Gray-White}"
                                  BorderColor="{Binding Source={x:Reference usuarioEntry}, Path=IsFocused, 
                                  Converter={StaticResource ColorConverter}, ConverterParameter=0}"

@@ -58,7 +58,7 @@ namespace lestoma.App.ViewModels.Modulos
         private async void ConsumoService()
         {
             Modulos = new ObservableCollection<ModuloDTO>();
-            Response response = await _apiService.GetListAsyncWithToken<ModuloDTO>(URL,
+            Response response = await _apiService.GetListAsyncWithToken<List<ModuloDTO>>(URL,
                 $"modulos/listado", TokenUser.Token);
             if (response.IsExito)
             {
@@ -100,8 +100,7 @@ namespace lestoma.App.ViewModels.Modulos
                 }
                 else
                 {
-                    CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.",
-                     Plugin.Toast.Abstractions.ToastLength.Long);
+                    AlertNoInternetConnection();
                 }
             }
             catch (Exception ex)

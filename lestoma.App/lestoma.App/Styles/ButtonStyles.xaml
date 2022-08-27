@@ -12,8 +12,8 @@
             <Setter.Value>
                 <graphics:SfLinearGradientBrush>
                     <graphics:SfLinearGradientBrush.GradientStops>
-                        <graphics:SfGradientStop Offset="0" Color="{DynamicResource PrimaryColor}" />
-                        <graphics:SfGradientStop Offset="1" Color="{DynamicResource PrimaryGradient}" />
+                        <graphics:SfGradientStop Offset="0" Color="{DynamicResource PantoneGris}" />
+                        <graphics:SfGradientStop Offset="1" Color="{DynamicResource PantoneGris}" />
                     </graphics:SfLinearGradientBrush.GradientStops>
                 </graphics:SfLinearGradientBrush>
             </Setter.Value>
@@ -33,7 +33,7 @@
     <!--  Common style for Transparent buttons  -->
     <Style x:Key="TransparentButtonStyle" TargetType="buttons:SfButton">
         <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="TextColor" Value="{DynamicResource HyperLink}" />
+        <Setter Property="TextColor" Value="{DynamicResource PantoneAmarilloLight}" />
         <Setter Property="FontFamily" Value="Montserrat-SemiBold" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="HorizontalOptions" Value="Start" />
@@ -65,7 +65,7 @@
         <Setter Property="CornerRadius" Value="1" />
         <Setter Property="BorderWidth" Value="0" />
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="TextColor" Value="{DynamicResource PrimaryColor}" />
+        <Setter Property="TextColor" Value="{DynamicResource PantoneAmarilloLight}" />
         <Setter Property="FontFamily" Value="Montserrat-SemiBold" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
         <Setter Property="VerticalTextAlignment" Value="Center" />

@@ -19,15 +19,16 @@
     <StackLayout Padding="10">
         <Label Text="No hay contenido." IsVisible="{Binding IsVisible}" HorizontalTextAlignment="Center" FontAttributes="Bold" 
                FontSize="Large" TextColor="{Binding PantoneVerdeSecond}"></Label>
-        
+
         <syncfusion:SfListView x:Name="LV_detalleUpasActividades"   
-                             LoadMoreOption="Auto" AllowSwiping="True"  SwipeOffset="100" SwipeEnded="LV_detalleUpasActividades_SwipeEnded"
+                             LoadMoreOption="Auto"  SwipeOffset="100" SwipeEnded="LV_detalleUpasActividades_SwipeEnded"
                              LoadMoreCommand="{Binding LoadMoreItemsCommand}" IsBusy="{Binding IsBusy}" AutoFitMode="DynamicHeight"
                              LoadMoreCommandParameter="{Binding Source={x:Reference Name=LV_detalleUpasActividades}}" TapCommand="{Binding EditCommand}"
                              ItemsSource="{Binding DetalleUpasActividades}" SelectionBackgroundColor="Transparent">
+          
             <syncfusion:SfListView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Margin="5,10,5,10" CornerRadius="10" Padding="5" BackgroundColor="AliceBlue">
+                    <Frame Margin="5,10,5,10" CornerRadius="10" Padding="5" BackgroundColor="{StaticResource PantoneGrisLight}">
                         <StackLayout Orientation="Vertical" VerticalOptions="Center">
                             <Label>
                                 <Label.FormattedText>
@@ -45,26 +46,14 @@
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>
-                            <Label Text="Actividades" FontSize="Small" FontAttributes="Bold"
-                                           TextColor="{StaticResource PantoneVerdeSecond}"/>
-                            <StackLayout>
-                                <CollectionView ItemsSource="{Binding Actividades}" HeightRequest="130" VerticalScrollBarVisibility="Always">
-                                    <CollectionView.ItemTemplate>
-                                        <DataTemplate>
-                                            <Label>
-                                                <Label.FormattedText>
-                                                    <FormattedString>
-                                                        <Span Text="• " FontSize="Large" TextColor="{StaticResource PantoneVerdeSecond}" 
-                                                              FontAttributes="Bold"/>
-                                                        <Span Text="{Binding Nombre}" TextColor="Black" FontSize="Small" />
-                                                    </FormattedString>
-                                                </Label.FormattedText>
-                                            </Label>
-                                        </DataTemplate>
-                                    </CollectionView.ItemTemplate>
-                                </CollectionView>
-                            </StackLayout>
-                           
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Cantidad de actividades: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" FontAttributes="Bold"/>
+                                        <Span Text="{Binding Upa.CantidadActividades}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
                             <Label>
                                 <Label.FormattedText>
                                     <FormattedString>
@@ -100,6 +89,12 @@
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>
+                            <button:SfButton x:Name="button" HeightRequest="35" CornerRadius="5" Margin="10"
+                                             HorizontalOptions="EndAndExpand" TextColor="White"                                        
+                                             Text="Ver Actividades" BackgroundColor="{StaticResource PantoneAmarilloSecond}"
+                                            Command="{Binding BindingContext.SeeActivitiesCommand, Source={x:Reference LV_detalleUpasActividades}}" 
+                                             CommandParameter="{Binding .}" ImageSource="icon_see.png" ShowIcon="True">
+                            </button:SfButton>
                         </StackLayout>
                     </Frame>
                 </DataTemplate>
@@ -115,18 +110,6 @@
                     </Grid>
                 </DataTemplate>
             </syncfusion:SfListView.LoadMoreTemplate>
-            <syncfusion:SfListView.RightSwipeTemplate>
-                <DataTemplate x:Name="RightSwipeTemplate">
-                    <Grid BackgroundColor="Transparent" HorizontalOptions="Fill" VerticalOptions="Fill">
-                        <Grid VerticalOptions="Center" HorizontalOptions="Center">
-                            <button:SfButton x:Name="button" HeightRequest="35" WidthRequest="35" 
-                                         Grid.Row="0" Text="Button" BackgroundColor="Transparent"
-                                         Command="{Binding DeleteCommand}" ImageSource="icon_delete.png" ShowIcon="True">
-                            </button:SfButton>
-                        </Grid>
-                    </Grid>
-                </DataTemplate>
-            </syncfusion:SfListView.RightSwipeTemplate>
         </syncfusion:SfListView>
     </StackLayout>
 </ContentPage>

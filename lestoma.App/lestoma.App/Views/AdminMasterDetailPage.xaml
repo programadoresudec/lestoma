@@ -14,15 +14,15 @@
                         Direction="Column"
                         AlignItems="Center">
                         <Grid>
-                            <gradient:SfGradientView Style="{StaticResource VioletGradientStyle}" />
+                            <gradient:SfGradientView Style="{StaticResource Pantone2GradientStyle}" />
                             <ScrollView HorizontalOptions="Center">
                                 <StackLayout Spacing="0">
                                     <Label Text="Lestoma" Grid.Row="0" HorizontalOptions="Center" 
                                        Padding="5,20,5,5" FontAttributes="Italic,Bold" 
-                                       TextColor="#c8fff8" FontSize="Title">
+                                       TextColor="{StaticResource PantoneAmarilloLight}" FontSize="Title">
                                     </Label>
                                     <Label FontAttributes="Bold, Italic"
-                                       FontSize="Large" Grid.Row="1" TextColor="#c8fff8"
+                                       FontSize="Large" Grid.Row="1" TextColor="{StaticResource PantoneAmarilloLight}"
                                        FontFamily="Lobster-Regular" Padding="10" 
                                        Text="{Binding UserApp.FullName}"/>
                                 </StackLayout>
@@ -32,7 +32,7 @@
 
                     <StackLayout Spacing="5">
                         <Grid>
-                            <gradient:SfGradientView Style="{StaticResource VioletGradientStyle}" Opacity="0.9" />
+                            <gradient:SfGradientView Style="{StaticResource Pantone2GradientStyle}" Opacity="0.9" />
                             <StackLayout Padding="20">
                                 <ListView BackgroundColor="Transparent"
                 	      ItemsSource="{Binding Menus}"

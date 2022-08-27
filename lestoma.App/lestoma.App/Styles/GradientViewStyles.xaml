@@ -14,8 +14,8 @@
             <Setter.Value>
                 <graphics:SfLinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                     <graphics:SfLinearGradientBrush.GradientStops>
-                        <graphics:SfGradientStop Offset="0.0" Color="#33807c" />
-                        <graphics:SfGradientStop Offset="1.0" Color="#012E8B" />
+                        <graphics:SfGradientStop Offset="0.0" Color="{DynamicResource PantoneGris}" />
+                        <graphics:SfGradientStop Offset="1.0" Color="{DynamicResource PantoneVerdeDark}" />
                     </graphics:SfLinearGradientBrush.GradientStops>
                 </graphics:SfLinearGradientBrush>
             </Setter.Value>
@@ -23,7 +23,7 @@
     </Style>
 
     <!--  Common style for violet gradient view  -->
-    <Style x:Key="VioletGradientStyle" TargetType="graphics:SfGradientView">
+    <Style x:Key="Pantone2GradientStyle" TargetType="graphics:SfGradientView">
         <Setter Property="Opacity" Value="1" />
         <Setter Property="VerticalOptions" Value="FillAndExpand" />
         <Setter Property="HorizontalOptions" Value="FillAndExpand" />
@@ -31,8 +31,8 @@
             <Setter.Value>
                 <graphics:SfLinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                     <graphics:SfLinearGradientBrush.GradientStops>
-                        <graphics:SfGradientStop Offset="0.0" Color="#337a80" />
-                        <graphics:SfGradientStop Offset="1.0" Color="#012E8B"/>
+                        <graphics:SfGradientStop Offset="0.0" Color="{DynamicResource PantoneVerdeDark}" />
+                        <graphics:SfGradientStop Offset="1.0" Color="{DynamicResource PantoneGris}"/>
                     </graphics:SfLinearGradientBrush.GradientStops>
                 </graphics:SfLinearGradientBrush>
             </Setter.Value>
@@ -45,8 +45,8 @@
             <Setter.Value>
                 <graphics:SfLinearGradientBrush StartPoint="0, 0" EndPoint="1, 1">
                     <graphics:SfLinearGradientBrush.GradientStops>
-                        <graphics:SfGradientStop Offset="0" Color="{DynamicResource PrimaryColor}" />
-                        <graphics:SfGradientStop Offset="1" Color="{DynamicResource PrimaryGradient}" />
+                        <graphics:SfGradientStop Offset="0" Color="{DynamicResource PantoneGris}" />
+                        <graphics:SfGradientStop Offset="1" Color="{DynamicResource PantoneVerdeDark}" />
                     </graphics:SfLinearGradientBrush.GradientStops>
                 </graphics:SfLinearGradientBrush>
             </Setter.Value>

@@ -23,16 +23,14 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <Grid>
-            <gradient:SfGradientView Style="{StaticResource VioletGradientStyle}" />
+            <gradient:SfGradientView Style="{StaticResource PrimaryGradientStyle}" />
             <ScrollView HorizontalOptions="Center">
-
                 <ScrollView.VerticalOptions>
                     <OnIdiom
                         x:TypeArguments="LayoutOptions"
                         Default="CenterAndExpand"
                         Phone="FillAndExpand" />
                 </ScrollView.VerticalOptions>
-
                 <StackLayout
                     Margin="{core:OnPlatformOrientationThickness PhonePortrait='24,32',
                                                                  PhoneLandscape='150,32',
@@ -72,12 +70,20 @@
                                 BackgroundColor="{DynamicResource Gray-White}"
                                 BorderColor="{Binding Source={x:Reference PasswordEntry}, Path=IsFocused, Converter={StaticResource ColorConverter},
                                     ConverterParameter=0}"
-                                CornerRadius="4" HeightRequest="60"
+                                CornerRadius="4" HeightRequest="75"
                                 Style="{StaticResource LoginFormBorderlessEntryBorderStyle}">
-
                                 <Grid ColumnDefinitions="*, Auto">
+                                    <!--  Label to display error message  -->
+                                    <Label
+                                        x:Name="PasswordValidationLabel"
+                                         Margin="20,10,10,50"
+                                        IsVisible="{Binding Password.IsValid, Converter={StaticResource InverseBoolConverter}}"
+                                        Style="{StaticResource SimpleLabelStyle}"
+                                        Text="{Binding Password.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+                                        TextColor="{DynamicResource Red}"
+                                        VerticalOptions="FillAndExpand" />
                                     <inputLayout:SfTextInputLayout Hint="Contraseña"  FocusedColor="Black"  ContainerBackgroundColor="Transparent"
-                                                   EnablePasswordVisibilityToggle="true"  Margin="10,0,0,0">
+                                                   EnablePasswordVisibilityToggle="true"  Margin="10,10,0,0">
                                         <control:BorderlessEntry
                                             x:Name="PasswordEntry"
                                             Margin="15,0"
@@ -94,21 +100,12 @@
                                     </inputLayout:SfTextInputLayout>
                                     <!--  Label to display error icon  -->
                                     <Label
-                                        Grid.Column="1"
+                                        Grid.Column="1" Margin="15,10,15,0"
                                         IsVisible="{Binding Path=IsVisible, Source={x:Reference PasswordValidationLabel}}"
                                         Style="{StaticResource ErrorIconLabelStyle}"
                                         Text="{StaticResource Error}" />
                                 </Grid>
                             </border:SfBorder>
-                            <!--  Label to display error message  -->
-                            <Label
-                                x:Name="PasswordValidationLabel"
-                                Margin="15,-3,0,0"
-                                IsVisible="{Binding Password.IsValid, Converter={StaticResource InverseBoolConverter}}"
-                                Style="{StaticResource SimpleLabelStyle}"
-                                Text="{Binding Password.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
-                                TextColor="{DynamicResource Red}"
-                                VerticalOptions="FillAndExpand" />
                         </StackLayout>
 
                         <!--  Forgot password link  -->
@@ -150,8 +147,7 @@
                         <buttons:SfButton
                             Command="{Binding SignUpCommand}"
                             Style="{StaticResource TransparentButtonStyle}"
-                            Text="Registrarse"
-                            TextColor="{DynamicResource PrimaryColor}" />
+                            Text="Registrarse" />
                     </StackLayout>
                 </StackLayout>
             </ScrollView>

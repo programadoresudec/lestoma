@@ -107,13 +107,14 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<ModeOfflinePage, ModeOfflinePageViewModel>();
             containerRegistry.RegisterForNavigation<ModuloPage, ModuloViewModel>();
             containerRegistry.RegisterForNavigation<CreateOrEditModuloPage, CreateOrEditModuloViewModel>();
+            containerRegistry.RegisterForNavigation<MenuReportsPage, MenuReportsViewModel>();
+            containerRegistry.RegisterForNavigation<ReportDailyPage, ReportDailyPageViewModel>();
+            containerRegistry.RegisterForNavigation<ReportByDatePage, ReportByDateViewModel>();
+            containerRegistry.RegisterForNavigation<ActividadesByUsuarioPopupPage, ActividadesByUsuarioPopupViewModel>();
 
             #endregion
 
 
-            containerRegistry.RegisterForNavigation<MenuReportsPage, MenuReportsViewModel>();
-            containerRegistry.RegisterForNavigation<ReportDailyPage, ReportDailyPageViewModel>();
-            containerRegistry.RegisterForNavigation<ReportByDatePage, ReportByDateViewModel>();
         }
     }
 }
