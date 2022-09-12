@@ -6,7 +6,7 @@
              x:Class="lestoma.App.App">
     <Application.Resources>
         <ResourceDictionary>
-            <x:String x:Key="UrlAPI">http://192.168.1.6:45455/api/</x:String>
+            <x:String x:Key="UrlAPI">http://192.168.1.6:45456/api/</x:String>
             <ResourceDictionary.MergedDictionaries>
                 <themes:LightTheme />
             </ResourceDictionary.MergedDictionaries >

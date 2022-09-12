@@ -20,7 +20,7 @@
             <DataTemplate>
                 <Frame Margin="5,10,5,10" CornerRadius="10" BackgroundColor="{StaticResource PantoneGrisLight}">
                     <StackLayout Orientation="Horizontal">
-                        <StackLayout VerticalOptions="Center" HorizontalOptions="StartAndExpand">
+                        <StackLayout VerticalOptions="Center" HorizontalOptions="StartAndExpand">   
                             <Label Text="{Binding Nombre}" FontSize="Body"
                                            TextColor="{x:DynamicResource PantoneVerdeSecond}" FontAttributes="Bold"/>
                             <Label>

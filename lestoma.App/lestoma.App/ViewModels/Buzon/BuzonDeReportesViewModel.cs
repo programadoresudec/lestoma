@@ -1,14 +1,13 @@
-﻿using lestoma.App.ItemViewModels;
+﻿using lestoma.App.Views.Buzon;
+using lestoma.App.Views.UpasActividades;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
-using Newtonsoft.Json;
-using Plugin.Toast;
 using Prism.Navigation;
-using System.Collections.Generic;
+using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using Xamarin.Essentials;
+using System.Diagnostics;
+using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Buzon
 {
@@ -16,63 +15,79 @@ namespace lestoma.App.ViewModels.Buzon
     {
         private readonly IApiService _apiService;
         private bool _isRunning;
-        private ObservableCollection<BuzonItemViewModel> _reportesDelBuzonView;
-        private List<BuzonDTO> _reportesDelBuzon;
-
+        private ObservableCollection<BuzonDTO> _reportesDelBuzon;
+        private Command<object> itemTap;
         public BuzonDeReportesViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
             _apiService = apiService;
             Title = "Listado de buzón de reportes";
+            SeeMoreInfoCommand = new Command<object>(OnSeeMoreInfo, CanNavigate);
             LoadBuzonDeReportesAsync();
         }
 
-        public ObservableCollection<BuzonItemViewModel> ReportesDelBuzonView
+        public ObservableCollection<BuzonDTO> ReportesDelBuzon
         {
-            get => _reportesDelBuzonView;
-            set => SetProperty(ref _reportesDelBuzonView, value);
+            get => _reportesDelBuzon;
+            set => SetProperty(ref _reportesDelBuzon, value);
         }
         public bool IsRunning
         {
             get => _isRunning;
             set => SetProperty(ref _isRunning, value);
         }
+        public Command<object> SeeMoreInfoCommand
+        {
+            get => itemTap;
+            set => SetProperty(ref itemTap, value);
+        }
+        private bool CanNavigate(object arg)
+        {
+            return true;
+        }
+        private async void OnSeeMoreInfo(object obj)
+        {
+            BuzonDTO buzon = (BuzonDTO)obj;
+            if (buzon == null)
+                return;
+            var parameters = new NavigationParameters
+            {
+                { "BuzonId",  buzon.Id}
+            };
+            await _navigationService.NavigateAsync($"{nameof(MoreInfoPopupPage)}", parameters);
+        }
+
 
         private async void LoadBuzonDeReportesAsync()
         {
-            if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+            PageSize = 100;
+            try
             {
-                CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
-                return;
+                if (_apiService.CheckConnection())
+                {
+                    IsRunning = true;
+                    Response response = await _apiService.GetPaginadoAsyncWithToken<BuzonDTO>(URL,
+                        $"buzon-de-reportes/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
+                    if (!response.IsExito)
+                    {
+                        AlertError(response.Mensaje);
+                        return;
+                    }
+                    Paginador<BuzonDTO> paginador = (Paginador<BuzonDTO>)response.Data;
+                    ReportesDelBuzon = new ObservableCollection<BuzonDTO>(paginador.Datos);
+                    IsRunning = false;
+                }
+                else
+                {
+                    AlertNoInternetConnection();
+                }
             }
-
-            IsRunning = true;
-            string url = App.Current.Resources["UrlAPI"].ToString();
-            TokenDTO UserApp = JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token);
-            Response response = await _apiService.GetListAsyncWithToken<List<BuzonDTO>>(url, "ReportsMailbox/listado",
-                UserApp.Token);
-
-            IsRunning = false;
-
-            if (!response.IsExito)
+            catch (Exception ex)
             {
-                CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
-                return;
+                IsRunning = false;
+                Debug.WriteLine(ex.Message);
             }
-
-            _reportesDelBuzon = (List<BuzonDTO>)response.Data;
-            MostrarReportes();
         }
 
-        private void MostrarReportes()
-        {
-            ReportesDelBuzonView = new ObservableCollection<BuzonItemViewModel>(_reportesDelBuzon.Select(p => new BuzonItemViewModel(_navigationService)
-            {
-                Detalle = p.Detalle,
-                User = p.User,
-                FechaCreacion = p.FechaCreacion,
-                Id = p.Id
-            }).ToList());
-        }
     }
 }

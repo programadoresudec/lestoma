@@ -9,26 +9,49 @@ namespace lestoma.App.Controls
     [Preserve(AllMembers = true)]
     public class BorderlessEditor : Editor
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BorderlessEditor"/> class.
-        /// </summary>
+        public static BindableProperty PlaceholderProperty
+            = BindableProperty.Create(nameof(Placeholder), typeof(string), typeof(BorderlessEditor));
+
+        public static BindableProperty PlaceholderColorProperty
+           = BindableProperty.Create(nameof(PlaceholderColor), typeof(Color), typeof(BorderlessEditor), Color.LightGray);
+
+        public static BindableProperty HasRoundedCornerProperty
+        = BindableProperty.Create(nameof(HasRoundedCorner), typeof(bool), typeof(BorderlessEditor), false);
+
+        public static BindableProperty IsExpandableProperty
+        = BindableProperty.Create(nameof(IsExpandable), typeof(bool), typeof(BorderlessEditor), false);
+
+        public bool IsExpandable
+        {
+            get { return (bool)GetValue(IsExpandableProperty); }
+            set { SetValue(IsExpandableProperty, value); }
+        }
+        public bool HasRoundedCorner
+        {
+            get { return (bool)GetValue(HasRoundedCornerProperty); }
+            set { SetValue(HasRoundedCornerProperty, value); }
+        }
+
+        public string Placeholder
+        {
+            get { return (string)GetValue(PlaceholderProperty); }
+            set { SetValue(PlaceholderProperty, value); }
+        }
+
+        public Color PlaceholderColor
+        {
+            get { return (Color)GetValue(PlaceholderColorProperty); }
+            set { SetValue(PlaceholderColorProperty, value); }
+        }
+
         public BorderlessEditor()
         {
-            this.TextChanged += this.ExtendableEditor_TextChanged;
+            TextChanged += OnTextChanged;
         }
 
-        #region Methods
-
-        /// <summary>
-        /// Invoked when editor text is changed.
-        /// </summary>
-        /// <param name="sender">The editor</param>
-        /// <param name="e">Text changed event args</param>
-        private void ExtendableEditor_TextChanged(object sender, TextChangedEventArgs e)
+        private void OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            this.InvalidateMeasure();
+            if (IsExpandable) InvalidateMeasure();
         }
-
-        #endregion
     }
 }

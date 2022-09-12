@@ -7,6 +7,7 @@ using lestoma.App.ViewModels.Reportes;
 using lestoma.App.ViewModels.Reportes.SuperAdmin;
 using lestoma.App.ViewModels.Upas;
 using lestoma.App.ViewModels.UpasActividades;
+using lestoma.App.ViewModels.Usuarios;
 using lestoma.App.Views;
 using lestoma.App.Views.Account;
 using lestoma.App.Views.Actividades;
@@ -16,6 +17,7 @@ using lestoma.App.Views.Reportes;
 using lestoma.App.Views.Reportes.SuperAdmin;
 using lestoma.App.Views.Upas;
 using lestoma.App.Views.UpasActividades;
+using lestoma.App.Views.Usuarios;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Services;
@@ -111,10 +113,10 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<ReportDailyPage, ReportDailyPageViewModel>();
             containerRegistry.RegisterForNavigation<ReportByDatePage, ReportByDateViewModel>();
             containerRegistry.RegisterForNavigation<ActividadesByUsuarioPopupPage, ActividadesByUsuarioPopupViewModel>();
-
+            containerRegistry.RegisterForNavigation<UserPage, UserViewModel>();
+            containerRegistry.RegisterForNavigation<CreateOrEditUserPage, CreateOrEditUserViewModel>();
+            containerRegistry.RegisterForNavigation<MoreInfoPopupPage, MoreInfoPopupPageViewModel>();
             #endregion
-
-
         }
     }
 }

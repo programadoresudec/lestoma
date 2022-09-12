@@ -7,7 +7,7 @@
              xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations" 
              xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
              xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
-             xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms"
+             xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms" xmlns:controls="clr-namespace:lestoma.App.Controls"
              prism:ViewModelLocator.AutowireViewModel="True"  Title="Reporte Del Buzón"
              x:Class="lestoma.App.Views.Buzon.CrearReporteDelBuzonPage">
     <AbsoluteLayout>
@@ -33,12 +33,20 @@
 
                     <inputLayout:SfTextInputLayout Hint="Título" 
                                                    ContainerType="Outlined" OutlineCornerRadius="8">
-                        <Entry Placeholder="Digite el titulo del reporte" 
+                        <controls:BorderlessEntry Placeholder="Digite el titulo del reporte"
                                Text="{Binding DetalleBuzon.Titulo}" />
                     </inputLayout:SfTextInputLayout>
 
                     <inputLayout:SfTextInputLayout Hint="Descripción" ContainerType="Outlined" OutlineCornerRadius="8">
-                        <Editor AutoSize="TextChanges" Text="{Binding DetalleBuzon.Descripcion}" />
+                        <controls:BorderlessEditor
+                                         x:Name="DescripcionEntry"
+                                         Margin="15,0" 
+                                         MaxLength="500" 
+                                         IsExpandable="True"
+                                         Style="{StaticResource BorderlessEntryStyle}"
+                                         Text="{Binding DetalleBuzon.Descripcion}"
+                                         TextColor="Black">
+                        </controls:BorderlessEditor>
                     </inputLayout:SfTextInputLayout>
 
                     <inputLayout:SfTextInputLayout Hint="tipo de gravedad" HeightRequest="80" ContainerType="Outlined" OutlineCornerRadius="8">

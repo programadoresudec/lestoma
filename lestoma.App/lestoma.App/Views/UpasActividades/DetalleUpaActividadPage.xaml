@@ -6,7 +6,7 @@
              xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms" 
              xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
              xmlns:helper="clr-namespace:Syncfusion.ListView.XForms.Helpers;assembly=Syncfusion.SfListView.XForms"
-             x:Class="lestoma.App.Views.UpasActividades.DetalleUpaActividadPage">
+             x:Class="lestoma.App.Views.UpasActividades.DetalleUpaActividadPage" Title="Detalle Upas-Actividades">
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="icon_plus.png" Command="{Binding AddCommand}"/>
     </ContentPage.ToolbarItems>
@@ -15,11 +15,9 @@
             <helper:InverseBoolConverter x:Key="inverseBoolConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
-
     <StackLayout Padding="10">
         <Label Text="No hay contenido." IsVisible="{Binding IsVisible}" HorizontalTextAlignment="Center" FontAttributes="Bold" 
                FontSize="Large" TextColor="{Binding PantoneVerdeSecond}"></Label>
-
         <syncfusion:SfListView x:Name="LV_detalleUpasActividades"   
                              LoadMoreOption="Auto"  SwipeOffset="100" SwipeEnded="LV_detalleUpasActividades_SwipeEnded"
                              LoadMoreCommand="{Binding LoadMoreItemsCommand}" IsBusy="{Binding IsBusy}" AutoFitMode="DynamicHeight"

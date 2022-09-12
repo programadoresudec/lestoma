@@ -1,11 +1,12 @@
 ﻿using lestoma.App.Models;
+using lestoma.App.Views;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Modulos
@@ -38,6 +39,7 @@ namespace lestoma.App.ViewModels.Modulos
                 CargarDatos();
                 if (_model.AreFieldsValid())
                 {
+                    await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Creando..."));
                     ModuloRequest request = new ModuloRequest
                     {
                         Id = Modulo.Id != Guid.Empty ? Modulo.Id : Guid.Empty,
@@ -53,20 +55,27 @@ namespace lestoma.App.ViewModels.Modulos
                         {
                             respuesta = await _apiService.PutAsyncWithToken(URL, "modulos/editar", request, TokenUser.Token);
                         }
+                        if (!respuesta.IsExito)
+                        {
+                            AlertWarning(respuesta.Mensaje);
+                            await ClosePopup();
+                            return;
+                        }
+                        await ClosePopup();
+                        AlertSuccess(respuesta.Mensaje);
+                        await _navigationService.GoBackAsync(null, useModalNavigation: true, true);
                     }
-
-                    if (!respuesta.IsExito)
+                    else
                     {
-                        AlertError(respuesta.Mensaje);
-                        return;
+                        await ClosePopup();
+                        AlertNoInternetConnection();
                     }
-                    await Task.Delay(2000);
-                    await _navigationService.GoBackAsync(null, useModalNavigation: true, true);
                 }
 
             }
             catch (Exception ex)
             {
+                await ClosePopup();
                 Debug.WriteLine(ex.Message);
             }
         }
@@ -96,6 +105,10 @@ namespace lestoma.App.ViewModels.Modulos
             if (parameters.ContainsKey("modulo"))
             {
                 Modulo = parameters.GetValue<ModuloRequest>("modulo");
+                Title = "Editar";
+            }
+            else if (Modulo != null)
+            {
                 Title = "Editar";
             }
             else

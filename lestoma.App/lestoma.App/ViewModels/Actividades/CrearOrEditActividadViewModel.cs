@@ -1,8 +1,10 @@
 ﻿using lestoma.App.Models;
+using lestoma.App.Views;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Diagnostics;
 using Xamarin.Forms;
@@ -40,6 +42,7 @@ namespace lestoma.App.ViewModels.Actividades
                 CargarDatos();
                 if (_model.AreFieldsValid())
                 {
+                    await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Creando..."));
                     ActividadRequest request = new ActividadRequest
                     {
                         Id = Actividad.Id != Guid.Empty ? Actividad.Id : Guid.Empty,
@@ -55,19 +58,28 @@ namespace lestoma.App.ViewModels.Actividades
                         {
                             respuesta = await _apiService.PutAsyncWithToken(URL, "actividades/editar", request, TokenUser.Token);
                         }
+                        if (!respuesta.IsExito)
+                        {
+                            AlertWarning(respuesta.Mensaje);
+                            await ClosePopup();
+                            return;
+                        }
+                        AlertSuccess(respuesta.Mensaje);
+                        await ClosePopup();
+                        await _navigationService.GoBackAsync(null, useModalNavigation: true, true);
                     }
-                    if (!respuesta.IsExito)
+                    else
                     {
-                        AlertWarning(respuesta.Mensaje);
-                        return;
+                        await ClosePopup();
+                        AlertNoInternetConnection();
                     }
-                    AlertSuccess(respuesta.Mensaje);
-                    await _navigationService.GoBackAsync(null, useModalNavigation: true, true);
+
                 }
 
             }
             catch (Exception ex)
             {
+                await ClosePopup();
                 Debug.WriteLine(ex.Message);
             }
         }
@@ -97,6 +109,10 @@ namespace lestoma.App.ViewModels.Actividades
             if (parameters.ContainsKey("actividad"))
             {
                 Actividad = parameters.GetValue<ActividadRequest>("actividad");
+                Title = "Editar";
+            }
+            else if (Actividad != null)
+            {
                 Title = "Editar";
             }
             else

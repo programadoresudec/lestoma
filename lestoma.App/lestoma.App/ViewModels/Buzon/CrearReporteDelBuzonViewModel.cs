@@ -132,7 +132,7 @@ namespace lestoma.App.ViewModels.Buzon
             };
 
             string url = App.Current.Resources["UrlAPI"].ToString();
-            Response respuesta = await _apiService.PostAsyncWithToken(url, "ReportsMailbox/create", buzon, UserApp.Token);
+            Response respuesta = await _apiService.PostAsyncWithToken(url, "buzon-de-reportes/create", buzon, UserApp.Token);
             IsRunning = false;
             IsEnabled = true;
             if (!respuesta.IsExito)

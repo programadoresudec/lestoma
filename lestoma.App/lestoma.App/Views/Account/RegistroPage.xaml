@@ -102,8 +102,6 @@
                                         Text="{StaticResource Error}" />
                                     </Grid>
                                 </border:SfBorder>
-
-                             
                             </StackLayout>
 
                             <StackLayout>
@@ -156,7 +154,7 @@
                                         <!--  Label to display error message  -->
                                         <Label
                                               x:Name="PasswordValidationLabel"
-                                              Margin="20,10,10,50"
+                                              Margin="20,5,10,50"
                                               IsVisible="{Binding Password.Item1.IsValid, Converter={StaticResource InverseBoolConverter}}"
                                               Style="{StaticResource SimpleLabelStyle}"
                                               Text="{Binding Password.Item1.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
@@ -192,7 +190,7 @@
                                         <!--  Label to display error message  -->
                                         <Label
                                             x:Name="ConfirmPasswordValidationLabel"
-                                            Margin="20,10,10,50"
+                                            Margin="20,5,10,50"
                                             IsVisible="{Binding Password.Item2.IsValid, Converter={StaticResource InverseBoolConverter}}"
                                             Style="{StaticResource SimpleLabelStyle}"
                                             Text="{Binding Password.Item2.Errors, Converter={StaticResource FirstValidationErrorConverter}}"

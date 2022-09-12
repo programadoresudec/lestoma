@@ -27,20 +27,20 @@ namespace lestoma.App.ViewModels.Reportes
             {
                 menu.Add(new Menu
                 {
-                    Icon = "icon_daily",
+                    Icon = "icon_report_daily",
                     PageName = $"{nameof(ReportDailyPage)}",
                     Title = "Configurar reporte diario."
                 });
             }
             menu.Add(new Menu
             {
-                Icon = "icon_acuaponic",
+                Icon = "icon_report_date",
                 PageName = $"{nameof(ReportByDatePage)}",
                 Title = "Generar reporte por fecha."
             });
-            menu.Add(new Menu
+            menu.Add(new Menu   
             {
-                Icon = "icon_acuaponic",
+                Icon = "icon_report_components",
                 PageName = Rol == (int)TipoRol.SuperAdministrador ? $"{nameof(AboutPage)}" : $"{nameof(AboutPage)}",
                 Title = "Generar reporte por componentes."
             });

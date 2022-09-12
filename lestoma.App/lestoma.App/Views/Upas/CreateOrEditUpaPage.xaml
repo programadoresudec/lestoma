@@ -6,7 +6,8 @@
              xmlns:control="clr-namespace:lestoma.App.Controls" xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms"
              xmlns:behaviour="clr-namespace:lestoma.App.Behaviors" xmlns:converter="clr-namespace:lestoma.App.Converters"
              prism:ViewModelLocator.AutowireViewModel="True"  xmlns:ListCollection="clr-namespace:System.Collections.Generic;assembly=netstandard"
-             xmlns:upas="clr-namespace:lestoma.App.ViewModels.Upas" xmlns:gradient="clr-namespace:Syncfusion.XForms.Graphics;assembly=Syncfusion.Core.XForms" x:DataType="upas:CreateOrEditUpaViewModel"
+             xmlns:upas="clr-namespace:lestoma.App.ViewModels.Upas" 
+             x:DataType="upas:CreateOrEditUpaViewModel"
              x:Class="lestoma.App.Views.Upas.CreateOrEditUpaPage">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -78,14 +79,13 @@
                             <inputLayout:SfTextInputLayout Hint="Descripción" Grid.Row="0" FocusedColor="Black" ContainerBackgroundColor="Transparent"
                                                    Margin="10,0,0,0">
                                 <control:BorderlessEditor
-                            x:Name="DescripcionEntry"
-                            Margin="15,0" 
-                            MaxLength="500" 
-                            AutoSize="TextChanges"
-                            PlaceholderColor="{StaticResource EntryPlaceholderColor}"
-                            Style="{StaticResource BorderlessEntryStyle}"
-                            Text="{Binding Upa.Descripcion}"
-                            TextColor="Black">
+                                         x:Name="DescripcionEntry"
+                                         Margin="15,0" 
+                                         MaxLength="500" 
+                                         IsExpandable="True"
+                                         Style="{StaticResource BorderlessEntryStyle}"
+                                         Text="{Binding Upa.Descripcion}"
+                                         TextColor="Black">
                                     <Editor.Behaviors>
                                         <behaviour:EditorLineValidationBehaviour IsValid="{Binding Model.Descripcion.IsValid}" />
                                     </Editor.Behaviors>

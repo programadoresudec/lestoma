@@ -28,7 +28,7 @@
                     <!--  Login validation label  -->
                     <Label
                             x:Name="ValidationLabel"
-                            Margin="20,10,10,50" Grid.Row="0"
+                            Margin="20,5,10,50" Grid.Row="0"
                             FontSize="12"
                             IsVisible="{Binding Email.IsValid, Converter={StaticResource InverseBoolConverter}}"
                             Style="{StaticResource SimpleLabelStyle}"
@@ -36,7 +36,7 @@
                             TextColor="{DynamicResource Red}"
                             VerticalOptions="FillAndExpand" />
                     <inputLayout:SfTextInputLayout Hint="Email" FocusedColor="Black" ContainerBackgroundColor="Transparent"
-                                                   Margin="10,10,0,0" HeightRequest="60">
+                                                   Margin="10,10,0,0" HeightRequest="75">
                         <control:BorderlessEntry
                         x:Name="EmailEntry"
                         Margin="15,0"
