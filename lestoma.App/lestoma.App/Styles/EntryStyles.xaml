@@ -15,5 +15,4 @@
         <Setter Property="VerticalOptions" Value="Center" />
         <Setter Property="ReturnType" Value="Done" />
     </Style>
-    
 </ResourceDictionary>

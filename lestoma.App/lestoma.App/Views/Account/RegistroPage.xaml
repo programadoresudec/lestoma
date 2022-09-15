@@ -124,7 +124,6 @@
                                                   Margin="10,10,0,0">
                                             <control:BorderlessEntry x:Name="LastNameEntry" Text="{Binding LastName.Value}"
                                                      PlaceholderColor="#606a7b"
-                                                 
                                                      Style="{StaticResource BorderlessEntryStyle}" MaxLength="60" TextColor="#333942">
                                                 <Entry.Behaviors>
                                                     <behaviour:EntryLineValidationBehaviour IsValid="{Binding LastName.IsValid}"/>

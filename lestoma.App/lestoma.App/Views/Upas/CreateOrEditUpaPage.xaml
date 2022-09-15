@@ -18,12 +18,12 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <Grid>
-           
+
             <StackLayout VerticalOptions="Start">
                 <StackLayout BackgroundColor="{StaticResource PantoneVerdeDark}" Orientation="Horizontal">
                     <buttons:SfButton BackgroundColor="Transparent" HorizontalOptions="Start" Margin="10" VerticalOptions="CenterAndExpand"
                                       ShowIcon="True" ImageSource="icon_leftarrow.png" Command="{Binding BackButtonCommand}"/>
-                                     <Label Text="{Binding Title}" FontSize="20" TextColor="White" FontAttributes="Bold" VerticalOptions="CenterAndExpand"/>
+                    <Label Text="{Binding Title}" FontSize="20" TextColor="White" FontAttributes="Bold" VerticalOptions="CenterAndExpand"/>
                 </StackLayout>
                 <!--  nombre upa  -->
                 <StackLayout VerticalOptions="CenterAndExpand"  Margin="15" Padding="10" Spacing="15">
@@ -45,10 +45,9 @@
                             x:Name="NombreEntry"
                             Margin="15,0" 
                             MaxLength="60" 
-                            PlaceholderColor="{StaticResource EntryPlaceholderColor}"
+                            PlaceholderColor="#606a7b"
                             Style="{StaticResource BorderlessEntryStyle}"
-                            Text="{Binding Upa.Nombre}"
-                            TextColor="Black">
+                            Text="{Binding Upa.Nombre}">
                                     <Entry.Behaviors>
                                         <behaviour:EntryLineValidationBehaviour IsValid="{Binding Model.Nombre.IsValid}" />
                                     </Entry.Behaviors>
@@ -77,21 +76,20 @@
                             TextColor="{DynamicResource Red}"
                             VerticalOptions="FillAndExpand" />
                             <inputLayout:SfTextInputLayout Hint="Descripción" Grid.Row="0" FocusedColor="Black" ContainerBackgroundColor="Transparent"
-                                                   Margin="10,0,0,0">
+                                                   Margin="10,10,0,0">
                                 <control:BorderlessEditor
                                          x:Name="DescripcionEntry"
                                          Margin="15,0" 
                                          MaxLength="500" 
                                          IsExpandable="True"
-                                         Style="{StaticResource BorderlessEntryStyle}"
-                                         Text="{Binding Upa.Descripcion}"
-                                         TextColor="Black">
+                                         Style="{StaticResource BorderlessEditorStyle}"
+                                         Text="{Binding Upa.Descripcion}">
                                     <Editor.Behaviors>
                                         <behaviour:EditorLineValidationBehaviour IsValid="{Binding Model.Descripcion.IsValid}" />
                                     </Editor.Behaviors>
                                 </control:BorderlessEditor>
                             </inputLayout:SfTextInputLayout>
-                            <Label Grid.Column="1"
+                            <Label Grid.Column="1" Margin="15,10,15,0"
                        IsVisible="{Binding Path=IsVisible, Source={x:Reference descripcionValidationLabel}}"
                        Style="{StaticResource ErrorIconLabelStyle}"
                        Text="{StaticResource Error}" />
@@ -112,9 +110,9 @@
             BorderColor="{Binding Source={x:Reference cantidadEntry}, Path=IsFocused, Converter={StaticResource ColorConverter}, ConverterParameter=0}"
             CornerRadius="4" HeightRequest="80" Style="{StaticResource LoginFormBorderlessEntryBorderStyle}">
                         <Grid ColumnDefinitions="*, Auto">
-                            <inputLayout:SfTextInputLayout Hint="cantidad de actividades" HeightRequest="80" Style="{StaticResource BorderlessEntryStyle}" ContainerBackgroundColor="Transparent" 
+                            <inputLayout:SfTextInputLayout Hint="cantidad de actividades" HeightRequest="80" ContainerBackgroundColor="Transparent" 
                                                    Margin="10,0,0,0">
-                                <Picker x:Name="cantidadEntry" TextColor="Black" Style="{StaticResource BorderlessEntryStyle}" Margin="15,0" 
+                                <Picker x:Name="cantidadEntry" Margin="15,0"  Title="--Seleccione--" FontFamily="Montserrat-Regular" TitleColor="{StaticResource PantoneVerdeSecond}"
                                 SelectedItem="{Binding Upa.CantidadActividades}">
                                     <Picker.Behaviors>
                                         <behaviour:PickerLineValidationBehaviour IsValid="{Binding Model.CantidadActividades.IsValid}" />

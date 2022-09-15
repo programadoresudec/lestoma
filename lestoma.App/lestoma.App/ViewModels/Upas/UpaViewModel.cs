@@ -1,5 +1,6 @@
 ﻿using lestoma.App.Views;
 using lestoma.App.Views.Upas;
+using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
@@ -7,6 +8,7 @@ using lestoma.CommonUtils.Requests;
 using Newtonsoft.Json;
 using Plugin.Toast;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -79,58 +81,57 @@ namespace lestoma.App.ViewModels.Upas
             await _navigationService.NavigateAsync(nameof(CreateOrEditUpaPage), parameters, useModalNavigation: true, true);
 
         }
-        private async void LoadMoreItems(object obj)
+        private void LoadMoreItems(object obj)
         {
-
-            try
-            {
-                IsBusy = true;
-                await Task.Delay(1000);
-                AddUpas();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
-            finally
-            {
-                IsBusy = false;
-            }
+            AddUpas();
         }
 
         private async void AddUpas()
         {
-            Page = ++Page;
-            Response response = await _apiService.GetPaginadoAsyncWithToken<UpaDTO>(URL,
-                $"upas/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
-            if (!response.IsExito)
+            try
             {
-                CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
-                return;
-            }
-            Paginador<UpaDTO> paginador = (Paginador<UpaDTO>)response.Data;
-            TotalItems = paginador.TotalDatos;
-            if (paginador.TotalPages <= 1)
-            {
-                return;
-            }
-            if (paginador.HasNextPage)
-            {
-                foreach (var item in paginador.Datos)
+                Page = ++Page;
+                Response response = await _apiService.GetPaginadoAsyncWithToken<UpaDTO>(URL,
+                    $"upas/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
+                if (!response.IsExito)
                 {
-                    Upas.Add(item);
+                    CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
+                    return;
                 }
-            }
-            if (Upas.Count < TotalItems)
-            {
-                if (paginador.HasPreviousPage == true && paginador.HasNextPage == false)
+                Paginador<UpaDTO> paginador = (Paginador<UpaDTO>)response.Data;
+                TotalItems = paginador.TotalDatos;
+                if (paginador.TotalPages <= 1)
+                {
+                    return;
+                }
+                if (paginador.HasNextPage)
                 {
                     foreach (var item in paginador.Datos)
                     {
                         Upas.Add(item);
                     }
                 }
+                if (Upas.Count < TotalItems)
+                {
+                    if (paginador.HasPreviousPage == true && paginador.HasNextPage == false)
+                    {
+                        foreach (var item in paginador.Datos)
+                        {
+                            Upas.Add(item);
+                        }
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                Response error = JsonConvert.DeserializeObject<Response>(ex.Message);
+                await PopupNavigation.Instance.PushAsync(new MessagePopupPage($"Error {error.StatusCode}: {error.Mensaje}", Constants.ICON_ERROR));
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+
         }
         private bool CanLoadMoreItems(object obj)
         {
@@ -144,23 +145,15 @@ namespace lestoma.App.ViewModels.Upas
 
         private async void LoadUpas()
         {
-            await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-            try
+            if (_apiService.CheckConnection())
             {
-                if (!_apiService.CheckConnection())
-                {
-                    CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
-                    return;
-                }
+                await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
                 ConsumoService();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
-            finally
-            {
                 await _navigationService.ClearPopupStackAsync();
+            }
+            else
+            {
+                AlertNoInternetConnection();
             }
         }
 
@@ -197,37 +190,44 @@ namespace lestoma.App.ViewModels.Upas
         }
         private async void ConsumoService()
         {
-            Upas = new ObservableCollection<UpaDTO>();
-            Page = 1;
-            Response response = await _apiService.GetPaginadoAsyncWithToken<UpaDTO>(URL,
-                $"upas/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
-            if (!response.IsExito)
+            try
             {
-                CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
-                return;
-            }
-            Paginador<UpaDTO> paginador = (Paginador<UpaDTO>)response.Data;
-            TotalItems = paginador.TotalDatos;
-            if (paginador.HasNextPage)
-            {
-                if (Upas.Count > 0)
+                Upas = new ObservableCollection<UpaDTO>();
+                Response response = await _apiService.GetPaginadoAsyncWithToken<UpaDTO>(URL,
+                    $"upas/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
+                if (!response.IsExito)
+                {
+                    CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
+                    return;
+                }
+                Paginador<UpaDTO> paginador = (Paginador<UpaDTO>)response.Data;
+                TotalItems = paginador.TotalDatos;
+                if (paginador.HasNextPage)
+                {
+                    if (Upas.Count > 0)
+                    {
+                        foreach (var item in paginador.Datos)
+                        {
+                            Upas.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        Upas = new ObservableCollection<UpaDTO>(paginador.Datos);
+                    }
+                }
+                else if (paginador.HasNextPage == false && paginador.HasPreviousPage == false)
                 {
                     foreach (var item in paginador.Datos)
                     {
                         Upas.Add(item);
                     }
                 }
-                else
-                {
-                    Upas = new ObservableCollection<UpaDTO>(paginador.Datos);
-                }
             }
-            else if (paginador.HasNextPage == false && paginador.HasPreviousPage == false)
+            catch (Exception ex)
             {
-                foreach (var item in paginador.Datos)
-                {
-                    Upas.Add(item);
-                }
+                Response error = JsonConvert.DeserializeObject<Response>(ex.Message);
+                await PopupNavigation.Instance.PushAsync(new MessagePopupPage($"Error {error.StatusCode}: {error.Mensaje}", Constants.ICON_ERROR));
             }
         }
     }

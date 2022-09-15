@@ -1,12 +1,15 @@
 ﻿using lestoma.App.Views;
 using lestoma.App.Views.Account;
 using lestoma.App.Views.UpasActividades;
+using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests.Filters;
+using Newtonsoft.Json;
 using Plugin.Toast;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -74,23 +77,16 @@ namespace lestoma.App.ViewModels.UpasActividades
         }
         private async void LoadDetalle()
         {
-            try
+
+            if (_apiService.CheckConnection())
             {
                 await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-                if (!_apiService.CheckConnection())
-                {
-                    CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
-                    return;
-                }
                 ConsumoService();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
-            finally
-            {
                 await _navigationService.ClearPopupStackAsync();
+            }
+            else
+            {
+                AlertNoInternetConnection();
             }
         }
         public Command<object> SeeActivitiesCommand
@@ -113,42 +109,51 @@ namespace lestoma.App.ViewModels.UpasActividades
 
         private async void ConsumoService()
         {
-            Response response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(URL,
-                $"detalle-upas-actividades/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
-            if (!response.IsExito)
+            try
             {
-                CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
-                return;
-            }
-            else if (response.Data == null)
-            {
-                IsVisible = true;
-                return;
-            }
-            Paginador<DetalleUpaActividadDTO> paginador = (Paginador<DetalleUpaActividadDTO>)response.Data;
-            TotalItems = paginador.TotalDatos;
-            if (paginador.HasNextPage)
-            {
-                Page += 1;
-                if (DetalleUpasActividades.Count > 0)
+                Response response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(URL,
+               $"detalle-upas-actividades/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
+                if (!response.IsExito)
+                {
+                    CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
+                    return;
+                }
+                else if (response.Data == null)
+                {
+                    IsVisible = true;
+                    return;
+                }
+                Paginador<DetalleUpaActividadDTO> paginador = (Paginador<DetalleUpaActividadDTO>)response.Data;
+                TotalItems = paginador.TotalDatos;
+                if (paginador.HasNextPage)
+                {
+                    Page += 1;
+                    if (DetalleUpasActividades.Count > 0)
+                    {
+                        foreach (var item in paginador.Datos)
+                        {
+                            DetalleUpasActividades.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        DetalleUpasActividades = new ObservableCollection<DetalleUpaActividadDTO>(paginador.Datos);
+                    }
+                }
+                else if (paginador.HasNextPage == false && paginador.HasPreviousPage == false)
                 {
                     foreach (var item in paginador.Datos)
                     {
                         DetalleUpasActividades.Add(item);
                     }
                 }
-                else
-                {
-                    DetalleUpasActividades = new ObservableCollection<DetalleUpaActividadDTO>(paginador.Datos);
-                }
             }
-            else if (paginador.HasNextPage == false && paginador.HasPreviousPage == false)
+            catch (Exception ex)
             {
-                foreach (var item in paginador.Datos)
-                {
-                    DetalleUpasActividades.Add(item);
-                }
+                Response error = JsonConvert.DeserializeObject<Response>(ex.Message);
+                await PopupNavigation.Instance.PushAsync(new MessagePopupPage($"Error {error.StatusCode}: {error.Mensaje}", Constants.ICON_ERROR));
             }
+
         }
         private bool CanLoadMoreItems(object arg)
         {
@@ -159,67 +164,67 @@ namespace lestoma.App.ViewModels.UpasActividades
 
         private async void LoadMoreItems(object obj)
         {
-            try
+            if (_apiService.CheckConnection())
             {
-                IsBusy = true;
-                if (!_apiService.CheckConnection())
-                {
-                    CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
-                    IsBusy = false;
-                    return;
-                }
                 await Task.Delay(1000);
                 AddUpasConActividades();
             }
-            catch (Exception ex)
+            else
             {
-                Debug.WriteLine(ex.Message);
-            }
-            finally
-            {
-                IsBusy = false;
+                AlertNoInternetConnection();
             }
         }
 
         private async void AddUpasConActividades()
         {
-
-            Response response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(URL,
-                $"detalle-upas-actividades/paginar  ", TokenUser.Token);
-            if (!response.IsExito)
+            try
             {
-                CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
-                return;
-            }
-            else if (response.Data == null)
-            {
-                IsVisible = true;
-                return;
-            }
-            Paginador<DetalleUpaActividadDTO> paginador = (Paginador<DetalleUpaActividadDTO>)response.Data;
-            if (paginador.TotalPages <= 1)
-            {
-                return;
-            }
-            if (paginador.HasNextPage)
-            {
-
-                Page += 1;
-                foreach (var item in paginador.Datos)
+                IsBusy = true;
+                Response response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(URL,
+                    $"detalle-upas-actividades/paginar  ", TokenUser.Token);
+                if (!response.IsExito)
                 {
-                    DetalleUpasActividades.Add(item);
+                    CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
+                    return;
                 }
-
-            }
-            if (DetalleUpasActividades.Count < TotalItems)
-            {
-                if (paginador.HasPreviousPage == true && paginador.HasNextPage == false)
+                else if (response.Data == null)
                 {
+                    IsVisible = true;
+                    return;
+                }
+                Paginador<DetalleUpaActividadDTO> paginador = (Paginador<DetalleUpaActividadDTO>)response.Data;
+                if (paginador.TotalPages <= 1)
+                {
+                    return;
+                }
+                if (paginador.HasNextPage)
+                {
+
+                    Page += 1;
                     foreach (var item in paginador.Datos)
                     {
                         DetalleUpasActividades.Add(item);
                     }
+
                 }
+                if (DetalleUpasActividades.Count < TotalItems)
+                {
+                    if (paginador.HasPreviousPage == true && paginador.HasNextPage == false)
+                    {
+                        foreach (var item in paginador.Datos)
+                        {
+                            DetalleUpasActividades.Add(item);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AlertError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
     }

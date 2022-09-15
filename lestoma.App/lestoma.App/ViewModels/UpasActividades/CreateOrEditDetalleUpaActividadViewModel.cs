@@ -181,6 +181,12 @@ namespace lestoma.App.ViewModels.UpasActividades
                 {
                     Response response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
                            "actividades/listado-nombres", TokenUser.Token);
+
+                    if (response.IsExito)
+                    {
+
+                    }
+
                     var listadoActividades = (List<NameDTO>)response.Data;
 
                     Response response1 = await _apiService.GetListAsyncWithToken<List<UserDTO>>(URL,
@@ -203,11 +209,11 @@ namespace lestoma.App.ViewModels.UpasActividades
                         IsEdit = false;
                         Upa = listadoUpas.Where(x => x.Id == detalleUpaActividad.UpaId).FirstOrDefault();
                         User = listadoUsuarios.Where(x => x.Id == detalleUpaActividad.UsuarioId).FirstOrDefault();
-                        Response response3 = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
+                        Response listaActividadesxUser = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
                           $"detalle-upas-actividades/lista-actividades-by-upa-usuario?UpaId={Upa.Id}&UsuarioId={User.Id}", TokenUser.Token);
-                        if (response.IsExito)
+                        if (listaActividadesxUser.IsExito)
                         {
-                            var listado = (List<NameDTO>)response.Data;
+                            var listado = (List<NameDTO>)listaActividadesxUser.Data;
                             Actividades = new ObservableCollection<NameDTO>(listadoActividades);
                             foreach (var item in listado)
                             {
@@ -220,9 +226,8 @@ namespace lestoma.App.ViewModels.UpasActividades
                             }
                             else
                             {
-                            
-                            }
-                            ActividadesAdd = new ObservableCollection<NameDTO>(listado);
+                                ActividadesAdd = new ObservableCollection<NameDTO>(listado);
+                            }            
                         }
                     }
                 }
