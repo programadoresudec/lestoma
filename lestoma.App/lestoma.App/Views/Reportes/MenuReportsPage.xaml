@@ -15,7 +15,7 @@
                         <StackLayout BackgroundColor="White"
                         Orientation="Vertical">
                             <gradient:SfGradientView Style="{StaticResource PrimaryGradientStyle}" />
-                            <Frame Margin="40,15,40,0" CornerRadius="20" BackgroundColor="{StaticResource PantoneAmarilloSecond}" HasShadow="False">
+                            <Frame Margin="40,15,40,0" CornerRadius="20" Opacity="0.8"  BackgroundColor="{StaticResource PantoneVerdeSecond}" HasShadow="False">
                                 <Grid HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" BackgroundColor="Transparent">
                                     <Grid.GestureRecognizers>
                                         <TapGestureRecognizer  Command="{Binding SelectMenuCommand}"/>
@@ -35,7 +35,7 @@
                                           VerticalOptions="CenterAndExpand"
                                            FontAttributes="Bold"
                                            FontSize="Large" HorizontalTextAlignment="Center"
-                                           TextColor="{StaticResource PantoneVerdeDark}"
+                                           TextColor="{StaticResource Gray-White}"
                                            Text="{Binding Title}"/>
                                 </Grid>
                             </Frame>

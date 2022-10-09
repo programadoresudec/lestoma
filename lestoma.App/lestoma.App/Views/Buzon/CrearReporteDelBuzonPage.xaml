@@ -42,6 +42,7 @@
                                          x:Name="DescripcionEntry"
                                          Margin="15,0" 
                                          MaxLength="500" 
+                                         Visual="Material"
                                          IsExpandable="True"
                                          Style="{StaticResource BorderlessEntryStyle}"
                                          Text="{Binding DetalleBuzon.Descripcion}"
@@ -50,7 +51,7 @@
                     </inputLayout:SfTextInputLayout>
 
                     <inputLayout:SfTextInputLayout Hint="tipo de gravedad" HeightRequest="80" ContainerType="Outlined" OutlineCornerRadius="8">
-                        <combobox:SfComboBox SelectedItem="{Binding DetalleBuzon.TipoDeGravedad}" DataSource="{Binding TiposDeGravedad}">
+                        <combobox:SfComboBox SelectedItem="{Binding DetalleBuzon.TipoDeGravedad}" Visual="Material" DataSource="{Binding TiposDeGravedad}">
                         </combobox:SfComboBox>
                     </inputLayout:SfTextInputLayout>
                 </StackLayout>

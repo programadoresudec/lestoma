@@ -16,11 +16,10 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <syncfusion:SfListView x:Name="LV_upas" AutoFitMode="DynamicHeight"
-                             LoadMoreOption="Auto" AllowSwiping="True" SwipeOffset="100"
-                             LoadMoreCommand="{Binding LoadMoreItemsCommand}" SwipeEnded="LV_upas_SwipeEnded" IsBusy="{Binding IsBusy}"
-                             LoadMoreCommandParameter="{Binding Source={x:Reference Name=LV_upas}}" TapCommand="{Binding EditCommand}"
+                             AllowSwiping="True" SwipeOffset="100"
+                              SwipeEnded="LV_upas_SwipeEnded" TapCommand="{Binding EditCommand}"
                              ItemsSource="{Binding Upas}" SelectionBackgroundColor="Transparent">
-       
+
         <syncfusion:SfListView.ItemTemplate>
             <DataTemplate>
                 <Frame Margin="5,10,5,10" CornerRadius="10" BackgroundColor="{StaticResource PantoneGrisLight}">
@@ -79,17 +78,6 @@
                 </Frame>
             </DataTemplate>
         </syncfusion:SfListView.ItemTemplate>
-        <syncfusion:SfListView.LoadMoreTemplate>
-            <DataTemplate>
-                <Grid>
-                    <Label Text="Load More Items" TextColor="Black" BackgroundColor="AliceBlue"
-                           HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
-                           IsVisible="{Binding IsBusy, Converter={StaticResource inverseBoolConverter}, Source={x:Reference Name=LV_upas}}" />
-                    <syncfusion:LoadMoreIndicator Color="{StaticResource PantoneVerdeSecond}" IsRunning="{Binding IsBusy, Source={x:Reference Name=LV_upas}}"
-                                                  IsVisible="{Binding IsBusy, Source={x:Reference Name=LV_upas}}" VerticalOptions="Center"/>
-                </Grid>
-            </DataTemplate>
-        </syncfusion:SfListView.LoadMoreTemplate>
         <syncfusion:SfListView.RightSwipeTemplate>
             <DataTemplate x:Name="RightSwipeTemplate">
                 <Grid BackgroundColor="Transparent" HorizontalOptions="Fill" VerticalOptions="Fill">

@@ -2,6 +2,7 @@
 using lestoma.App.Validators.Rules;
 using lestoma.App.Views;
 using lestoma.App.Views.Account;
+using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
@@ -11,6 +12,7 @@ using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Account
@@ -141,15 +143,16 @@ namespace lestoma.App.ViewModels.Account
                             NewPassword = this.Password.Item1.Value
                         };
                         Response respuesta = await _apiService.PostAsyncWithToken(URL, "Account/changepassword", cambio, UserApp.Token);
-                        if (!respuesta.IsExito)
+                        if (respuesta.IsExito)
+                        {
+                            AlertSuccess(respuesta.Mensaje);
+                            await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(SettingsPage)}");
+                        }
+                        else
                         {
                             AlertError(respuesta.Mensaje);
-                            await ClosePopup();
-                            return;
                         }
-                        AlertSuccess(respuesta.Mensaje);
-                        await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(SettingsPage)}");
-                        await ClosePopup();
+                        ClosePopup();
                     }
                     else
                     {
@@ -158,7 +161,10 @@ namespace lestoma.App.ViewModels.Account
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine(ex.Message);
+                    if (PopupNavigation.Instance.PopupStack.Any())
+                        await PopupNavigation.Instance.PopAsync();
+                    await PopupNavigation.Instance.PopAsync();
+                    SeeError(ex);
                 }
             }
         }

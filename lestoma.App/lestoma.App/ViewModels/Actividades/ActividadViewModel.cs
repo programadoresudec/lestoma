@@ -1,13 +1,17 @@
 ﻿using lestoma.App.Views;
 using lestoma.App.Views.Actividades;
+using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
+using Newtonsoft.Json;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Actividades
@@ -41,7 +45,7 @@ namespace lestoma.App.ViewModels.Actividades
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
-            RefreshActividades();
+            ServiceListadoActividades(true);
         }
         public async void DeleteClicked()
         {
@@ -112,49 +116,42 @@ namespace lestoma.App.ViewModels.Actividades
         }
         public ActividadDTO ItemDelete { get; set; }
 
-
-        public void RefreshActividades()
+        public void LoadActividades()
         {
-            try
+            if (_apiService.CheckConnection())
             {
-                InsertarListadoActividades();
+                ServiceListadoActividades();
             }
-            catch (Exception ex)
+            else
             {
-                Debug.WriteLine(ex.Message);
+                AlertNoInternetConnection();
             }
-
         }
 
-        public async void LoadActividades()
+        private async void ServiceListadoActividades(bool refresh = false)
         {
             try
             {
-                await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-                if (_apiService.CheckConnection())
+                if (!refresh)
+                    await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
+
+                Actividades = new ObservableCollection<ActividadDTO>();
+                Response response = await _apiService.GetListAsyncWithToken<List<ActividadDTO>>(URL, "actividades/listado", TokenUser.Token);
+                if (response.IsExito)
                 {
-                    InsertarListadoActividades();
+                    var listado = (List<ActividadDTO>)response.Data;
+                    Actividades = new ObservableCollection<ActividadDTO>(listado);
+                    ClosePopup();
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                if (!refresh)
+                    if (PopupNavigation.Instance.PopupStack.Any())
+                        await PopupNavigation.Instance.PopAsync();
+                SeeError(ex);
             }
-            finally
-            {
-                await _navigationService.ClearPopupStackAsync();
-            }
-        }
 
-        private async void InsertarListadoActividades()
-        {
-            Actividades = new ObservableCollection<ActividadDTO>();
-            Response response = await _apiService.GetListAsyncWithToken<List<ActividadDTO>>(URL, "actividades/listado", TokenUser.Token);
-            if (response.IsExito)
-            {
-                var listado = (List<ActividadDTO>)response.Data;
-                Actividades = new ObservableCollection<ActividadDTO>(listado);
-            }
         }
     }
 }

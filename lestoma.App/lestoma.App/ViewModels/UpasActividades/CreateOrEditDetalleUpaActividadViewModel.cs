@@ -181,20 +181,27 @@ namespace lestoma.App.ViewModels.UpasActividades
                 {
                     Response response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
                            "actividades/listado-nombres", TokenUser.Token);
-
-                    if (response.IsExito)
+                    if (!response.IsExito)
                     {
-
+                        AlertWarning(response.Mensaje);
+                        return;
                     }
-
-                    var listadoActividades = (List<NameDTO>)response.Data;
-
                     Response response1 = await _apiService.GetListAsyncWithToken<List<UserDTO>>(URL,
                         "usuarios/activos", TokenUser.Token);
-                    var listadoUsuarios = (List<UserDTO>)response1.Data;
-
+                    if (!response1.IsExito)
+                    {
+                        AlertWarning(response.Mensaje);
+                        return;
+                    }
                     Response response2 = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
                         "upas/listado-nombres", TokenUser.Token);
+                    if (!response2.IsExito)
+                    {
+                        AlertWarning(response.Mensaje);
+                        return;
+                    }
+                    var listadoActividades = (List<NameDTO>)response.Data;
+                    var listadoUsuarios = (List<UserDTO>)response1.Data;
                     var listadoUpas = (List<NameDTO>)response2.Data;
 
                     Upas = new ObservableCollection<NameDTO>(listadoUpas);
@@ -227,19 +234,20 @@ namespace lestoma.App.ViewModels.UpasActividades
                             else
                             {
                                 ActividadesAdd = new ObservableCollection<NameDTO>(listado);
-                            }            
+                            }
                         }
                     }
                 }
                 else
                 {
                     AlertNoInternetConnection();
+                    await _navigationService.GoBackAsync();
                 }
 
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                SeeError(ex);
             }
         }
 

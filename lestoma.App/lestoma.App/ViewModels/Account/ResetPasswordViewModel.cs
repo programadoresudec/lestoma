@@ -2,12 +2,16 @@
 using lestoma.App.Validators.Rules;
 using lestoma.App.Views;
 using lestoma.App.Views.Account;
+using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
+using Newtonsoft.Json;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
+using System;
 using System.Diagnostics;
+using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -190,15 +194,17 @@ namespace lestoma.App.ViewModels.Account
                             Password = Password.Item1.Value
                         };
                         Response respuesta = await _apiService.PutAsync(URL, "Account/recoverpassword", recover);
-                        if (!respuesta.IsExito)
+                        if (respuesta.IsExito)
+                        {
+                            AlertSuccess(respuesta.Mensaje);
+                            await _navigationService.NavigateAsync(nameof(LoginPage));
+
+                        }
+                        else
                         {
                             AlertError(respuesta.Mensaje);
-                            await ClosePopup();
-                            return;
+                            ClosePopup();
                         }
-                        AlertSuccess(respuesta.Mensaje);
-                        await _navigationService.NavigateAsync(nameof(LoginPage));
-                        await ClosePopup();
                     }
                     else
                     {
@@ -206,9 +212,11 @@ namespace lestoma.App.ViewModels.Account
                     }
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                if (PopupNavigation.Instance.PopupStack.Any())
+                    await PopupNavigation.Instance.PopAsync();
+                SeeError(ex);
             }
         }
 

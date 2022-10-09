@@ -5,7 +5,8 @@ using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
-using System.Diagnostics;
+using System;
+using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -59,24 +60,27 @@ namespace lestoma.App.ViewModels.Account
                             Email = Email.Value,
                         };
                         Response respuesta = await _apiService.PutAsync(URL, "Account/forgotpassword", email);
-                        if (!respuesta.IsExito)
+                        if (respuesta.IsExito)
+                        {
+                            AlertSuccess(respuesta.Mensaje);
+                            await _navigationService.NavigateAsync($"{nameof(ResetPasswordPage)}"); ;
+                        }
+                        else
                         {
                             AlertError(respuesta.Mensaje);
-                            await ClosePopup();
-                            return;
                         }
-                        AlertSuccess(respuesta.Mensaje);
-                        await _navigationService.NavigateAsync($"{nameof(ResetPasswordPage)}");
-                        await ClosePopup();
+                        ClosePopup();
                     }
                     else
                     {
                         AlertNoInternetConnection();
                     }
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
-                    Debug.WriteLine(ex.Message);
+                    if (PopupNavigation.Instance.PopupStack.Any())
+                        await PopupNavigation.Instance.PopAsync();
+                    SeeError(ex);
                 }
 
             }

@@ -5,10 +5,12 @@ using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Plugin.Toast;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Modulos
@@ -52,23 +54,10 @@ namespace lestoma.App.ViewModels.Modulos
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
-            ConsumoService();
+            ConsumoService(true);
         }
 
-        private async void ConsumoService()
-        {
-            Modulos = new ObservableCollection<ModuloDTO>();
-            Response response = await _apiService.GetListAsyncWithToken<List<ModuloDTO>>(URL,
-                $"modulos/listado", TokenUser.Token);
-            if (response.IsExito)
-            {
-                var listado = (List<ModuloDTO>)response.Data;
-                if (listado.Count > 0)
-                {
-                    Modulos = new ObservableCollection<ModuloDTO>(listado);
-                }
-            }
-        }
+       
         private async void UpaSelected(object objeto)
         {
             var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
@@ -89,27 +78,15 @@ namespace lestoma.App.ViewModels.Modulos
             await _navigationService.NavigateAsync(nameof(CreateOrEditModuloPage), parameters, useModalNavigation: true, true);
 
         }
-        private async void LoadModulos()
+        private void LoadModulos()
         {
-            await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-            try
+            if (_apiService.CheckConnection())
             {
-                if (_apiService.CheckConnection())
-                {
-                    ConsumoService();
-                }
-                else
-                {
-                    AlertNoInternetConnection();
-                }
+                ConsumoService();
             }
-            catch (Exception ex)
+            else
             {
-                Debug.WriteLine(ex.Message);
-            }
-            finally
-            {
-                await _navigationService.ClearPopupStackAsync();
+                AlertNoInternetConnection();
             }
         }
 
@@ -148,6 +125,36 @@ namespace lestoma.App.ViewModels.Modulos
                     await _navigationService.ClearPopupStackAsync();
                 }
             }
+        }
+        private async void ConsumoService(bool refresh = false)
+        {
+            try
+            {
+                if (!refresh)
+                    await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
+
+                Modulos = new ObservableCollection<ModuloDTO>();
+                Response response = await _apiService.GetListAsyncWithToken<List<ModuloDTO>>(URL,
+                    $"modulos/listado", TokenUser.Token);
+                if (response.IsExito)
+                {
+                    var listado = (List<ModuloDTO>)response.Data;
+                    if (listado.Count > 0)
+                    {
+                        Modulos = new ObservableCollection<ModuloDTO>(listado);
+                    }
+                }
+                if (!refresh)
+                    ClosePopup();
+            }
+            catch (Exception ex)
+            {
+                if (!refresh)
+                    if (PopupNavigation.Instance.PopupStack.Any())
+                        await PopupNavigation.Instance.PopAsync();
+                SeeError(ex);
+            }
+
         }
     }
 }

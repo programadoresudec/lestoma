@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
-using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -119,7 +119,16 @@ namespace lestoma.App.ViewModels.Account
 
                         };
                         Response respuesta = await _apiService.PostAsync(URL, "Account/login", login);
-                        if (!respuesta.IsExito)
+                        if (respuesta.IsExito)
+                        {
+                            TokenDTO token = ParsearData<TokenDTO>(respuesta);
+                            MovilSettings.Token = JsonConvert.SerializeObject(token);
+                            MovilSettings.IsLogin = true;
+                            AlertSuccess(respuesta.Mensaje);
+                            await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
+                            ClosePopup();
+                        }
+                        else
                         {
                             if (respuesta.StatusCode == (int)HttpStatusCode.Unauthorized)
                             {
@@ -129,15 +138,9 @@ namespace lestoma.App.ViewModels.Account
                             {
                                 AlertError(respuesta.Mensaje);
                             }
-                            await ClosePopup();
-                            return;
+                            ClosePopup();
                         }
-                        TokenDTO token = ParsearData<TokenDTO>(respuesta);
-                        MovilSettings.Token = JsonConvert.SerializeObject(token);
-                        MovilSettings.IsLogin = true;
-                        AlertSuccess(respuesta.Mensaje);
-                        await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
-                        await ClosePopup();
+
                     }
                     else
                     {
@@ -147,8 +150,9 @@ namespace lestoma.App.ViewModels.Account
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine(ex.Message);
-                    await ClosePopup();
+                    if (PopupNavigation.Instance.PopupStack.Any())
+                        await PopupNavigation.Instance.PopAsync();
+                    SeeError(ex);
                 }
             }
         }

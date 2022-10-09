@@ -16,8 +16,6 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <StackLayout Padding="10">
-        <Label Text="No hay contenido." IsVisible="{Binding IsVisible}" HorizontalTextAlignment="Center" FontAttributes="Bold" 
-               FontSize="Large" TextColor="{Binding PantoneVerdeSecond}"></Label>
         <syncfusion:SfListView x:Name="LV_detalleUpasActividades"   
                              LoadMoreOption="Auto"  SwipeOffset="100" SwipeEnded="LV_detalleUpasActividades_SwipeEnded"
                              LoadMoreCommand="{Binding LoadMoreItemsCommand}" IsBusy="{Binding IsBusy}" AutoFitMode="DynamicHeight"

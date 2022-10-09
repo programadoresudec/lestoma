@@ -1,6 +1,8 @@
 ﻿using Android.Bluetooth;
 using Android.OS;
+using lestoma.App.Views;
 using lestoma.App.Views.Account;
+using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using Newtonsoft.Json;
@@ -8,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using Plugin.Toast;
 using Prism.Mvvm;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -121,9 +124,23 @@ namespace lestoma.App.ViewModels
 
         #region Methods
 
-        protected async Task ClosePopup()
+        protected async void ClosePopup()
         {
             await _navigationService.ClearPopupStackAsync();
+        }
+
+
+        protected async void SeeError(Exception exception)
+        {
+            if (exception.Message.Contains("StatusCode"))
+            {
+                Response error = JsonConvert.DeserializeObject<Response>(exception.Message);
+                await PopupNavigation.Instance.PushAsync(new MessagePopupPage($"Error {error.StatusCode}: {error.Mensaje}", Constants.ICON_ERROR));
+            }
+            else
+            {
+                await PopupNavigation.Instance.PushAsync(new MessagePopupPage($"Error: {exception.Message}", Constants.ICON_ERROR));
+            }
         }
 
         protected void NotifyPropertyChanged([CallerMemberName] string propertyName = null)

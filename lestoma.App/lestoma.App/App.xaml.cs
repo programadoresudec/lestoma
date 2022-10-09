@@ -75,10 +75,9 @@ namespace lestoma.App
         {
             containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
             containerRegistry.Register<IApiService, ApiService>();
-
             containerRegistry.Register<IFilesHelper, FilesHelper>();
 
-            #region injection UnitOfwork
+            #region injection UnitOfwork Database OFfline
             containerRegistry.Register<IUnitOfWork, UnitOfWork>();
             #endregion
 
@@ -116,8 +115,9 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<UserPage, UserViewModel>();
             containerRegistry.RegisterForNavigation<CreateOrEditUserPage, CreateOrEditUserViewModel>();
             containerRegistry.RegisterForNavigation<MoreInfoPopupPage, MoreInfoPopupPageViewModel>();
-            #endregion
             containerRegistry.RegisterForNavigation<MessagePopupPage>();
+            #endregion
+
         }
     }
 }

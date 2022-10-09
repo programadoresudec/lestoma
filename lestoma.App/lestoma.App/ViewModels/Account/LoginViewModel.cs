@@ -1,6 +1,5 @@
 ﻿using lestoma.App.Validators;
 using lestoma.App.Validators.Rules;
-using lestoma.CommonUtils.Interfaces;
 using Prism.Navigation;
 using Xamarin.Forms.Internals;
 
@@ -57,20 +56,20 @@ namespace lestoma.App.ViewModels.Account
 
         #region Methods
 
-     
+
         public bool IsEmailFieldValid()
         {
             bool isEmailValid = this.Email.Validate();
             return isEmailValid;
         }
 
-     
+
         private void InitializeProperties()
         {
-           Email = new ValidatableObject<string>();
+            Email = new ValidatableObject<string>();
         }
 
- 
+
         private void AddValidationRules()
         {
             Email.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "El Email es requerido." });

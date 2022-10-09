@@ -7,6 +7,7 @@ using lestoma.App.Views.Modulos;
 using lestoma.App.Views.Reportes;
 using lestoma.App.Views.Upas;
 using lestoma.App.Views.UpasActividades;
+using lestoma.App.Views.Usuarios;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
@@ -81,6 +82,12 @@ namespace lestoma.App.ViewModels
             {
                 List<Menu> menuSuperAdmin = new List<Menu>
                 {
+                    new Menu
+                    {
+                        Icon =  "icon_users",
+                        PageName = $"{nameof(UserPage)}",
+                        Title = "Usuarios"
+                    },
                     new Menu
                     {
                         Icon =  "icon_actividad",

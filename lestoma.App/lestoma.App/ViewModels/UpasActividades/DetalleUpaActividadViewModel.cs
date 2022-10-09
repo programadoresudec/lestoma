@@ -1,19 +1,11 @@
-﻿using lestoma.App.Views;
-using lestoma.App.Views.Account;
-using lestoma.App.Views.UpasActividades;
-using lestoma.CommonUtils.Constants;
+﻿using lestoma.App.Views.UpasActividades;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests.Filters;
-using Newtonsoft.Json;
-using Plugin.Toast;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.UpasActividades
@@ -22,7 +14,6 @@ namespace lestoma.App.ViewModels.UpasActividades
     {
         private IApiService _apiService;
         private ObservableCollection<DetalleUpaActividadDTO> _detalleUpaActividad;
-        private bool _isVisible;
         private Command<object> itemTap;
         public DetalleUpaActividadViewModel(INavigationService navigationService, IApiService apiService) :
         base(navigationService)
@@ -53,11 +44,7 @@ namespace lestoma.App.ViewModels.UpasActividades
             set => SetProperty(ref _detalleUpaActividad, value);
         }
 
-        public bool IsVisible
-        {
-            get => _isVisible;
-            set => SetProperty(ref _isVisible, value);
-        }
+
         private bool CanNavigate(object arg)
         {
             return true;
@@ -75,14 +62,12 @@ namespace lestoma.App.ViewModels.UpasActividades
             };
             await _navigationService.NavigateAsync(nameof(CreateOrEditDetalleUpaActividadPage), parameters);
         }
-        private async void LoadDetalle()
+        private void LoadDetalle()
         {
 
             if (_apiService.CheckConnection())
             {
-                await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
                 ConsumoService();
-                await _navigationService.ClearPopupStackAsync();
             }
             else
             {
@@ -113,45 +98,42 @@ namespace lestoma.App.ViewModels.UpasActividades
             {
                 Response response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(URL,
                $"detalle-upas-actividades/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
-                if (!response.IsExito)
+                if (response.IsExito)
                 {
-                    CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
-                    return;
-                }
-                else if (response.Data == null)
-                {
-                    IsVisible = true;
-                    return;
-                }
-                Paginador<DetalleUpaActividadDTO> paginador = (Paginador<DetalleUpaActividadDTO>)response.Data;
-                TotalItems = paginador.TotalDatos;
-                if (paginador.HasNextPage)
-                {
-                    Page += 1;
-                    if (DetalleUpasActividades.Count > 0)
+                    Paginador<DetalleUpaActividadDTO> paginador = (Paginador<DetalleUpaActividadDTO>)response.Data;
+                    TotalItems = paginador.TotalDatos;
+                    if (paginador.HasNextPage)
+                    {
+                        Page += 1;
+                        if (DetalleUpasActividades.Count > 0)
+                        {
+                            foreach (var item in paginador.Datos)
+                            {
+                                DetalleUpasActividades.Add(item);
+                            }
+                        }
+                        else
+                        {
+                            DetalleUpasActividades = new ObservableCollection<DetalleUpaActividadDTO>(paginador.Datos);
+                        }
+                    }
+                    else if (paginador.HasNextPage == false && paginador.HasPreviousPage == false)
                     {
                         foreach (var item in paginador.Datos)
                         {
                             DetalleUpasActividades.Add(item);
                         }
                     }
-                    else
-                    {
-                        DetalleUpasActividades = new ObservableCollection<DetalleUpaActividadDTO>(paginador.Datos);
-                    }
                 }
-                else if (paginador.HasNextPage == false && paginador.HasPreviousPage == false)
+                else
                 {
-                    foreach (var item in paginador.Datos)
-                    {
-                        DetalleUpasActividades.Add(item);
-                    }
+                    AlertWarning(response.Mensaje);
                 }
+
             }
             catch (Exception ex)
             {
-                Response error = JsonConvert.DeserializeObject<Response>(ex.Message);
-                await PopupNavigation.Instance.PushAsync(new MessagePopupPage($"Error {error.StatusCode}: {error.Mensaje}", Constants.ICON_ERROR));
+                SeeError(ex);
             }
 
         }
@@ -162,11 +144,10 @@ namespace lestoma.App.ViewModels.UpasActividades
             return true;
         }
 
-        private async void LoadMoreItems(object obj)
+        private void LoadMoreItems(object obj)
         {
             if (_apiService.CheckConnection())
             {
-                await Task.Delay(1000);
                 AddUpasConActividades();
             }
             else
@@ -181,46 +162,44 @@ namespace lestoma.App.ViewModels.UpasActividades
             {
                 IsBusy = true;
                 Response response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(URL,
-                    $"detalle-upas-actividades/paginar  ", TokenUser.Token);
-                if (!response.IsExito)
+                    $"detalle-upas-actividades/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
+                if (response.IsExito)
                 {
-                    CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
-                    return;
-                }
-                else if (response.Data == null)
-                {
-                    IsVisible = true;
-                    return;
-                }
-                Paginador<DetalleUpaActividadDTO> paginador = (Paginador<DetalleUpaActividadDTO>)response.Data;
-                if (paginador.TotalPages <= 1)
-                {
-                    return;
-                }
-                if (paginador.HasNextPage)
-                {
-
-                    Page += 1;
-                    foreach (var item in paginador.Datos)
+                    Paginador<DetalleUpaActividadDTO> paginador = (Paginador<DetalleUpaActividadDTO>)response.Data;
+                    if (paginador.TotalPages <= 1)
                     {
-                        DetalleUpasActividades.Add(item);
+                        return;
                     }
-
-                }
-                if (DetalleUpasActividades.Count < TotalItems)
-                {
-                    if (paginador.HasPreviousPage == true && paginador.HasNextPage == false)
+                    if (paginador.HasNextPage)
                     {
+
+                        Page += 1;
                         foreach (var item in paginador.Datos)
                         {
                             DetalleUpasActividades.Add(item);
                         }
+
+                    }
+                    if (DetalleUpasActividades.Count < TotalItems)
+                    {
+                        if (paginador.HasPreviousPage == true && paginador.HasNextPage == false)
+                        {
+                            foreach (var item in paginador.Datos)
+                            {
+                                DetalleUpasActividades.Add(item);
+                            }
+                        }
                     }
                 }
+                else
+                {
+                    AlertWarning(response.Mensaje);
+                }
+
             }
             catch (Exception ex)
             {
-                AlertError(ex.Message);
+                SeeError(ex);
             }
             finally
             {

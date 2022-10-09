@@ -25,7 +25,8 @@
                 <Label x:Name="Label_Message" TextColor="Black" FontSize="Medium" HorizontalTextAlignment="Center" 
                        VerticalTextAlignment="Center" FontAttributes="Italic"
                 VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" />
-                <Button x:Name="Button_Salir" HorizontalOptions="CenterAndExpand" Clicked="Button_Salir_Clicked" BackgroundColor="{StaticResource PantoneVerdeDark}" CornerRadius="6" Text="Aceptar" TextColor="White"
+                <Button x:Name="Button_Salir" HorizontalOptions="CenterAndExpand" Clicked="Button_Salir_Clicked" 
+                        BackgroundColor="{StaticResource PantoneVerdeDark}" CornerRadius="6" Text="Aceptar" TextColor="White"
                              VerticalOptions="CenterAndExpand" />
             </StackLayout>
         </cards:SfCardView>

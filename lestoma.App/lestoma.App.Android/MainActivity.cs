@@ -6,6 +6,7 @@ using Plugin.Permissions;
 using Prism;
 using Prism.Ioc;
 using Prism.Plugin.Popups;
+using System.Net;
 
 namespace lestoma.App.Droid
 {
@@ -17,6 +18,8 @@ namespace lestoma.App.Droid
         {
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
+            ServicePointManager.ServerCertificateValidationCallback =
+           (message, certificate, chain, sslPolicyErrors) => true;
             base.OnCreate(savedInstanceState);
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);

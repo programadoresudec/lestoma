@@ -1,9 +1,13 @@
-﻿using lestoma.App.Views.Buzon;
+﻿using lestoma.App.Views;
+using lestoma.App.Views.Buzon;
 using lestoma.App.Views.UpasActividades;
+using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
+using Newtonsoft.Json;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -85,7 +89,7 @@ namespace lestoma.App.ViewModels.Buzon
             catch (Exception ex)
             {
                 IsRunning = false;
-                Debug.WriteLine(ex.Message);
+                SeeError(ex);
             }
         }
 

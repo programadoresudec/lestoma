@@ -2,7 +2,6 @@
 using Java.Util;
 using lestoma.App.Views;
 using lestoma.CommonUtils.Helpers;
-using lestoma.CRC.Helpers;
 using Plugin.Toast;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
@@ -129,7 +128,7 @@ namespace lestoma.App.ViewModels
                         {
 
                             var bytes = new List<byte>();
-                            byte[] bytesMOdbus = CalcularCRCHelper.CalculateCrc16Modbus(Trama);
+                            byte[] bytesMOdbus = new CRCHelper().CalculateCrc16Modbus(Trama);
 
                             var resultado = new List<byte>();
                             resultado.Add(bytesMOdbus.ElementAt(1));

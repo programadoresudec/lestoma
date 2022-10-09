@@ -8,7 +8,7 @@ using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
-using System.Diagnostics;
+using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -40,7 +40,7 @@ namespace lestoma.App.ViewModels.Account
             _navigationService = navigationService;
             _apiService = apiService;
             this.InitializeProperties();
-            this.AddValidationRules();       
+            this.AddValidationRules();
             this.LoginCommand = new Command(this.LoginClicked);
             this.SignUpCommand = new Command(this.SignUpClicked);
         }
@@ -186,15 +186,16 @@ namespace lestoma.App.ViewModels.Account
                             Nombre = Name.Value
                         };
                         Response respuesta = await _apiService.PostAsync(URL, "Account/registro", usuario);
-                        if (!respuesta.IsExito)
+                        if (respuesta.IsExito)
+                        {
+                            AlertSuccess(respuesta.Mensaje);
+                            await _navigationService.GoBackAsync();
+                        }
+                        else
                         {
                             AlertError(respuesta.Mensaje);
-                            await ClosePopup();
-                            return;
                         }
-                        AlertSuccess(respuesta.Mensaje);
-                        await ClosePopup();
-                        await _navigationService.GoBackAsync();
+                        ClosePopup();
                     }
                     else
                     {
@@ -204,8 +205,9 @@ namespace lestoma.App.ViewModels.Account
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
-                AlertError(ex.Message);
+                if (PopupNavigation.Instance.PopupStack.Any())
+                    await PopupNavigation.Instance.PopAsync();
+                SeeError(ex);
             }
         }
 

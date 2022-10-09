@@ -1,8 +1,99 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="http://prismlibrary.com"
+             xmlns:prism="http://prismlibrary.com" xmlns:helper="clr-namespace:lestoma.App.Converters"
+             xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms" 
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="lestoma.App.Views.Usuarios.UserPage">
-  
+             x:Class="lestoma.App.Views.Usuarios.UserPage" Title="Usuarios">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="icon_add_user.png" Command="{Binding AddCommand}"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <helper:InverseBoolConverter x:Key="inverseBoolConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <StackLayout Padding="10">
+        <syncfusion:SfListView x:Name="LV_usuarios" AutoFitMode="DynamicHeight" TapCommand="{Binding EditCommand}"
+                             ItemsSource="{Binding Users}" SelectionBackgroundColor="Transparent">
+            <syncfusion:SfListView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="5,10,5,10" CornerRadius="10" Padding="5" BackgroundColor="{StaticResource PantoneGrisLight}">
+                        <StackLayout Orientation="Vertical" VerticalOptions="Center">
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Nombre Usuario: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" FontAttributes="Bold"/>
+                                        <Span Text="{Binding InfoUser.FullName}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Email: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" FontAttributes="Bold"/>
+                                        <Span Text="{Binding InfoUser.Email}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Rol asignado: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" FontAttributes="Bold"/>
+                                        <Span Text="{Binding InfoUser.Rol.NombreRol}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Estado: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" FontAttributes="Bold"/>
+
+                                        <Span Text="{Binding InfoUser.Estado.NombreEstado}" TextColor="white" BackgroundColor="{Binding ColorEstado}"  FontSize="Small" >
+
+                                        </Span>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Fecha modificación: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" 
+                                              FontAttributes="Bold"/>
+                                        <Span Text="{Binding InfoUser.FechaCreacionServer}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="IP modificación: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" FontAttributes="Bold"/>
+                                        <Span Text="{Binding InfoUser.Ip}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Usuario ultima modificación: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" 
+                                              FontAttributes="Bold"/>
+                                        <Span Text="{Binding InfoUser.Session}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Aplicación ultima modificación: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" 
+                                              FontAttributes="Bold"/>
+                                        <Span Text="{Binding InfoUser.TipoDeAplicacion}" TextColor="Black" FontSize="Small" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </StackLayout>
+                    </Frame>
+                </DataTemplate>
+            </syncfusion:SfListView.ItemTemplate>
+        </syncfusion:SfListView>
+    </StackLayout>
 </ContentPage>

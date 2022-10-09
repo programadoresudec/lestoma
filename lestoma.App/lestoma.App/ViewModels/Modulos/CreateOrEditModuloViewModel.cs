@@ -6,7 +6,6 @@ using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
-using System.Diagnostics;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Modulos
@@ -33,13 +32,12 @@ namespace lestoma.App.ViewModels.Modulos
 
         private async void CreateOrEditarClicked(object obj)
         {
-            Response respuesta = new Response();
+            Response respuesta;
             try
             {
                 CargarDatos();
                 if (_model.AreFieldsValid())
                 {
-                    await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Creando..."));
                     ModuloRequest request = new ModuloRequest
                     {
                         Id = Modulo.Id != Guid.Empty ? Modulo.Id : Guid.Empty,
@@ -47,6 +45,7 @@ namespace lestoma.App.ViewModels.Modulos
                     };
                     if (_apiService.CheckConnection())
                     {
+                        await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Creando..."));
                         if (Modulo.Id == Guid.Empty)
                         {
                             respuesta = await _apiService.PostAsyncWithToken(URL, "modulos/crear", request, TokenUser.Token);
@@ -55,19 +54,19 @@ namespace lestoma.App.ViewModels.Modulos
                         {
                             respuesta = await _apiService.PutAsyncWithToken(URL, "modulos/editar", request, TokenUser.Token);
                         }
-                        if (!respuesta.IsExito)
+                        if (respuesta.IsExito)
                         {
-                            AlertWarning(respuesta.Mensaje);
-                            await ClosePopup();
-                            return;
+                            AlertSuccess(respuesta.Mensaje);
+                            await _navigationService.GoBackAsync(null, useModalNavigation: true, true);
                         }
-                        await ClosePopup();
-                        AlertSuccess(respuesta.Mensaje);
-                        await _navigationService.GoBackAsync(null, useModalNavigation: true, true);
+                        else
+                        {
+                            AlertError(respuesta.Mensaje);
+                        }
+                        ClosePopup();
                     }
                     else
                     {
-                        await ClosePopup();
                         AlertNoInternetConnection();
                     }
                 }
@@ -75,8 +74,8 @@ namespace lestoma.App.ViewModels.Modulos
             }
             catch (Exception ex)
             {
-                await ClosePopup();
-                Debug.WriteLine(ex.Message);
+                await PopupNavigation.Instance.PopAsync();
+                SeeError(ex);
             }
         }
 
