@@ -1,17 +1,15 @@
-﻿using Android.Widget;
-using lestoma.App.Views;
+﻿using lestoma.App.Views;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Newtonsoft.Json;
-using Plugin.Toast;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.UpasActividades
@@ -181,25 +179,13 @@ namespace lestoma.App.ViewModels.UpasActividades
                 {
                     Response response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
                            "actividades/listado-nombres", TokenUser.Token);
-                    if (!response.IsExito)
-                    {
-                        AlertWarning(response.Mensaje);
-                        return;
-                    }
+
                     Response response1 = await _apiService.GetListAsyncWithToken<List<UserDTO>>(URL,
                         "usuarios/activos", TokenUser.Token);
-                    if (!response1.IsExito)
-                    {
-                        AlertWarning(response.Mensaje);
-                        return;
-                    }
+
                     Response response2 = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
                         "upas/listado-nombres", TokenUser.Token);
-                    if (!response2.IsExito)
-                    {
-                        AlertWarning(response.Mensaje);
-                        return;
-                    }
+
                     var listadoActividades = (List<NameDTO>)response.Data;
                     var listadoUsuarios = (List<UserDTO>)response1.Data;
                     var listadoUpas = (List<NameDTO>)response2.Data;
@@ -214,8 +200,8 @@ namespace lestoma.App.ViewModels.UpasActividades
                     {
                         IsVisibleActividades = true;
                         IsEdit = false;
-                        Upa = listadoUpas.Where(x => x.Id == detalleUpaActividad.UpaId).FirstOrDefault();
-                        User = listadoUsuarios.Where(x => x.Id == detalleUpaActividad.UsuarioId).FirstOrDefault();
+                        Upa = Upas.Where(x => x.Id == detalleUpaActividad.UpaId).FirstOrDefault();
+                        User = Usuarios.Where(x => x.Id == detalleUpaActividad.UsuarioId).FirstOrDefault();
                         Response listaActividadesxUser = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
                           $"detalle-upas-actividades/lista-actividades-by-upa-usuario?UpaId={Upa.Id}&UsuarioId={User.Id}", TokenUser.Token);
                         if (listaActividadesxUser.IsExito)
@@ -252,14 +238,12 @@ namespace lestoma.App.ViewModels.UpasActividades
         }
 
 
-        private async void CreateOrEditClicked(object obj)
+        private void CreateOrEditClicked(object obj)
         {
             try
             {
                 if (_apiService.CheckConnection())
                 {
-                    await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-
                     if (DetalleUpaActividad == null)
                     {
                         Crear();
@@ -277,17 +261,13 @@ namespace lestoma.App.ViewModels.UpasActividades
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                SeeError(ex);
             }
-            finally
-            {
-                await _navigationService.ClearPopupStackAsync();
-            }
-
         }
 
         private async void Crear()
         {
+            await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Guardando..."));
             var detalle = new CrearDetalleUpaActividadRequest
             {
                 UpaId = Upa.Id,
@@ -312,10 +292,12 @@ namespace lestoma.App.ViewModels.UpasActividades
             {
                 AlertWarning(response.Mensaje);
             }
+            await PopupNavigation.Instance.PopAsync();
         }
 
         private async void editar()
         {
+            await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Guardando..."));
             var detalle = new CrearDetalleUpaActividadRequest
             {
                 UpaId = Upa.Id,
@@ -340,6 +322,7 @@ namespace lestoma.App.ViewModels.UpasActividades
             {
                 AlertWarning(response.Mensaje);
             }
+            await PopupNavigation.Instance.PopAsync();
         }
     }
 }

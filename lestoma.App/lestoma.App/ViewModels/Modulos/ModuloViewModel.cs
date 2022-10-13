@@ -54,10 +54,13 @@ namespace lestoma.App.ViewModels.Modulos
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
-            ConsumoService(true);
+            if (parameters.ContainsKey("refresh"))
+            {
+                ConsumoService(true);
+            }
         }
 
-       
+
         private async void UpaSelected(object objeto)
         {
             var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
@@ -144,15 +147,16 @@ namespace lestoma.App.ViewModels.Modulos
                         Modulos = new ObservableCollection<ModuloDTO>(listado);
                     }
                 }
-                if (!refresh)
-                    ClosePopup();
             }
             catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
             {
                 if (!refresh)
                     if (PopupNavigation.Instance.PopupStack.Any())
                         await PopupNavigation.Instance.PopAsync();
-                SeeError(ex);
             }
 
         }

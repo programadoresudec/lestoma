@@ -1,8 +1,11 @@
 ﻿using lestoma.App.Models;
 using lestoma.App.Views;
 using lestoma.App.Views.Upas;
+using lestoma.App.Views.Usuarios;
+using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
+using Newtonsoft.Json;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
@@ -25,6 +28,7 @@ namespace lestoma.App.ViewModels.Usuarios
             _apiService = apiService;
             EditCommand = new Command<object>(UserSelected, CanNavigate);
             LoadUsers();
+
         }
 
 
@@ -41,7 +45,7 @@ namespace lestoma.App.ViewModels.Usuarios
             {
                 return new Command(async () =>
                 {
-                    await _navigationService.NavigateAsync(nameof(CreateOrEditUserViewModel), null, useModalNavigation: true, true);
+                    await _navigationService.NavigateAsync($"{nameof(CreateOrEditUserPage)}");
                 });
             }
         }
@@ -51,7 +55,10 @@ namespace lestoma.App.ViewModels.Usuarios
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
-            ConsumoService(true);
+            if (parameters.ContainsKey(Constants.REFRESH))
+            {
+                ConsumoService(true);
+            }
         }
 
 
@@ -74,19 +81,25 @@ namespace lestoma.App.ViewModels.Usuarios
 
         private async void UserSelected(object objeto)
         {
-            var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
-            var infoUser = lista.ItemData as InfoUserModel;
+            try
+            {
+                var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
+                var infoUser = lista.ItemData as InfoUserModel;
 
-            if (infoUser == null)
-                return;
+                if (infoUser == null)
+                    return;
 
-            InfoUserDTO userEdit = infoUser.InfoUser;
-            var parameters = new NavigationParameters
+                string userEdit = JsonConvert.SerializeObject(infoUser.InfoUser);
+                var parameters = new NavigationParameters
             {
                 { "usuario", userEdit }
             };
-            await _navigationService.NavigateAsync(nameof(CreateOrEditUpaPage), parameters, useModalNavigation: true, true);
-
+                await _navigationService.NavigateAsync($"{nameof(CreateOrEditUserPage)}", parameters);
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
         }
 
         private async void ConsumoService(bool refresh = false)
@@ -95,9 +108,9 @@ namespace lestoma.App.ViewModels.Usuarios
             {
                 Users = new ObservableCollection<InfoUserModel>();
                 if (!refresh)
-                    await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
+                    await PopupNavigation.Instance.PushAsync(new LoadingPopupPage());
 
-                Response response = await _apiService.GetListAsyncWithToken<List<ActividadDTO>>(URL, "usuarios/listado", TokenUser.Token);
+                Response response = await _apiService.GetListAsyncWithToken<List<InfoUserDTO>>(URL, "usuarios/listado", TokenUser.Token);
                 if (response.IsExito)
                 {
                     var listado = (List<InfoUserDTO>)response.Data;
@@ -109,6 +122,7 @@ namespace lestoma.App.ViewModels.Usuarios
                             {
                                 InfoUser = item
                             };
+                            Users.Add(info);
                         }
                     }
                 }
@@ -116,12 +130,12 @@ namespace lestoma.App.ViewModels.Usuarios
                 {
                     AlertWarning(response.Mensaje);
                 }
+                if (!refresh)
+                    if (PopupNavigation.Instance.PopupStack.Any())
+                        await PopupNavigation.Instance.PopAllAsync();
             }
             catch (Exception ex)
             {
-                if (!refresh)
-                    if (PopupNavigation.Instance.PopupStack.Any())
-                        await PopupNavigation.Instance.PopAsync();
                 SeeError(ex);
             }
         }

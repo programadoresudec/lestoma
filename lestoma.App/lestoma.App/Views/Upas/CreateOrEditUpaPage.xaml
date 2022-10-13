@@ -18,7 +18,6 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <Grid>
-
             <StackLayout VerticalOptions="Start">
                 <StackLayout BackgroundColor="{StaticResource PantoneVerdeDark}" Orientation="Horizontal">
                     <buttons:SfButton BackgroundColor="Transparent" HorizontalOptions="Start" Margin="10" VerticalOptions="CenterAndExpand"
@@ -62,7 +61,6 @@
                     <!--  nombre upa  -->
 
                     <!--  descripcion upa -->
-
                     <border:SfBorder BackgroundColor="{DynamicResource Gray-White}"
                         BorderColor="{Binding Source={x:Reference DescripcionEntry}, Path=IsFocused, Converter={StaticResource ColorConverter}, ConverterParameter=0}"
                         CornerRadius="4" Style="{StaticResource LoginFormBorderlessEntryBorderStyle}">
@@ -95,8 +93,10 @@
                        Text="{StaticResource Error}" />
                         </Grid>
                     </border:SfBorder>
-
+                    
                     <!--  descripcion upa -->
+                    
+                    
                     <!--  cantidad upa -->
                     <Label 
             x:Name="cantidadValidationLabel"

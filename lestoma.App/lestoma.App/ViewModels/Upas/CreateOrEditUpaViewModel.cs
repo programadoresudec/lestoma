@@ -1,13 +1,13 @@
 ﻿using lestoma.App.Models;
 using lestoma.App.Views;
+using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using Plugin.Toast;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Upas
@@ -24,7 +24,7 @@ namespace lestoma.App.ViewModels.Upas
             _model.AddValidationRules();
             _apiService = apiService;
             _upa = new UpaRequest();
-            CreateOrEditCommand = new Command(CreateOrEditarClicked);
+            CreateOrEditCommand = new Command(CreateOrEditClicked);
         }
         public UpaRequest Upa
         {
@@ -67,7 +67,7 @@ namespace lestoma.App.ViewModels.Upas
             }
         }
 
-        private async void CreateOrEditarClicked(object obj)
+        private async void CreateOrEditClicked(object obj)
         {
             try
             {
@@ -81,48 +81,53 @@ namespace lestoma.App.ViewModels.Upas
                         Descripcion = _model.Descripcion.Value.Trim(),
                         CantidadActividades = (short)Convert.ToInt32(_model.CantidadActividades.Value)
                     };
-                    if (!_apiService.CheckConnection())
-                    {
-                        CrossToastPopUp.Current.ShowToastError("Error no hay conexión a internet.");
-                        return;
-                    }
-                    else
+                    if (_apiService.CheckConnection())
                     {
                         await _navigationService.NavigateAsync($"{nameof(LoadingPopupPage)}");
 
                         if (Upa.Id == Guid.Empty)
                         {
                             Response respuesta = await _apiService.PostAsyncWithToken(URL, "upas/crear", request, TokenUser.Token);
-                            if (!respuesta.IsExito)
+                            if (respuesta.IsExito)
                             {
-                                CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
-                                await _navigationService.ClearPopupStackAsync();
-                                return;
+                                AlertSuccess(respuesta.Mensaje);
+                                var parameters = new NavigationParameters { { Constants.REFRESH, true } };
+                                await _navigationService.GoBackAsync(parameters, useModalNavigation: true, true);
                             }
-                            CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
-                            await Task.Delay(2000);
+                            else
+                            {
+                                AlertWarning(respuesta.Mensaje);
+                            }
                         }
                         else
                         {
                             Response respuesta = await _apiService.PutAsyncWithToken(URL, "upas/editar", request, TokenUser.Token);
-                            if (!respuesta.IsExito)
+                            if (respuesta.IsExito)
                             {
-                                CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
-                                await _navigationService.ClearPopupStackAsync();
-                                return;
+                                AlertSuccess(respuesta.Mensaje);
+                                var parameters = new NavigationParameters { { Constants.REFRESH, true } };
+                                await _navigationService.GoBackAsync(parameters, useModalNavigation: true, true);
                             }
-                            CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
-                            await Task.Delay(2000);
+                            else
+                            {
+                                AlertWarning(respuesta.Mensaje);
+                            }
                         }
-                        await _navigationService.ClearPopupStackAsync();
-                        await _navigationService.GoBackAsync(null, useModalNavigation: true, true);
+                    }
+                    else
+                    {
+                        AlertNoInternetConnection();
                     }
                 }
             }
             catch (Exception ex)
             {
-                await _navigationService.ClearPopupStackAsync();
-                Debug.WriteLine(ex.Message);
+                SeeError(ex);
+            }
+            finally
+            {
+                if (PopupNavigation.Instance.PopupStack.Any())
+                    await PopupNavigation.Instance.PopAsync();
             }
         }
     }

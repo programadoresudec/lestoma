@@ -54,7 +54,10 @@ namespace lestoma.App.ViewModels.Upas
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
-            ConsumoService(true);
+            if (parameters.ContainsKey("refresh"))
+            {
+                ConsumoService(true);
+            }
         }
         private async void UpaSelected(object objeto)
         {
@@ -137,22 +140,21 @@ namespace lestoma.App.ViewModels.Upas
                 {
                     var listado = (List<UpaDTO>)response.Data;
                     Upas = new ObservableCollection<UpaDTO>(listado);
-
-                    if (!refresh)
-                        ClosePopup();
                 }
                 else
                 {
                     AlertWarning(response.Mensaje);
                 }
-
             }
             catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
             {
                 if (!refresh)
                     if (PopupNavigation.Instance.PopupStack.Any())
                         await PopupNavigation.Instance.PopAsync();
-                SeeError(ex);
             }
         }
     }

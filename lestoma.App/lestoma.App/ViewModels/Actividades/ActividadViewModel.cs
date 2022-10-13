@@ -27,7 +27,7 @@ namespace lestoma.App.ViewModels.Actividades
             _navigationService = navigationService;
             _apiService = apiService;
             EditCommand = new Command<object>(ActividadSelected, CanNavigate);
-            LoadActividades();
+            ServiceListadoActividades();
         }
         public Command EditCommand { get; set; }
 
@@ -45,7 +45,10 @@ namespace lestoma.App.ViewModels.Actividades
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
-            ServiceListadoActividades(true);
+            if (parameters.ContainsKey("refresh"))
+            {
+                ServiceListadoActividades(true);
+            }
         }
         public async void DeleteClicked()
         {

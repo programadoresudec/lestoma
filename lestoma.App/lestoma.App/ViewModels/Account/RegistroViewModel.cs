@@ -18,7 +18,7 @@ namespace lestoma.App.ViewModels.Account
     /// ViewModel for sign-up page.
     /// </summary>
     [Preserve(AllMembers = true)]
-    public class RegistroPageViewModel : LoginViewModel
+    public class RegistroViewModel : LoginViewModel
     {
         #region Fields
         private ValidatableObject<string> name;
@@ -31,9 +31,9 @@ namespace lestoma.App.ViewModels.Account
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance for the <see cref="RegistroPageViewModel" /> class.
+        /// Initializes a new instance for the <see cref="RegistroViewModel" /> class.
         /// </summary>
-        public RegistroPageViewModel(INavigationService navigationService, IApiService apiService)
+        public RegistroViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
             Title = "Registrarse";

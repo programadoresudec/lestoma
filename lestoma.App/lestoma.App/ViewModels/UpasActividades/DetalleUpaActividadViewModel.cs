@@ -1,11 +1,14 @@
-﻿using lestoma.App.Views.UpasActividades;
+﻿using lestoma.App.Views;
+using lestoma.App.Views.UpasActividades;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests.Filters;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.UpasActividades
@@ -44,7 +47,14 @@ namespace lestoma.App.ViewModels.UpasActividades
             set => SetProperty(ref _detalleUpaActividad, value);
         }
 
-
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            base.OnNavigatedTo(parameters);
+            if (parameters.ContainsKey("refresh"))
+            {
+                ConsumoService(true);
+            }
+        }
         private bool CanNavigate(object arg)
         {
             return true;
@@ -92,10 +102,12 @@ namespace lestoma.App.ViewModels.UpasActividades
             await _navigationService.NavigateAsync($"{nameof(ActividadesByUsuarioPopupPage)}", parameters);
         }
 
-        private async void ConsumoService()
+        private async void ConsumoService(bool refresh = false)
         {
             try
             {
+                if (!refresh)
+                    await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
                 Response response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(URL,
                $"detalle-upas-actividades/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
                 if (response.IsExito)
@@ -134,6 +146,12 @@ namespace lestoma.App.ViewModels.UpasActividades
             catch (Exception ex)
             {
                 SeeError(ex);
+            }
+            finally
+            {
+                if (!refresh)
+                    if (PopupNavigation.Instance.PopupStack.Any())
+                        await PopupNavigation.Instance.PopAsync();
             }
 
         }

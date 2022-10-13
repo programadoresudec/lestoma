@@ -31,7 +31,6 @@
         <AbsoluteLayout>
             <Grid>
                 <gradient:SfGradientView Style="{StaticResource BlueGradientStyle}" />
-
                 <ScrollView HorizontalOptions="Center">
                     <ScrollView.VerticalOptions>
                         <OnIdiom

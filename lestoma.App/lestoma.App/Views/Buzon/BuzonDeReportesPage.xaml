@@ -8,10 +8,19 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="lestoma.App.Views.Buzon.BuzonDeReportesPage"
                Title="{Binding Title}">
-    <AbsoluteLayout>
-        <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
-                     AbsoluteLayout.LayoutFlags="All" 
-                     Padding="5">
+    <Grid>
+        <Grid Opacity=".8" BackgroundColor="Black" IsVisible="{Binding IsBusy}">
+            <busyindicator:SfBusyIndicator AnimationType="Gear" 
+                	                   BackgroundColor="{StaticResource PantoneGrisLight}"
+                	                   HorizontalOptions="Center"
+                	                   TextColor="Black"
+                	                   IsBusy="{Binding IsBusy}"
+                	                   Title="Cargando..."
+                	                   VerticalOptions="Center"
+                	                   ViewBoxWidth="80"
+                	                   ViewBoxHeight="80" />
+        </Grid>
+        <StackLayout Padding="5">
             <syncfusion:SfListView x:Name="LV_Buzon"   
                              LoadMoreOption="Auto" SwipeOffset="100"
                               AutoFitMode="DynamicHeight" LoadMoreCommandParameter="{Binding Source={x:Reference Name=LV_Buzon}}"
@@ -92,16 +101,5 @@
                 </syncfusion:SfListView.ItemTemplate>
             </syncfusion:SfListView>
         </StackLayout>
-        <busyindicator:SfBusyIndicator AnimationType="Gear" 
-                                       AbsoluteLayout.LayoutBounds=".5,.5,.5,.5"
-                	                   AbsoluteLayout.LayoutFlags="All"
-                	                   BackgroundColor="LightCyan"
-                	                   HorizontalOptions="Center"
-                	                   TextColor="Black"
-                	                   IsBusy="{Binding IsRunning}"
-                	                   Title="Cargando..."
-                	                   VerticalOptions="Center"
-                	                   ViewBoxWidth="80"
-                	                   ViewBoxHeight="80" />
-    </AbsoluteLayout>
+    </Grid>
 </ContentPage>

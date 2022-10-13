@@ -1,16 +1,10 @@
-﻿using lestoma.App.Views;
-using lestoma.App.Views.Buzon;
-using lestoma.App.Views.UpasActividades;
-using lestoma.CommonUtils.Constants;
+﻿using lestoma.App.Views.Buzon;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
-using Newtonsoft.Json;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Buzon
@@ -18,7 +12,6 @@ namespace lestoma.App.ViewModels.Buzon
     public class BuzonDeReportesViewModel : BaseViewModel
     {
         private readonly IApiService _apiService;
-        private bool _isRunning;
         private ObservableCollection<BuzonDTO> _reportesDelBuzon;
         private Command<object> itemTap;
         public BuzonDeReportesViewModel(INavigationService navigationService, IApiService apiService)
@@ -35,11 +28,7 @@ namespace lestoma.App.ViewModels.Buzon
             get => _reportesDelBuzon;
             set => SetProperty(ref _reportesDelBuzon, value);
         }
-        public bool IsRunning
-        {
-            get => _isRunning;
-            set => SetProperty(ref _isRunning, value);
-        }
+
         public Command<object> SeeMoreInfoCommand
         {
             get => itemTap;
@@ -69,7 +58,7 @@ namespace lestoma.App.ViewModels.Buzon
             {
                 if (_apiService.CheckConnection())
                 {
-                    IsRunning = true;
+                    IsBusy = true;
                     Response response = await _apiService.GetPaginadoAsyncWithToken<BuzonDTO>(URL,
                         $"buzon-de-reportes/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
                     if (!response.IsExito)
@@ -79,7 +68,6 @@ namespace lestoma.App.ViewModels.Buzon
                     }
                     Paginador<BuzonDTO> paginador = (Paginador<BuzonDTO>)response.Data;
                     ReportesDelBuzon = new ObservableCollection<BuzonDTO>(paginador.Datos);
-                    IsRunning = false;
                 }
                 else
                 {
@@ -88,8 +76,11 @@ namespace lestoma.App.ViewModels.Buzon
             }
             catch (Exception ex)
             {
-                IsRunning = false;
                 SeeError(ex);
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 
