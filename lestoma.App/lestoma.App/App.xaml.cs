@@ -2,6 +2,7 @@ using lestoma.App.ViewModels;
 using lestoma.App.ViewModels.Account;
 using lestoma.App.ViewModels.Actividades;
 using lestoma.App.ViewModels.Buzon;
+using lestoma.App.ViewModels.Componentes;
 using lestoma.App.ViewModels.Modulos;
 using lestoma.App.ViewModels.Reportes;
 using lestoma.App.ViewModels.Reportes.SuperAdmin;
@@ -12,6 +13,7 @@ using lestoma.App.Views;
 using lestoma.App.Views.Account;
 using lestoma.App.Views.Actividades;
 using lestoma.App.Views.Buzon;
+using lestoma.App.Views.Componentes;
 using lestoma.App.Views.Modulos;
 using lestoma.App.Views.Reportes;
 using lestoma.App.Views.Reportes.SuperAdmin;
@@ -118,6 +120,8 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<MessagePopupPage>();
             #endregion
 
+            containerRegistry.RegisterForNavigation<ComponentPage, ComponentViewModel>();
+            containerRegistry.RegisterForNavigation<CreateOrEditComponentPage, CreateOrEditComponentViewModel>();
         }
     }
 }
