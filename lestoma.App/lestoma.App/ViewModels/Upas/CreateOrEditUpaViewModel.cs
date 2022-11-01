@@ -87,30 +87,30 @@ namespace lestoma.App.ViewModels.Upas
 
                         if (Upa.Id == Guid.Empty)
                         {
-                            Response respuesta = await _apiService.PostAsyncWithToken(URL, "upas/crear", request, TokenUser.Token);
+                            ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL, "upas/crear", request, TokenUser.Token);
                             if (respuesta.IsExito)
                             {
-                                AlertSuccess(respuesta.Mensaje);
+                                AlertSuccess(respuesta.MensajeHttp);
                                 var parameters = new NavigationParameters { { Constants.REFRESH, true } };
                                 await _navigationService.GoBackAsync(parameters, useModalNavigation: true, true);
                             }
                             else
                             {
-                                AlertWarning(respuesta.Mensaje);
+                                AlertWarning(respuesta.MensajeHttp);
                             }
                         }
                         else
                         {
-                            Response respuesta = await _apiService.PutAsyncWithToken(URL, "upas/editar", request, TokenUser.Token);
+                            ResponseDTO respuesta = await _apiService.PutAsyncWithToken(URL, "upas/editar", request, TokenUser.Token);
                             if (respuesta.IsExito)
                             {
-                                AlertSuccess(respuesta.Mensaje);
+                                AlertSuccess(respuesta.MensajeHttp);
                                 var parameters = new NavigationParameters { { Constants.REFRESH, true } };
                                 await _navigationService.GoBackAsync(parameters, useModalNavigation: true, true);
                             }
                             else
                             {
-                                AlertWarning(respuesta.Mensaje);
+                                AlertWarning(respuesta.MensajeHttp);
                             }
                         }
                     }

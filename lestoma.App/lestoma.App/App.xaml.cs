@@ -106,7 +106,7 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<DetalleUpaActividadPage, DetalleUpaActividadViewModel>();
             containerRegistry.RegisterForNavigation<CreateOrEditUpaPage, CreateOrEditUpaViewModel>();
             containerRegistry.RegisterForNavigation<CreateOrEditDetalleUpaActividadPage, CreateOrEditDetalleUpaActividadViewModel>();
-            containerRegistry.RegisterForNavigation<OnBoardingPage, OnBoardingPageViewModel>();
+            containerRegistry.RegisterForNavigation<OnBoardingPage, OnBoardingViewModel>();
             containerRegistry.RegisterForNavigation<ModeOfflinePage, ModeOfflinePageViewModel>();
             containerRegistry.RegisterForNavigation<ModuloPage, ModuloViewModel>();
             containerRegistry.RegisterForNavigation<CreateOrEditModuloPage, CreateOrEditModuloViewModel>();
@@ -117,11 +117,14 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<UserPage, UserViewModel>();
             containerRegistry.RegisterForNavigation<CreateOrEditUserPage, CreateOrEditUserViewModel>();
             containerRegistry.RegisterForNavigation<MoreInfoPopupPage, MoreInfoPopupPageViewModel>();
-            containerRegistry.RegisterForNavigation<MessagePopupPage>();
-            #endregion
 
             containerRegistry.RegisterForNavigation<ComponentPage, ComponentViewModel>();
             containerRegistry.RegisterForNavigation<CreateOrEditComponentPage, CreateOrEditComponentViewModel>();
+            containerRegistry.RegisterForNavigation<MessagePopupPage>();
+            containerRegistry.RegisterForNavigation<DashboardHangFirePage, DashboardHangfireViewModel>();
+            #endregion
+
+
         }
     }
 }

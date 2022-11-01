@@ -103,6 +103,4 @@
             </syncfusion:SfListView>
         </StackLayout>
     </Grid>
-    
-  
 </ContentPage>

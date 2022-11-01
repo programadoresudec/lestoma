@@ -142,15 +142,15 @@ namespace lestoma.App.ViewModels.Account
                             OldPassword = this.CurrentPassword.Value,
                             NewPassword = this.Password.Item1.Value
                         };
-                        Response respuesta = await _apiService.PostAsyncWithToken(URL, "Account/changepassword", cambio, UserApp.Token);
+                        ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL, "Account/changepassword", cambio, UserApp.Token);
                         if (respuesta.IsExito)
                         {
-                            AlertSuccess(respuesta.Mensaje);
+                            AlertSuccess(respuesta.MensajeHttp);
                             await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(SettingsPage)}");
                         }
                         else
                         {
-                            AlertError(respuesta.Mensaje);
+                            AlertError(respuesta.MensajeHttp);
                         }
                         ClosePopup();
                     }

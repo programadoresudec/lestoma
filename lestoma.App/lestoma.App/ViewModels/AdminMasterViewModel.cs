@@ -123,6 +123,12 @@ namespace lestoma.App.ViewModels
                         Icon = "icon_generate_report",
                         PageName = $"{nameof(MenuReportsPage)}",
                         Title = "Generación de reportes"
+                    },
+                     new Menu
+                    {
+                        Icon = "icon_dashboard",
+                        PageName = $"{nameof(DashboardHangFirePage)}",
+                        Title = "Dashboard-HangFire"
                     }
                 };
                 menus.AddRange(menuSuperAdmin);

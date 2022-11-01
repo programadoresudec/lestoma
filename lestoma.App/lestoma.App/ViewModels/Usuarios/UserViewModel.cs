@@ -18,13 +18,11 @@ namespace lestoma.App.ViewModels.Usuarios
 {
     public class UserViewModel : BaseViewModel
     {
-        private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         private ObservableCollection<InfoUserModel> _usuarios;
         public UserViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
-            _navigationService = navigationService;
             _apiService = apiService;
             EditCommand = new Command<object>(UserSelected, CanNavigate);
             LoadUsers();
@@ -110,7 +108,7 @@ namespace lestoma.App.ViewModels.Usuarios
                 if (!refresh)
                     await PopupNavigation.Instance.PushAsync(new LoadingPopupPage());
 
-                Response response = await _apiService.GetListAsyncWithToken<List<InfoUserDTO>>(URL, "usuarios/listado", TokenUser.Token);
+                ResponseDTO response = await _apiService.GetListAsyncWithToken<List<InfoUserDTO>>(URL, "usuarios/listado", TokenUser.Token);
                 if (response.IsExito)
                 {
                     var listado = (List<InfoUserDTO>)response.Data;
@@ -128,7 +126,7 @@ namespace lestoma.App.ViewModels.Usuarios
                 }
                 else
                 {
-                    AlertWarning(response.Mensaje);
+                    AlertWarning(response.MensajeHttp);
                 }
                 if (!refresh)
                     if (PopupNavigation.Instance.PopupStack.Any())

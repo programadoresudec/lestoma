@@ -132,15 +132,15 @@ namespace lestoma.App.ViewModels.Buzon
             };
 
             string url = App.Current.Resources["UrlAPI"].ToString();
-            Response respuesta = await _apiService.PostAsyncWithToken(url, "buzon-de-reportes/create", buzon, UserApp.Token);
+            ResponseDTO respuesta = await _apiService.PostAsyncWithToken(url, "buzon-de-reportes/create", buzon, UserApp.Token);
             IsRunning = false;
             IsEnabled = true;
             if (!respuesta.IsExito)
             {
-                CrossToastPopUp.Current.ShowToastError("Error " + respuesta.Mensaje);
+                CrossToastPopUp.Current.ShowToastError("Error " + respuesta.MensajeHttp);
                 return;
             }
-            CrossToastPopUp.Current.ShowToastSuccess(respuesta.Mensaje);
+            CrossToastPopUp.Current.ShowToastSuccess(respuesta.MensajeHttp);
             await Task.Delay(2000);
             await _navigationService.NavigateAsync($"{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
         }

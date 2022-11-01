@@ -9,12 +9,12 @@ using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels
 {
-    public class OnBoardingPageViewModel : BaseViewModel
+    public class OnBoardingViewModel : BaseViewModel
     {
         private ObservableCollection<OnboardingModel> items;
         private int position;
         private string skipButtonText;
-        public OnBoardingPageViewModel(INavigationService navigationService)
+        public OnBoardingViewModel(INavigationService navigationService)
             : base(navigationService)
         {
             SetSkipButtonText("SALTAR");

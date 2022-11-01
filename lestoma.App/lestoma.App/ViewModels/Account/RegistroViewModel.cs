@@ -185,15 +185,15 @@ namespace lestoma.App.ViewModels.Account
                             Apellido = LastName.Value,
                             Nombre = Name.Value
                         };
-                        Response respuesta = await _apiService.PostAsync(URL, "Account/registro", usuario);
+                        ResponseDTO respuesta = await _apiService.PostAsync(URL, "Account/registro", usuario);
                         if (respuesta.IsExito)
                         {
-                            AlertSuccess(respuesta.Mensaje);
+                            AlertSuccess(respuesta.MensajeHttp);
                             await _navigationService.GoBackAsync();
                         }
                         else
                         {
-                            AlertError(respuesta.Mensaje);
+                            AlertError(respuesta.MensajeHttp);
                         }
                         ClosePopup();
                     }

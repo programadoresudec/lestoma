@@ -102,15 +102,15 @@ namespace lestoma.App.ViewModels.Modulos
                     if (_apiService.CheckConnection())
                     {
                         await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-                        Response response = await _apiService.DeleteAsyncWithToken(URL,
+                        ResponseDTO response = await _apiService.DeleteAsyncWithToken(URL,
                             "modulos", ItemDelete.Id, TokenUser.Token);
                         if (!response.IsExito)
                         {
 
-                            CrossToastPopUp.Current.ShowToastError($"ERROR: {response.Mensaje}", Plugin.Toast.Abstractions.ToastLength.Long);
+                            CrossToastPopUp.Current.ShowToastError($"ERROR: {response.MensajeHttp}", Plugin.Toast.Abstractions.ToastLength.Long);
                             return;
                         }
-                        CrossToastPopUp.Current.ShowToastSuccess($"{response.Mensaje}", Plugin.Toast.Abstractions.ToastLength.Long);
+                        CrossToastPopUp.Current.ShowToastSuccess($"{response.MensajeHttp}", Plugin.Toast.Abstractions.ToastLength.Long);
 
                     }
                     else
@@ -137,7 +137,7 @@ namespace lestoma.App.ViewModels.Modulos
                     await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
 
                 Modulos = new ObservableCollection<ModuloDTO>();
-                Response response = await _apiService.GetListAsyncWithToken<List<ModuloDTO>>(URL,
+                ResponseDTO response = await _apiService.GetListAsyncWithToken<List<ModuloDTO>>(URL,
                     $"modulos/listado", TokenUser.Token);
                 if (response.IsExito)
                 {
