@@ -241,7 +241,9 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\icon_delete.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\icon_dashboard.png" />
+  </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\icon_leftarrow.png" />
   </ItemGroup>

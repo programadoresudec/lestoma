@@ -125,6 +125,12 @@ namespace lestoma.App.ViewModels
                             Icon =  "icon_detalles",
                             PageName = $"{nameof(DetalleUpaActividadPage)}",
                             Title = "Detalle de upas con actividades"
+                        },
+                         new Menu
+                        {
+                            Icon = "icon_dashboard",
+                            PageName = $"{nameof(DashboardHangFirePage)}",
+                            Title = "Dashboard-HangFire"
                         }
                     };
                     menus.AddRange(menuSuperAdmin);

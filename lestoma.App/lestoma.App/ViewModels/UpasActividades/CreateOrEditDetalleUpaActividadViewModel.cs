@@ -16,7 +16,6 @@ namespace lestoma.App.ViewModels.UpasActividades
 {
     public class CreateOrEditDetalleUpaActividadViewModel : BaseViewModel
     {
-        private INavigationService _navigationService;
         private IApiService _apiService;
 
         private ObservableCollection<UserDTO> _users;
@@ -31,7 +30,6 @@ namespace lestoma.App.ViewModels.UpasActividades
         public CreateOrEditDetalleUpaActividadViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
-            _navigationService = navigationService;
             _apiService = apiService;
             _users = new ObservableCollection<UserDTO>();
             _upas = new ObservableCollection<NameDTO>();

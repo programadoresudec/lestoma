@@ -18,13 +18,11 @@ namespace lestoma.App.ViewModels.Usuarios
 {
     public class UserViewModel : BaseViewModel
     {
-        private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         private ObservableCollection<InfoUserModel> _usuarios;
         public UserViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
-            _navigationService = navigationService;
             _apiService = apiService;
             EditCommand = new Command<object>(UserSelected, CanNavigate);
             LoadUsers();

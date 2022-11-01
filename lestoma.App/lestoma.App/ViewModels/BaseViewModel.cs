@@ -1,5 +1,4 @@
 ﻿using Android.Bluetooth;
-using Android.OS;
 using lestoma.App.Views;
 using lestoma.App.Views.Account;
 using lestoma.CommonUtils.Constants;
@@ -17,7 +16,6 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
