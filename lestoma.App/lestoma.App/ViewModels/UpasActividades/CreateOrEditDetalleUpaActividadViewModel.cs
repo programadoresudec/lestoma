@@ -177,13 +177,13 @@ namespace lestoma.App.ViewModels.UpasActividades
             {
                 if (_apiService.CheckConnection())
                 {
-                    Response response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
+                    ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
                            "actividades/listado-nombres", TokenUser.Token);
 
-                    Response response1 = await _apiService.GetListAsyncWithToken<List<UserDTO>>(URL,
+                    ResponseDTO response1 = await _apiService.GetListAsyncWithToken<List<UserDTO>>(URL,
                         "usuarios/activos", TokenUser.Token);
 
-                    Response response2 = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
+                    ResponseDTO response2 = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
                         "upas/listado-nombres", TokenUser.Token);
 
                     var listadoActividades = (List<NameDTO>)response.Data;
@@ -202,7 +202,7 @@ namespace lestoma.App.ViewModels.UpasActividades
                         IsEdit = false;
                         Upa = Upas.Where(x => x.Id == detalleUpaActividad.UpaId).FirstOrDefault();
                         User = Usuarios.Where(x => x.Id == detalleUpaActividad.UsuarioId).FirstOrDefault();
-                        Response listaActividadesxUser = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
+                        ResponseDTO listaActividadesxUser = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
                           $"detalle-upas-actividades/lista-actividades-by-upa-usuario?UpaId={Upa.Id}&UsuarioId={User.Id}", TokenUser.Token);
                         if (listaActividadesxUser.IsExito)
                         {
@@ -285,12 +285,12 @@ namespace lestoma.App.ViewModels.UpasActividades
             var response = await _apiService.PostAsyncWithToken(URL, "detalle-upas-actividades/crear", detalle, TokenUser.Token);
             if (response.IsExito)
             {
-                AlertSuccess(response.Mensaje);
+                AlertSuccess(response.MensajeHttp);
                 await _navigationService.GoBackAsync();
             }
             else
             {
-                AlertWarning(response.Mensaje);
+                AlertWarning(response.MensajeHttp);
             }
             await PopupNavigation.Instance.PopAsync();
         }
@@ -315,12 +315,12 @@ namespace lestoma.App.ViewModels.UpasActividades
             var response = await _apiService.PutAsyncWithToken(URL, "detalle-upas-actividades/editar", detalle, TokenUser.Token);
             if (response.IsExito)
             {
-                AlertSuccess(response.Mensaje);
+                AlertSuccess(response.MensajeHttp);
                 await _navigationService.GoBackAsync();
             }
             else
             {
-                AlertWarning(response.Mensaje);
+                AlertWarning(response.MensajeHttp);
             }
             await PopupNavigation.Instance.PopAsync();
         }

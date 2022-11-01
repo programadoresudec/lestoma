@@ -107,14 +107,14 @@ namespace lestoma.App.ViewModels.Upas
                         return;
                     }
                     await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-                    Response response = await _apiService.DeleteAsyncWithToken(URL,
+                    ResponseDTO response = await _apiService.DeleteAsyncWithToken(URL,
                         "upas", ItemDelete.Id, TokenUser.Token);
                     if (!response.IsExito)
                     {
-                        CrossToastPopUp.Current.ShowToastError("Error " + response.Mensaje);
+                        CrossToastPopUp.Current.ShowToastError("Error " + response.MensajeHttp);
                         return;
                     }
-                    CrossToastPopUp.Current.ShowToastSuccess(response.Mensaje);
+                    CrossToastPopUp.Current.ShowToastSuccess(response.MensajeHttp);
                 }
                 catch (Exception ex)
                 {
@@ -134,7 +134,7 @@ namespace lestoma.App.ViewModels.Upas
                     await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
 
                 Upas = new ObservableCollection<UpaDTO>();
-                Response response = await _apiService.GetListAsyncWithToken<List<UpaDTO>>(URL,
+                ResponseDTO response = await _apiService.GetListAsyncWithToken<List<UpaDTO>>(URL,
                     $"upas/listado", TokenUser.Token);
                 if (response.IsExito)
                 {
@@ -143,7 +143,7 @@ namespace lestoma.App.ViewModels.Upas
                 }
                 else
                 {
-                    AlertWarning(response.Mensaje);
+                    AlertWarning(response.MensajeHttp);
                 }
             }
             catch (Exception ex)

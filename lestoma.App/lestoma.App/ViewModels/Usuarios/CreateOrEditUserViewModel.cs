@@ -289,16 +289,16 @@ namespace lestoma.App.ViewModels.Usuarios
                                 EstadoId = EstadoActual.Id,
                                 RolId = RolActual.Id
                             };
-                            Response respuesta = await _apiService.PostAsyncWithToken(URL, "usuarios/crear", request, TokenUser.Token);
+                            ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL, "usuarios/crear", request, TokenUser.Token);
                             if (respuesta.IsExito)
                             {
-                                AlertSuccess(respuesta.Mensaje);
+                                AlertSuccess(respuesta.MensajeHttp);
                                 var parameters = new NavigationParameters { { Constants.REFRESH, true } };
                                 await _navigationService.GoBackAsync(parameters);
                             }
                             else
                             {
-                                AlertWarning(respuesta.Mensaje);
+                                AlertWarning(respuesta.MensajeHttp);
                             }
                         }
                         else
@@ -311,16 +311,16 @@ namespace lestoma.App.ViewModels.Usuarios
                                 EstadoId = EstadoActual.Id,
                                 RolId = RolActual.Id
                             };
-                            Response respuesta = await _apiService.PutAsyncWithToken(URL, "usuarios/editar", request, TokenUser.Token);
+                            ResponseDTO respuesta = await _apiService.PutAsyncWithToken(URL, "usuarios/editar", request, TokenUser.Token);
                             if (respuesta.IsExito)
                             {
-                                AlertSuccess(respuesta.Mensaje);
+                                AlertSuccess(respuesta.MensajeHttp);
                                 var parameters = new NavigationParameters { { Constants.REFRESH, true } };
                                 await _navigationService.GoBackAsync(parameters);
                             }
                             else
                             {
-                                AlertWarning(respuesta.Mensaje);
+                                AlertWarning(respuesta.MensajeHttp);
                             }
                         }
                     }
@@ -350,10 +350,10 @@ namespace lestoma.App.ViewModels.Usuarios
                 if (_apiService.CheckConnection())
                 {
 
-                    Response roles = await _apiService.GetListAsyncWithToken<List<RolDTO>>(URL,
+                    ResponseDTO roles = await _apiService.GetListAsyncWithToken<List<RolDTO>>(URL,
                            "usuarios/listado-roles", TokenUser.Token);
                     Roles = new ObservableCollection<RolDTO>((List<RolDTO>)roles.Data);
-                    Response estados = await _apiService.GetListAsyncWithToken<List<EstadoDTO>>(URL,
+                    ResponseDTO estados = await _apiService.GetListAsyncWithToken<List<EstadoDTO>>(URL,
                         "usuarios/listado-estados", TokenUser.Token);
                     Estados = new ObservableCollection<EstadoDTO>((List<EstadoDTO>)estados.Data);
                     if (infoUser != null)

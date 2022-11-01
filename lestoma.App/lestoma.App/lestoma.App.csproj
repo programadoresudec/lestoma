@@ -213,6 +213,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ViewModels\Laboratorio\" />
     <Folder Include="ViewModels\Reportes\Admin\" />
     <Folder Include="Views\Reportes\Admin\" />
   </ItemGroup>

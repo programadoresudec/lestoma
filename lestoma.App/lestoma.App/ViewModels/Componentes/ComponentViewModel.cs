@@ -1,12 +1,16 @@
-﻿using lestoma.App.Views.Componentes;
+﻿using lestoma.App.Views;
+using lestoma.App.Views.Componentes;
 using lestoma.App.Views.Modulos;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Prism.Mvvm;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Componentes
@@ -29,7 +33,14 @@ namespace lestoma.App.ViewModels.Componentes
         {
             return true;
         }
-
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            base.OnNavigatedTo(parameters);
+            if (parameters.ContainsKey("refresh"))
+            {
+                ConsumoService(true);
+            }
+        }
 
         public ObservableCollection<ListadoComponenteDTO> Componentes
         {
@@ -45,7 +56,7 @@ namespace lestoma.App.ViewModels.Componentes
             {
                 return new Command(async () =>
                 {
-                    await _navigationService.NavigateAsync(nameof(CreateOrEditModuloPage), null, useModalNavigation: true, true);
+                    await _navigationService.NavigateAsync(nameof(CreateOrEditComponentPage), null, useModalNavigation: true, true);
                 });
             }
         }
@@ -79,9 +90,35 @@ namespace lestoma.App.ViewModels.Componentes
             }
         }
 
-        private void ConsumoService()
+        private async void ConsumoService(bool refresh = false)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (!refresh)
+                    await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
+
+                Componentes = new ObservableCollection<ListadoComponenteDTO>();
+                ResponseDTO response = await _apiService.GetListAsyncWithToken<List<ListadoComponenteDTO>>(URL,
+                    $"componentes/", TokenUser.Token);
+                if (response.IsExito)
+                {
+                    var listado = (List<ListadoComponenteDTO>)response.Data;
+                    if (listado.Count > 0)
+                    {
+                        Componentes = new ObservableCollection<ListadoComponenteDTO>(listado);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
+            {
+                if (!refresh)
+                    if (PopupNavigation.Instance.PopupStack.Any())
+                        await PopupNavigation.Instance.PopAsync();
+            }
         }
     }
 }

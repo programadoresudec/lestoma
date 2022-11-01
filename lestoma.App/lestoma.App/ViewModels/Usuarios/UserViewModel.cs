@@ -110,7 +110,7 @@ namespace lestoma.App.ViewModels.Usuarios
                 if (!refresh)
                     await PopupNavigation.Instance.PushAsync(new LoadingPopupPage());
 
-                Response response = await _apiService.GetListAsyncWithToken<List<InfoUserDTO>>(URL, "usuarios/listado", TokenUser.Token);
+                ResponseDTO response = await _apiService.GetListAsyncWithToken<List<InfoUserDTO>>(URL, "usuarios/listado", TokenUser.Token);
                 if (response.IsExito)
                 {
                     var listado = (List<InfoUserDTO>)response.Data;
@@ -128,7 +128,7 @@ namespace lestoma.App.ViewModels.Usuarios
                 }
                 else
                 {
-                    AlertWarning(response.Mensaje);
+                    AlertWarning(response.MensajeHttp);
                 }
                 if (!refresh)
                     if (PopupNavigation.Instance.PopupStack.Any())
@@ -139,6 +139,5 @@ namespace lestoma.App.ViewModels.Usuarios
                 SeeError(ex);
             }
         }
-
     }
 }

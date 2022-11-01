@@ -3,6 +3,7 @@ using lestoma.App.Views;
 using lestoma.App.Views.Account;
 using lestoma.App.Views.Actividades;
 using lestoma.App.Views.Buzon;
+using lestoma.App.Views.Componentes;
 using lestoma.App.Views.Modulos;
 using lestoma.App.Views.Reportes;
 using lestoma.App.Views.Upas;
@@ -16,6 +17,7 @@ using Prism.Navigation;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Xamarin.Essentials;
 
 namespace lestoma.App.ViewModels
 {
@@ -52,7 +54,7 @@ namespace lestoma.App.ViewModels
         }
         private void LoadMenus()
         {
-            List<Menu> menus = new List<Menu>
+            List<Menu> menus = new List<Menu>()
             {
                 new Menu
                 {
@@ -60,76 +62,78 @@ namespace lestoma.App.ViewModels
                     PageName = $"{nameof(AboutPage)}",
                     Title = "acerca de lestoma"
                 },
-
                 new Menu
                 {
                     Icon = "icon_acuaponic",
                     PageName = UserApp.RolId == (int)TipoRol.Administrador ? $"{nameof(AboutPage)}" : $"{nameof(AboutPage)}",
                     Title = "Laboratorio lestoma"
-                },
-                new Menu
+                }
+            };
+
+            if (Connectivity.NetworkAccess == NetworkAccess.Internet)
+            {
+                menus.Add(new Menu
                 {
                     Icon = UserApp.RolId == (int)TipoRol.Administrador ? "icon_buzon" : "icon_crear_reporte",
                     PageName = UserApp.RolId == (int)TipoRol.Administrador || UserApp.RolId == (int)TipoRol.SuperAdministrador
-                    ? $"{nameof(BuzonDeReportesPage)}" : $"{nameof(CrearReporteDelBuzonPage)}",
-                    Title = UserApp.RolId == (int)TipoRol.Administrador || UserApp.RolId == (int)TipoRol.SuperAdministrador  ? "Buzon De Reportes"
-                    : "Crear Reporte"
-                },
-
-            };
-
-            if (UserApp.RolId == (int)TipoRol.SuperAdministrador)
-            {
-                List<Menu> menuSuperAdmin = new List<Menu>
+                         ? $"{nameof(BuzonDeReportesPage)}" : $"{nameof(CrearReporteDelBuzonPage)}",
+                    Title = UserApp.RolId == (int)TipoRol.Administrador || UserApp.RolId == (int)TipoRol.SuperAdministrador ? "Buzon De Reportes"
+                         : "Crear Reporte"
+                });
+                if (UserApp.RolId == (int)TipoRol.SuperAdministrador)
                 {
-                    new Menu
+                    List<Menu> menuSuperAdmin = new List<Menu>
                     {
-                        Icon =  "icon_users",
-                        PageName = $"{nameof(UserPage)}",
-                        Title = "Usuarios"
-                    },
-                    new Menu
-                    {
-                        Icon =  "icon_actividad",
-                        PageName = $"{nameof(ActividadPage)}",
-                        Title = "Actividades"
-                    },
-                     new Menu
-                    {
-                        Icon =  "icon_module",
-                        PageName = $"{nameof(ModuloPage)}",
-                        Title = "Modulos"
-                    },
-                      new Menu
-                    {
-                        Icon =  "",
-                        PageName = $"{nameof(MandarTramar)}",
-                        Title = "Mandar trama"
-                    },
-                    new Menu
-                    {
-                        Icon = "icon_upa",
-                        PageName = $"{nameof(UpaPage)}",
-                        Title = "Upas"
-                    },
-                     new Menu
-                    {
-                        Icon =  "icon_detalles",
-                        PageName = $"{nameof(DetalleUpaActividadPage)}",
-                        Title = "Detalle de upas con actividades"
-                    },
-                     new Menu
-                    {
-                        Icon = "icon_generate_report",
-                        PageName = $"{nameof(MenuReportsPage)}",
-                        Title = "Generación de reportes"
-                    }
-                };
-                menus.AddRange(menuSuperAdmin);
-            }
+                        new Menu
+                        {
+                            Icon =  "icon_users",
+                            PageName = $"{nameof(UserPage)}",
+                            Title = "Usuarios"
+                        },
+                        new Menu
+                        {
+                            Icon =  "icon_actividad",
+                            PageName = $"{nameof(ActividadPage)}",
+                            Title = "Actividades"
+                        },
+                        new Menu
+                        {
+                            Icon =  "icon_module",
+                            PageName = $"{nameof(ModuloPage)}",
+                            Title = "Modulos"
+                        },
+                        new Menu
+                        {
+                            Icon =  "icon_component",
+                            PageName = $"{nameof(ComponentPage)}",
+                            Title = "Componentes"
+                        },
+                        new Menu
+                        {
+                            Icon =  "",
+                            PageName = $"{nameof(MandarTramar)}",
+                            Title = "Mandar trama"
+                        },
+                        new Menu
+                        {
+                            Icon = "icon_upa",
+                            PageName = $"{nameof(UpaPage)}",
+                            Title = "Upas"
+                        },
+                        new Menu
+                        {
+                            Icon =  "icon_detalles",
+                            PageName = $"{nameof(DetalleUpaActividadPage)}",
+                            Title = "Detalle de upas con actividades"
+                        }
+                    };
+                    menus.AddRange(menuSuperAdmin);
+                }
 
-            else if (UserApp.RolId == (int)TipoRol.Administrador)
-            {
+                else if (UserApp.RolId == (int)TipoRol.Administrador)
+                {
+
+                }
                 menus.Add(new Menu
                 {
                     Icon = "icon_generate_report",
@@ -137,22 +141,24 @@ namespace lestoma.App.ViewModels
                     Title = "Generación de reportes"
                 });
             }
+            else
+            {
 
-            Menu settings = new Menu
+            }
+
+            menus.Add(new Menu
             {
                 Icon = "icon_settings",
                 PageName = $"{nameof(SettingsPage)}",
                 Title = "Configuración"
-            };
-            menus.Add(settings);
-            Menu signout = new Menu
+            });
+
+            menus.Add(new Menu
             {
                 Icon = "icon_signOut",
                 PageName = $"{nameof(SignOutPopupPage)}",
                 Title = "Cerrar Sesión"
-            };
-            menus.Add(signout);
-
+            });
 
             Menus = new ObservableCollection<MenuItemViewModel>(
                 menus.Select(m => new MenuItemViewModel(_navigationService)

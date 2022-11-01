@@ -32,7 +32,7 @@ namespace lestoma.App.ViewModels.Modulos
 
         private async void CreateOrEditarClicked(object obj)
         {
-            Response respuesta;
+            ResponseDTO respuesta;
             try
             {
                 CargarDatos();
@@ -56,12 +56,12 @@ namespace lestoma.App.ViewModels.Modulos
                         }
                         if (respuesta.IsExito)
                         {
-                            AlertSuccess(respuesta.Mensaje);
+                            AlertSuccess(respuesta.MensajeHttp);
                             await _navigationService.GoBackAsync(null, useModalNavigation: true, true);
                         }
                         else
                         {
-                            AlertError(respuesta.Mensaje);
+                            AlertError(respuesta.MensajeHttp);
                         }
                         ClosePopup();
                     }

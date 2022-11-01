@@ -10,10 +10,10 @@ using System.Linq;
 
 namespace lestoma.App.ViewModels.Componentes
 {
-    public class CreateOrEditComponentPageViewModel : BaseViewModel
+    public class CreateOrEditComponentViewModel : BaseViewModel
     {
         private readonly IApiService _apiService;
-        public CreateOrEditComponentPageViewModel(INavigationService navigationService, IApiService apiService) :
+        public CreateOrEditComponentViewModel(INavigationService navigationService, IApiService apiService) :
              base(navigationService)
         {
             _apiService = apiService;

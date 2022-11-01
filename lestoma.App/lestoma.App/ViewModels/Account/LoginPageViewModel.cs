@@ -118,13 +118,13 @@ namespace lestoma.App.ViewModels.Account
                             TipoAplicacion = (int)TipoAplicacion.AppMovil
 
                         };
-                        Response respuesta = await _apiService.PostAsync(URL, "Account/login", login);
+                        ResponseDTO respuesta = await _apiService.PostAsync(URL, "Account/login", login);
                         if (respuesta.IsExito)
                         {
                             TokenDTO token = ParsearData<TokenDTO>(respuesta);
                             MovilSettings.Token = JsonConvert.SerializeObject(token);
                             MovilSettings.IsLogin = true;
-                            AlertSuccess(respuesta.Mensaje);
+                            AlertSuccess(respuesta.MensajeHttp);
                             await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
                             ClosePopup();
                         }
@@ -132,11 +132,11 @@ namespace lestoma.App.ViewModels.Account
                         {
                             if (respuesta.StatusCode == (int)HttpStatusCode.Unauthorized)
                             {
-                                AlertWarning(respuesta.Mensaje);
+                                AlertWarning(respuesta.MensajeHttp);
                             }
                             else
                             {
-                                AlertError(respuesta.Mensaje);
+                                AlertError(respuesta.MensajeHttp);
                             }
                             ClosePopup();
                         }

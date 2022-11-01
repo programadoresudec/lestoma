@@ -134,8 +134,8 @@ namespace lestoma.App.ViewModels
         {
             if (exception.Message.Contains("StatusCode"))
             {
-                Response error = JsonConvert.DeserializeObject<Response>(exception.Message);
-                await PopupNavigation.Instance.PushAsync(new MessagePopupPage($"Error {error.StatusCode}: {error.Mensaje}", Constants.ICON_ERROR));
+                ResponseDTO error = JsonConvert.DeserializeObject<ResponseDTO>(exception.Message);
+                await PopupNavigation.Instance.PushAsync(new MessagePopupPage($"Error {error.StatusCode}: {error.MensajeHttp}", Constants.ICON_ERROR));
             }
             else
             {
@@ -207,7 +207,7 @@ namespace lestoma.App.ViewModels
         #endregion
 
         #region Metodo parsear Data de un JSON OBJECT
-        public T ParsearData<T>(Response respuesta)
+        public T ParsearData<T>(ResponseDTO respuesta)
         {
             JObject Jobject = JObject.FromObject(respuesta);
             JToken jToken = Jobject.GetValue("Data");
