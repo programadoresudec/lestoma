@@ -137,6 +137,5 @@ namespace lestoma.App.ViewModels.Usuarios
                 SeeError(ex);
             }
         }
-
     }
 }

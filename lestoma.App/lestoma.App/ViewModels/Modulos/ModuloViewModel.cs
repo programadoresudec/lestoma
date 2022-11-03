@@ -59,8 +59,6 @@ namespace lestoma.App.ViewModels.Modulos
                 ConsumoService(true);
             }
         }
-
-
         private async void UpaSelected(object objeto)
         {
             var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
