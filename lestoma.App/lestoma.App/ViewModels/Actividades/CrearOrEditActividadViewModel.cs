@@ -52,11 +52,11 @@ namespace lestoma.App.ViewModels.Actividades
                         await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Creando..."));
                         if (Actividad.Id == Guid.Empty)
                         {
-                            respuesta = await _apiService.PostAsyncWithToken(URL, "actividades/crear", request, TokenUser.Token);
+                            respuesta = await _apiService.PostAsyncWithToken(URL_API, "actividades/crear", request, TokenUser.Token);
                         }
                         else
                         {
-                            respuesta = await _apiService.PutAsyncWithToken(URL, "actividades/editar", request, TokenUser.Token);
+                            respuesta = await _apiService.PutAsyncWithToken(URL_API, "actividades/editar", request, TokenUser.Token);
                         }
                         if (respuesta.IsExito)
                         {

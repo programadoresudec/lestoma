@@ -53,10 +53,13 @@ namespace lestoma.App.ViewModels
         #endregion
 
         #region Variables globales que quedan en persistencia
-        public string URL => Prism.PrismApplicationBase.Current.Resources["UrlAPI"].ToString();
-        public TokenDTO TokenUser => !string.IsNullOrEmpty(MovilSettings.Token) ? JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token) : null;
+        protected string URL_API => Prism.PrismApplicationBase.Current.Resources["UrlAPI"].ToString();
 
-        public int Rol => TokenUser != null ? TokenUser.User.RolId : 0;
+        protected string URL_DOMINIO => Prism.PrismApplicationBase.Current.Resources["UrlDominio"].ToString();
+
+        protected TokenDTO TokenUser => !string.IsNullOrEmpty(MovilSettings.Token) ? JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token) : null;
+
+        protected int Rol => TokenUser != null ? TokenUser.User.RolId : 0;
         #endregion
 
         #region Event handler

@@ -1,10 +1,9 @@
-﻿using lestoma.App.Views;
+﻿using Acr.UserDialogs;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Newtonsoft.Json;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -173,15 +172,16 @@ namespace lestoma.App.ViewModels.UpasActividades
         {
             try
             {
+                UserDialogs.Instance.ShowLoading("Cargando");
                 if (_apiService.CheckConnection())
                 {
-                    ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
+                    ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
                            "actividades/listado-nombres", TokenUser.Token);
 
-                    ResponseDTO response1 = await _apiService.GetListAsyncWithToken<List<UserDTO>>(URL,
+                    ResponseDTO response1 = await _apiService.GetListAsyncWithToken<List<UserDTO>>(URL_API,
                         "usuarios/activos", TokenUser.Token);
 
-                    ResponseDTO response2 = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
+                    ResponseDTO response2 = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
                         "upas/listado-nombres", TokenUser.Token);
 
                     var listadoActividades = (List<NameDTO>)response.Data;
@@ -200,7 +200,7 @@ namespace lestoma.App.ViewModels.UpasActividades
                         IsEdit = false;
                         Upa = Upas.Where(x => x.Id == detalleUpaActividad.UpaId).FirstOrDefault();
                         User = Usuarios.Where(x => x.Id == detalleUpaActividad.UsuarioId).FirstOrDefault();
-                        ResponseDTO listaActividadesxUser = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
+                        ResponseDTO listaActividadesxUser = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
                           $"detalle-upas-actividades/lista-actividades-by-upa-usuario?UpaId={Upa.Id}&UsuarioId={User.Id}", TokenUser.Token);
                         if (listaActividadesxUser.IsExito)
                         {
@@ -233,94 +233,111 @@ namespace lestoma.App.ViewModels.UpasActividades
             {
                 SeeError(ex);
             }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
         }
 
 
         private void CreateOrEditClicked(object obj)
         {
-            try
+
+            if (_apiService.CheckConnection())
             {
-                if (_apiService.CheckConnection())
+                if (DetalleUpaActividad == null)
                 {
-                    if (DetalleUpaActividad == null)
-                    {
-                        Crear();
-                    }
-                    else
-                    {
-                        editar();
-                    }
+                    Crear();
                 }
                 else
                 {
-                    AlertNoInternetConnection();
+                    editar();
                 }
 
             }
-            catch (Exception ex)
+            else
             {
-                SeeError(ex);
+                AlertNoInternetConnection();
             }
         }
 
         private async void Crear()
         {
-            await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Guardando..."));
-            var detalle = new CrearDetalleUpaActividadRequest
+            try
             {
-                UpaId = Upa.Id,
-                UsuarioId = User.Id
-            };
-            foreach (var item in ActividadesAdd)
-            {
-                detalle.Actividades.Add(new ActividadRequest
+                var detalle = new CrearDetalleUpaActividadRequest
                 {
-                    Id = item.Id,
-                    Nombre = item.Nombre
-                });
-            }
+                    UpaId = Upa.Id,
+                    UsuarioId = User.Id
+                };
+                foreach (var item in ActividadesAdd)
+                {
+                    detalle.Actividades.Add(new ActividadRequest
+                    {
+                        Id = item.Id,
+                        Nombre = item.Nombre
+                    });
+                }
 
-            var response = await _apiService.PostAsyncWithToken(URL, "detalle-upas-actividades/crear", detalle, TokenUser.Token);
-            if (response.IsExito)
-            {
-                AlertSuccess(response.MensajeHttp);
-                await _navigationService.GoBackAsync();
+                var response = await _apiService.PostAsyncWithToken(URL_API, "detalle-upas-actividades/crear", detalle, TokenUser.Token);
+                if (response.IsExito)
+                {
+                    AlertSuccess(response.MensajeHttp);
+                    await _navigationService.GoBackAsync();
+                }
+                else
+                {
+                    AlertWarning(response.MensajeHttp);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                AlertWarning(response.MensajeHttp);
+                SeeError(ex);
             }
-            await PopupNavigation.Instance.PopAsync();
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
         }
 
         private async void editar()
         {
-            await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Guardando..."));
-            var detalle = new CrearDetalleUpaActividadRequest
+            try
             {
-                UpaId = Upa.Id,
-                UsuarioId = User.Id
-            };
-            foreach (var item in ActividadesAdd)
-            {
-                detalle.Actividades.Add(new ActividadRequest
+                UserDialogs.Instance.ShowLoading("Guardando");
+                var detalle = new CrearDetalleUpaActividadRequest
                 {
-                    Id = item.Id,
-                    Nombre = item.Nombre
-                });
-            }
+                    UpaId = Upa.Id,
+                    UsuarioId = User.Id
+                };
+                foreach (var item in ActividadesAdd)
+                {
+                    detalle.Actividades.Add(new ActividadRequest
+                    {
+                        Id = item.Id,
+                        Nombre = item.Nombre
+                    });
+                }
 
-            var response = await _apiService.PutAsyncWithToken(URL, "detalle-upas-actividades/editar", detalle, TokenUser.Token);
-            if (response.IsExito)
-            {
-                AlertSuccess(response.MensajeHttp);
-                await _navigationService.GoBackAsync();
+                var response = await _apiService.PutAsyncWithToken(URL_API, "detalle-upas-actividades/editar", detalle, TokenUser.Token);
+                if (response.IsExito)
+                {
+                    AlertSuccess(response.MensajeHttp);
+                    await _navigationService.GoBackAsync();
+                }
+                else
+                {
+                    AlertWarning(response.MensajeHttp);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                AlertWarning(response.MensajeHttp);
+                SeeError(ex);
             }
-            await PopupNavigation.Instance.PopAsync();
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
         }
     }
 }

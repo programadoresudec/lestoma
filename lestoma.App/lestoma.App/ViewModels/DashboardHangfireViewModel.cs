@@ -2,13 +2,13 @@
 using lestoma.CommonUtils.Interfaces;
 using Prism.Navigation;
 using System;
+using System.Threading.Tasks;
 
 namespace lestoma.App.ViewModels
 {
     public class DashboardHangfireViewModel : BaseViewModel
     {
         private string _pathHangFire;
-        private const string DOMINIO = "https://www.lestoma.site/";
         private readonly IApiService _apiService;
         public DashboardHangfireViewModel(INavigationService navigationService, IApiService apiService)
              : base(navigationService)
@@ -18,22 +18,22 @@ namespace lestoma.App.ViewModels
             LoadPath();
         }
 
-        private void LoadPath()
+        private async void LoadPath()
         {
             try
             {
-                UserDialogs.Instance.ShowLoading("Cargando", MaskType.Gradient);
+                UserDialogs.Instance.ShowLoading("Cargando");
                 if (_apiService.CheckConnection())
                 {
                     if (TokenUser.Expiration >= DateTime.Now)
                     {
-                        PathHangFire = $"{DOMINIO}dashboard-lestoma?jwt_token={TokenUser.Token}";
+                        PathHangFire = $"{URL_DOMINIO}dashboard-lestoma?jwt_token={TokenUser.Token}";
                     }
                 }
                 else
                 {
                     AlertNoInternetConnection();
-                }                
+                }
             }
             catch (Exception ex)
             {
@@ -41,6 +41,7 @@ namespace lestoma.App.ViewModels
             }
             finally
             {
+                await Task.Delay(1000);
                 UserDialogs.Instance.HideLoading();
             }
 

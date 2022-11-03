@@ -118,7 +118,7 @@ namespace lestoma.App.ViewModels.Account
                             TipoAplicacion = (int)TipoAplicacion.AppMovil
 
                         };
-                        ResponseDTO respuesta = await _apiService.PostAsync(URL, "Account/login", login);
+                        ResponseDTO respuesta = await _apiService.PostAsync(URL_API, "Account/login", login);
                         if (respuesta.IsExito)
                         {
                             TokenDTO token = ParsearData<TokenDTO>(respuesta);

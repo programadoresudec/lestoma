@@ -108,7 +108,7 @@ namespace lestoma.App.ViewModels.Usuarios
                 if (!refresh)
                     await PopupNavigation.Instance.PushAsync(new LoadingPopupPage());
 
-                ResponseDTO response = await _apiService.GetListAsyncWithToken<List<InfoUserDTO>>(URL, "usuarios/listado", TokenUser.Token);
+                ResponseDTO response = await _apiService.GetListAsyncWithToken<List<InfoUserDTO>>(URL_API, "usuarios/listado", TokenUser.Token);
                 if (response.IsExito)
                 {
                     var listado = (List<InfoUserDTO>)response.Data;

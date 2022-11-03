@@ -108,7 +108,7 @@ namespace lestoma.App.ViewModels.UpasActividades
             {
                 if (!refresh)
                     await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-                ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(URL,
+                ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(URL_API,
                $"detalle-upas-actividades/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
                 if (response.IsExito)
                 {
@@ -179,7 +179,7 @@ namespace lestoma.App.ViewModels.UpasActividades
             try
             {
                 IsBusy = true;
-                ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(URL,
+                ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(URL_API,
                     $"detalle-upas-actividades/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
                 if (response.IsExito)
                 {

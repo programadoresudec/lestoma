@@ -107,7 +107,7 @@ namespace lestoma.App.ViewModels.Upas
                         return;
                     }
                     await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-                    ResponseDTO response = await _apiService.DeleteAsyncWithToken(URL,
+                    ResponseDTO response = await _apiService.DeleteAsyncWithToken(URL_API,
                         "upas", ItemDelete.Id, TokenUser.Token);
                     if (!response.IsExito)
                     {
@@ -134,7 +134,7 @@ namespace lestoma.App.ViewModels.Upas
                     await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
 
                 Upas = new ObservableCollection<UpaDTO>();
-                ResponseDTO response = await _apiService.GetListAsyncWithToken<List<UpaDTO>>(URL,
+                ResponseDTO response = await _apiService.GetListAsyncWithToken<List<UpaDTO>>(URL_API,
                     $"upas/listado", TokenUser.Token);
                 if (response.IsExito)
                 {

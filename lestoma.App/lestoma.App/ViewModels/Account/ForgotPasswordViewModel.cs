@@ -59,7 +59,7 @@ namespace lestoma.App.ViewModels.Account
                         {
                             Email = Email.Value,
                         };
-                        ResponseDTO respuesta = await _apiService.PutAsync(URL, "Account/forgotpassword", email);
+                        ResponseDTO respuesta = await _apiService.PutAsync(URL_API, "Account/forgotpassword", email);
                         if (respuesta.IsExito)
                         {
                             AlertSuccess(respuesta.MensajeHttp);

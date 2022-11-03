@@ -48,11 +48,11 @@ namespace lestoma.App.ViewModels.Modulos
                         await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Creando..."));
                         if (Modulo.Id == Guid.Empty)
                         {
-                            respuesta = await _apiService.PostAsyncWithToken(URL, "modulos/crear", request, TokenUser.Token);
+                            respuesta = await _apiService.PostAsyncWithToken(URL_API, "modulos/crear", request, TokenUser.Token);
                         }
                         else
                         {
-                            respuesta = await _apiService.PutAsyncWithToken(URL, "modulos/editar", request, TokenUser.Token);
+                            respuesta = await _apiService.PutAsyncWithToken(URL_API, "modulos/editar", request, TokenUser.Token);
                         }
                         if (respuesta.IsExito)
                         {

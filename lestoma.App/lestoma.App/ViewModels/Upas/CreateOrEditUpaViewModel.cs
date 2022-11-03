@@ -87,7 +87,7 @@ namespace lestoma.App.ViewModels.Upas
 
                         if (Upa.Id == Guid.Empty)
                         {
-                            ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL, "upas/crear", request, TokenUser.Token);
+                            ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL_API, "upas/crear", request, TokenUser.Token);
                             if (respuesta.IsExito)
                             {
                                 AlertSuccess(respuesta.MensajeHttp);
@@ -101,7 +101,7 @@ namespace lestoma.App.ViewModels.Upas
                         }
                         else
                         {
-                            ResponseDTO respuesta = await _apiService.PutAsyncWithToken(URL, "upas/editar", request, TokenUser.Token);
+                            ResponseDTO respuesta = await _apiService.PutAsyncWithToken(URL_API, "upas/editar", request, TokenUser.Token);
                             if (respuesta.IsExito)
                             {
                                 AlertSuccess(respuesta.MensajeHttp);

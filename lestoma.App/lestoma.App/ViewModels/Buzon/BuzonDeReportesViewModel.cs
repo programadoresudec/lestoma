@@ -59,7 +59,7 @@ namespace lestoma.App.ViewModels.Buzon
                 if (_apiService.CheckConnection())
                 {
                     IsBusy = true;
-                    ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<BuzonDTO>(URL,
+                    ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<BuzonDTO>(URL_API,
                         $"buzon-de-reportes/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
                     if (!response.IsExito)
                     {

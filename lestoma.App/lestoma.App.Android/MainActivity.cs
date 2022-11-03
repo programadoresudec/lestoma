@@ -1,4 +1,5 @@
-﻿using Android.App;
+﻿using Acr.UserDialogs;
+using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Plugin.CurrentActivity;
@@ -21,6 +22,7 @@ namespace lestoma.App.Droid
             ServicePointManager.ServerCertificateValidationCallback =
            (message, certificate, chain, sslPolicyErrors) => true;
             base.OnCreate(savedInstanceState);
+            UserDialogs.Init(this);
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             global::Rg.Plugins.Popup.Popup.Init(this);

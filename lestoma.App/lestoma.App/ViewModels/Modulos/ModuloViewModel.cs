@@ -102,7 +102,7 @@ namespace lestoma.App.ViewModels.Modulos
                     if (_apiService.CheckConnection())
                     {
                         await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-                        ResponseDTO response = await _apiService.DeleteAsyncWithToken(URL,
+                        ResponseDTO response = await _apiService.DeleteAsyncWithToken(URL_API,
                             "modulos", ItemDelete.Id, TokenUser.Token);
                         if (!response.IsExito)
                         {
@@ -137,7 +137,7 @@ namespace lestoma.App.ViewModels.Modulos
                     await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
 
                 Modulos = new ObservableCollection<ModuloDTO>();
-                ResponseDTO response = await _apiService.GetListAsyncWithToken<List<ModuloDTO>>(URL,
+                ResponseDTO response = await _apiService.GetListAsyncWithToken<List<ModuloDTO>>(URL_API,
                     $"modulos/listado", TokenUser.Token);
                 if (response.IsExito)
                 {

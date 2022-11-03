@@ -49,7 +49,7 @@ namespace lestoma.App.ViewModels.UpasActividades
             {
                 if (_apiService.CheckConnection())
                 {
-                    ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
+                    ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
                         $"detalle-upas-actividades/lista-actividades-by-upa-usuario?UpaId={filtro.UpaId}&UsuarioId={filtro.UsuarioId}", TokenUser.Token);
                     if (response.IsExito)
                     {

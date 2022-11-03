@@ -142,7 +142,7 @@ namespace lestoma.App.ViewModels.Account
                             OldPassword = this.CurrentPassword.Value,
                             NewPassword = this.Password.Item1.Value
                         };
-                        ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL, "Account/changepassword", cambio, UserApp.Token);
+                        ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL_API, "Account/changepassword", cambio, UserApp.Token);
                         if (respuesta.IsExito)
                         {
                             AlertSuccess(respuesta.MensajeHttp);

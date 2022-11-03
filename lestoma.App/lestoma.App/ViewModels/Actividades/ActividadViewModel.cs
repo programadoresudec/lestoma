@@ -59,7 +59,7 @@ namespace lestoma.App.ViewModels.Actividades
                     await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
                     if (_apiService.CheckConnection())
                     {
-                        ResponseDTO response = await _apiService.DeleteAsyncWithToken(URL,
+                        ResponseDTO response = await _apiService.DeleteAsyncWithToken(URL_API,
                         "actividades", ItemDelete.Id, TokenUser.Token);
                         if (response.IsExito)
                         {
@@ -139,7 +139,7 @@ namespace lestoma.App.ViewModels.Actividades
                     await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
 
                 Actividades = new ObservableCollection<ActividadDTO>();
-                ResponseDTO response = await _apiService.GetListAsyncWithToken<List<ActividadDTO>>(URL, "actividades/listado", TokenUser.Token);
+                ResponseDTO response = await _apiService.GetListAsyncWithToken<List<ActividadDTO>>(URL_API, "actividades/listado", TokenUser.Token);
                 if (response.IsExito)
                 {
                     var listado = (List<ActividadDTO>)response.Data;

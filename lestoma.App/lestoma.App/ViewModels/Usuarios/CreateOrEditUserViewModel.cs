@@ -289,7 +289,7 @@ namespace lestoma.App.ViewModels.Usuarios
                                 EstadoId = EstadoActual.Id,
                                 RolId = RolActual.Id
                             };
-                            ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL, "usuarios/crear", request, TokenUser.Token);
+                            ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL_API, "usuarios/crear", request, TokenUser.Token);
                             if (respuesta.IsExito)
                             {
                                 AlertSuccess(respuesta.MensajeHttp);
@@ -311,7 +311,7 @@ namespace lestoma.App.ViewModels.Usuarios
                                 EstadoId = EstadoActual.Id,
                                 RolId = RolActual.Id
                             };
-                            ResponseDTO respuesta = await _apiService.PutAsyncWithToken(URL, "usuarios/editar", request, TokenUser.Token);
+                            ResponseDTO respuesta = await _apiService.PutAsyncWithToken(URL_API, "usuarios/editar", request, TokenUser.Token);
                             if (respuesta.IsExito)
                             {
                                 AlertSuccess(respuesta.MensajeHttp);
@@ -350,10 +350,10 @@ namespace lestoma.App.ViewModels.Usuarios
                 if (_apiService.CheckConnection())
                 {
 
-                    ResponseDTO roles = await _apiService.GetListAsyncWithToken<List<RolDTO>>(URL,
+                    ResponseDTO roles = await _apiService.GetListAsyncWithToken<List<RolDTO>>(URL_API,
                            "usuarios/listado-roles", TokenUser.Token);
                     Roles = new ObservableCollection<RolDTO>((List<RolDTO>)roles.Data);
-                    ResponseDTO estados = await _apiService.GetListAsyncWithToken<List<EstadoDTO>>(URL,
+                    ResponseDTO estados = await _apiService.GetListAsyncWithToken<List<EstadoDTO>>(URL_API,
                         "usuarios/listado-estados", TokenUser.Token);
                     Estados = new ObservableCollection<EstadoDTO>((List<EstadoDTO>)estados.Data);
                     if (infoUser != null)
