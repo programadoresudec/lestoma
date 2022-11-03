@@ -39,7 +39,7 @@
                     Margin="{core:OnPlatformOrientationThickness PhonePortrait='20,32',
                                                                  PhoneLandscape='150,32',
                                                                  TabletPortrait='200,50',
-                                                                 TabletLandscape='300,50',
+                                                                 TabletLandscape='100,50',
                                                                  Desktop='30'}"
                     Spacing="0"
                     VerticalOptions="FillAndExpand">

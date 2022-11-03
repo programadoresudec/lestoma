@@ -17,10 +17,10 @@
     </ContentPage.Resources>
     <StackLayout Padding="10">
         <syncfusion:SfListView x:Name="LV_detalleUpasActividades"   
-                             LoadMoreOption="Auto"  SwipeOffset="100" SwipeEnded="LV_detalleUpasActividades_SwipeEnded"
-                             LoadMoreCommand="{Binding LoadMoreItemsCommand}" IsBusy="{Binding IsBusy}" AutoFitMode="DynamicHeight"
-                             LoadMoreCommandParameter="{Binding Source={x:Reference Name=LV_detalleUpasActividades}}" TapCommand="{Binding EditCommand}"
-                             ItemsSource="{Binding DetalleUpasActividades}" SelectionBackgroundColor="Transparent">
+                             LoadMoreOption="Auto" LoadMoreCommand="{Binding LoadMoreItemsCommand}" IsBusy="{Binding IsBusy}"
+                               AutoFitMode="DynamicHeight" LoadMoreCommandParameter="{Binding Source={x:Reference Name=LV_detalleUpasActividades}}"
+                               TapCommand="{Binding EditCommand}" ItemsSource="{Binding DetalleUpasActividades}" 
+                               SelectionBackgroundColor="Transparent">
           
             <syncfusion:SfListView.ItemTemplate>
                 <DataTemplate>

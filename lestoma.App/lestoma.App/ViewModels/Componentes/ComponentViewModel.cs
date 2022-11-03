@@ -2,6 +2,7 @@
 using lestoma.App.Views.Componentes;
 using lestoma.App.Views.Modulos;
 using lestoma.CommonUtils.DTOs;
+using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Prism.Mvvm;
@@ -23,7 +24,7 @@ namespace lestoma.App.ViewModels.Componentes
              base(navigationService)
         {
             _apiService = apiService;
-    
+
             EditCommand = new Command<object>(ComponentSelected, CanNavigate);
             LoadComponents();
         }
@@ -70,7 +71,7 @@ namespace lestoma.App.ViewModels.Componentes
                 return;
 
             var salida = componente.Id;
-            
+
             var parameters = new NavigationParameters
             {
                 { "id", salida }
@@ -98,14 +99,14 @@ namespace lestoma.App.ViewModels.Componentes
                     await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
 
                 Componentes = new ObservableCollection<ListadoComponenteDTO>();
-                ResponseDTO response = await _apiService.GetListAsyncWithToken<List<ListadoComponenteDTO>>(URL,
-                    $"componentes/", TokenUser.Token);
+                ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<Paginador<ListadoComponenteDTO>>(URL_API,
+                    $"componentes/paginar", TokenUser.Token);
                 if (response.IsExito)
                 {
-                    var listado = (List<ListadoComponenteDTO>)response.Data;
-                    if (listado.Count > 0)
+                    Paginador<ListadoComponenteDTO> paginador = (Paginador<ListadoComponenteDTO>)response.Data;
+                    if (paginador.Datos.Count > 0)
                     {
-                        Componentes = new ObservableCollection<ListadoComponenteDTO>(listado);
+                        Componentes = new ObservableCollection<ListadoComponenteDTO>(paginador.Datos);
                     }
                 }
             }
