@@ -1,17 +1,10 @@
-﻿using lestoma.App.Views;
-using lestoma.App.Views.Componentes;
-using lestoma.App.Views.Modulos;
+﻿using lestoma.App.Views.Componentes;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
-using lestoma.CommonUtils.Requests;
-using Prism.Mvvm;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Componentes
@@ -19,7 +12,7 @@ namespace lestoma.App.ViewModels.Componentes
     public class ComponentViewModel : BaseViewModel
     {
         private readonly IApiService _apiService;
-        private ObservableCollection<ListadoComponenteDTO> _componentes;
+        private ObservableCollection<ComponentesDTO> _componentes;
         public ComponentViewModel(INavigationService navigationService, IApiService apiService) :
              base(navigationService)
         {
@@ -43,7 +36,7 @@ namespace lestoma.App.ViewModels.Componentes
             }
         }
 
-        public ObservableCollection<ListadoComponenteDTO> Componentes
+        public ObservableCollection<ComponentesDTO> Componentes
         {
             get => _componentes;
             set => SetProperty(ref _componentes, value);
@@ -93,20 +86,18 @@ namespace lestoma.App.ViewModels.Componentes
 
         private async void ConsumoService(bool refresh = false)
         {
+            IsBusy = true;
             try
             {
-                if (!refresh)
-                    await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-
-                Componentes = new ObservableCollection<ListadoComponenteDTO>();
-                ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<Paginador<ListadoComponenteDTO>>(URL_API,
+                Componentes = new ObservableCollection<ComponentesDTO>();
+                ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<ComponentesDTO>(URL_API,
                     $"componentes/paginar", TokenUser.Token);
                 if (response.IsExito)
                 {
-                    Paginador<ListadoComponenteDTO> paginador = (Paginador<ListadoComponenteDTO>)response.Data;
+                    var paginador = (Paginador<ComponentesDTO>)response.Data;
                     if (paginador.Datos.Count > 0)
                     {
-                        Componentes = new ObservableCollection<ListadoComponenteDTO>(paginador.Datos);
+                        Componentes = new ObservableCollection<ComponentesDTO>(paginador.Datos);
                     }
                 }
             }
@@ -116,9 +107,7 @@ namespace lestoma.App.ViewModels.Componentes
             }
             finally
             {
-                if (!refresh)
-                    if (PopupNavigation.Instance.PopupStack.Any())
-                        await PopupNavigation.Instance.PopAsync();
+                IsBusy = false;
             }
         }
     }
