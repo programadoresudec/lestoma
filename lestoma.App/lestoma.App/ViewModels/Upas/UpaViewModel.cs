@@ -1,16 +1,12 @@
-﻿using lestoma.App.Views;
+﻿using Acr.UserDialogs;
 using lestoma.App.Views.Upas;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using Plugin.Toast;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Upas
@@ -25,6 +21,7 @@ namespace lestoma.App.ViewModels.Upas
             _apiService = apiService;
             _upas = new ObservableCollection<UpaDTO>();
             EditCommand = new Command<object>(UpaSelected, CanNavigate);
+            DeleteCommand = new Command<object>(DeleteClicked, CanNavigate);
             LoadUpas();
         }
 
@@ -38,9 +35,9 @@ namespace lestoma.App.ViewModels.Upas
             get => _upas;
             set => SetProperty(ref _upas, value);
         }
-        public UpaDTO ItemDelete { get; set; }
 
         public Command EditCommand { get; set; }
+        public Command DeleteCommand { get; set; }
         public Command AddCommand
         {
             get
@@ -56,7 +53,7 @@ namespace lestoma.App.ViewModels.Upas
             base.OnNavigatedTo(parameters);
             if (parameters.ContainsKey("refresh"))
             {
-                ConsumoService(true);
+                LoadUpas();
             }
         }
         private async void UpaSelected(object objeto)
@@ -95,44 +92,47 @@ namespace lestoma.App.ViewModels.Upas
             }
         }
 
-        public async void DeleteClicked()
+        public async void DeleteClicked(object obj)
         {
-            if (ItemDelete != null)
+            UpaDTO detalle = (UpaDTO)obj;
+            if (detalle == null)
+                return;
+            try
             {
-                try
+                UserDialogs.Instance.ShowLoading("Eliminando...");
+                if (_apiService.CheckConnection())
                 {
-                    if (!_apiService.CheckConnection())
+                    ResponseDTO response = await _apiService.DeleteAsyncWithToken(URL_API, "upas", detalle.Id, TokenUser.Token);
+                    if (response.IsExito)
                     {
-                        CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.");
-                        return;
+                        AlertSuccess(response.MensajeHttp);
+                        ConsumoService();
                     }
-                    await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-                    ResponseDTO response = await _apiService.DeleteAsyncWithToken(URL_API,
-                        "upas", ItemDelete.Id, TokenUser.Token);
-                    if (!response.IsExito)
+                    else
                     {
-                        CrossToastPopUp.Current.ShowToastError("Error " + response.MensajeHttp);
-                        return;
+                        AlertWarning(response.MensajeHttp);
                     }
-                    CrossToastPopUp.Current.ShowToastSuccess(response.MensajeHttp);
                 }
-                catch (Exception ex)
+                else
                 {
-                    Debug.WriteLine(ex.Message);
+                    AlertNoInternetConnection();
                 }
-                finally
-                {
-                    await _navigationService.ClearPopupStackAsync();
-                }
+
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
             }
         }
-        private async void ConsumoService(bool refresh = false)
+        private async void ConsumoService()
         {
             try
             {
-                if (!refresh)
-                    await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-
+                UserDialogs.Instance.ShowLoading("Cargando...");
                 Upas = new ObservableCollection<UpaDTO>();
                 ResponseDTO response = await _apiService.GetListAsyncWithToken<List<UpaDTO>>(URL_API,
                     $"upas/listado", TokenUser.Token);
@@ -152,9 +152,7 @@ namespace lestoma.App.ViewModels.Upas
             }
             finally
             {
-                if (!refresh)
-                    if (PopupNavigation.Instance.PopupStack.Any())
-                        await PopupNavigation.Instance.PopAsync();
+                UserDialogs.Instance.HideLoading();
             }
         }
     }

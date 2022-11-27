@@ -1,12 +1,11 @@
-﻿using lestoma.App.Models;
-using lestoma.App.Views;
+﻿using Acr.UserDialogs;
+using lestoma.App.Models;
+using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
-using System.Diagnostics;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Actividades
@@ -36,20 +35,20 @@ namespace lestoma.App.ViewModels.Actividades
 
         private async void CreateOrEditarClicked(object obj)
         {
-            ResponseDTO respuesta = new ResponseDTO();
+            ResponseDTO respuesta;
             try
             {
                 CargarDatos();
                 if (_model.AreFieldsValid())
                 {
-                    ActividadRequest request = new ActividadRequest
-                    {
-                        Id = Actividad.Id != Guid.Empty ? Actividad.Id : Guid.Empty,
-                        Nombre = _model.Nombre.Value
-                    };
+                    UserDialogs.Instance.ShowLoading("Guardando");
                     if (_apiService.CheckConnection())
                     {
-                        await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Creando..."));
+                        ActividadRequest request = new ActividadRequest
+                        {
+                            Id = Actividad.Id != Guid.Empty ? Actividad.Id : Guid.Empty,
+                            Nombre = _model.Nombre.Value
+                        };
                         if (Actividad.Id == Guid.Empty)
                         {
                             respuesta = await _apiService.PostAsyncWithToken(URL_API, "actividades/crear", request, TokenUser.Token);
@@ -61,13 +60,13 @@ namespace lestoma.App.ViewModels.Actividades
                         if (respuesta.IsExito)
                         {
                             AlertSuccess(respuesta.MensajeHttp);
-                            await _navigationService.GoBackAsync(null, useModalNavigation: true, true);
+                            var parameters = new NavigationParameters { { Constants.REFRESH, true } };
+                            await _navigationService.GoBackAsync(parameters, useModalNavigation: true, true);
                         }
                         else
                         {
                             AlertWarning(respuesta.MensajeHttp);
                         }
-                        ClosePopup();
                     }
                     else
                     {
@@ -78,8 +77,11 @@ namespace lestoma.App.ViewModels.Actividades
             }
             catch (Exception ex)
             {
-                await PopupNavigation.Instance.PopAsync();
                 SeeError(ex);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
             }
         }
 
@@ -105,13 +107,9 @@ namespace lestoma.App.ViewModels.Actividades
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
-            if (parameters.ContainsKey("actividad"))
+            if (parameters.ContainsKey("actividad") || Actividad.Id != Guid.Empty)
             {
                 Actividad = parameters.GetValue<ActividadRequest>("actividad");
-                Title = "Editar";
-            }
-            else if (Actividad != null)
-            {
                 Title = "Editar";
             }
             else

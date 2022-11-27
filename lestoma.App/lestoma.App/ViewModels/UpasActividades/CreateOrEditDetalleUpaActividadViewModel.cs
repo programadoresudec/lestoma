@@ -1,4 +1,5 @@
 ﻿using Acr.UserDialogs;
+using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
@@ -158,12 +159,12 @@ namespace lestoma.App.ViewModels.UpasActividades
             if (parameters.ContainsKey("detalleUpaActividad"))
             {
                 DetalleUpaActividad = parameters.GetValue<DetalleUpaActividadDTO>("detalleUpaActividad");
-                Title = "Editar";
+                Title = "Editar Detalle";
                 CargarObjetos(DetalleUpaActividad);
             }
             else
             {
-                Title = "Crear";
+                Title = "Crear Detalle";
                 CargarObjetos();
             }
         }
@@ -201,7 +202,8 @@ namespace lestoma.App.ViewModels.UpasActividades
                         Upa = Upas.Where(x => x.Id == detalleUpaActividad.UpaId).FirstOrDefault();
                         User = Usuarios.Where(x => x.Id == detalleUpaActividad.UsuarioId).FirstOrDefault();
                         ResponseDTO listaActividadesxUser = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
-                          $"detalle-upas-actividades/lista-actividades-by-upa-usuario?UpaId={Upa.Id}&UsuarioId={User.Id}", TokenUser.Token);
+                          $"detalle-upas-actividades/lista-actividades-by-upa-usuario?UpaId=" +
+                          $"{Upa.Id}&UsuarioId={User.Id}", TokenUser.Token);
                         if (listaActividadesxUser.IsExito)
                         {
                             var listado = (List<NameDTO>)listaActividadesxUser.Data;
@@ -211,14 +213,7 @@ namespace lestoma.App.ViewModels.UpasActividades
                                 var actividad = Actividades.Where(x => x.Id == item.Id).FirstOrDefault();
                                 Actividades.Remove(actividad);
                             }
-                            if (Actividades.Count == 0)
-                            {
-                                Actividades = new ObservableCollection<NameDTO>();
-                            }
-                            else
-                            {
-                                ActividadesAdd = new ObservableCollection<NameDTO>(listado);
-                            }
+                            ActividadesAdd = new ObservableCollection<NameDTO>(listado);
                         }
                     }
                 }
@@ -283,7 +278,8 @@ namespace lestoma.App.ViewModels.UpasActividades
                 if (response.IsExito)
                 {
                     AlertSuccess(response.MensajeHttp);
-                    await _navigationService.GoBackAsync();
+                    var parameters = new NavigationParameters { { Constants.REFRESH, true } };
+                    await _navigationService.GoBackAsync(parameters);
                 }
                 else
                 {
@@ -323,7 +319,8 @@ namespace lestoma.App.ViewModels.UpasActividades
                 if (response.IsExito)
                 {
                     AlertSuccess(response.MensajeHttp);
-                    await _navigationService.GoBackAsync();
+                    var parameters = new NavigationParameters { { Constants.REFRESH, true } };
+                    await _navigationService.GoBackAsync(parameters);
                 }
                 else
                 {

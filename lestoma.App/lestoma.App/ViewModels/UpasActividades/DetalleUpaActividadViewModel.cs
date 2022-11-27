@@ -52,6 +52,8 @@ namespace lestoma.App.ViewModels.UpasActividades
             base.OnNavigatedTo(parameters);
             if (parameters.ContainsKey("refresh"))
             {
+                DetalleUpasActividades.Clear();
+                DetalleUpasActividades = new ObservableCollection<DetalleUpaActividadDTO>();
                 ConsumoService(true);
             }
         }

@@ -1,13 +1,11 @@
-﻿using lestoma.App.Models;
-using lestoma.App.Views;
+﻿using Acr.UserDialogs;
+using lestoma.App.Models;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
-using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Upas
@@ -56,7 +54,7 @@ namespace lestoma.App.ViewModels.Upas
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
-            if (parameters.ContainsKey("upa"))
+            if (parameters.ContainsKey("upa") || Upa.Id != Guid.Empty)
             {
                 Upa = parameters.GetValue<UpaRequest>("upa");
                 Title = "Editar";
@@ -74,17 +72,16 @@ namespace lestoma.App.ViewModels.Upas
                 CargarDatos();
                 if (_model.AreFieldsValid())
                 {
-                    UpaRequest request = new UpaRequest
-                    {
-                        Id = Upa.Id == Guid.Empty ? Guid.Empty : Upa.Id,
-                        Nombre = _model.Nombre.Value.Trim(),
-                        Descripcion = _model.Descripcion.Value.Trim(),
-                        CantidadActividades = (short)Convert.ToInt32(_model.CantidadActividades.Value)
-                    };
+                    UserDialogs.Instance.ShowLoading("Guardando");
                     if (_apiService.CheckConnection())
                     {
-                        await _navigationService.NavigateAsync($"{nameof(LoadingPopupPage)}");
-
+                        UpaRequest request = new UpaRequest
+                        {
+                            Id = Upa.Id == Guid.Empty ? Guid.Empty : Upa.Id,
+                            Nombre = _model.Nombre.Value.Trim(),
+                            Descripcion = _model.Descripcion.Value.Trim(),
+                            CantidadActividades = (short)Convert.ToInt32(_model.CantidadActividades.Value)
+                        };
                         if (Upa.Id == Guid.Empty)
                         {
                             ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL_API, "upas/crear", request, TokenUser.Token);
@@ -126,8 +123,7 @@ namespace lestoma.App.ViewModels.Upas
             }
             finally
             {
-                if (PopupNavigation.Instance.PopupStack.Any())
-                    await PopupNavigation.Instance.PopAsync();
+                UserDialogs.Instance.HideLoading();
             }
         }
     }

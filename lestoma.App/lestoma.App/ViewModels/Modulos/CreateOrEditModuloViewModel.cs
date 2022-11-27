@@ -1,5 +1,7 @@
-﻿using lestoma.App.Models;
+﻿using Acr.UserDialogs;
+using lestoma.App.Models;
 using lestoma.App.Views;
+using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
@@ -38,14 +40,14 @@ namespace lestoma.App.ViewModels.Modulos
                 CargarDatos();
                 if (_model.AreFieldsValid())
                 {
-                    ModuloRequest request = new ModuloRequest
-                    {
-                        Id = Modulo.Id != Guid.Empty ? Modulo.Id : Guid.Empty,
-                        Nombre = _model.Nombre.Value
-                    };
+                    UserDialogs.Instance.ShowLoading("Guardando");
                     if (_apiService.CheckConnection())
                     {
-                        await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Creando..."));
+                        ModuloRequest request = new ModuloRequest
+                        {
+                            Id = Modulo.Id != Guid.Empty ? Modulo.Id : Guid.Empty,
+                            Nombre = _model.Nombre.Value
+                        };
                         if (Modulo.Id == Guid.Empty)
                         {
                             respuesta = await _apiService.PostAsyncWithToken(URL_API, "modulos/crear", request, TokenUser.Token);
@@ -57,7 +59,8 @@ namespace lestoma.App.ViewModels.Modulos
                         if (respuesta.IsExito)
                         {
                             AlertSuccess(respuesta.MensajeHttp);
-                            await _navigationService.GoBackAsync(null, useModalNavigation: true, true);
+                            var parameters = new NavigationParameters { { Constants.REFRESH, true } };
+                            await _navigationService.GoBackAsync(parameters, useModalNavigation: true, true);
                         }
                         else
                         {
@@ -74,8 +77,11 @@ namespace lestoma.App.ViewModels.Modulos
             }
             catch (Exception ex)
             {
-                await PopupNavigation.Instance.PopAsync();
                 SeeError(ex);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
             }
         }
 
@@ -101,13 +107,9 @@ namespace lestoma.App.ViewModels.Modulos
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
-            if (parameters.ContainsKey("modulo"))
+            if (parameters.ContainsKey("modulo") || Modulo.Id != Guid.Empty)
             {
                 Modulo = parameters.GetValue<ModuloRequest>("modulo");
-                Title = "Editar";
-            }
-            else if (Modulo != null)
-            {
                 Title = "Editar";
             }
             else

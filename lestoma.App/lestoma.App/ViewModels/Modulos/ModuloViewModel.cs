@@ -1,16 +1,12 @@
-﻿using lestoma.App.Views;
+﻿using Acr.UserDialogs;
 using lestoma.App.Views.Modulos;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using Plugin.Toast;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Modulos
@@ -25,6 +21,7 @@ namespace lestoma.App.ViewModels.Modulos
             _apiService = apiService;
             _modulos = new ObservableCollection<ModuloDTO>();
             EditCommand = new Command<object>(UpaSelected, CanNavigate);
+            DeleteCommand = new Command<object>(DeleteClicked, CanNavigate);
             LoadModulos();
         }
         private bool CanNavigate(object arg)
@@ -38,9 +35,9 @@ namespace lestoma.App.ViewModels.Modulos
             get => _modulos;
             set => SetProperty(ref _modulos, value);
         }
-        public ModuloDTO ItemDelete { get; set; }
 
         public Command EditCommand { get; set; }
+        public Command DeleteCommand { get; set; }
         public Command AddCommand
         {
             get
@@ -56,7 +53,7 @@ namespace lestoma.App.ViewModels.Modulos
             base.OnNavigatedTo(parameters);
             if (parameters.ContainsKey("refresh"))
             {
-                ConsumoService(true);
+                LoadModulos();
             }
         }
         private async void UpaSelected(object objeto)
@@ -91,49 +88,48 @@ namespace lestoma.App.ViewModels.Modulos
             }
         }
 
-        public async void DeleteClicked()
+        public async void DeleteClicked(object obj)
         {
-            if (ItemDelete != null)
+            ModuloDTO detalle = (ModuloDTO)obj;
+            if (detalle == null)
+                return;
+            try
             {
-                try
+                UserDialogs.Instance.ShowLoading("Eliminando...");
+                if (_apiService.CheckConnection())
                 {
-                    if (_apiService.CheckConnection())
+                    ResponseDTO response = await _apiService.DeleteAsyncWithToken(URL_API,
+                        "modulos", detalle.Id, TokenUser.Token);
+                    if (response.IsExito)
                     {
-                        await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-                        ResponseDTO response = await _apiService.DeleteAsyncWithToken(URL_API,
-                            "modulos", ItemDelete.Id, TokenUser.Token);
-                        if (!response.IsExito)
-                        {
-
-                            CrossToastPopUp.Current.ShowToastError($"ERROR: {response.MensajeHttp}", Plugin.Toast.Abstractions.ToastLength.Long);
-                            return;
-                        }
-                        CrossToastPopUp.Current.ShowToastSuccess($"{response.MensajeHttp}", Plugin.Toast.Abstractions.ToastLength.Long);
-
+                        AlertSuccess(response.MensajeHttp);
+                        LoadModulos();
                     }
                     else
                     {
-                        CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.",
-                    Plugin.Toast.Abstractions.ToastLength.Long);
+                        AlertWarning(response.MensajeHttp);
                     }
+
                 }
-                catch (Exception ex)
+                else
                 {
-                    Debug.WriteLine(ex.Message);
-                }
-                finally
-                {
-                    await _navigationService.ClearPopupStackAsync();
+                    AlertNoInternetConnection();
                 }
             }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
         }
-        private async void ConsumoService(bool refresh = false)
+        private async void ConsumoService()
         {
             try
             {
-                if (!refresh)
-                    await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-
+                UserDialogs.Instance.ShowLoading("Cargando...");
                 Modulos = new ObservableCollection<ModuloDTO>();
                 ResponseDTO response = await _apiService.GetListAsyncWithToken<List<ModuloDTO>>(URL_API,
                     $"modulos/listado", TokenUser.Token);
@@ -152,9 +148,7 @@ namespace lestoma.App.ViewModels.Modulos
             }
             finally
             {
-                if (!refresh)
-                    if (PopupNavigation.Instance.PopupStack.Any())
-                        await PopupNavigation.Instance.PopAsync();
+                UserDialogs.Instance.HideLoading();
             }
 
         }

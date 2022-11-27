@@ -1,4 +1,5 @@
-﻿using Android.Runtime;
+﻿using Acr.UserDialogs;
+using Android.Runtime;
 using lestoma.App.Validators;
 using lestoma.App.Validators.Rules;
 using lestoma.App.ViewModels.Account;
@@ -28,6 +29,8 @@ namespace lestoma.App.ViewModels.Usuarios
         private ValidatableObject<string> rol;
         private InfoUserDTO _usuario;
         private RolDTO _rolActual;
+        private string _nombre;
+        private string _apellido;
         private EstadoDTO _estadoActual;
         private ObservableCollection<EstadoDTO> _estados;
         private ObservableCollection<RolDTO> _roles;
@@ -61,6 +64,24 @@ namespace lestoma.App.ViewModels.Usuarios
             set
             {
                 SetProperty(ref _rolActual, value);
+            }
+        }
+
+        public string Nombre
+        {
+            get => _nombre;
+            set
+            {
+                SetProperty(ref _nombre, value);
+            }
+        }
+
+        public string Apellido
+        {
+            get => _apellido;
+            set
+            {
+                SetProperty(ref _apellido, value);
             }
         }
 
@@ -249,6 +270,8 @@ namespace lestoma.App.ViewModels.Usuarios
                 this.Usuario = _usuario;
                 Title = "Editar";
                 LoadListados(_usuario);
+                this.Nombre = _usuario.Nombre;
+                this.Apellido = _usuario.Apellido;
             }
             else
             {
@@ -260,11 +283,9 @@ namespace lestoma.App.ViewModels.Usuarios
 
         private void CargarDatos()
         {
-            Name.Value = Usuario != null ? Usuario.Nombre : string.Empty;
-            LastName.Value = Usuario != null ? Usuario.Apellido : string.Empty;
-            Email.Value = Usuario != null ? Usuario.Email : string.Empty;
-            Rol.Value = Usuario != null ? Usuario.Rol.NombreRol : string.Empty;
-            Estado.Value = Usuario != null ? Usuario.Estado.NombreEstado : string.Empty;
+            Name.Value = this.Nombre.Trim();
+            LastName.Value = this.Apellido.Trim();
+            
         }
 
         private async void CreateOrEditClicked(object obj)
@@ -277,8 +298,7 @@ namespace lestoma.App.ViewModels.Usuarios
 
                     if (_apiService.CheckConnection())
                     {
-                        await _navigationService.NavigateAsync($"{nameof(LoadingPopupPage)}");
-
+                        UserDialogs.Instance.ShowLoading("Guardando");
                         if (Usuario.Id == 0)
                         {
                             var request = new RegistroRequest
@@ -336,8 +356,7 @@ namespace lestoma.App.ViewModels.Usuarios
             }
             finally
             {
-                if (PopupNavigation.Instance.PopupStack.Any())
-                    await PopupNavigation.Instance.PopAsync();
+                UserDialogs.Instance.HideLoading();
             }
         }
 
