@@ -41,7 +41,7 @@
                 Margin="0,10,0,24"
                 TextColor="White"
                 CornerRadius="10"
-                Clicked="BT_Verificar_Clicked"
+                Command="{Binding NavigateMenuOfflineCommand}"
                 BackgroundColor="{StaticResource PantoneVerdeDark}"
                 Text="Ir A Modo Offline"
                 VerticalOptions="End"

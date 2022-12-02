@@ -214,7 +214,7 @@
                                             VerticalOptions="FillAndExpand" />
                                         <inputLayout:SfTextInputLayout Hint="Seleccione Estado" HeightRequest="80" 
                                                                    ContainerBackgroundColor="Transparent" 
-                                                   Margin="10,0,0,0">
+                                                   Margin="10,10,0,0">
                                             <Picker x:Name="estadoEntry" TextColor="Black" ItemDisplayBinding="{Binding NombreEstado}"
                                              Style="{StaticResource BorderlessEntryStyle}" Margin="15,0" 
                                             SelectedItem="{Binding EstadoActual}" ItemsSource="{Binding Estados}">
@@ -247,7 +247,7 @@
                                             VerticalOptions="FillAndExpand" />
                                         <inputLayout:SfTextInputLayout Hint="Seleccione Rol" HeightRequest="80" 
                                                                    ContainerBackgroundColor="Transparent" 
-                                                   Margin="10,0,0,0">
+                                                   Margin="10,12,0,0">
                                             <Picker x:Name="RolEntry" TextColor="Black" ItemDisplayBinding="{Binding NombreRol}"
                                              Style="{StaticResource BorderlessEntryStyle}" Margin="15,0" 
                                             SelectedItem="{Binding RolActual}" ItemsSource="{Binding Roles}">

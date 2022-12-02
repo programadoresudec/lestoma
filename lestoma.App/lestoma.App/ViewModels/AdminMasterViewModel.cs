@@ -110,12 +110,6 @@ namespace lestoma.App.ViewModels
                         },
                         new Menu
                         {
-                            Icon =  "",
-                            PageName = $"{nameof(MandarTramar)}",
-                            Title = "Mandar trama"
-                        },
-                        new Menu
-                        {
                             Icon = "icon_upa",
                             PageName = $"{nameof(UpaPage)}",
                             Title = "Upas"

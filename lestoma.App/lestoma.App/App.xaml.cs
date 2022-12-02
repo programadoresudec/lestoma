@@ -107,7 +107,7 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<CreateOrEditUpaPage, CreateOrEditUpaViewModel>();
             containerRegistry.RegisterForNavigation<CreateOrEditDetalleUpaActividadPage, CreateOrEditDetalleUpaActividadViewModel>();
             containerRegistry.RegisterForNavigation<OnBoardingPage, OnBoardingViewModel>();
-            containerRegistry.RegisterForNavigation<ModeOfflinePage, ModeOfflinePageViewModel>();
+            containerRegistry.RegisterForNavigation<ModeOfflinePage, ModeOfflineViewModel>();
             containerRegistry.RegisterForNavigation<ModuloPage, ModuloViewModel>();
             containerRegistry.RegisterForNavigation<CreateOrEditModuloPage, CreateOrEditModuloViewModel>();
             containerRegistry.RegisterForNavigation<MenuReportsPage, MenuReportsViewModel>();

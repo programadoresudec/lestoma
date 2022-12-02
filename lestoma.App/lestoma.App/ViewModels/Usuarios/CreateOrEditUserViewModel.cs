@@ -3,14 +3,12 @@ using Android.Runtime;
 using lestoma.App.Validators;
 using lestoma.App.Validators.Rules;
 using lestoma.App.ViewModels.Account;
-using lestoma.App.Views;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Newtonsoft.Json;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -128,6 +126,7 @@ namespace lestoma.App.ViewModels.Usuarios
         {
             get
             {
+
                 return this.estado;
             }
 
@@ -137,7 +136,10 @@ namespace lestoma.App.ViewModels.Usuarios
                 {
                     return;
                 }
-
+                if (_estadoActual != null)
+                {
+                    this.estado.Value = _estadoActual.NombreEstado;
+                }
                 this.SetProperty(ref this.estado, value);
             }
         }
@@ -154,7 +156,10 @@ namespace lestoma.App.ViewModels.Usuarios
                 {
                     return;
                 }
-
+                if (_rolActual != null)
+                {
+                    this.rol.Value = _rolActual.NombreRol;
+                }
                 this.SetProperty(ref this.rol, value);
             }
         }
@@ -213,18 +218,20 @@ namespace lestoma.App.ViewModels.Usuarios
         /// Initialize whether fieldsvalue are true or false.
         /// </summary>
         /// <returns>true or false </returns>
-        public bool AreFieldsValid()
+        public bool AreFieldsValid(bool isEdit = false)
         {
-            bool isPasswordValid = true;
-            bool isEmailValid = this.Email.Validate();
+            bool isPasswordValid = isEdit;
+            bool isEmailValid = isEdit;
             bool isNameValid = this.Name.Validate();
             bool isLastNameValid = this.LastName.Validate();
-            if (IsEdit)
-            {
-                isPasswordValid = this.Password.Validate();
-            }
             bool isEstadoValid = this.Estado.Validate();
             bool isRolValid = this.Rol.Validate();
+            if (!isEdit)
+            {
+                isEmailValid = this.Email.Validate();
+                isPasswordValid = this.Password.Validate();
+            }
+
             return isPasswordValid && isNameValid && isLastNameValid && isEmailValid && isRolValid && isEstadoValid;
         }
         /// <summary>
@@ -267,7 +274,6 @@ namespace lestoma.App.ViewModels.Usuarios
                 IsVisible = false;
                 var json = parameters.GetValue<string>("usuario");
                 _usuario = JsonConvert.DeserializeObject<InfoUserDTO>(json);
-                this.Usuario = _usuario;
                 Title = "Editar";
                 LoadListados(_usuario);
                 this.Nombre = _usuario.Nombre;
@@ -283,23 +289,25 @@ namespace lestoma.App.ViewModels.Usuarios
 
         private void CargarDatos()
         {
-            Name.Value = this.Nombre.Trim();
-            LastName.Value = this.Apellido.Trim();
-            
+            Name.Value = Nombre != null ? this.Nombre.Trim() : string.Empty;
+            LastName.Value = Apellido != null ? this.Apellido.Trim() : string.Empty;
+            Rol.Value = RolActual != null ? RolActual.NombreRol : string.Empty;
+            Estado.Value = EstadoActual != null ? EstadoActual.NombreEstado : string.Empty;
         }
 
         private async void CreateOrEditClicked(object obj)
         {
             try
             {
+                UserDialogs.Instance.ShowLoading("Guardando...");
                 CargarDatos();
-                if (this.AreFieldsValid())
+                var isedit = Usuario != null ? true : false;
+                if (this.AreFieldsValid(isedit))
                 {
 
                     if (_apiService.CheckConnection())
                     {
-                        UserDialogs.Instance.ShowLoading("Guardando");
-                        if (Usuario.Id == 0)
+                        if (Usuario == null)
                         {
                             var request = new RegistroRequest
                             {
@@ -307,7 +315,8 @@ namespace lestoma.App.ViewModels.Usuarios
                                 Apellido = LastName.Value,
                                 Email = Email.Value,
                                 EstadoId = EstadoActual.Id,
-                                RolId = RolActual.Id
+                                RolId = RolActual.Id,
+                                Clave = Password.Item1.Value,
                             };
                             ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL_API, "usuarios/crear", request, TokenUser.Token);
                             if (respuesta.IsExito)
@@ -353,6 +362,7 @@ namespace lestoma.App.ViewModels.Usuarios
             catch (Exception ex)
             {
                 SeeError(ex);
+
             }
             finally
             {
