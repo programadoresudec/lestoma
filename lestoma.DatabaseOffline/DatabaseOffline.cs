@@ -14,6 +14,8 @@ namespace lestoma.DatabaseOffline
         public DatabaseOffline(string dbPath)
         {
             _databasePath = dbPath;
+            // aplicar que cuando se desloguee elimine la bd local de sqlite
+            //Database.EnsureDeleted();
             Database.EnsureCreated();
         }
         #endregion
