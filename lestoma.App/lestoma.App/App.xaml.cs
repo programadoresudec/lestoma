@@ -20,13 +20,16 @@ using lestoma.App.Views.Reportes.SuperAdmin;
 using lestoma.App.Views.Upas;
 using lestoma.App.Views.UpasActividades;
 using lestoma.App.Views.Usuarios;
+using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Services;
 using lestoma.DatabaseOffline.IConfiguration;
+using Newtonsoft.Json;
 using Prism;
 using Prism.Ioc;
 using Prism.Plugin.Popups;
+using System;
 using System.IO;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Implementation;
@@ -67,7 +70,27 @@ namespace lestoma.App
                 }
                 else
                 {
-                    await NavigationService.NavigateAsync($"{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
+                    TokenDTO TokenUser = !string.IsNullOrEmpty(MovilSettings.Token)
+                        ? JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token) : null;
+
+                    if (TokenUser != null)
+                    {
+                        if (TokenUser.Expiration <= DateTime.Now)
+                        {
+                            MovilSettings.Token = null;
+                            MovilSettings.IsLogin = false;
+                            await NavigationService.NavigateAsync($"NavigationPage/{nameof(LoginPage)}");
+                        }
+                        else
+                        {
+                            await NavigationService.NavigateAsync($"{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
+                        }
+                    }
+                    else
+                    {
+                        await NavigationService.NavigateAsync($"NavigationPage/{nameof(LoginPage)}");
+                    }
+
                 }
             }
 
