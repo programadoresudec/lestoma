@@ -1,4 +1,6 @@
-﻿using lestoma.App.Views.Componentes;
+﻿using Android.OS;
+using lestoma.App.Models;
+using lestoma.App.Views.Componentes;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
@@ -12,16 +14,36 @@ namespace lestoma.App.ViewModels.Componentes
     public class ComponentViewModel : BaseViewModel
     {
         private readonly IApiService _apiService;
-        private ObservableCollection<ComponentesDTO> _componentes;
+        private ObservableCollection<ComponenteDTO> _componentes;
         public ComponentViewModel(INavigationService navigationService, IApiService apiService) :
              base(navigationService)
         {
             _apiService = apiService;
 
             EditCommand = new Command<object>(ComponentSelected, CanNavigate);
+            VerEstadoCommand = new Command<object>(OnSeeStatus, CanNavigate);
             LoadComponents();
         }
 
+        private async void OnSeeStatus(object obj)
+        {
+            try
+            {
+                ComponenteDTO detalle = (ComponenteDTO)obj;
+                if (detalle == null)
+                    return;
+                var parameters = new NavigationParameters
+            {
+                { "estadoComponente", new InfoEstadoComponenteModel {Estado = detalle.TipoEstadoComponente, IsEdit = false } }
+            };
+                await _navigationService.NavigateAsync($"{nameof(InfoEstadoPopupPage)}", parameters);
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+
+        }
 
         private bool CanNavigate(object arg)
         {
@@ -36,7 +58,7 @@ namespace lestoma.App.ViewModels.Componentes
             }
         }
 
-        public ObservableCollection<ComponentesDTO> Componentes
+        public ObservableCollection<ComponenteDTO> Componentes
         {
             get => _componentes;
             set => SetProperty(ref _componentes, value);
@@ -44,6 +66,7 @@ namespace lestoma.App.ViewModels.Componentes
         public ModuloDTO ItemDelete { get; set; }
 
         public Command EditCommand { get; set; }
+        public Command VerEstadoCommand { get; set; }
         public Command AddCommand
         {
             get
@@ -89,15 +112,15 @@ namespace lestoma.App.ViewModels.Componentes
             IsBusy = true;
             try
             {
-                Componentes = new ObservableCollection<ComponentesDTO>();
-                ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<ComponentesDTO>(URL_API,
+                Componentes = new ObservableCollection<ComponenteDTO>();
+                ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<ComponenteDTO>(URL_API,
                     $"componentes/paginar", TokenUser.Token);
                 if (response.IsExito)
                 {
-                    var paginador = (Paginador<ComponentesDTO>)response.Data;
+                    var paginador = (Paginador<ComponenteDTO>)response.Data;
                     if (paginador.Datos.Count > 0)
                     {
-                        Componentes = new ObservableCollection<ComponentesDTO>(paginador.Datos);
+                        Componentes = new ObservableCollection<ComponenteDTO>(paginador.Datos);
                     }
                 }
             }

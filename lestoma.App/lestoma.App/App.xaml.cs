@@ -142,9 +142,11 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<MoreInfoPopupPage, MoreInfoPopupPageViewModel>();
             containerRegistry.RegisterForNavigation<ComponentPage, ComponentViewModel>();
             containerRegistry.RegisterForNavigation<CreateOrEditComponentPage, CreateOrEditComponentViewModel>();
+            containerRegistry.RegisterForNavigation<InfoEstadoPopupPage, InfoEstadoPopupViewModel>();
             containerRegistry.RegisterForNavigation<MessagePopupPage>();
             containerRegistry.RegisterForNavigation<DashboardHangFirePage, DashboardHangfireViewModel>();
             #endregion
+
 
 
         }

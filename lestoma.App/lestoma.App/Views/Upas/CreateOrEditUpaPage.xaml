@@ -93,10 +93,10 @@
                        Text="{StaticResource Error}" />
                         </Grid>
                     </border:SfBorder>
-                    
+
                     <!--  descripcion upa -->
-                    
-                    
+
+
                     <!--  cantidad upa -->
                     <Label 
             x:Name="cantidadValidationLabel"
@@ -139,11 +139,11 @@
                     </border:SfBorder>
                     <!--  cantidad upa -->
                     <buttons:SfButton
-            HorizontalOptions="FillAndExpand"
-            Command="{Binding CreateOrEditCommand}"
-             CornerRadius="4" Margin="15"
-             Style="{StaticResource GradientButtonStyle}"
-             Text="Guardar" />
+                        HorizontalOptions="FillAndExpand"
+                        Command="{Binding CreateOrEditCommand}"
+                        CornerRadius="4" Margin="15"
+                        Style="{StaticResource GradientButtonStyle}"
+                        Text="Guardar" />
                 </StackLayout>
             </StackLayout>
         </Grid>

@@ -152,7 +152,7 @@ namespace lestoma.App.ViewModels.Actividades
         {
             try
             {
-                UserDialogs.Instance.ShowLoading("Cargando...");
+                IsBusy = true;
                 Actividades.Clear();
                 ResponseDTO response = await _apiService.GetListAsyncWithToken<List<ActividadDTO>>(URL_API, "actividades/listado", TokenUser.Token);
                 if (response.IsExito)
@@ -167,7 +167,7 @@ namespace lestoma.App.ViewModels.Actividades
             }
             finally
             {
-                UserDialogs.Instance.HideLoading();
+                IsBusy = false;
             }
         }
     }

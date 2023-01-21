@@ -129,7 +129,7 @@ namespace lestoma.App.ViewModels.Modulos
         {
             try
             {
-                UserDialogs.Instance.ShowLoading("Cargando...");
+                IsBusy = true;
                 Modulos = new ObservableCollection<ModuloDTO>();
                 ResponseDTO response = await _apiService.GetListAsyncWithToken<List<ModuloDTO>>(URL_API,
                     $"modulos/listado", TokenUser.Token);
@@ -148,7 +148,7 @@ namespace lestoma.App.ViewModels.Modulos
             }
             finally
             {
-                UserDialogs.Instance.HideLoading();
+                IsBusy = false;
             }
 
         }

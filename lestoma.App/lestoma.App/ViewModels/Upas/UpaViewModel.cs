@@ -132,7 +132,7 @@ namespace lestoma.App.ViewModels.Upas
         {
             try
             {
-                UserDialogs.Instance.ShowLoading("Cargando...");
+                IsBusy = true;
                 Upas = new ObservableCollection<UpaDTO>();
                 ResponseDTO response = await _apiService.GetListAsyncWithToken<List<UpaDTO>>(URL_API,
                     $"upas/listado", TokenUser.Token);
@@ -152,7 +152,7 @@ namespace lestoma.App.ViewModels.Upas
             }
             finally
             {
-                UserDialogs.Instance.HideLoading();
+                IsBusy = false;
             }
         }
     }

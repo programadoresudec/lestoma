@@ -1,14 +1,11 @@
 ﻿using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests.Filters;
-using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 
 namespace lestoma.App.ViewModels.UpasActividades
 {
@@ -59,7 +56,7 @@ namespace lestoma.App.ViewModels.UpasActividades
                         {
                             Actividades.Add(new
                             {
-                                Nombre = item.Nombre
+                                item.Nombre
                             });
                         }
                     }

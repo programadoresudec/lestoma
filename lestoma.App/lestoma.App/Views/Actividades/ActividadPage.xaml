@@ -4,14 +4,27 @@
              xmlns:prism="http://prismlibrary.com" 
              xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms" 
              xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="lestoma.App.Views.Actividades.ActividadPage"
              Title="Actividades">
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="icon_plus.png" Command="{Binding AddCommand}"/>
     </ContentPage.ToolbarItems>
-
-    <syncfusion:SfListView  x:Name="LV_Actividades" ItemsSource="{Binding Actividades}"  TapCommand="{Binding EditCommand}" AutoFitMode="Height" 
+    <Grid>
+        <Grid Opacity=".8" BackgroundColor="Black" IsVisible="{Binding IsBusy}">
+            <busyindicator:SfBusyIndicator AnimationType="Cupertino" 
+                	                   BackgroundColor="{StaticResource PantoneGrisLight}"
+                	                   HorizontalOptions="Center"
+                	                   TextColor="Black"
+                	                   IsBusy="{Binding IsBusy}"
+                	                   Title="Cargando..."
+                	                   VerticalOptions="Center"
+                	                   ViewBoxWidth="80"
+                	                   ViewBoxHeight="80" />
+        </Grid>
+        <StackLayout Padding="10">
+            <syncfusion:SfListView  x:Name="LV_Actividades" ItemsSource="{Binding Actividades}"  TapCommand="{Binding EditCommand}" AutoFitMode="Height" 
                             SelectionBackgroundColor="Transparent">
 
         <syncfusion:SfListView.ItemTemplate>
@@ -62,4 +75,6 @@
             </DataTemplate>
         </syncfusion:SfListView.ItemTemplate>
     </syncfusion:SfListView>
+        </StackLayout>
+    </Grid>
 </ContentPage>
