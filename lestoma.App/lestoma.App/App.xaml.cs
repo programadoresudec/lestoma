@@ -46,7 +46,7 @@ namespace lestoma.App
     public partial class App
     {
         public static string DbPathSqlLite { get; set; } =
-            Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "lestoma.db");
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "lestoma.db");
 
         public App(IPlatformInitializer initializer)
             : base(initializer)

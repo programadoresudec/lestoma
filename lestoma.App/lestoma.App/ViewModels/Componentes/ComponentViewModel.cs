@@ -1,6 +1,7 @@
-﻿using Android.OS;
+﻿using Acr.UserDialogs;
 using lestoma.App.Models;
 using lestoma.App.Views.Componentes;
+using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
@@ -15,44 +16,22 @@ namespace lestoma.App.ViewModels.Componentes
     {
         private readonly IApiService _apiService;
         private ObservableCollection<ComponenteDTO> _componentes;
+
         public ComponentViewModel(INavigationService navigationService, IApiService apiService) :
-             base(navigationService)
+            base(navigationService)
         {
             _apiService = apiService;
 
             EditCommand = new Command<object>(ComponentSelected, CanNavigate);
-            VerEstadoCommand = new Command<object>(OnSeeStatus, CanNavigate);
+            VerEstadoCommand = new Command<object>(OnSeeStatusSelected, CanNavigate);
+            DeleteCommand = new Command<object>(DeleteClicked, CanNavigate);
             LoadComponents();
         }
 
-        private async void OnSeeStatus(object obj)
-        {
-            try
-            {
-                ComponenteDTO detalle = (ComponenteDTO)obj;
-                if (detalle == null)
-                    return;
-                var parameters = new NavigationParameters
-            {
-                { "estadoComponente", new InfoEstadoComponenteModel {Estado = detalle.TipoEstadoComponente, IsEdit = false } }
-            };
-                await _navigationService.NavigateAsync($"{nameof(InfoEstadoPopupPage)}", parameters);
-            }
-            catch (Exception ex)
-            {
-                SeeError(ex);
-            }
-
-        }
-
-        private bool CanNavigate(object arg)
-        {
-            return true;
-        }
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
-            if (parameters.ContainsKey("refresh"))
+            if (parameters.ContainsKey(Constants.REFRESH))
             {
                 ConsumoService(true);
             }
@@ -63,38 +42,105 @@ namespace lestoma.App.ViewModels.Componentes
             get => _componentes;
             set => SetProperty(ref _componentes, value);
         }
+
         public ModuloDTO ItemDelete { get; set; }
 
         public Command EditCommand { get; set; }
+        public Command DeleteCommand { get; set; }
         public Command VerEstadoCommand { get; set; }
+
         public Command AddCommand
         {
             get
             {
                 return new Command(async () =>
                 {
-                    await _navigationService.NavigateAsync(nameof(CreateOrEditComponentPage), null, useModalNavigation: true, true);
+                    await _navigationService.NavigateAsync(nameof(CreateOrEditComponentPage), null);
                 });
             }
         }
 
+        private bool CanNavigate(object arg)
+        {
+            return true;
+        }
+
         private async void ComponentSelected(object objeto)
         {
-            var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
-            var componente = lista.ItemData as ListadoComponenteDTO;
+            var list = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
+            var component = list.ItemData as ComponenteDTO;
 
-            if (componente == null)
+            if (component == null)
                 return;
 
-            var salida = componente.Id;
+            var salida = component.Id;
 
             var parameters = new NavigationParameters
             {
-                { "id", salida }
+                { "idComponent", salida }
             };
-            await _navigationService.NavigateAsync(nameof(CreateOrEditComponentPage), parameters, useModalNavigation: true, true);
-
+            await _navigationService.NavigateAsync(nameof(CreateOrEditComponentPage), parameters);
         }
+
+        private async void DeleteClicked(object obj)
+        {
+            ComponenteDTO detalle = (ComponenteDTO)obj;
+            if (detalle == null)
+                return;
+            try
+            {
+                UserDialogs.Instance.ShowLoading("Eliminando...");
+                if (_apiService.CheckConnection())
+                {
+                    ResponseDTO response = await _apiService.DeleteAsyncWithToken(URL_API,
+                        "componentes", detalle.Id, TokenUser.Token);
+                    if (response.IsExito)
+                    {
+                        AlertSuccess(response.MensajeHttp);
+                        LoadComponents();
+                    }
+                    else
+                    {
+                        AlertWarning(response.MensajeHttp);
+                    }
+                }
+                else
+                {
+                    AlertNoInternetConnection();
+                }
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+        }
+
+        private async void OnSeeStatusSelected(object obj)
+        {
+            try
+            {
+                ComponenteDTO detalle = (ComponenteDTO)obj;
+                if (detalle == null)
+                    return;
+                var parameters = new NavigationParameters
+                {
+                    {
+                        "estadoComponente",
+                        new InfoEstadoComponenteModel { Estado = detalle.TipoEstadoComponente, IsEdit = false }
+                    }
+                };
+                await _navigationService.NavigateAsync($"{nameof(InfoEstadoPopupPage)}", parameters);
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+        }
+
         private void LoadComponents()
         {
             if (_apiService.CheckConnection())

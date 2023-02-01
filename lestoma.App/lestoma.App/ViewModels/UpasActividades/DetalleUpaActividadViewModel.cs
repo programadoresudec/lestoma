@@ -1,4 +1,5 @@
 ﻿using lestoma.App.Views.UpasActividades;
+using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
@@ -47,7 +48,7 @@ namespace lestoma.App.ViewModels.UpasActividades
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
-            if (parameters.ContainsKey("refresh"))
+            if (parameters.ContainsKey(Constants.REFRESH))
             {
                 DetalleUpasActividades.Clear();
                 DetalleUpasActividades = new ObservableCollection<DetalleUpaActividadDTO>();

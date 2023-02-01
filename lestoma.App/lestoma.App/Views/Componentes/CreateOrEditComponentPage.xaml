@@ -2,7 +2,81 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
-             prism:ViewModelLocator.AutowireViewModel="True"
+             xmlns:control="clr-namespace:lestoma.App.Controls"
+             xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" 
+             xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms"
+             prism:ViewModelLocator.AutowireViewModel="True" Title="{Binding Title}"
              x:Class="lestoma.App.Views.Componentes.CreateOrEditComponentPage">
-  
+    <StackLayout Spacing="15" VerticalOptions="CenterAndExpand" Padding="30">
+        <ScrollView>
+            <StackLayout>
+                <border:SfBorder HeightRequest="85"  Style="{StaticResource ThemeBorderStyle}">
+                    <inputLayout:SfTextInputLayout Hint="Nombre" FocusedColor="Black" 
+                                                   ContainerBackgroundColor="Transparent"
+                                                   Margin="10">
+                        <control:BorderlessEntry x:Name="NameEntry" Text="{Binding InfoComponente.Nombre}"
+                                             PlaceholderColor="#606a7b"
+                                             Margin="15,0"
+                                             Style="{StaticResource BorderlessEntryStyle}" MaxLength="60"
+                                                 TextColor="#333942">
+                        </control:BorderlessEntry>
+                    </inputLayout:SfTextInputLayout>
+                </border:SfBorder>
+                <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
+                    <inputLayout:SfTextInputLayout Hint="modulos" HeightRequest="80" IsEnabled="{Binding IsEdit}"
+                                                   ContainerBackgroundColor="Transparent" 
+                                                   Margin="10">
+                        <Picker x:Name="moduloEntry" TextColor="Black"  ItemDisplayBinding="{Binding Nombre}" 
+                                    Style="{StaticResource BorderlessEntryStyle}" 
+                                SelectedItem="{Binding Modulo}" ItemsSource="{Binding Modulos}">
+                        </Picker>
+                    </inputLayout:SfTextInputLayout>
+                </border:SfBorder>
+                <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
+                    <inputLayout:SfTextInputLayout Hint="Upas" HeightRequest="80" IsEnabled="{Binding IsEdit}" 
+                                                   ContainerBackgroundColor="Transparent" 
+                                                  Margin="10">
+                        <Picker x:Name="upaEntry" TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
+                                    Style="{StaticResource BorderlessEntryStyle}"  
+                                SelectedItem="{Binding Upa}" ItemsSource="{Binding Upas}">
+                        </Picker>
+                    </inputLayout:SfTextInputLayout>
+                </border:SfBorder>
+                <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
+                    <inputLayout:SfTextInputLayout Hint="Actividades" HeightRequest="80" IsEnabled="{Binding IsEdit}" 
+                                                   ContainerBackgroundColor="Transparent" 
+                                                   Margin="10">
+                        <Picker x:Name="actividadEntry" TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
+                                    Style="{StaticResource BorderlessEntryStyle}"  
+                                SelectedItem="{Binding Actividad}" ItemsSource="{Binding Actividades}">
+                        </Picker>
+                    </inputLayout:SfTextInputLayout>
+                </border:SfBorder>
+                <buttons:SfButton x:Name="btnStatusComponent" HorizontalOptions="StartAndExpand"
+                    Command="{Binding AddStatusComponentCommand}"
+                    CornerRadius="4" Margin="15" ImageSource="{Binding IconStatusComponent}" ShowIcon="True"
+                    Style="{StaticResource LestomaButtonStyle}"
+                    Text="{Binding Title, StringFormat='{0} estado'}" />
+                <border:SfBorder Style="{StaticResource ThemeBorderStyle}">
+                    <Label Margin="10">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Estado Componente" FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                <Span Text="&#10;" TextColor="Transparent" FontSize="Small" />
+                                <Span Text="{Binding JsonEstadoComponente}" TextColor="Black" FontSize="Small"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                </border:SfBorder>
+            </StackLayout>
+        </ScrollView>
+        <buttons:SfButton x:Name="btnSave"
+            HorizontalOptions="FillAndExpand" 
+            Command="{Binding CreateOrEditCommand}"
+             CornerRadius="8" Margin="15"
+             Style="{StaticResource GradientButtonStyle}"
+             Text="Guardar" />
+    </StackLayout>
 </ContentPage>

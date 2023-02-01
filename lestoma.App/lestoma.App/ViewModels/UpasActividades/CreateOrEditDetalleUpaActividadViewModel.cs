@@ -17,7 +17,6 @@ namespace lestoma.App.ViewModels.UpasActividades
     public class CreateOrEditDetalleUpaActividadViewModel : BaseViewModel
     {
         private IApiService _apiService;
-
         private ObservableCollection<UserDTO> _users;
         private UserDTO _user;
         private ObservableCollection<NameDTO> _upas;
@@ -177,13 +176,13 @@ namespace lestoma.App.ViewModels.UpasActividades
                 if (_apiService.CheckConnection())
                 {
                     ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
-                           "actividades/listado-nombres", TokenUser.Token);
+                           "actividades/listar-nombres", TokenUser.Token);
 
                     ResponseDTO response1 = await _apiService.GetListAsyncWithToken<List<UserDTO>>(URL_API,
                         "usuarios/activos", TokenUser.Token);
 
                     ResponseDTO response2 = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
-                        "upas/listado-nombres", TokenUser.Token);
+                        "upas/listar-nombres", TokenUser.Token);
 
                     var listadoActividades = (List<NameDTO>)response.Data;
                     var listadoUsuarios = (List<UserDTO>)response1.Data;

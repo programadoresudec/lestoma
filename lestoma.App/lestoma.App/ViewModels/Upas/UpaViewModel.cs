@@ -1,5 +1,6 @@
 ﻿using Acr.UserDialogs;
 using lestoma.App.Views.Upas;
+using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
@@ -51,7 +52,7 @@ namespace lestoma.App.ViewModels.Upas
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
-            if (parameters.ContainsKey("refresh"))
+            if (parameters.ContainsKey(Constants.REFRESH))
             {
                 LoadUpas();
             }
