@@ -31,14 +31,8 @@ namespace lestoma.App.ViewModels
                 new OnboardingModel
                 {
                     Title = "Bienvenido a \n LESTOMA",
-                    Content = "Aplicativo para Monitoreo y Control de Sistemas Acuaponicos.",
+                    Content = "Aplicativo para Monitoreo y Control de Sistemas Acuapónicos.",
                     ImageUrl = "Logolestoma.svg"
-                },
-                new OnboardingModel
-                {
-                    Title = "Registrate",
-                    Content = "Para que comencemos!!!",
-                    ImageUrl = "ilust2.svg"
                 },
                 new OnboardingModel
                 {
@@ -48,9 +42,9 @@ namespace lestoma.App.ViewModels
                 },
                 new OnboardingModel
                 {
-                    Title = "Una solución Eficiente",
+                    Title = "Una solución Eficiente.",
                     Content = "Universidad De Cundinamarca",
-                    ImageUrl = "EscudoCundinamarca.svg"
+                    ImageUrl = "acuaponics.svg"
                 }
 
             };

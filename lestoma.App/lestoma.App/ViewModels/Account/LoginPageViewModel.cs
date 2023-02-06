@@ -37,6 +37,7 @@ namespace lestoma.App.ViewModels.Account
             : base(navigationService)
         {
             Title = "Iniciar Sesión";
+            IsBusy = false;
             _navigationService = navigationService;
             _apiService = apiService;
             InitializeProperties();
@@ -110,7 +111,7 @@ namespace lestoma.App.ViewModels.Account
                 {
                     if (_apiService.CheckConnection())
                     {
-                        await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Iniciando Sesión..."));
+                        IsBusy = true;
                         LoginRequest login = new LoginRequest
                         {
                             Email = Email.Value,
@@ -124,9 +125,7 @@ namespace lestoma.App.ViewModels.Account
                             TokenDTO token = ParsearData<TokenDTO>(respuesta);
                             MovilSettings.Token = JsonConvert.SerializeObject(token);
                             MovilSettings.IsLogin = true;
-                            AlertSuccess(respuesta.MensajeHttp);
                             await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
-                            ClosePopup();
                         }
                         else
                         {
@@ -138,9 +137,7 @@ namespace lestoma.App.ViewModels.Account
                             {
                                 AlertError(respuesta.MensajeHttp);
                             }
-                            ClosePopup();
                         }
-
                     }
                     else
                     {
@@ -150,9 +147,11 @@ namespace lestoma.App.ViewModels.Account
                 }
                 catch (Exception ex)
                 {
-                    if (PopupNavigation.Instance.PopupStack.Any())
-                        await PopupNavigation.Instance.PopAsync();
                     SeeError(ex);
+                }
+                finally
+                {
+                    IsBusy = false;
                 }
             }
         }

@@ -219,7 +219,7 @@
                             <buttons:SfButton
                             Command="{Binding SignUpCommand}"
                             HorizontalOptions="FillAndExpand"
-                            Style="{StaticResource GradientButtonStyle}"
+                            Style="{StaticResource LestomaGradientButtonStyle}"
                             Text="REGISTRARSE" />
                         </StackLayout>
 
@@ -236,7 +236,7 @@
 
                             <buttons:SfButton
                             Command="{Binding LoginCommand}"
-                            Style="{StaticResource TransparentButtonStyle}"
+                            Style="{StaticResource LestomaTransparentButtonStyle}"
                             Text="Iniciar sesión"/>
 
                         </StackLayout>

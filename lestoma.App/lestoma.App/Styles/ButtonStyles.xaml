@@ -6,8 +6,8 @@
     xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
     xmlns:graphics="clr-namespace:Syncfusion.XForms.Graphics;assembly=Syncfusion.Core.XForms">
 
-    <!--  Common style for Gradient buttons  -->
-    <Style x:Key="GradientButtonStyle" TargetType="buttons:SfButton">
+    <!--  Common style for Gradient button lestoma -->
+    <Style x:Key="LestomaGradientButtonStyle" TargetType="buttons:SfButton">
         <Setter Property="BackgroundGradient">
             <Setter.Value>
                 <graphics:SfLinearGradientBrush>
@@ -56,7 +56,7 @@
 
 
     <!--  Common style button lestoma -->
-    <Style x:Key="TransparentButtonStyle" TargetType="buttons:SfButton">
+    <Style x:Key="LestomaTransparentButtonStyle" TargetType="buttons:SfButton">
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="TextColor" Value="{DynamicResource PantoneAmarilloLight}" />
         <Setter Property="FontFamily" Value="Montserrat-SemiBold" />

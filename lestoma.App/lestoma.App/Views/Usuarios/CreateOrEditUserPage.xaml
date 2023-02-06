@@ -267,7 +267,7 @@
                             <buttons:SfButton
                             Command="{Binding CreateOrEditCommand}"
                             HorizontalOptions="FillAndExpand"
-                            Style="{StaticResource GradientButtonStyle}"
+                            Style="{StaticResource LestomaGradientButtonStyle}"
                             Text="GUARDAR" />
                         </StackLayout>
                     </StackLayout>

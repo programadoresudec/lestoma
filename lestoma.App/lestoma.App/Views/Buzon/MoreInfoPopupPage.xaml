@@ -4,8 +4,13 @@
              xmlns:prism="http://prismlibrary.com"
              prism:ViewModelLocator.AutowireViewModel="True"
              xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
-             xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup" 
-             x:Class="lestoma.App.Views.Buzon.MoreInfoPopupPage">
+             xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+                  xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+                  xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations" 
+                  xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms"
+                  xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" 
+                  xmlns:control="clr-namespace:lestoma.App.Controls" xmlns:core="clr-namespace:Syncfusion.XForms.Core;assembly=Syncfusion.Core.XForms"
+                  x:Class="lestoma.App.Views.Buzon.MoreInfoPopupPage">
     <popup:PopupPage.Animation>
         <animations:ScaleAnimation DurationIn="400"
                                    DurationOut="300"
@@ -17,27 +22,77 @@
                                    ScaleIn="1.2"
                                    ScaleOut="0.8" />
     </popup:PopupPage.Animation>
-    <AbsoluteLayout VerticalOptions="CenterAndExpand" Margin="20">
-        <cards:SfCardView BackgroundColor="White" CornerRadius="10" Margin="0,30,40,0" >
-            <StackLayout Margin="30" Spacing="15">
-                <Label Text="Descripción" FontSize="Large"  HorizontalTextAlignment="Start" TextColor="{StaticResource PantoneVerdeDark}"></Label>
-
+    <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+        <cards:SfCardView BackgroundColor="White" CornerRadius="10" 
+                          HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"
+                           Margin="{core:OnPlatformOrientationThickness  PhonePortrait='30,40',
+                                                                 PhoneLandscape='150,32',
+                                                                 TabletPortrait='200,50',
+                                                                 TabletLandscape='200,50',
+                                                                 Desktop='30'}">
+            <StackLayout VerticalOptions="End" WidthRequest="500"
+               Margin="0,0,0,20">
+                <Grid Padding="30,25,25,0">
+                    <Label Text="Información" FontSize="Large" 
+                           HorizontalTextAlignment="Start" TextColor="{StaticResource PantoneVerdeDark}"></Label>
+                    <Frame WidthRequest="32" HeightRequest="32"
+                        Padding="0" CornerRadius="40" HorizontalOptions="End">
+                        <ContentView>
+                            <ContentView.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnCloseButtonTapped" />
+                            </ContentView.GestureRecognizers>
+                            <Image Source="icon_close.png"  Aspect="AspectFill" />
+                        </ContentView>
+                    </Frame>
+                </Grid>
+                <StackLayout Spacing="20" Margin="30,0,30,20">
+                    <ffimageloading:CachedImage Aspect="AspectFit"
+                                                Source="{Binding Buzon.PathImagen, TargetNullValue = 'DefaultImagen.png'}" 
+                                                Margin="15,10,10,10"
+                                                WidthRequest="100"
+                                                CacheDuration= "50"
+                                                HeightRequest="150"
+                                                RetryCount= "3" 
+                                                RetryDelay= "600">
+                        <ffimageloading:CachedImage.Transformations>
+                            <fftransformations:CropTransformation />
+                        </ffimageloading:CachedImage.Transformations>
+                    </ffimageloading:CachedImage>
+                    <border:SfBorder HeightRequest="80" Style="{StaticResource ThemeBorderStyle}">
+                        <inputLayout:SfTextInputLayout Hint="Título" 
+                                                   ContainerBackgroundColor="Transparent"
+                                                   Margin="10,0,10,0">
+                            <control:BorderlessEntry Text="{Binding Buzon.Titulo}" IsEnabled="False"
+                                             PlaceholderColor="#606a7b" Margin="15,0"
+                                             Style="{StaticResource BorderlessEntryStyle}" MaxLength="60"
+                                                 TextColor="#333942">
+                            </control:BorderlessEntry>
+                        </inputLayout:SfTextInputLayout>
+                    </border:SfBorder>
+                    <border:SfBorder Style="{StaticResource ThemeBorderStyle}">
+                        <inputLayout:SfTextInputLayout Hint="Descripción" 
+                                                   ContainerBackgroundColor="Transparent" 
+                                                   Margin="10,0,10,0">
+                            <control:BorderlessEditor  IsEnabled="False"
+                                         MaxLength="500" IsExpandable="True"
+                                          Style="{StaticResource BorderlessEditorStyle}" Margin="15,0"
+                                         Text="{Binding Buzon.Descripcion}"
+                                         TextColor="Black">
+                            </control:BorderlessEditor>
+                        </inputLayout:SfTextInputLayout>
+                    </border:SfBorder>
+                    <border:SfBorder Style="{StaticResource ThemeBorderStyle}">
+                        <inputLayout:SfTextInputLayout Hint="Tipo de gravedad"  IsEnabled="False"
+                                                   ContainerBackgroundColor="Transparent" Margin="10,0,10,0">
+                            <control:BorderlessEntry Text="{Binding Buzon.TipoDeGravedad}"
+                                             PlaceholderColor="#606a7b" Margin="15,0"
+                                             Style="{StaticResource BorderlessEntryStyle}" MaxLength="60"
+                                                 TextColor="#333942">
+                            </control:BorderlessEntry>
+                        </inputLayout:SfTextInputLayout>
+                    </border:SfBorder>
+                </StackLayout>
             </StackLayout>
         </cards:SfCardView>
-        <ContentView AbsoluteLayout.LayoutBounds="1, 0, -1, -1" AbsoluteLayout.LayoutFlags="PositionProportional">
-            <ContentView.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnCloseButtonTapped" />
-            </ContentView.GestureRecognizers>
-            <Image
-                    x:Name="CloseImage"
-                    HeightRequest="32" Margin="20,10,0,0"
-                    WidthRequest="32">
-                <Image.Source>
-                    <OnPlatform
-                            x:TypeArguments="ImageSource"
-                            Android="icon_close.png"/>
-                </Image.Source>
-            </Image>
-        </ContentView>
-    </AbsoluteLayout>
+    </Grid>
 </popup:PopupPage>

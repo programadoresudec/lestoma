@@ -57,7 +57,7 @@
             HorizontalOptions="CenterAndExpand"
             Command="{Binding CreateOrEditCommand}"
              CornerRadius="4"
-             Style="{StaticResource GradientButtonStyle}"
+             Style="{StaticResource LestomaGradientButtonStyle}"
              Text="Guardar" />
         </StackLayout>
     </StackLayout>

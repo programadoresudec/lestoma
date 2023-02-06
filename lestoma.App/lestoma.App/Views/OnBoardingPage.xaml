@@ -8,9 +8,9 @@
              x:Class="lestoma.App.Views.OnBoardingPage">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Color x:Key="BlueColor">#55669F</Color>
+
             <Style TargetType="Label">
-                <Setter Property="TextColor" Value="{StaticResource BlueColor}" />
+                <Setter Property="TextColor" Value="{StaticResource PantoneVerdeSecond}" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
@@ -29,7 +29,7 @@
                     FontSize="Medium"
                     FontAttributes="Bold"
                     BackgroundColor="Transparent"
-                    TextColor="{StaticResource BlueColor}"
+                    TextColor="{StaticResource PantoneVerdeDark}"
                     Text="{Binding SkipButtonText}"
                     Command="{Binding SkipCommand}"/>
             <CarouselView x:Name="onBoardingCarousel"
@@ -60,7 +60,7 @@
             <IndicatorView
                     Grid.Row="2"
                     IndicatorsShape="Circle"
-                    IndicatorColor="{StaticResource BlueColor}"
+                    IndicatorColor="{StaticResource PantoneVerdeDark}"
                     SelectedIndicatorColor="DarkGray"
                     HorizontalOptions="Center"/>
         </Grid>

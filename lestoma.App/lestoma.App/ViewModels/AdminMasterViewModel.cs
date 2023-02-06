@@ -132,7 +132,16 @@ namespace lestoma.App.ViewModels
 
                 else if (UserApp.RolId == (int)TipoRol.Administrador)
                 {
-
+                    List<Menu> menuAdmin = new List<Menu>
+                    {
+                        new Menu
+                        {
+                            Icon = "icon_component",
+                            PageName = $"{nameof(ComponentPage)}",
+                            Title = "Componentes"
+                        }
+                    };
+                    menus.AddRange(menuAdmin);
                 }
                 menus.Add(new Menu
                 {

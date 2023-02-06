@@ -147,7 +147,7 @@ namespace lestoma.App.ViewModels.Componentes
 
                     if (id != Guid.Empty)
                     {
-                        var infoComponente = await _apiService.GetByIdAsyncWithToken<InfoComponenteDTO>(URL_API,
+                        var infoComponente = await _apiService.GetByIdAsyncWithToken(URL_API,
                             $"componentes/{id}", TokenUser.Token);
                         if (infoComponente.IsExito)
                         {

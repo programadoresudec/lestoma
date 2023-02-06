@@ -5,6 +5,8 @@
              xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms" 
              xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" 
              xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms"
+             xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms" 
+             xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
              prism:ViewModelLocator.AutowireViewModel="True"  Title="Componentes"
              x:Class="lestoma.App.Views.Componentes.ComponentPage">
     <ContentPage.ToolbarItems>
@@ -28,6 +30,19 @@
                 	                   ViewBoxHeight="80" />
         </Grid>
         <StackLayout Padding="10">
+            <StackLayout VerticalOptions="StartAndExpand">
+                <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}" IsVisible="{Binding IsSuperAdmin}">
+                    <inputLayout:SfTextInputLayout Hint="Upas" HeightRequest="80" IsVisible="{Binding IsSuperAdmin}"
+                                                   ContainerBackgroundColor="Transparent" VerticalOptions="Start"
+                                                  Margin="10">
+                        <Picker x:Name="upaEntry" TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
+                                    Style="{StaticResource BorderlessEntryStyle}"
+                                SelectedItem="{Binding Upa}" ItemsSource="{Binding Upas}">
+                        </Picker>
+                    </inputLayout:SfTextInputLayout>
+                </border:SfBorder>
+            </StackLayout>
+          
             <syncfusion:SfListView x:Name="LV_Componentes" AutoFitMode="DynamicHeight"
                                TapCommand="{Binding EditCommand}"
                              ItemsSource="{Binding Componentes}" SelectionBackgroundColor="Transparent">

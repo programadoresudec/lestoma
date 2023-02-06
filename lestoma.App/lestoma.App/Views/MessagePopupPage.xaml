@@ -21,7 +21,7 @@
     <StackLayout VerticalOptions="CenterAndExpand" Margin="20" Padding="20">
         <cards:SfCardView BackgroundColor="White" CornerRadius="10">
             <StackLayout Margin="20" Spacing="15">
-                <Image x:Name="Image_Icon" Aspect="AspectFit" WidthRequest="128" HeightRequest="128"/>
+                <Image x:Name="Image_Icon" Aspect="AspectFit" WidthRequest="112" HeightRequest="112"/>
                 <Label x:Name="Label_Message" TextColor="Black" FontSize="Medium" HorizontalTextAlignment="Center" 
                        VerticalTextAlignment="Center" FontAttributes="Italic"
                 VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" />

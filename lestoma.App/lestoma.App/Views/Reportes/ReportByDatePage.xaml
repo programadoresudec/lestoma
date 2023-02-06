@@ -30,7 +30,7 @@
             HorizontalOptions="CenterAndExpand"
             Command="{Binding DownloadCommand}"
              CornerRadius="4"
-             Style="{StaticResource GradientButtonStyle}"
+             Style="{StaticResource LestomaGradientButtonStyle}"
              Text="Descargar" />
         </StackLayout>
     </ContentPage.Content>

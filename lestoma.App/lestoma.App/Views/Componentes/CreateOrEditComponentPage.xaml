@@ -76,7 +76,7 @@
             HorizontalOptions="FillAndExpand" 
             Command="{Binding CreateOrEditCommand}"
              CornerRadius="8" Margin="15"
-             Style="{StaticResource GradientButtonStyle}"
+             Style="{StaticResource LestomaGradientButtonStyle}"
              Text="Guardar" />
     </StackLayout>
 </ContentPage>

@@ -56,7 +56,7 @@
                         HorizontalOptions="FillAndExpand" 
                         Command="{Binding SaveEstadoCommand}"
                         CornerRadius="4" IsVisible="{Binding IsEdit}"
-                        Style="{StaticResource GradientButtonStyle}"
+                        Style="{StaticResource LestomaGradientButtonStyle}"
                         Text="Guardar" />
                 </StackLayout>
             </StackLayout>

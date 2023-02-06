@@ -48,17 +48,19 @@
                         </inputLayout:SfTextInputLayout>
                     </Grid>
                 </border:SfBorder>
-                <inputLayout:SfTextInputLayout Hint="Actividades" x:Name="InputComboBox" ContainerBackgroundColor="Transparent" 
+                <border:SfBorder Style="{StaticResource ThemeBorderStyle}">
+                    <inputLayout:SfTextInputLayout Hint="Actividades" x:Name="InputComboBox" ContainerBackgroundColor="Transparent" 
                                                    Margin="10,0,0,0">
-                    <combobox:SfComboBox EnableAutoSize="True" x:Name="comboBoxActividades" AllowFiltering="true" ComboBoxMode="SuggestAppend"
+                        <combobox:SfComboBox EnableAutoSize="True" x:Name="comboBoxActividades" AllowFiltering="true" ComboBoxMode="SuggestAppend"
                                          DisplayMemberPath="Nombre" IsEditableMode="True" NoResultsFoundText="Actividad no encontrada." 
                                      DataSource="{Binding Actividades}"  >
-                        <combobox:SfComboBox.Behaviors>
-                            <prism:EventToCommandBehavior EventName="SelectionChanging"
+                            <combobox:SfComboBox.Behaviors>
+                                <prism:EventToCommandBehavior EventName="SelectionChanging"
                                           Command="{Binding ItemSelectCommand}" EventArgsParameterPath="Value" />
-                        </combobox:SfComboBox.Behaviors>
-                    </combobox:SfComboBox>
-                </inputLayout:SfTextInputLayout>
+                            </combobox:SfComboBox.Behaviors>
+                        </combobox:SfComboBox>
+                    </inputLayout:SfTextInputLayout>
+                </border:SfBorder>
                 <cards:SfCardView Margin="20" Padding="15,0,15,0" IsVisible="{Binding IsVisibleActividades}" CornerRadius="30,30,30,30">
                     <StackLayout Spacing="20" VerticalOptions="Center" Padding="10"  IsVisible="{Binding IsVisibleActividades}">
                         <Label Text="Actividades agregadas"   IsVisible="{Binding IsVisibleActividades}" TextColor="{StaticResource PantoneVerdeSecond}"
@@ -76,7 +78,7 @@
                                     <prism:EventToCommandBehavior EventName="ItemRemoved"
                                           Command="{Binding ItemRemoveCommand}" EventArgsParameterPath="RemovedItem" />
                                 </buttons:SfChipGroup.Behaviors>
-                                
+
                                 <buttons:SfChipGroup.ChipLayout>
                                     <FlexLayout 
                                         HorizontalOptions="Start"
@@ -96,7 +98,7 @@
             HorizontalOptions="CenterAndExpand"
             Command="{Binding CreateOrEditCommand}"
              CornerRadius="4" Margin="15"
-             Style="{StaticResource GradientButtonStyle}"
+             Style="{StaticResource LestomaGradientButtonStyle}"
              Text="Guardar" />
     </StackLayout>
 </ContentPage>

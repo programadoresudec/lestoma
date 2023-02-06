@@ -411,7 +411,7 @@
             <buttons:SfButton
                     Margin="0,24,0,32"
                     Command="{Binding LogoutCommand}"
-                    Style="{StaticResource GradientButtonStyle}"
+                    Style="{StaticResource LestomaGradientButtonStyle}"
                     Text="Cerrar Sesión"
                     WidthRequest="245" />
 

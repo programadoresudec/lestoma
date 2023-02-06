@@ -201,7 +201,7 @@ namespace lestoma.App.ViewModels.UpasActividades
                         Upa = Upas.Where(x => x.Id == detalleUpaActividad.UpaId).FirstOrDefault();
                         User = Usuarios.Where(x => x.Id == detalleUpaActividad.UsuarioId).FirstOrDefault();
                         ResponseDTO listaActividadesxUser = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
-                          $"detalle-upas-actividades/lista-actividades-by-upa-usuario?UpaId=" +
+                          $"detalle-upas-actividades/listar-actividades-upa-usuario?UpaId=" +
                           $"{Upa.Id}&UsuarioId={User.Id}", TokenUser.Token);
                         if (listaActividadesxUser.IsExito)
                         {
@@ -245,7 +245,7 @@ namespace lestoma.App.ViewModels.UpasActividades
                 }
                 else
                 {
-                    editar();
+                    Editar();
                 }
 
             }
@@ -295,7 +295,7 @@ namespace lestoma.App.ViewModels.UpasActividades
             }
         }
 
-        private async void editar()
+        private async void Editar()
         {
             try
             {
