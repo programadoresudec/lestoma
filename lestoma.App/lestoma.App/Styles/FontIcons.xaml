@@ -62,5 +62,7 @@
     <x:String x:Key="Menu">&#xe715;</x:String>
     <x:String x:Key="Category">&#xe733;</x:String>
     <x:String x:Key="Error">&#xe707;</x:String>
-
+    <x:String x:Key="Logout">&#xe747;</x:String>
+    <x:String x:Key="ChangePassword">&#xe73f;</x:String>
+    <x:String x:Key="Document">&#xe73a;</x:String>
 </ResourceDictionary>

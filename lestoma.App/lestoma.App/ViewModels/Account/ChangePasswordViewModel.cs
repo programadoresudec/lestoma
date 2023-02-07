@@ -2,7 +2,6 @@
 using lestoma.App.Validators.Rules;
 using lestoma.App.Views;
 using lestoma.App.Views.Account;
-using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
@@ -11,7 +10,6 @@ using Newtonsoft.Json;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using Xamarin.Forms;
 
@@ -32,7 +30,7 @@ namespace lestoma.App.ViewModels.Account
         public ChangePasswordViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
-            Title = "Iniciar Sesión";
+            Title = "Cuenta";
             _navigationService = navigationService;
             _apiService = apiService;
             this.InitializeProperties();
