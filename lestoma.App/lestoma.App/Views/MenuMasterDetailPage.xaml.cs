@@ -7,10 +7,10 @@ using Xamarin.Forms;
 
 namespace lestoma.App.Views
 {
-    public partial class AdminMasterDetailPage : MasterDetailPage
+    public partial class MenuMasterDetailPage : MasterDetailPage
     {
         private readonly INavigationService _navigationService;
-        public AdminMasterDetailPage(INavigationService navigationService)
+        public MenuMasterDetailPage(INavigationService navigationService)
         {
             _navigationService = navigationService;
             InitializeComponent();
@@ -25,7 +25,7 @@ namespace lestoma.App.Views
                 {
                     if (Connectivity.NetworkAccess == NetworkAccess.Internet)
                     {
-                        await _navigationService.NavigateAsync($"{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
+                        await _navigationService.NavigateAsync($"{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
                     }
                     else
                     {

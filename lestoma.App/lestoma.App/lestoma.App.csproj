@@ -124,7 +124,7 @@
     <EmbeddedResource Update="Views\Actividades\CrearOrEditActividadPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\AdminMasterDetailPage.xaml">
+    <EmbeddedResource Update="Views\MenuMasterDetailPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Buzon\BuzonDeReportesPage.xaml">
@@ -164,6 +164,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\DashboardHangFirePage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Laboratorio\ComponentesUpaPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Laboratorio\ModulosUpaPage.xaml">
@@ -222,6 +225,9 @@
   <ItemGroup>
     <Compile Update="Styles\NavigationStyles.xaml.cs">
       <DependentUpon>NavigationStyles.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MenuMasterDetailPage.xaml.cs">
+      <DependentUpon>MenuMasterDetailPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\Reportes\MenuReportsPage.xaml.cs">
       <DependentUpon>MenuReportsPage.xaml</DependentUpon>

@@ -144,7 +144,7 @@ namespace lestoma.App.ViewModels.Account
                         if (respuesta.IsExito)
                         {
                             AlertSuccess(respuesta.MensajeHttp);
-                            await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(SettingsPage)}");
+                            await _navigationService.NavigateAsync($"/{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(SettingsPage)}");
                         }
                         else
                         {

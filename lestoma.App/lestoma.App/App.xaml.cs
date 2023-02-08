@@ -85,7 +85,7 @@ namespace lestoma.App
                         }
                         else
                         {
-                            await NavigationService.NavigateAsync($"{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
+                            await NavigationService.NavigateAsync($"{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
                         }
                     }
                     else
@@ -117,7 +117,7 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<RegistroPage, RegistroViewModel>();
             containerRegistry.RegisterForNavigation<AboutPage, AboutPageViewModel>();
             containerRegistry.RegisterForNavigation<ForgotPasswordPage, ForgotPasswordViewModel>();
-            containerRegistry.RegisterForNavigation<AdminMasterDetailPage, MenuMasterViewModel>();
+            containerRegistry.RegisterForNavigation<MenuMasterDetailPage, MenuMasterViewModel>();
             containerRegistry.RegisterForNavigation<SettingsPage, SettingsViewModel>();
             containerRegistry.RegisterForNavigation<ResetPasswordPage, ResetPasswordViewModel>();
             containerRegistry.RegisterForNavigation<ChangePasswordPage, ChangePasswordViewModel>();
@@ -147,8 +147,10 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<InfoEstadoPopupPage, InfoEstadoPopupViewModel>();
             containerRegistry.RegisterForNavigation<MessagePopupPage>();
             containerRegistry.RegisterForNavigation<DashboardHangFirePage, DashboardHangfireViewModel>();
-            containerRegistry.RegisterForNavigation<ModulosUpaPage, ModuloUpaViewModel>();
+            containerRegistry.RegisterForNavigation<ModulosUpaPage, ModulosUpaViewModel>();
+            containerRegistry.RegisterForNavigation<ComponentesUpaPage, ComponentesUpaViewModel>();
             #endregion
+
         }
     }
 }

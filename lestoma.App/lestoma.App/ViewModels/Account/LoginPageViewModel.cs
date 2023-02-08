@@ -123,7 +123,7 @@ namespace lestoma.App.ViewModels.Account
                             TokenDTO token = ParsearData<TokenDTO>(respuesta);
                             MovilSettings.Token = JsonConvert.SerializeObject(token);
                             MovilSettings.IsLogin = true;
-                            await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
+                            await _navigationService.NavigateAsync($"/{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
                         }
                         else
                         {

@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="http://prismlibrary.com" 
-             xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms"
-             xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms" xmlns:controls="clr-namespace:lestoma.App.Controls"
+             xmlns:prism="http://prismlibrary.com" xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms" 
+             xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms" 
+             xmlns:controls="clr-namespace:lestoma.App.Controls"
              prism:ViewModelLocator.AutowireViewModel="True" Title="{Binding Title}"
-             x:Class="lestoma.App.Views.Laboratorio.ModulosUpaPage">
+             x:Class="lestoma.App.Views.Laboratorio.ComponentesUpaPage">
     <Grid>
         <Grid Opacity=".8" BackgroundColor="Black" IsVisible="{Binding IsBusy}">
             <busyindicator:SfBusyIndicator AnimationType="Cupertino" 
@@ -20,12 +20,13 @@
         </Grid>
         <StackLayout Padding="10">
             <syncfusion:SfListView  x:Name="LV_Modulos" 
-                             ItemsSource="{Binding Modulos}" TapCommand="{Binding SeeComponentCommand}" 
+                             ItemsSource="{Binding Componentes}"
+                                    TapCommand="{Binding RedirectionTramaCommand}" 
                                     AutoFitMode="Height" SelectionBackgroundColor="Transparent">
 
                 <syncfusion:SfListView.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout Orientation="Vertical" Margin="0,10,0,10">
+                        <StackLayout Orientation="Vertical"  Margin="0,10,0,10">
                             <BoxView Style="{StaticResource HorizontalSeparatorStyle}" />
                             <StackLayout Orientation="Horizontal">
                                 <Label HorizontalOptions="Start"

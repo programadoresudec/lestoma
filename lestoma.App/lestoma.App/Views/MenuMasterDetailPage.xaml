@@ -3,7 +3,7 @@
                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"            
                   xmlns:prism="http://prismlibrary.com" xmlns:gradient="clr-namespace:Syncfusion.XForms.Graphics;assembly=Syncfusion.Core.XForms" 
                   prism:ViewModelLocator.AutowireViewModel="True"
-                  x:Class="lestoma.App.Views.AdminMasterDetailPage">
+                  x:Class="lestoma.App.Views.MenuMasterDetailPage">
 
     <MasterDetailPage.Master>
         <ContentPage Title="Menu">

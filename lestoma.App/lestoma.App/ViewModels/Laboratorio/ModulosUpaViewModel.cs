@@ -1,4 +1,4 @@
-﻿using lestoma.App.Views.Modulos;
+﻿using lestoma.App.Views.Laboratorio;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
@@ -10,16 +10,18 @@ using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Laboratorio
 {
-    public class ModuloUpaViewModel : BaseViewModel
+    public class ModulosUpaViewModel : BaseViewModel
     {
         private readonly IApiService _apiService;
         private ObservableCollection<NameDTO> _modulos;
-        public ModuloUpaViewModel(INavigationService navigationService, IApiService apiService) :
+
+        public ModulosUpaViewModel(INavigationService navigationService, IApiService apiService) :
              base(navigationService)
         {
             _apiService = apiService;
+            Title = "Modulos";
             _modulos = new ObservableCollection<NameDTO>();
-            seeComponentCommand = new Command<object>(ModuloSelected, CanNavigate);
+            SeeComponentCommand = new Command<object>(ModuloSelected, CanNavigate);
             LoadModulos();
         }
         private bool CanNavigate(object arg)
@@ -34,15 +36,8 @@ namespace lestoma.App.ViewModels.Laboratorio
             set => SetProperty(ref _modulos, value);
         }
 
-        public Command seeComponentCommand { get; set; }
-        public override void OnNavigatedTo(INavigationParameters parameters)
-        {
-            base.OnNavigatedTo(parameters);
-            if (parameters.ContainsKey(Constants.REFRESH))
-            {
-                LoadModulos();
-            }
-        }
+        public Command SeeComponentCommand { get; set; }
+       
         private async void ModuloSelected(object objeto)
         {
             var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
@@ -55,7 +50,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             {
                 { "ModuloId", modulo.Id }
             };
-            await _navigationService.NavigateAsync(nameof(CreateOrEditModuloPage), parameters);
+            await _navigationService.NavigateAsync(nameof(ComponentesUpaPage), parameters);
 
         }
         private void LoadModulos()
@@ -74,7 +69,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             throw new NotImplementedException();
         }
 
-      
+
         private async void ConsumoService()
         {
             try

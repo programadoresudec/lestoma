@@ -19,7 +19,7 @@ namespace lestoma.App.ViewModels
             {
                 return new Command(async () =>
                 {
-                    await _navigationService.NavigateAsync($"{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
+                    await _navigationService.NavigateAsync($"{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
                 });
             }
         }
