@@ -166,6 +166,9 @@
     <EmbeddedResource Update="Views\DashboardHangFirePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Views\Laboratorio\ModulosUpaPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\LoadingPopupPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -226,7 +229,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\Laboratorio\" />
     <Folder Include="ViewModels\Reportes\Admin\" />
     <Folder Include="Views\Reportes\Admin\" />
   </ItemGroup>
@@ -242,7 +244,7 @@
 
   <ItemGroup>
     <Reference Include="Mono.Android">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v10.0\Mono.Android.dll</HintPath>
+      <HintPath>C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v10.0\Mono.Android.dll</HintPath>
     </Reference>
   </ItemGroup>
 
