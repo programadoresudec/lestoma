@@ -12,7 +12,6 @@
             <x:String x:Key="UrlDominio">https://www.lestoma.site/</x:String>
             <ResourceDictionary.MergedDictionaries>
                 <themes:LightTheme />
-                <themes:DarkTheme />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
         <!-- Application resource dictionary -->
