@@ -21,7 +21,7 @@ namespace lestoma.App.ViewModels.Modulos
         {
             _apiService = apiService;
             _modulos = new ObservableCollection<ModuloDTO>();
-            EditCommand = new Command<object>(UpaSelected, CanNavigate);
+            EditCommand = new Command<object>(ModuloSelected, CanNavigate);
             DeleteCommand = new Command<object>(DeleteClicked, CanNavigate);
             LoadModulos();
         }
@@ -57,7 +57,7 @@ namespace lestoma.App.ViewModels.Modulos
                 LoadModulos();
             }
         }
-        private async void UpaSelected(object objeto)
+        private async void ModuloSelected(object objeto)
         {
             var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
             var modulo = lista.ItemData as ModuloDTO;

@@ -95,9 +95,10 @@
             </StackLayout>
         </ScrollView>
         <buttons:SfButton
-            HorizontalOptions="CenterAndExpand"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="EndAndExpand"
             Command="{Binding CreateOrEditCommand}"
-             CornerRadius="4" Margin="15"
+             CornerRadius="8" Margin="15"
              Style="{StaticResource LestomaGradientButtonStyle}"
              Text="Guardar" />
     </StackLayout>

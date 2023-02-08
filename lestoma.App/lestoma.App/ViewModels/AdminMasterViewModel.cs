@@ -4,6 +4,7 @@ using lestoma.App.Views.Account;
 using lestoma.App.Views.Actividades;
 using lestoma.App.Views.Buzon;
 using lestoma.App.Views.Componentes;
+using lestoma.App.Views.Laboratorio;
 using lestoma.App.Views.Modulos;
 using lestoma.App.Views.Reportes;
 using lestoma.App.Views.Upas;
@@ -21,11 +22,11 @@ using Xamarin.Essentials;
 
 namespace lestoma.App.ViewModels
 {
-    public class AdminMasterViewModel : BaseViewModel
+    public class MenuMasterViewModel : BaseViewModel
     {
-        private static AdminMasterViewModel _instance;
+        private static MenuMasterViewModel _instance;
         private UserDTO _userApp;
-        public AdminMasterViewModel(INavigationService navigationService)
+        public MenuMasterViewModel(INavigationService navigationService)
             : base(navigationService)
         {
             _instance = this;
@@ -33,7 +34,7 @@ namespace lestoma.App.ViewModels
             LoadMenus();
         }
         public ObservableCollection<MenuItemViewModel> Menus { get; set; }
-        public static AdminMasterViewModel GetInstance()
+        public static MenuMasterViewModel GetInstance()
         {
             return _instance;
         }
@@ -65,7 +66,7 @@ namespace lestoma.App.ViewModels
                 new Menu
                 {
                     Icon = "icon_acuaponic",
-                    PageName = UserApp.RolId == (int)TipoRol.Administrador ? $"{nameof(AboutPage)}" : $"{nameof(AboutPage)}",
+                    PageName =  $"{nameof(ModulosUpaPage)}",
                     Title = "Laboratorio lestoma"
                 }
             };

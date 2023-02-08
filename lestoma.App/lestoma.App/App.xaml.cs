@@ -117,7 +117,7 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<RegistroPage, RegistroViewModel>();
             containerRegistry.RegisterForNavigation<AboutPage, AboutPageViewModel>();
             containerRegistry.RegisterForNavigation<ForgotPasswordPage, ForgotPasswordViewModel>();
-            containerRegistry.RegisterForNavigation<AdminMasterDetailPage, AdminMasterViewModel>();
+            containerRegistry.RegisterForNavigation<AdminMasterDetailPage, MenuMasterViewModel>();
             containerRegistry.RegisterForNavigation<SettingsPage, SettingsViewModel>();
             containerRegistry.RegisterForNavigation<ResetPasswordPage, ResetPasswordViewModel>();
             containerRegistry.RegisterForNavigation<ChangePasswordPage, ChangePasswordViewModel>();
@@ -147,7 +147,7 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<InfoEstadoPopupPage, InfoEstadoPopupViewModel>();
             containerRegistry.RegisterForNavigation<MessagePopupPage>();
             containerRegistry.RegisterForNavigation<DashboardHangFirePage, DashboardHangfireViewModel>();
-            containerRegistry.RegisterForNavigation<ModulosUpaPage, ModulosUpaViewModel>();
+            containerRegistry.RegisterForNavigation<ModulosUpaPage, ModuloUpaViewModel>();
             #endregion
         }
     }
