@@ -9,12 +9,12 @@ using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Laboratorio
 {
-    public class ComponentesUpaViewModel : BaseViewModel
+    public class ComponentesModuloViewModel : BaseViewModel
     {
         private readonly IApiService _apiService;
         private ObservableCollection<ComponentePorModuloDTO> _componentes;
         private Guid _moduloId;
-        public ComponentesUpaViewModel(INavigationService navigationService, IApiService apiService) :
+        public ComponentesModuloViewModel(INavigationService navigationService, IApiService apiService) :
              base(navigationService)
         {
             _apiService = apiService;

@@ -5,7 +5,7 @@
              xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms" 
              xmlns:controls="clr-namespace:lestoma.App.Controls"
              prism:ViewModelLocator.AutowireViewModel="True" Title="{Binding Title}"
-             x:Class="lestoma.App.Views.Laboratorio.ComponentesUpaPage">
+             x:Class="lestoma.App.Views.Laboratorio.ComponentesModuloPage">
     <Grid>
         <Grid Opacity=".8" BackgroundColor="Black" IsVisible="{Binding IsBusy}">
             <busyindicator:SfBusyIndicator AnimationType="Cupertino" 
@@ -19,28 +19,44 @@
                 	                   ViewBoxHeight="80" />
         </Grid>
         <StackLayout Padding="10">
-            <syncfusion:SfListView  x:Name="LV_Modulos" 
+            <syncfusion:SfListView  x:Name="LV_Componentes" 
                              ItemsSource="{Binding Componentes}"
                                     TapCommand="{Binding RedirectionTramaCommand}" 
                                     AutoFitMode="Height" SelectionBackgroundColor="Transparent">
-
                 <syncfusion:SfListView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout Orientation="Vertical"  Margin="0,10,0,10">
-                            <BoxView Style="{StaticResource HorizontalSeparatorStyle}" />
                             <StackLayout Orientation="Horizontal">
                                 <Label HorizontalOptions="Start"
                                         Margin="16,0,0,0"
                                         Style="{StaticResource IconLabelStyle}"
-                                        Text="{StaticResource Settings}" />
+                                        Text="{StaticResource Category}" />
                                 <!--  Edit profile label  -->
-                                <Label
+                                <StackLayout Orientation="Vertical">
+                                    <Label
                                     Margin="16,0,0,0"
                                     FontFamily="Montserrat-SemiBold"
                                     HorizontalOptions="StartAndExpand"
                                     Style="{StaticResource TitleLabelStyle}"
                                     Text="{Binding Nombre}"
                                     VerticalOptions="Center" />
+                                    <Label
+                                    Margin="16,0,0,0"
+                                    FontFamily="Montserrat-Regular"
+                                    FontSize="12"
+                                    HorizontalOptions="StartAndExpand"
+                                    Style="{StaticResource TitleLabelStyle}"
+                                    Text="{Binding EstadoComponente.TipoEstado, StringFormat='ESTADO - {0}'}"
+                                    VerticalOptions="Center" />
+                                    <Label
+                                    Margin="16,0,0,0"
+                                    FontFamily="Montserrat-Regular"
+                                    FontSize="12"
+                                    HorizontalOptions="StartAndExpand"
+                                    Style="{StaticResource TitleLabelStyle}"
+                                    Text="{Binding Actividad, StringFormat='ACTIVIDAD - {0}'}"
+                                    VerticalOptions="Center" />
+                                </StackLayout>
                                 <!--  Navigation icon  -->
                                 <Label
                                     HorizontalOptions="EndAndExpand"
@@ -48,7 +64,7 @@
                                     Style="{StaticResource IconLabelStyle}"
                                     Text="{StaticResource Next}" />
                             </StackLayout>
-                            <BoxView Style="{StaticResource HorizontalSeparatorStyle}" />
+                            <BoxView  Style="{StaticResource HorizontalSeparatorStyle}" HeightRequest="2" />
                         </StackLayout>
                     </DataTemplate>
                 </syncfusion:SfListView.ItemTemplate>

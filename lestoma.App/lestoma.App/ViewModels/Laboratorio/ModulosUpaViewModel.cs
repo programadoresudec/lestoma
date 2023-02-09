@@ -1,5 +1,4 @@
 ﻿using lestoma.App.Views.Laboratorio;
-using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using Prism.Navigation;
@@ -37,7 +36,7 @@ namespace lestoma.App.ViewModels.Laboratorio
         }
 
         public Command SeeComponentCommand { get; set; }
-       
+
         private async void ModuloSelected(object objeto)
         {
             var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
@@ -50,7 +49,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             {
                 { "ModuloId", modulo.Id }
             };
-            await _navigationService.NavigateAsync(nameof(ComponentesUpaPage), parameters);
+            await _navigationService.NavigateAsync(nameof(ComponentesModuloPage), parameters);
 
         }
         private void LoadModulos()

@@ -96,79 +96,12 @@
                     TextColor="{DynamicResource Gray-800}"
                     VerticalOptions="Center"
                     VerticalTextAlignment="Center" />
-
-            <!--  Grid for Notifications label and switch  -->
-            <Grid
-                    BackgroundColor="{DynamicResource Gray-Bg}"
-                    ColumnDefinitions="Auto, *, Auto"
-                    ColumnSpacing="0"
-                    RowSpacing="0">
-
-                <!--  Notifications icon  -->
-                <Label
-                        Grid.Column="0"
-                        Margin="16,0,0,0"
-                        Style="{StaticResource IconLabelStyle}"
-                        Text="{StaticResource Notification}" />
-                <!--  Notification label  -->
-                <Label
-                        Grid.Column="1"
-                        Margin="16,12"
-                        FontFamily="Montserrat-Medium"
-                        HorizontalOptions="Start"
-                        Style="{StaticResource TitleLabelStyle}"
-                        Text="Notificaciones"
-                        VerticalOptions="Center" />
-                <!--  Notifications switch  -->
-                <buttons:SfSwitch
-                        Grid.Column="2"
-                        Margin="8,0"
-                        AllowIndeterminateState="False"
-                        HeightRequest="28"
-                        VisualType="Cupertino">
-                    <VisualStateManager.VisualStateGroups>
-                        <VisualStateGroup x:Name="CommonStates">
-                            <VisualState x:Name="On">
-                                <VisualState.Setters>
-                                    <Setter Property="SwitchSettings">
-                                        <Setter.Value>
-                                            <buttons:CupertinoSwitchSettings
-                                                    x:TypeArguments="buttons:OnState"
-                                                    ThumbBorderColor="{DynamicResource Gray-White}"
-                                                    ThumbColor="{DynamicResource Gray-White}"
-                                                    TrackBorderColor="{DynamicResource Gray-200}"
-                                                    TrackColor="{DynamicResource PantoneVerdeThird}" />
-                                        </Setter.Value>
-                                    </Setter>
-                                </VisualState.Setters>
-                            </VisualState>
-                            <VisualState x:Name="Off">
-                                <VisualState.Setters>
-                                    <Setter Property="SwitchSettings">
-                                        <Setter.Value>
-                                            <buttons:CupertinoSwitchSettings
-                                                    x:TypeArguments="buttons:OffState"
-                                                    ThumbBorderColor="{DynamicResource Gray-300}"
-                                                    ThumbColor="{DynamicResource Gray-White}"
-                                                    TrackBorderColor="{DynamicResource Gray-300}"
-                                                    TrackColor="{DynamicResource Gray-300}" />
-                                        </Setter.Value>
-                                    </Setter>
-                                </VisualState.Setters>
-                            </VisualState>
-                        </VisualStateGroup>
-                    </VisualStateManager.VisualStateGroups>
-                </buttons:SfSwitch>
-            </Grid>
-            <BoxView Style="{StaticResource HorizontalSeparatorStyle}" />
-
             <!--  Grid for Email notifications and switch  -->
             <Grid
                     BackgroundColor="{DynamicResource Gray-Bg}"
                     ColumnDefinitions="Auto, *, Auto"
                     ColumnSpacing="0"
                     RowSpacing="0">
-
                 <!--  Email notification icon  -->
                 <Label
                         Grid.Column="0"

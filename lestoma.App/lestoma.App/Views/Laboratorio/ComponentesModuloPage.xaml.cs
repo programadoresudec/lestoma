@@ -2,9 +2,9 @@
 
 namespace lestoma.App.Views.Laboratorio
 {
-    public partial class ComponentesUpaPage : ContentPage
+    public partial class ComponentesModuloPage : ContentPage
     {
-        public ComponentesUpaPage()
+        public ComponentesModuloPage()
         {
             InitializeComponent();
         }
