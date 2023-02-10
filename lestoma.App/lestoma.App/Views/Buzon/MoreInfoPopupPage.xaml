@@ -45,7 +45,7 @@
                             </ContentView>
                         </Frame>
                     </Grid>
-                    <StackLayout Spacing="20" Margin="30,0,30,20">
+                    <StackLayout Spacing="10" Margin="30,0,30,20">
                         <ffimageloading:CachedImage Aspect="AspectFit"
                                                 Source="{Binding Buzon.PathImagen, TargetNullValue = 'DefaultImagen.png'}" 
                                                 Margin="15,10,10,10"
@@ -58,14 +58,13 @@
                                 <fftransformations:CropTransformation />
                             </ffimageloading:CachedImage.Transformations>
                         </ffimageloading:CachedImage>
-                        <border:SfBorder HeightRequest="80" Style="{StaticResource ThemeBorderStyle}">
+                        <border:SfBorder Style="{StaticResource ThemeBorderStyle}">
                             <StackLayout>
-                                <Label Text="Titulo" FontFamily="Montserrat-Bold"
+                                <Label Text="Titulo" FontFamily="Montserrat-SemiBold"
                                     FontSize="Small"
                                     HorizontalOptions="StartAndExpand"
                                     Style="{StaticResource TitleLabelStyle}"/>
                                 <control:BorderlessEntry Text="{Binding Buzon.Titulo}" IsEnabled="False"
-                                              Margin="15,0"
                                              Style="{StaticResource BorderlessEntryStyle}"
                                                  TextColor="Black">
                                 </control:BorderlessEntry>
@@ -73,29 +72,26 @@
                         </border:SfBorder>
                         <border:SfBorder Style="{StaticResource ThemeBorderStyle}">
                             <StackLayout>
-                                <Label Text="Descripción"  FontFamily="Montserrat-Bold"
+                                <Label Text="Descripción" FontFamily="Montserrat-SemiBold"
                                     FontSize="Small"
                                     HorizontalOptions="StartAndExpand"
                                     Style="{StaticResource TitleLabelStyle}"/>
                                 <control:BorderlessEditor  IsEnabled="False"
                                           IsExpandable="True"
-                                          Style="{StaticResource BorderlessEditorStyle}" Margin="15,0"
+                                          Style="{StaticResource BorderlessEditorStyle}"
                                           Text="{Binding Buzon.Descripcion}"
                                           TextColor="Black">
                                 </control:BorderlessEditor>
                             </StackLayout>
-
                         </border:SfBorder>
                         <border:SfBorder Style="{StaticResource ThemeBorderStyle}">
                             <StackLayout>
-                                <Label Text="Típo de gravedad" FontFamily="Montserrat-Bold"
+                                <Label Text="Típo de gravedad" FontFamily="Montserrat-SemiBold"
                                     FontSize="Small"
                                     HorizontalOptions="StartAndExpand"
                                     Style="{StaticResource TitleLabelStyle}"/>
-                                <control:BorderlessEntry Text="{Binding Buzon.TipoDeGravedad}"
-                                              Margin="15,0"
-                                             Style="{StaticResource BorderlessEntryStyle}" MaxLength="60"
-                                                 TextColor="Black">
+                                <control:BorderlessEntry Text="{Binding Buzon.TipoDeGravedad}" IsEnabled="False"
+                                             Style="{StaticResource BorderlessEntryStyle}" TextColor="Black">
                                 </control:BorderlessEntry>
                             </StackLayout>
                         </border:SfBorder>

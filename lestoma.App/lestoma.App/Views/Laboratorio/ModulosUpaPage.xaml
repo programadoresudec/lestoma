@@ -22,7 +22,6 @@
             <syncfusion:SfListView  x:Name="LV_Modulos" 
                              ItemsSource="{Binding Modulos}" TapCommand="{Binding SeeComponentCommand}" 
                                     AutoFitMode="Height" SelectionBackgroundColor="Transparent">
-
                 <syncfusion:SfListView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout Orientation="Vertical" Margin="0,10,0,10">

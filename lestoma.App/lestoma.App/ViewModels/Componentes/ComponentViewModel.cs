@@ -30,6 +30,7 @@ namespace lestoma.App.ViewModels.Componentes
             EditCommand = new Command<object>(ComponentSelected, CanNavigate);
             VerEstadoCommand = new Command<object>(OnSeeStatusSelected, CanNavigate);
             DeleteCommand = new Command<object>(DeleteClicked, CanNavigate);
+            _componentes = new ObservableCollection<ComponenteDTO>();
             LoadComponents();
         }
 
@@ -38,7 +39,7 @@ namespace lestoma.App.ViewModels.Componentes
             base.OnNavigatedTo(parameters);
             if (parameters.ContainsKey(Constants.REFRESH))
             {
-                LoadComponents();
+                ListarComponentesAll();
             }
         }
 
@@ -123,7 +124,7 @@ namespace lestoma.App.ViewModels.Componentes
                     if (response.IsExito)
                     {
                         AlertSuccess(response.MensajeHttp);
-                        LoadComponents();
+                        ListarComponentesAll();
                     }
                     else
                     {
@@ -201,7 +202,7 @@ namespace lestoma.App.ViewModels.Componentes
             {
                 if (_apiService.CheckConnection())
                 {
-                    Componentes = new ObservableCollection<ComponenteDTO>();
+                    Componentes.Clear();
                     ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<ComponenteDTO>(URL_API,
                         $"componentes/paginar", TokenUser.Token);
                     if (response.IsExito)
@@ -233,7 +234,7 @@ namespace lestoma.App.ViewModels.Componentes
             {
                 if (_apiService.CheckConnection())
                 {
-                    Componentes = new ObservableCollection<ComponenteDTO>();
+                    Componentes.Clear();
                     ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<ComponenteDTO>(URL_API,
                         $"componentes/paginar?UpaId={id}", TokenUser.Token);
                     if (response.IsExito)
@@ -243,6 +244,10 @@ namespace lestoma.App.ViewModels.Componentes
                         {
                             Componentes = new ObservableCollection<ComponenteDTO>(paginador.Datos);
                         }
+                    }
+                    else
+                    {
+                        AlertWarning(response.MensajeHttp);
                     }
                 }
             }

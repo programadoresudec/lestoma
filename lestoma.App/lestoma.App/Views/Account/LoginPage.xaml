@@ -82,8 +82,8 @@
                                         Text="{Binding Password.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
                                         TextColor="{DynamicResource Red}"
                                         VerticalOptions="FillAndExpand" />
-                                    <inputLayout:SfTextInputLayout Hint="Contraseña"  FocusedColor="Black"  ContainerBackgroundColor="Transparent"
-                                                   EnablePasswordVisibilityToggle="true"  Margin="10,10,0,0">
+                                    <inputLayout:SfTextInputLayout Hint="Contraseña" FocusedColor="Black"  ContainerBackgroundColor="Transparent"
+                                                   EnablePasswordVisibilityToggle="true" Margin="10,10,0,0">
                                         <control:BorderlessEntry
                                             x:Name="PasswordEntry"
                                             Margin="15,0"
