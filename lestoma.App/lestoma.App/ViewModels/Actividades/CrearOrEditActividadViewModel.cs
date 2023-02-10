@@ -28,6 +28,37 @@ namespace lestoma.App.ViewModels.Actividades
             CreateOrEditCommand = new Command(CreateOrEditarClicked);
         }
         public Command CreateOrEditCommand { get; set; }
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            base.OnNavigatedTo(parameters);
+            if (parameters.ContainsKey("actividad") || Actividad.Id != Guid.Empty)
+            {
+                Actividad = parameters.GetValue<ActividadRequest>("actividad");
+                Title = "Editar";
+            }
+            else
+            {
+                Title = "Crear";
+            }
+        }
+        public ActividadRequest Actividad
+        {
+            get => _actividad;
+            set
+            {
+                SetProperty(ref _actividad, value);
+            }
+        }
+
+        public ParametrosModel Model
+        {
+            get => _model;
+            set
+            {
+                SetProperty(ref _model, value);
+            }
+        }
+
         private void CargarDatos()
         {
             Model.Nombre.Value = Actividad != null ? Actividad.Nombre : string.Empty;
@@ -41,9 +72,9 @@ namespace lestoma.App.ViewModels.Actividades
                 CargarDatos();
                 if (_model.AreFieldsValid())
                 {
-                    UserDialogs.Instance.ShowLoading("Guardando");
+                    UserDialogs.Instance.ShowLoading("Guardando...");
                     if (_apiService.CheckConnection())
-                    {
+                    {   
                         ActividadRequest request = new ActividadRequest
                         {
                             Id = Actividad.Id != Guid.Empty ? Actividad.Id : Guid.Empty,
@@ -83,39 +114,6 @@ namespace lestoma.App.ViewModels.Actividades
             {
                 UserDialogs.Instance.HideLoading();
             }
-        }
-
-        public ActividadRequest Actividad
-        {
-            get => _actividad;
-            set
-            {
-                SetProperty(ref _actividad, value);
-            }
-        }
-
-        public ParametrosModel Model
-        {
-            get => _model;
-            set
-            {
-                SetProperty(ref _model, value);
-            }
-        }
-
-
-        public override void OnNavigatedTo(INavigationParameters parameters)
-        {
-            base.OnNavigatedTo(parameters);
-            if (parameters.ContainsKey("actividad") || Actividad.Id != Guid.Empty)
-            {
-                Actividad = parameters.GetValue<ActividadRequest>("actividad");
-                Title = "Editar";
-            }
-            else
-            {
-                Title = "Crear";
-            }
-        }
+        } 
     }
 }
