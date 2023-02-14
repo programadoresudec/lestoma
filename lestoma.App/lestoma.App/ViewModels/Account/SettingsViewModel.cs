@@ -68,7 +68,7 @@ namespace lestoma.App.ViewModels.Account
                     {
                          { "TypeSyncronization", TipoSincronizacion.MigrateDataOnlineToDevice }
                     };
-                    await _navigationService.NavigateAsync(nameof(SyncronizarDataPopupPage), parameters);
+                    await _navigationService.NavigateAsync(nameof(SignOutPopupPage), parameters);
                 });
             }
         }
@@ -83,7 +83,7 @@ namespace lestoma.App.ViewModels.Account
                     {
                          { "TypeSyncronization", TipoSincronizacion.MigrateDataOfflineToServer }
                     };
-                    await _navigationService.NavigateAsync(nameof(SyncronizarDataPopupPage), parameters);
+                    await _navigationService.NavigateAsync(nameof(SignOutPopupPage), parameters);
                 });
             }
         }

@@ -121,7 +121,7 @@
                         FontFamily="Montserrat-Medium"
                         HorizontalOptions="Start"
                         Style="{StaticResource TitleLabelStyle}"
-                        Text="Sincronizar datos para modo Offline"
+                        Text="Sincronizar Datos Offline"
                         VerticalOptions="Center" />
                 <!--  Navigation icon  -->
                 <Label
@@ -140,22 +140,20 @@
                     Command="{Binding MigrateDataToServerCommand}"
                     RowSpacing="0"
                     Tapped="False">
-
-                <!--  Change password icon  -->
                 <Label
                         Grid.Column="0"
                         FontFamily="FontsAwesome"
                         Margin="16,0,0,0"
                         Style="{StaticResource IconLabelStyle}"
                         Text="{StaticResource Syncronization}" />
-                <!--  Change password label  -->
+              
                 <Label
                         Grid.Column="1"
                         Margin="16,12"
                         FontFamily="Montserrat-Medium"
                         HorizontalOptions="Start"
                         Style="{StaticResource TitleLabelStyle}"
-                        Text="Sincronizar Datos a la Nube"
+                        Text="Sincronizar Datos Nube"
                         VerticalOptions="Center" />
                 <!--  Navigation icon  -->
                 <Label

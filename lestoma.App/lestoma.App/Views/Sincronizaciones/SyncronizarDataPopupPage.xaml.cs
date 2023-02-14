@@ -7,6 +7,7 @@ namespace lestoma.App.Views.Sincronizaciones
     {
         public SyncronizarDataPopupPage()
         {
+            
             InitializeComponent();
         }
     }

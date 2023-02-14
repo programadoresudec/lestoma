@@ -1,13 +1,16 @@
 ﻿using Acr.UserDialogs;
 using lestoma.App.Models;
+using lestoma.App.Views;
 using lestoma.App.Views.Componentes;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
+using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Newtonsoft.Json;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,6 +30,7 @@ namespace lestoma.App.ViewModels.Componentes
         private NameDTO _actividad;
         private InfoComponenteDTO _infoComponente;
         private bool _isEdit;
+        private bool _isVisible;
         private string _iconStatusComponent;
         private string _jsonEstadoComponente;
 
@@ -114,6 +118,12 @@ namespace lestoma.App.ViewModels.Componentes
             get => _isEdit;
             set => SetProperty(ref _isEdit, value);
         }
+
+        public bool IsVisible
+        {
+            get => _isVisible;
+            set => SetProperty(ref _isVisible, value);
+        }
         public string IconStatusComponent
         {
             get => _iconStatusComponent;
@@ -136,13 +146,22 @@ namespace lestoma.App.ViewModels.Componentes
                         "modulos/listar-nombres", TokenUser.Token);
                     Modulos = new ObservableCollection<NameDTO>((List<NameDTO>)modulos.Data);
 
-                    ResponseDTO upas = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
-                        "upas/listar-nombres", TokenUser.Token);
-                    Upas = new ObservableCollection<NameDTO>((List<NameDTO>)upas.Data);
+                    if (TokenUser.User.RolId == (int)TipoRol.SuperAdministrador)
+                    {
+                        ResponseDTO upas = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
+                       "upas/listar-nombres", TokenUser.Token);
+                        Upas = new ObservableCollection<NameDTO>((List<NameDTO>)upas.Data);
+                        ResponseDTO actividades = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
+                    "actividades/listar-nombres", TokenUser.Token);
+                        Actividades = new ObservableCollection<NameDTO>((List<NameDTO>)actividades.Data);
+                    }
 
-                    ResponseDTO actividades = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
-                        "actividades/listar-nombres", TokenUser.Token);
-                    Actividades = new ObservableCollection<NameDTO>((List<NameDTO>)actividades.Data);
+                    else
+                    {
+                        ResponseDTO actividades = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
+                        $"actividades/listar-actividades-upa-usuario?UpaId={Guid.Empty}&UsuarioId={TokenUser.User.Id}", TokenUser.Token);
+                        Actividades = new ObservableCollection<NameDTO>((List<NameDTO>)actividades.Data);
+                    }
 
 
                     if (id != Guid.Empty)
@@ -259,6 +278,11 @@ namespace lestoma.App.ViewModels.Componentes
                     {
                         AlertNoInternetConnection();
                     }
+                }
+                else
+                {
+                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage(@$"Error:
+                    Todos los campos son obligatorios.", Constants.ICON_WARNING));
                 }
             }
             catch (Exception ex)

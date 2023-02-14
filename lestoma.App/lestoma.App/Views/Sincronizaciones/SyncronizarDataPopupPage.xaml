@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
-             xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup" xmlns:cards="clr-namespace:Syncfusion.XForms.Cards;assembly=Syncfusion.Cards.XForms"
+             xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup" 
+                 xmlns:cards="clr-namespace:Syncfusion.XForms.Cards;assembly=Syncfusion.Cards.XForms"
                  prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="lestoma.App.Views.Sincronizaciones.SyncronizarDataPopupPage">
     <popup:PopupPage.Animation>
@@ -20,21 +21,20 @@
     <StackLayout VerticalOptions="CenterAndExpand" Margin="20" Padding="20">
         <cards:SfCardView BackgroundColor="White" CornerRadius="10">
             <StackLayout Margin="20" Spacing="15">
-                <Label  Style="{StaticResource IconLabelStyle}"
-                        Text="{StaticResource Syncronization}" FontFamily="FontsAwesome" WidthRequest="64" HeightRequest="64"/>
+                <Label  Style="{StaticResource IconLabelStyle}" Text="{StaticResource Syncronization}"
+                        FontFamily="FontsAwesome" WidthRequest="64" HeightRequest="64"/>
                 <Label Text="{Binding Message}" TextColor="Black" FontSize="Medium" HorizontalTextAlignment="Center" 
                        VerticalTextAlignment="Center" FontAttributes="Italic"
                 VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" />
 
-                <StackLayout Orientation="Horizontal" Margin="5">
+                <!--<StackLayout Orientation="Horizontal" Margin="5">
                     <Button  HorizontalOptions="Start" Command="{Binding BackButtonCommand}"
                             Text="Cancelar" Style="{StaticResource LestomaTransparentButtonStyle}"
                              VerticalOptions="Start" />
                     <Button  HorizontalOptions="EndAndExpand" Command="{Binding SyncronizationCommand}"
                         BackgroundColor="{StaticResource PantoneVerdeDark}" CornerRadius="8" Text="Sincronizar" TextColor="White"
                              VerticalOptions="EndAndExpand" />
-                </StackLayout>
-
+                </StackLayout>-->
             </StackLayout>
         </cards:SfCardView>
     </StackLayout>

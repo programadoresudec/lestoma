@@ -10,14 +10,13 @@ namespace lestoma.App.ViewModels.Sincronizaciones
     public class SyncronizarDataViewModel : BaseViewModel
     {
         private readonly IApiService _apiService;
-        private readonly IUnitOfWork _unitOfWork;
         private TipoSincronizacion _tipoSincronizacion;
         public IForegroundService foregroundService;
-        public SyncronizarDataViewModel(INavigationService navigationService, IApiService apiService, IUnitOfWork unitOfWork)
+        public SyncronizarDataViewModel(INavigationService navigationService, 
+            IApiService apiService)
              : base(navigationService)
         {
             _apiService = apiService;
-            _unitOfWork = unitOfWork;
             SyncronizationCommand = new Command(SyncDataClicked);
         }
 
