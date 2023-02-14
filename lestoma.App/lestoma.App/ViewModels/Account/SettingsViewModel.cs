@@ -1,7 +1,10 @@
 ﻿using Acr.UserDialogs;
 using lestoma.App.Views;
 using lestoma.App.Views.Account;
+using lestoma.App.Views.Sincronizaciones;
 using lestoma.CommonUtils.DTOs;
+using lestoma.CommonUtils.Enums;
+using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
@@ -17,6 +20,7 @@ namespace lestoma.App.ViewModels.Account
         private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         private string _fullName;
+        private bool _isOn;
         #region Constructor
 
         public SettingsViewModel(INavigationService navigationService, IApiService apiService)
@@ -28,8 +32,9 @@ namespace lestoma.App.ViewModels.Account
             ChangePasswordCommand = new Command(ChangePasswordClicked);
             HelpCommand = new Command(HelpClicked);
             LogoutCommand = new Command(LogoutClicked);
-            StateChangedCommand = new Command<object>(SwitchStateChanged, CanNavigate);
+            StateChangedCommand = new Command(SwitchStateChanged, CanNavigate);
             _fullName = TokenUser.User.FullName;
+            _isOn = MovilSettings.IsOnNotificationsViaMail;
         }
         #endregion
 
@@ -39,6 +44,11 @@ namespace lestoma.App.ViewModels.Account
             get => _fullName;
             set => SetProperty(ref _fullName, value);
         }
+        public bool IsOn
+        {
+            get => _isOn;
+            set => SetProperty(ref _isOn, value);
+        }
         #endregion
 
         #region Commands
@@ -47,6 +57,37 @@ namespace lestoma.App.ViewModels.Account
         public Command HelpCommand { get; set; }
         public Command LogoutCommand { get; set; }
         public Command StateChangedCommand { get; set; }
+
+        public Command MigrateDataToDeviceCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    var parameters = new NavigationParameters
+                    {
+                         { "TypeSyncronization", TipoSincronizacion.MigrateDataOnlineToDevice }
+                    };
+                    await _navigationService.NavigateAsync(nameof(SyncronizarDataPopupPage), parameters);
+                });
+            }
+        }
+
+        public Command MigrateDataToServerCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    var parameters = new NavigationParameters
+                    {
+                         { "TypeSyncronization", TipoSincronizacion.MigrateDataOfflineToServer }
+                    };
+                    await _navigationService.NavigateAsync(nameof(SyncronizarDataPopupPage), parameters);
+                });
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -73,17 +114,17 @@ namespace lestoma.App.ViewModels.Account
         {
             await _navigationService.NavigateAsync($"{nameof(SignOutPopupPage)}");
         }
-
-        #endregion
         private void SwitchStateChanged(object obj)
         {
-            var SwitchState = obj as Syncfusion.XForms.Buttons.SwitchStateChangedEventArgs;
-            if (SwitchState.NewValue.Value)
+
+            if (IsOn)
             {
+                MovilSettings.IsOnNotificationsViaMail = true;
                 ActivateNotificationsViaEmail();
             }
             else
             {
+                MovilSettings.IsOnNotificationsViaMail = false;
                 DesactivateNotificationsViaEmail();
 
             }
@@ -152,5 +193,7 @@ namespace lestoma.App.ViewModels.Account
                 UserDialogs.Instance.HideLoading();
             }
         }
+        #endregion
+
     }
 }

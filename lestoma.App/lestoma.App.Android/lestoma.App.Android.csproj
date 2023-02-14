@@ -127,6 +127,8 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Services\ForegroundService.cs" />
+    <Compile Include="Services\MyBroadCastReceiver.cs" />
     <Compile Include="MainApplication.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Renderers\BorderlessEntryRenderer.cs" />
@@ -163,6 +165,10 @@
     <AndroidResource Include="Resources\values\strings.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\lestomaAPI\lestoma.CommonUtils\lestoma.CommonUtils.csproj">
+      <Project>{9DD3C8A2-4517-454F-B9E7-558D19A5D2BB}</Project>
+      <Name>lestoma.CommonUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\lestoma.App\lestoma.App.csproj">
       <Project>{A682884C-CB44-4A89-B752-27BB634E0ABE}</Project>
       <Name>lestoma.App</Name>
@@ -363,5 +369,6 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\acuaponics.svg" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

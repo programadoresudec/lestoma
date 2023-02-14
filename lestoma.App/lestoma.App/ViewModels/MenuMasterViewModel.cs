@@ -126,6 +126,12 @@ namespace lestoma.App.ViewModels
                             Icon = "icon_dashboard",
                             PageName = $"{nameof(DashboardHangFirePage)}",
                             Title = "Dashboard-HangFire"
+                        },
+                         new Menu
+                        {
+                            Icon = "icon_generate_report",
+                            PageName = $"{nameof(MenuReportsPage)}",
+                            Title = "Generación de reportes"
                         }
                     };
                     menus.AddRange(menuSuperAdmin);
@@ -140,22 +146,18 @@ namespace lestoma.App.ViewModels
                             Icon = "icon_component",
                             PageName = $"{nameof(ComponentPage)}",
                             Title = "Componentes"
+                        },
+                        new Menu
+                        {
+                            Icon = "icon_generate_report",
+                            PageName = $"{nameof(MenuReportsPage)}",
+                            Title = "Generación de reportes"
                         }
-                    };
+                };
                     menus.AddRange(menuAdmin);
                 }
-                menus.Add(new Menu
-                {
-                    Icon = "icon_generate_report",
-                    PageName = $"{nameof(MenuReportsPage)}",
-                    Title = "Generación de reportes"
-                });
-            }
-            else
-            {
 
             }
-
             menus.Add(new Menu
             {
                 Icon = "icon_settings",

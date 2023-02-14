@@ -7,6 +7,7 @@ using lestoma.App.ViewModels.Laboratorio;
 using lestoma.App.ViewModels.Modulos;
 using lestoma.App.ViewModels.Reportes;
 using lestoma.App.ViewModels.Reportes.SuperAdmin;
+using lestoma.App.ViewModels.Sincronizaciones;
 using lestoma.App.ViewModels.Upas;
 using lestoma.App.ViewModels.UpasActividades;
 using lestoma.App.ViewModels.Usuarios;
@@ -19,6 +20,7 @@ using lestoma.App.Views.Laboratorio;
 using lestoma.App.Views.Modulos;
 using lestoma.App.Views.Reportes;
 using lestoma.App.Views.Reportes.SuperAdmin;
+using lestoma.App.Views.Sincronizaciones;
 using lestoma.App.Views.Upas;
 using lestoma.App.Views.UpasActividades;
 using lestoma.App.Views.Usuarios;
@@ -43,6 +45,7 @@ using Xamarin.Forms;
 [assembly: ExportFont("Montserrat-Regular.ttf", Alias = "Montserrat-Regular")]
 [assembly: ExportFont("Montserrat-SemiBold.ttf", Alias = "Montserrat-SemiBold")]
 [assembly: ExportFont("UIFontIcons.ttf", Alias = "FontIcons")]
+[assembly: ExportFont("FontAwesome.ttf", Alias = "FontsAwesome")]
 namespace lestoma.App
 {
     public partial class App
@@ -149,6 +152,7 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<DashboardHangFirePage, DashboardHangfireViewModel>();
             containerRegistry.RegisterForNavigation<ModulosUpaPage, ModulosUpaViewModel>();
             containerRegistry.RegisterForNavigation<ComponentesModuloPage, ComponentesModuloViewModel>();
+            containerRegistry.RegisterForNavigation<SyncronizarDataPopupPage, SyncronizarDataViewModel>();
             #endregion
 
         }

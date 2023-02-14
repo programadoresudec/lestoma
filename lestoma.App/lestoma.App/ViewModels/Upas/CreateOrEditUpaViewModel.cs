@@ -27,19 +27,13 @@ namespace lestoma.App.ViewModels.Upas
         public UpaRequest Upa
         {
             get => _upa;
-            set
-            {
-                SetProperty(ref _upa, value);
-            }
+            set => SetProperty(ref _upa, value);
         }
 
         public UpaModel Model
         {
             get => _model;
-            set
-            {
-                SetProperty(ref _model, value);
-            }
+            set => SetProperty(ref _model, value);
         }
         public Command CreateOrEditCommand { get; }
 

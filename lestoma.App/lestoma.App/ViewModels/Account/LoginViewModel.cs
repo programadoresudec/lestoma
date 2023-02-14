@@ -1,7 +1,10 @@
 ﻿using lestoma.App.Validators;
 using lestoma.App.Validators.Rules;
 using Prism.Navigation;
+using System.Net.Sockets;
+using System.Net;
 using Xamarin.Forms.Internals;
+using System;
 
 namespace lestoma.App.ViewModels.Account
 {
@@ -56,7 +59,18 @@ namespace lestoma.App.ViewModels.Account
 
         #region Methods
 
-
+        public static string GetLocalIPAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            return string.Empty;
+        }
         public bool IsEmailFieldValid()
         {
             bool isEmailValid = this.Email.Validate();

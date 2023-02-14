@@ -3,10 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
-             xmlns:controls="clr-namespace:lestoma.App.Controls" xmlns:behaviors="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             xmlns:controls="clr-namespace:lestoma.App.Controls"
+             xmlns:behaviors="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True" 
-             x:Class="lestoma.App.Views.Account.SettingsPage" Title="{Binding FullName}"
-            >
+             x:Class="lestoma.App.Views.Account.SettingsPage" Title="{Binding FullName}">
     <ScrollView>
         <StackLayout BackgroundColor="{DynamicResource Gray-Bg}" Spacing="0">
 
@@ -86,6 +86,86 @@
                         Text="{StaticResource Next}" />
             </controls:TapAnimationGrid>
             <BoxView Style="{StaticResource HorizontalSeparatorStyle}" />
+
+            <!--  Header label for account setting  -->
+            <Label
+                    Margin="16,24,0,16"
+                    FontFamily="Montserrat-SemiBold"
+                    FontSize="12"
+                    HorizontalOptions="FillAndExpand"
+                    Text="SINCRONIZACIÓN"
+                    TextColor="{DynamicResource Gray-800}"
+                    VerticalOptions="Center"
+                    VerticalTextAlignment="Center" />
+
+            <!--  Grid for Edit profile label and navigation bar icon  -->
+            <controls:TapAnimationGrid
+                    BackgroundColor="{DynamicResource Gray-Bg}"
+                    ColumnDefinitions="Auto, *, Auto"
+                    ColumnSpacing="0"
+                    Command="{Binding MigrateDataToDeviceCommand}"
+                    RowSpacing="0"
+                    Tapped="False">
+
+                <!--  Edit profile icon  -->
+                <Label
+                        Grid.Column="0"
+                        Margin="16,0,0,0"
+                        FontFamily="FontsAwesome"
+                        Style="{StaticResource IconLabelStyle}"
+                        Text="{StaticResource Syncronization}" />
+                <!--  Edit profile label  -->
+                <Label
+                        Grid.Column="1"
+                        Margin="16,12"
+                        FontFamily="Montserrat-Medium"
+                        HorizontalOptions="Start"
+                        Style="{StaticResource TitleLabelStyle}"
+                        Text="Sincronizar datos para modo Offline"
+                        VerticalOptions="Center" />
+                <!--  Navigation icon  -->
+                <Label
+                        Grid.Column="2"
+                        Margin="16,8"
+                        Style="{StaticResource IconLabelStyle}"
+                        Text="{StaticResource Next}" />
+            </controls:TapAnimationGrid>
+            <BoxView Style="{StaticResource HorizontalSeparatorStyle}" />
+
+            <!--  Grid for Change password label and navigation bar icon  -->
+            <controls:TapAnimationGrid
+                    BackgroundColor="{DynamicResource Gray-Bg}"
+                    ColumnDefinitions="Auto, *, Auto"
+                    ColumnSpacing="0"
+                    Command="{Binding MigrateDataToServerCommand}"
+                    RowSpacing="0"
+                    Tapped="False">
+
+                <!--  Change password icon  -->
+                <Label
+                        Grid.Column="0"
+                        FontFamily="FontsAwesome"
+                        Margin="16,0,0,0"
+                        Style="{StaticResource IconLabelStyle}"
+                        Text="{StaticResource Syncronization}" />
+                <!--  Change password label  -->
+                <Label
+                        Grid.Column="1"
+                        Margin="16,12"
+                        FontFamily="Montserrat-Medium"
+                        HorizontalOptions="Start"
+                        Style="{StaticResource TitleLabelStyle}"
+                        Text="Sincronizar Datos a la Nube"
+                        VerticalOptions="Center" />
+                <!--  Navigation icon  -->
+                <Label
+                        Grid.Column="2"
+                        Margin="16,8"
+                        Style="{StaticResource IconLabelStyle}"
+                        Text="{StaticResource Next}" />
+            </controls:TapAnimationGrid>
+            <BoxView Style="{StaticResource HorizontalSeparatorStyle}" />
+
             <!--  Header lable for notifications  -->
             <Label
                     Margin="16,40,0,16"
@@ -119,7 +199,7 @@
                         VerticalOptions="Center" />
                 <!--  Email notification switch  -->
                 <buttons:SfSwitch
-                        Grid.Column="2"
+                        Grid.Column="2" IsOn="{Binding IsOn}"
                         Margin="8,0"
                         AllowIndeterminateState="False"
                         HeightRequest="28" 

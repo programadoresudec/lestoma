@@ -114,8 +114,8 @@ namespace lestoma.App.ViewModels.Account
                         {
                             Email = Email.Value,
                             Clave = password.Value,
-                            TipoAplicacion = (int)TipoAplicacion.AppMovil
-
+                            TipoAplicacion = (int)TipoAplicacion.AppMovil,
+                            Ip = GetLocalIPAddress()
                         };
                         ResponseDTO respuesta = await _apiService.PostAsync(URL_API, "Account/login", login);
                         if (respuesta.IsExito)
@@ -123,6 +123,8 @@ namespace lestoma.App.ViewModels.Account
                             TokenDTO token = ParsearData<TokenDTO>(respuesta);
                             MovilSettings.Token = JsonConvert.SerializeObject(token);
                             MovilSettings.IsLogin = true;
+                            ResponseDTO hasNotifications = await _apiService.PostWithoutBodyAsyncWithToken(URL_API, "Account/is-active-notifications-by-mail", token.Token);
+                            MovilSettings.IsOnNotificationsViaMail = ParsearData<HasNotificationsDTO>(hasNotifications).IsActive;
                             await _navigationService.NavigateAsync($"/{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
                         }
                         else
@@ -145,6 +147,8 @@ namespace lestoma.App.ViewModels.Account
                 }
                 catch (Exception ex)
                 {
+                    MovilSettings.Token = string.Empty;
+                    MovilSettings.IsLogin = false;
                     SeeError(ex);
                 }
                 finally
