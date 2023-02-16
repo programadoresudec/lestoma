@@ -134,7 +134,6 @@ namespace lestoma.App.ViewModels.Componentes
             get => _jsonEstadoComponente;
             set => SetProperty(ref _jsonEstadoComponente, value);
         }
-
         private async void LoadLists(Guid id)
         {
             try
@@ -148,22 +147,21 @@ namespace lestoma.App.ViewModels.Componentes
 
                     if (TokenUser.User.RolId == (int)TipoRol.SuperAdministrador)
                     {
+                        IsVisible = true;
                         ResponseDTO upas = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
                        "upas/listar-nombres", TokenUser.Token);
                         Upas = new ObservableCollection<NameDTO>((List<NameDTO>)upas.Data);
                         ResponseDTO actividades = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
-                    "actividades/listar-nombres", TokenUser.Token);
+                        "actividades/listar-nombres", TokenUser.Token);
                         Actividades = new ObservableCollection<NameDTO>((List<NameDTO>)actividades.Data);
                     }
-
                     else
                     {
+                        IsVisible = false;
                         ResponseDTO actividades = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
-                        $"actividades/listar-actividades-upa-usuario?UpaId={Guid.Empty}&UsuarioId={TokenUser.User.Id}", TokenUser.Token);
+                        $"detalle-upas-actividades/listar-actividades-upa-usuario?UpaId={Guid.Empty}&UsuarioId={TokenUser.User.Id}", TokenUser.Token);
                         Actividades = new ObservableCollection<NameDTO>((List<NameDTO>)actividades.Data);
                     }
-
-
                     if (id != Guid.Empty)
                     {
                         var infoComponente = await _apiService.GetByIdAsyncWithToken(URL_API,
@@ -172,10 +170,10 @@ namespace lestoma.App.ViewModels.Componentes
                         {
                             InfoComponente = ParsearData<InfoComponenteDTO>(infoComponente);
                             var modulo = Modulos.Where(x => x.Id == InfoComponente.Modulo.Id).FirstOrDefault();
-                            var upa = Upas.Where(x => x.Id == InfoComponente.Upa.Id).FirstOrDefault();
+                            var upa = Upas != null ? Upas.Where(x => x.Id == InfoComponente.Upa.Id).FirstOrDefault() : null;
                             var actividad = Actividades.Where(x => x.Id == InfoComponente.Actividad.Id).FirstOrDefault();
 
-                            if (modulo != null && upa != null && actividad != null)
+                            if (modulo != null && actividad != null)
                             {
                                 Upa = upa;
                                 Modulo = modulo;
@@ -232,12 +230,18 @@ namespace lestoma.App.ViewModels.Componentes
                             {
                                 Nombre = InfoComponente.Nombre,
                                 ActividadId = Actividad.Id,
-                                UpaId = Upa.Id,
                                 ModuloComponenteId = Modulo.Id,
                                 TipoEstadoComponente = InfoComponente.EstadoComponente
                             };
-                            ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL_API, "componentes/crear",
-                                createRequest, TokenUser.Token);
+                            if (Upa != null)
+                            {
+                                createRequest.UpaId = Upa.Id;
+                            }
+                            else
+                            {
+                                createRequest.UpaId = Guid.Empty;
+                            }
+                            ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL_API, "componentes/crear", createRequest, TokenUser.Token);
                             if (respuesta.IsExito)
                             {
                                 AlertSuccess(respuesta.MensajeHttp);
@@ -281,8 +285,7 @@ namespace lestoma.App.ViewModels.Componentes
                 }
                 else
                 {
-                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage(@$"Error:
-                    Todos los campos son obligatorios.", Constants.ICON_WARNING));
+                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage(@$"Error: Todos los campos son obligatorios.", Constants.ICON_WARNING));
                 }
             }
             catch (Exception ex)
@@ -305,6 +308,11 @@ namespace lestoma.App.ViewModels.Componentes
             bool isActividadValid = Actividad != null;
             bool isModuloValid = Modulo != null;
             bool isEstadoValid = InfoComponente.EstadoComponente != null;
+
+            if (TokenUser.User.RolId == (int)TipoRol.Administrador)
+            {
+                isUpaValid = true;
+            }
             return isNameValid && isEstadoValid && isUpaValid && isModuloValid && isActividadValid;
         }
     }

@@ -23,15 +23,23 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
-            <Button Grid.Row="0"
+            <StackLayout Orientation="Horizontal" Margin="10,0,10,0">
+                <Button
                     HorizontalOptions="EndAndExpand"
-                    Margin="0,0,20,0"
+                    
                     FontSize="Medium"
+                    FontFamily="Montserrat-Bold"
                     FontAttributes="Bold"
-                    BackgroundColor="Transparent"
+                    BackgroundColor="Transparent"              
                     TextColor="{StaticResource PantoneVerdeDark}"
                     Text="{Binding SkipButtonText}"
                     Command="{Binding SkipCommand}"/>
+                        <Label
+                        Margin="10,2,10,0" HorizontalOptions="Start"
+                        Style="{StaticResource IconLabelStyle}"
+                        Text="{StaticResource ArrowRight}" />
+            </StackLayout>
+
             <CarouselView x:Name="onBoardingCarousel"
                           Grid.Row="1"
                           ItemsSource="{Binding Items}"                          

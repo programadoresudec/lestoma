@@ -1,6 +1,5 @@
 ﻿using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Interfaces;
-using lestoma.DatabaseOffline.IConfiguration;
 using Prism.Navigation;
 using System;
 using Xamarin.Forms;

@@ -33,12 +33,13 @@
                         </Picker>
                     </inputLayout:SfTextInputLayout>
                 </border:SfBorder>
-                <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
-                    <inputLayout:SfTextInputLayout Hint="Upas" HeightRequest="80" IsEnabled="{Binding IsEdit}" 
+                <border:SfBorder HeightRequest="85" IsVisible="{Binding IsVisible}" Style="{StaticResource ThemeBorderStyle}">
+                    <inputLayout:SfTextInputLayout Hint="Upas" IsVisible="{Binding IsVisible}"
+                                                   HeightRequest="80" IsEnabled="{Binding IsEdit}" 
                                                    ContainerBackgroundColor="Transparent" 
                                                   Margin="10">
                         <Picker x:Name="upaEntry" TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
-                                    Style="{StaticResource BorderlessEntryStyle}"  
+                                    Style="{StaticResource BorderlessEntryStyle}" IsVisible="{Binding IsVisible}" 
                                 SelectedItem="{Binding Upa}" ItemsSource="{Binding Upas}">
                         </Picker>
                     </inputLayout:SfTextInputLayout>

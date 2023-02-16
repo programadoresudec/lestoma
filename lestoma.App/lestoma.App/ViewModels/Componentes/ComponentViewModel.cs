@@ -203,8 +203,7 @@ namespace lestoma.App.ViewModels.Componentes
                 if (_apiService.CheckConnection())
                 {
                     Componentes.Clear();
-                    ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<ComponenteDTO>(URL_API,
-                        $"componentes/paginar", TokenUser.Token);
+                    ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<ComponenteDTO>(URL_API, $"componentes/paginar", TokenUser.Token);
                     if (response.IsExito)
                     {
                         var paginador = (Paginador<ComponenteDTO>)response.Data;
