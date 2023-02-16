@@ -6,24 +6,15 @@
              x:Class="lestoma.App.Views.Reportes.ReportByDatePage">
     <ContentPage.Content>
         <StackLayout Padding="10">
-            <?Se recibe el timePicker y se le asigna los label como van estar ubicados, luego se asigna la fecha minima y maxima y finalmente la hora con timePicker?>
-            <Label Text="Fecha de inicio"
-                VerticalOptions="Center" 
-                HorizontalOptions="Center"  FontSize="20"/>
-            <DatePicker x:Name="datePickerInicio" MinimumDate="2023/01/01" MaximumDate="2023/01/01"/>
-            <TimePicker x:Name="timePickerInicio"/>
-            <?Fecha final?>
-            <Label Text="Fecha de finalizacion"
-                VerticalOptions="Center" 
-                HorizontalOptions="Center"  FontSize="20"/>
-            <DatePicker x:Name="datePickerFinal" MinimumDate="2021/01/01" MaximumDate="2023/01/01"/>
-            <TimePicker x:Name="timePickerFinal"/>
             <?Selector de Upa?>
             <Label Text="Localizacion UPA" FontSize="Medium"/>
-            <Picker Title="Seleccionar localizacion" x:Name="MainPickerUpa" ItemsSource="{Binding UpaList}" ItemDisplayBinding="{Binding Value}"/>
+            <Picker Title="Seleccionar localizacion" x:Name="MainPickerUpa" 
+                    ItemsSource="{Binding UpaList}" ItemDisplayBinding="{Binding Value}"/>
             <?Selector documento?>
             <Label Text="Tipo documento" FontSize="Medium"/>
-            <Picker Title="Seleccionar tipo de documento" x:Name="MainPickerDocumento" ItemsSource="{Binding DocumentoList}" ItemDisplayBinding="{Binding Value}"/>
+            <Picker Title="Seleccionar tipo de documento" 
+                    x:Name="MainPickerDocumento" 
+                    ItemsSource="{Binding DocumentoList}" ItemDisplayBinding="{Binding Value}"/>
             <?Boton y label que imprime?>
 
             <buttons:SfButton
