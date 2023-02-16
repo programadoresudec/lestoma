@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace lestoma.App.ViewModels.Reportes.SuperAdmin
 {
-    public class ReportDailyPageViewModel : BindableBase
+    public class ReportDailyViewModel : BindableBase
     {
-        public ReportDailyPageViewModel()
+        public ReportDailyViewModel()
         {
 
         }
