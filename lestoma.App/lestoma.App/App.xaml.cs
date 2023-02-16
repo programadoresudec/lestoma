@@ -139,7 +139,7 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<ModuloPage, ModuloViewModel>();
             containerRegistry.RegisterForNavigation<CreateOrEditModuloPage, CreateOrEditModuloViewModel>();
             containerRegistry.RegisterForNavigation<MenuReportsPage, MenuReportsViewModel>();
-            containerRegistry.RegisterForNavigation<ReportDailyPage, ReportDailyPageViewModel>();
+            containerRegistry.RegisterForNavigation<ReportDailyPage, ReportDailyViewModel>();
             containerRegistry.RegisterForNavigation<ReportByDatePage, ReportByDateViewModel>();
             containerRegistry.RegisterForNavigation<ActividadesByUsuarioPopupPage, ActividadesByUsuarioPopupViewModel>();
             containerRegistry.RegisterForNavigation<UserPage, UserViewModel>();

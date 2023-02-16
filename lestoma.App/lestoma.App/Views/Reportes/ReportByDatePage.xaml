@@ -10,7 +10,7 @@
             <Label Text="Fecha de inicio"
                 VerticalOptions="Center" 
                 HorizontalOptions="Center"  FontSize="20"/>
-            <DatePicker x:Name="datePickerInicio" MinimumDate="2019/01/01" MaximumDate="2023/01/01"/>
+            <DatePicker x:Name="datePickerInicio" MinimumDate="2023/01/01" MaximumDate="2023/01/01"/>
             <TimePicker x:Name="timePickerInicio"/>
             <?Fecha final?>
             <Label Text="Fecha de finalizacion"
