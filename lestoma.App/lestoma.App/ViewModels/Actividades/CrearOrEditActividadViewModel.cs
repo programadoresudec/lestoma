@@ -1,12 +1,11 @@
-﻿using lestoma.App.Models;
-using lestoma.App.Views;
+﻿using Acr.UserDialogs;
+using lestoma.App.Models;
+using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
-using System.Diagnostics;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Actividades
@@ -29,60 +28,19 @@ namespace lestoma.App.ViewModels.Actividades
             CreateOrEditCommand = new Command(CreateOrEditarClicked);
         }
         public Command CreateOrEditCommand { get; set; }
-        private void CargarDatos()
+        public override void OnNavigatedTo(INavigationParameters parameters)
         {
-            Model.Nombre.Value = Actividad != null ? Actividad.Nombre : string.Empty;
-        }
-
-        private async void CreateOrEditarClicked(object obj)
-        {
-            Response respuesta = new Response();
-            try
+            base.OnNavigatedTo(parameters);
+            if (parameters.ContainsKey("actividad") || Actividad.Id != Guid.Empty)
             {
-                CargarDatos();
-                if (_model.AreFieldsValid())
-                {
-                    ActividadRequest request = new ActividadRequest
-                    {
-                        Id = Actividad.Id != Guid.Empty ? Actividad.Id : Guid.Empty,
-                        Nombre = _model.Nombre.Value
-                    };
-                    if (_apiService.CheckConnection())
-                    {
-                        await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Creando..."));
-                        if (Actividad.Id == Guid.Empty)
-                        {
-                            respuesta = await _apiService.PostAsyncWithToken(URL, "actividades/crear", request, TokenUser.Token);
-                        }
-                        else
-                        {
-                            respuesta = await _apiService.PutAsyncWithToken(URL, "actividades/editar", request, TokenUser.Token);
-                        }
-                        if (respuesta.IsExito)
-                        {
-                            AlertSuccess(respuesta.Mensaje);
-                            await _navigationService.GoBackAsync(null, useModalNavigation: true, true);
-                        }
-                        else
-                        {
-                            AlertWarning(respuesta.Mensaje);
-                        }
-                        ClosePopup();
-                    }
-                    else
-                    {
-                        AlertNoInternetConnection();
-                    }
-                }
-
+                Actividad = parameters.GetValue<ActividadRequest>("actividad");
+                Title = "Editar";
             }
-            catch (Exception ex)
+            else
             {
-                await PopupNavigation.Instance.PopAsync();
-                SeeError(ex);
+                Title = "Crear";
             }
         }
-
         public ActividadRequest Actividad
         {
             get => _actividad;
@@ -101,23 +59,61 @@ namespace lestoma.App.ViewModels.Actividades
             }
         }
 
-
-        public override void OnNavigatedTo(INavigationParameters parameters)
+        private void CargarDatos()
         {
-            base.OnNavigatedTo(parameters);
-            if (parameters.ContainsKey("actividad"))
-            {
-                Actividad = parameters.GetValue<ActividadRequest>("actividad");
-                Title = "Editar";
-            }
-            else if (Actividad != null)
-            {
-                Title = "Editar";
-            }
-            else
-            {
-                Title = "Crear";
-            }
+            Model.Nombre.Value = Actividad != null ? Actividad.Nombre : string.Empty;
         }
+
+        private async void CreateOrEditarClicked(object obj)
+        {
+            ResponseDTO respuesta;
+            try
+            {
+                CargarDatos();
+                if (_model.AreFieldsValid())
+                {
+                    UserDialogs.Instance.ShowLoading("Guardando...");
+                    if (_apiService.CheckConnection())
+                    {   
+                        ActividadRequest request = new ActividadRequest
+                        {
+                            Id = Actividad.Id != Guid.Empty ? Actividad.Id : Guid.Empty,
+                            Nombre = _model.Nombre.Value
+                        };
+                        if (Actividad.Id == Guid.Empty)
+                        {
+                            respuesta = await _apiService.PostAsyncWithToken(URL_API, "actividades/crear", request, TokenUser.Token);
+                        }
+                        else
+                        {
+                            respuesta = await _apiService.PutAsyncWithToken(URL_API, "actividades/editar", request, TokenUser.Token);
+                        }
+                        if (respuesta.IsExito)
+                        {
+                            AlertSuccess(respuesta.MensajeHttp);
+                            var parameters = new NavigationParameters { { Constants.REFRESH, true } };
+                            await _navigationService.GoBackAsync(parameters, useModalNavigation: true, true);
+                        }
+                        else
+                        {
+                            AlertWarning(respuesta.MensajeHttp);
+                        }
+                    }
+                    else
+                    {
+                        AlertNoInternetConnection();
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+        } 
     }
 }

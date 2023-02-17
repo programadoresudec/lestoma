@@ -9,9 +9,7 @@ using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Newtonsoft.Json;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
-using System.Linq;
 using System.Net;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -37,6 +35,7 @@ namespace lestoma.App.ViewModels.Account
             : base(navigationService)
         {
             Title = "Iniciar Sesión";
+            IsBusy = false;
             _navigationService = navigationService;
             _apiService = apiService;
             InitializeProperties();
@@ -110,37 +109,35 @@ namespace lestoma.App.ViewModels.Account
                 {
                     if (_apiService.CheckConnection())
                     {
-                        await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Iniciando Sesión..."));
+                        IsBusy = true;
                         LoginRequest login = new LoginRequest
                         {
                             Email = Email.Value,
                             Clave = password.Value,
-                            TipoAplicacion = (int)TipoAplicacion.AppMovil
-
+                            TipoAplicacion = (int)TipoAplicacion.AppMovil,
+                            Ip = GetLocalIPAddress()
                         };
-                        Response respuesta = await _apiService.PostAsync(URL, "Account/login", login);
+                        ResponseDTO respuesta = await _apiService.PostAsync(URL_API, "Account/login", login);
                         if (respuesta.IsExito)
                         {
                             TokenDTO token = ParsearData<TokenDTO>(respuesta);
                             MovilSettings.Token = JsonConvert.SerializeObject(token);
                             MovilSettings.IsLogin = true;
-                            AlertSuccess(respuesta.Mensaje);
-                            await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
-                            ClosePopup();
+                            ResponseDTO hasNotifications = await _apiService.PostWithoutBodyAsyncWithToken(URL_API, "Account/is-active-notifications-by-mail", token.Token);
+                            MovilSettings.IsOnNotificationsViaMail = ParsearData<HasNotificationsDTO>(hasNotifications).IsActive;
+                            await _navigationService.NavigateAsync($"/{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
                         }
                         else
                         {
                             if (respuesta.StatusCode == (int)HttpStatusCode.Unauthorized)
                             {
-                                AlertWarning(respuesta.Mensaje);
+                                AlertWarning(respuesta.MensajeHttp);
                             }
                             else
                             {
-                                AlertError(respuesta.Mensaje);
+                                AlertError(respuesta.MensajeHttp);
                             }
-                            ClosePopup();
                         }
-
                     }
                     else
                     {
@@ -150,9 +147,13 @@ namespace lestoma.App.ViewModels.Account
                 }
                 catch (Exception ex)
                 {
-                    if (PopupNavigation.Instance.PopupStack.Any())
-                        await PopupNavigation.Instance.PopAsync();
+                    MovilSettings.Token = string.Empty;
+                    MovilSettings.IsLogin = false;
                     SeeError(ex);
+                }
+                finally
+                {
+                    IsBusy = false;
                 }
             }
         }

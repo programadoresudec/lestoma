@@ -1,4 +1,5 @@
-﻿using Android.Bluetooth;
+﻿
+using Android.Bluetooth;
 using Java.Util;
 using lestoma.App.Views;
 using lestoma.CommonUtils.Helpers;

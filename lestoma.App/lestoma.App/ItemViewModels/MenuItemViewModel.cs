@@ -33,7 +33,7 @@ namespace lestoma.App.ItemViewModels
                     { "pageReturn", PageName }
                 };
 
-                await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(LoginPage)}", parameters);
+                await _navigationService.NavigateAsync($"/{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(LoginPage)}", parameters);
             }
             else
             {
@@ -43,7 +43,7 @@ namespace lestoma.App.ItemViewModels
                 }
                 else
                 {
-                    await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{PageName}");
+                    await _navigationService.NavigateAsync($"/{nameof(MenuMasterDetailPage)}/NavigationPage/{PageName}");
                 }    
             }
         }

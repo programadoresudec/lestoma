@@ -193,16 +193,16 @@ namespace lestoma.App.ViewModels.Account
                             Codigo = VerificationCode.Value,
                             Password = Password.Item1.Value
                         };
-                        Response respuesta = await _apiService.PutAsync(URL, "Account/recoverpassword", recover);
+                        ResponseDTO respuesta = await _apiService.PutAsync(URL_API, "Account/recoverpassword", recover);
                         if (respuesta.IsExito)
                         {
-                            AlertSuccess(respuesta.Mensaje);
+                            AlertSuccess(respuesta.MensajeHttp);
                             await _navigationService.NavigateAsync(nameof(LoginPage));
 
                         }
                         else
                         {
-                            AlertError(respuesta.Mensaje);
+                            AlertError(respuesta.MensajeHttp);
                             ClosePopup();
                         }
                     }

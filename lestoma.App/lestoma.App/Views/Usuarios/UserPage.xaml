@@ -15,7 +15,7 @@
     </ContentPage.Resources>
     <Grid>
         <Grid Opacity=".8" BackgroundColor="Black" IsVisible="{Binding IsBusy}">
-            <busyindicator:SfBusyIndicator AnimationType="Gear" 
+            <busyindicator:SfBusyIndicator AnimationType="Cupertino" 
                 	                   BackgroundColor="{StaticResource PantoneGrisLight}"
                 	                   HorizontalOptions="Center"
                 	                   TextColor="Black"
@@ -103,6 +103,4 @@
             </syncfusion:SfListView>
         </StackLayout>
     </Grid>
-    
-  
 </ContentPage>

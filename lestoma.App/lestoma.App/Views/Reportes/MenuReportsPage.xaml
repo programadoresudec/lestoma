@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-            xmlns:prism="http://prismlibrary.com" xmlns:gradient="clr-namespace:Syncfusion.XForms.Graphics;assembly=Syncfusion.Core.XForms"
+            xmlns:prism="http://prismlibrary.com" xmlns:gradient="clr-namespace:Syncfusion.XForms.Graphics;assembly=Syncfusion.Core.XForms" xmlns:core="clr-namespace:Syncfusion.XForms.Core;assembly=Syncfusion.Core.XForms"
              prism:ViewModelLocator.AutowireViewModel="True" Title="Generación de reportes"
             x:Class="lestoma.App.Views.Reportes.MenuReportsPage">
     <ContentPage.Content>
@@ -15,7 +15,15 @@
                         <StackLayout BackgroundColor="White"
                         Orientation="Vertical">
                             <gradient:SfGradientView Style="{StaticResource PrimaryGradientStyle}" />
-                            <Frame Margin="40,15,40,0" CornerRadius="20" Opacity="0.8"  BackgroundColor="{StaticResource PantoneVerdeSecond}" HasShadow="False">
+                            <Frame 
+                                 Margin="{core:OnPlatformOrientationThickness PhonePortrait='20,32',
+                                                                 PhoneLandscape='40,15,40,0',
+                                                                 TabletPortrait='200,50',
+                                                                 TabletLandscape='200,30,200,10',
+                                                                 Desktop='30'}"
+                                 CornerRadius="20" Opacity="0.8"  
+                                   
+                                   BackgroundColor="{StaticResource PantoneVerdeSecond}" HasShadow="False">
                                 <Grid HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" BackgroundColor="Transparent">
                                     <Grid.GestureRecognizers>
                                         <TapGestureRecognizer  Command="{Binding SelectMenuCommand}"/>

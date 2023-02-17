@@ -8,7 +8,6 @@ using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
-using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -175,9 +174,9 @@ namespace lestoma.App.ViewModels.Account
             {
                 if (AreFieldsValid())
                 {
+                    IsBusy = true;
                     if (_apiService.CheckConnection())
                     {
-                        await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Registrando..."));
                         UsuarioRequest usuario = new UsuarioRequest
                         {
                             Email = Email.Value,
@@ -185,17 +184,16 @@ namespace lestoma.App.ViewModels.Account
                             Apellido = LastName.Value,
                             Nombre = Name.Value
                         };
-                        Response respuesta = await _apiService.PostAsync(URL, "Account/registro", usuario);
+                        ResponseDTO respuesta = await _apiService.PostAsync(URL_API, "Account/register", usuario);
                         if (respuesta.IsExito)
                         {
-                            AlertSuccess(respuesta.Mensaje);
                             await _navigationService.GoBackAsync();
+                            await PopupNavigation.Instance.PushAsync(new MessagePopupPage(respuesta.MensajeHttp));
                         }
                         else
                         {
-                            AlertError(respuesta.Mensaje);
+                            AlertError(respuesta.MensajeHttp);
                         }
-                        ClosePopup();
                     }
                     else
                     {
@@ -205,9 +203,11 @@ namespace lestoma.App.ViewModels.Account
             }
             catch (Exception ex)
             {
-                if (PopupNavigation.Instance.PopupStack.Any())
-                    await PopupNavigation.Instance.PopAsync();
                 SeeError(ex);
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 

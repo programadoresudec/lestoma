@@ -11,9 +11,9 @@
     xmlns:gradient="clr-namespace:Syncfusion.XForms.Graphics;assembly=Syncfusion.Core.XForms"
     xmlns:local="clr-namespace:lestoma.App.Views.Account"
     xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" xmlns:control="clr-namespace:lestoma.App.Controls"
+    xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms"
     NavigationPage.HasNavigationBar="False"
      Title="{Binding Title}">
-
     <ContentPage.Resources>
         <ResourceDictionary>
             <converter:BooleanToColorConverter x:Key="ColorConverter" />
@@ -82,8 +82,8 @@
                                         Text="{Binding Password.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
                                         TextColor="{DynamicResource Red}"
                                         VerticalOptions="FillAndExpand" />
-                                    <inputLayout:SfTextInputLayout Hint="Contraseña"  FocusedColor="Black"  ContainerBackgroundColor="Transparent"
-                                                   EnablePasswordVisibilityToggle="true"  Margin="10,10,0,0">
+                                    <inputLayout:SfTextInputLayout Hint="Contraseña" FocusedColor="Black"  ContainerBackgroundColor="Transparent"
+                                                   EnablePasswordVisibilityToggle="true" Margin="10,10,0,0">
                                         <control:BorderlessEntry
                                             x:Name="PasswordEntry"
                                             Margin="15,0"
@@ -116,41 +116,47 @@
                             Command="{Binding ForgotPasswordCommand}"
                             FontSize="12"
                             HorizontalOptions="End"
-                            Style="{StaticResource TransparentButtonStyle}"
+                            Style="{StaticResource LestomaTransparentButtonStyle}"
                             Text="¿Ha olvidado su contraseña?"
                             TextColor="{DynamicResource Gray-White}" />
-
-
                         <buttons:SfButton
                             Grid.Row="5"
                             Margin="0,16"
                             Command="{Binding LoginCommand}"
                             CornerRadius="4"
                             HorizontalOptions="Fill"
-                            Style="{StaticResource GradientButtonStyle}"
+                            Style="{StaticResource LestomaGradientButtonStyle}"
                             Text="Iniciar Sesión" />
                     </Grid>
-
                     <StackLayout
                         HorizontalOptions="Center"
                         Orientation="Horizontal"
                         Spacing="1"
                         VerticalOptions="End">
-
                         <Label
                             Style="{StaticResource DescriptionLabelStyle}"
                             Text="¿No tienes cuenta?"
                             TextColor="{DynamicResource Gray-White}"
                             VerticalTextAlignment="Center" />
-
                         <!--  Sign-up button  -->
                         <buttons:SfButton
                             Command="{Binding SignUpCommand}"
-                            Style="{StaticResource TransparentButtonStyle}"
+                            Style="{StaticResource LestomaTransparentButtonStyle}"
                             Text="Registrarse" />
                     </StackLayout>
                 </StackLayout>
             </ScrollView>
+            <Grid Opacity=".7" BackgroundColor="Black" IsVisible="{Binding IsBusy}">
+                <busyindicator:SfBusyIndicator AnimationType="Cupertino" 
+                	                   BackgroundColor="{StaticResource PantoneGrisLight}"
+                	                   HorizontalOptions="Center"
+                	                   TextColor="Black"
+                	                   IsBusy="{Binding IsBusy}"
+                	                   Title="Iniciando Sesión..."
+                	                   VerticalOptions="Center"
+                	                   ViewBoxWidth="80"
+                	                   ViewBoxHeight="80" />
+            </Grid>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

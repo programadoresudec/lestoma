@@ -7,6 +7,7 @@
 
     <!--  Common style borderless editors  -->
     <Style x:Key="BorderlessEditorStyle" TargetType="control:BorderlessEditor">
+        <Setter Property="FontFamily" Value="Montserrat-Regular" />
         <Setter Property="TextColor" Value="{DynamicResource Gray-900}" />
         <Setter Property="FontFamily" Value="Montserrat-Regular" />
         <Setter Property="HorizontalOptions" Value="FillAndExpand" />

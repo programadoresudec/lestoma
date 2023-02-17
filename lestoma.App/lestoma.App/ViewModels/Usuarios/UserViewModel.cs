@@ -1,37 +1,28 @@
 ﻿using lestoma.App.Models;
-using lestoma.App.Views;
-using lestoma.App.Views.Upas;
 using lestoma.App.Views.Usuarios;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using Newtonsoft.Json;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Usuarios
 {
     public class UserViewModel : BaseViewModel
     {
-        private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         private ObservableCollection<InfoUserModel> _usuarios;
         public UserViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
-            _navigationService = navigationService;
             _apiService = apiService;
             EditCommand = new Command<object>(UserSelected, CanNavigate);
             LoadUsers();
-
         }
-
-
 
         public ObservableCollection<InfoUserModel> Users
         {
@@ -57,7 +48,7 @@ namespace lestoma.App.ViewModels.Usuarios
             base.OnNavigatedTo(parameters);
             if (parameters.ContainsKey(Constants.REFRESH))
             {
-                ConsumoService(true);
+                ConsumoService();
             }
         }
 
@@ -102,15 +93,14 @@ namespace lestoma.App.ViewModels.Usuarios
             }
         }
 
-        private async void ConsumoService(bool refresh = false)
+        private async void ConsumoService()
         {
             try
             {
+                IsBusy = true;
                 Users = new ObservableCollection<InfoUserModel>();
-                if (!refresh)
-                    await PopupNavigation.Instance.PushAsync(new LoadingPopupPage());
 
-                Response response = await _apiService.GetListAsyncWithToken<List<InfoUserDTO>>(URL, "usuarios/listado", TokenUser.Token);
+                ResponseDTO response = await _apiService.GetListAsyncWithToken<List<InfoUserDTO>>(URL_API, "usuarios/listado", TokenUser.Token);
                 if (response.IsExito)
                 {
                     var listado = (List<InfoUserDTO>)response.Data;
@@ -128,17 +118,17 @@ namespace lestoma.App.ViewModels.Usuarios
                 }
                 else
                 {
-                    AlertWarning(response.Mensaje);
+                    AlertWarning(response.MensajeHttp);
                 }
-                if (!refresh)
-                    if (PopupNavigation.Instance.PopupStack.Any())
-                        await PopupNavigation.Instance.PopAllAsync();
             }
             catch (Exception ex)
             {
                 SeeError(ex);
             }
+            finally
+            {
+                IsBusy = false;
+            }
         }
-
     }
 }

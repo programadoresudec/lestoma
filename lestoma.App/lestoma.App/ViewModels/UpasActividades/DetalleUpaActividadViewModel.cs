@@ -1,14 +1,12 @@
-﻿using lestoma.App.Views;
-using lestoma.App.Views.UpasActividades;
+﻿using lestoma.App.Views.UpasActividades;
+using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests.Filters;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.UpasActividades
@@ -50,9 +48,11 @@ namespace lestoma.App.ViewModels.UpasActividades
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
-            if (parameters.ContainsKey("refresh"))
+            if (parameters.ContainsKey(Constants.REFRESH))
             {
-                ConsumoService(true);
+                DetalleUpasActividades.Clear();
+                DetalleUpasActividades = new ObservableCollection<DetalleUpaActividadDTO>();
+                ConsumoService();
             }
         }
         private bool CanNavigate(object arg)
@@ -102,13 +102,12 @@ namespace lestoma.App.ViewModels.UpasActividades
             await _navigationService.NavigateAsync($"{nameof(ActividadesByUsuarioPopupPage)}", parameters);
         }
 
-        private async void ConsumoService(bool refresh = false)
+        private async void ConsumoService()
         {
             try
             {
-                if (!refresh)
-                    await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-                Response response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(URL,
+                IsBusy = true;
+                ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(URL_API,
                $"detalle-upas-actividades/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
                 if (response.IsExito)
                 {
@@ -139,7 +138,7 @@ namespace lestoma.App.ViewModels.UpasActividades
                 }
                 else
                 {
-                    AlertWarning(response.Mensaje);
+                    AlertWarning(response.MensajeHttp);
                 }
 
             }
@@ -149,9 +148,7 @@ namespace lestoma.App.ViewModels.UpasActividades
             }
             finally
             {
-                if (!refresh)
-                    if (PopupNavigation.Instance.PopupStack.Any())
-                        await PopupNavigation.Instance.PopAsync();
+                IsBusy = false;
             }
 
         }
@@ -179,7 +176,7 @@ namespace lestoma.App.ViewModels.UpasActividades
             try
             {
                 IsBusy = true;
-                Response response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(URL,
+                ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<DetalleUpaActividadDTO>(URL_API,
                     $"detalle-upas-actividades/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
                 if (response.IsExito)
                 {
@@ -211,7 +208,7 @@ namespace lestoma.App.ViewModels.UpasActividades
                 }
                 else
                 {
-                    AlertWarning(response.Mensaje);
+                    AlertWarning(response.MensajeHttp);
                 }
 
             }

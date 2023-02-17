@@ -1,14 +1,11 @@
 ﻿using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests.Filters;
-using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 
 namespace lestoma.App.ViewModels.UpasActividades
 {
@@ -49,8 +46,8 @@ namespace lestoma.App.ViewModels.UpasActividades
             {
                 if (_apiService.CheckConnection())
                 {
-                    Response response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
-                        $"detalle-upas-actividades/lista-actividades-by-upa-usuario?UpaId={filtro.UpaId}&UsuarioId={filtro.UsuarioId}", TokenUser.Token);
+                    ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
+                        $"detalle-upas-actividades/listar-actividades-upa-usuario?UpaId={filtro.UpaId}&UsuarioId={filtro.UsuarioId}", TokenUser.Token);
                     if (response.IsExito)
                     {
                         var listado = (List<NameDTO>)response.Data;
@@ -59,7 +56,7 @@ namespace lestoma.App.ViewModels.UpasActividades
                         {
                             Actividades.Add(new
                             {
-                                Nombre = item.Nombre
+                                item.Nombre
                             });
                         }
                     }

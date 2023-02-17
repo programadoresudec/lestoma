@@ -8,10 +8,5 @@ namespace lestoma.App.Views
         {
             InitializeComponent();
         }
-
-        private void BT_Verificar_Clicked(object sender, System.EventArgs e)
-        {
-
-        }
     }
 }

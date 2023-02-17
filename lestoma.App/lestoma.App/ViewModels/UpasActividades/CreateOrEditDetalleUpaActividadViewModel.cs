@@ -1,10 +1,10 @@
-﻿using lestoma.App.Views;
+﻿using Acr.UserDialogs;
+using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Newtonsoft.Json;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,9 +16,7 @@ namespace lestoma.App.ViewModels.UpasActividades
 {
     public class CreateOrEditDetalleUpaActividadViewModel : BaseViewModel
     {
-        private INavigationService _navigationService;
         private IApiService _apiService;
-
         private ObservableCollection<UserDTO> _users;
         private UserDTO _user;
         private ObservableCollection<NameDTO> _upas;
@@ -31,7 +29,6 @@ namespace lestoma.App.ViewModels.UpasActividades
         public CreateOrEditDetalleUpaActividadViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
-            _navigationService = navigationService;
             _apiService = apiService;
             _users = new ObservableCollection<UserDTO>();
             _upas = new ObservableCollection<NameDTO>();
@@ -161,12 +158,12 @@ namespace lestoma.App.ViewModels.UpasActividades
             if (parameters.ContainsKey("detalleUpaActividad"))
             {
                 DetalleUpaActividad = parameters.GetValue<DetalleUpaActividadDTO>("detalleUpaActividad");
-                Title = "Editar";
+                Title = "Editar Detalle";
                 CargarObjetos(DetalleUpaActividad);
             }
             else
             {
-                Title = "Crear";
+                Title = "Crear Detalle";
                 CargarObjetos();
             }
         }
@@ -175,16 +172,17 @@ namespace lestoma.App.ViewModels.UpasActividades
         {
             try
             {
+                UserDialogs.Instance.ShowLoading("Cargando");
                 if (_apiService.CheckConnection())
                 {
-                    Response response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
-                           "actividades/listado-nombres", TokenUser.Token);
+                    ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
+                           "actividades/listar-nombres", TokenUser.Token);
 
-                    Response response1 = await _apiService.GetListAsyncWithToken<List<UserDTO>>(URL,
+                    ResponseDTO response1 = await _apiService.GetListAsyncWithToken<List<UserDTO>>(URL_API,
                         "usuarios/activos", TokenUser.Token);
 
-                    Response response2 = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
-                        "upas/listado-nombres", TokenUser.Token);
+                    ResponseDTO response2 = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
+                        "upas/listar-nombres", TokenUser.Token);
 
                     var listadoActividades = (List<NameDTO>)response.Data;
                     var listadoUsuarios = (List<UserDTO>)response1.Data;
@@ -202,8 +200,9 @@ namespace lestoma.App.ViewModels.UpasActividades
                         IsEdit = false;
                         Upa = Upas.Where(x => x.Id == detalleUpaActividad.UpaId).FirstOrDefault();
                         User = Usuarios.Where(x => x.Id == detalleUpaActividad.UsuarioId).FirstOrDefault();
-                        Response listaActividadesxUser = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL,
-                          $"detalle-upas-actividades/lista-actividades-by-upa-usuario?UpaId={Upa.Id}&UsuarioId={User.Id}", TokenUser.Token);
+                        ResponseDTO listaActividadesxUser = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
+                          $"detalle-upas-actividades/listar-actividades-upa-usuario?UpaId=" +
+                          $"{Upa.Id}&UsuarioId={User.Id}", TokenUser.Token);
                         if (listaActividadesxUser.IsExito)
                         {
                             var listado = (List<NameDTO>)listaActividadesxUser.Data;
@@ -213,14 +212,7 @@ namespace lestoma.App.ViewModels.UpasActividades
                                 var actividad = Actividades.Where(x => x.Id == item.Id).FirstOrDefault();
                                 Actividades.Remove(actividad);
                             }
-                            if (Actividades.Count == 0)
-                            {
-                                Actividades = new ObservableCollection<NameDTO>();
-                            }
-                            else
-                            {
-                                ActividadesAdd = new ObservableCollection<NameDTO>(listado);
-                            }
+                            ActividadesAdd = new ObservableCollection<NameDTO>(listado);
                         }
                     }
                 }
@@ -235,94 +227,113 @@ namespace lestoma.App.ViewModels.UpasActividades
             {
                 SeeError(ex);
             }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
         }
 
 
         private void CreateOrEditClicked(object obj)
         {
-            try
+
+            if (_apiService.CheckConnection())
             {
-                if (_apiService.CheckConnection())
+                if (DetalleUpaActividad == null)
                 {
-                    if (DetalleUpaActividad == null)
-                    {
-                        Crear();
-                    }
-                    else
-                    {
-                        editar();
-                    }
+                    Crear();
                 }
                 else
                 {
-                    AlertNoInternetConnection();
+                    Editar();
                 }
 
             }
-            catch (Exception ex)
+            else
             {
-                SeeError(ex);
+                AlertNoInternetConnection();
             }
         }
 
         private async void Crear()
         {
-            await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Guardando..."));
-            var detalle = new CrearDetalleUpaActividadRequest
+            try
             {
-                UpaId = Upa.Id,
-                UsuarioId = User.Id
-            };
-            foreach (var item in ActividadesAdd)
-            {
-                detalle.Actividades.Add(new ActividadRequest
+                var detalle = new CrearDetalleUpaActividadRequest
                 {
-                    Id = item.Id,
-                    Nombre = item.Nombre
-                });
-            }
+                    UpaId = Upa.Id,
+                    UsuarioId = User.Id
+                };
+                foreach (var item in ActividadesAdd)
+                {
+                    detalle.Actividades.Add(new ActividadRequest
+                    {
+                        Id = item.Id,
+                        Nombre = item.Nombre
+                    });
+                }
 
-            var response = await _apiService.PostAsyncWithToken(URL, "detalle-upas-actividades/crear", detalle, TokenUser.Token);
-            if (response.IsExito)
-            {
-                AlertSuccess(response.Mensaje);
-                await _navigationService.GoBackAsync();
+                var response = await _apiService.PostAsyncWithToken(URL_API, "detalle-upas-actividades/crear", detalle, TokenUser.Token);
+                if (response.IsExito)
+                {
+                    AlertSuccess(response.MensajeHttp);
+                    var parameters = new NavigationParameters { { Constants.REFRESH, true } };
+                    await _navigationService.GoBackAsync(parameters);
+                }
+                else
+                {
+                    AlertWarning(response.MensajeHttp);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                AlertWarning(response.Mensaje);
+                SeeError(ex);
             }
-            await PopupNavigation.Instance.PopAsync();
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
         }
 
-        private async void editar()
+        private async void Editar()
         {
-            await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Guardando..."));
-            var detalle = new CrearDetalleUpaActividadRequest
+            try
             {
-                UpaId = Upa.Id,
-                UsuarioId = User.Id
-            };
-            foreach (var item in ActividadesAdd)
-            {
-                detalle.Actividades.Add(new ActividadRequest
+                UserDialogs.Instance.ShowLoading("Guardando");
+                var detalle = new CrearDetalleUpaActividadRequest
                 {
-                    Id = item.Id,
-                    Nombre = item.Nombre
-                });
-            }
+                    UpaId = Upa.Id,
+                    UsuarioId = User.Id
+                };
+                foreach (var item in ActividadesAdd)
+                {
+                    detalle.Actividades.Add(new ActividadRequest
+                    {
+                        Id = item.Id,
+                        Nombre = item.Nombre
+                    });
+                }
 
-            var response = await _apiService.PutAsyncWithToken(URL, "detalle-upas-actividades/editar", detalle, TokenUser.Token);
-            if (response.IsExito)
-            {
-                AlertSuccess(response.Mensaje);
-                await _navigationService.GoBackAsync();
+                var response = await _apiService.PutAsyncWithToken(URL_API, "detalle-upas-actividades/editar", detalle, TokenUser.Token);
+                if (response.IsExito)
+                {
+                    AlertSuccess(response.MensajeHttp);
+                    var parameters = new NavigationParameters { { Constants.REFRESH, true } };
+                    await _navigationService.GoBackAsync(parameters);
+                }
+                else
+                {
+                    AlertWarning(response.MensajeHttp);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                AlertWarning(response.Mensaje);
+                SeeError(ex);
             }
-            await PopupNavigation.Instance.PopAsync();
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
         }
     }
 }

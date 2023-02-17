@@ -10,7 +10,7 @@
                Title="{Binding Title}">
     <Grid>
         <Grid Opacity=".8" BackgroundColor="Black" IsVisible="{Binding IsBusy}">
-            <busyindicator:SfBusyIndicator AnimationType="Gear" 
+            <busyindicator:SfBusyIndicator AnimationType="Cupertino" 
                 	                   BackgroundColor="{StaticResource PantoneGrisLight}"
                 	                   HorizontalOptions="Center"
                 	                   TextColor="Black"
@@ -90,9 +90,9 @@
                                     </Label.FormattedText>
                                 </Label>
                                 <button:SfButton x:Name="button" HeightRequest="35" CornerRadius="5" Margin="10"
-                                             HorizontalOptions="EndAndExpand" TextColor="White"                                        
-                                             Text="Ver más" BackgroundColor="{StaticResource PantoneAmarilloSecond}"
-                                            Command="{Binding BindingContext.s, Source={x:Reference LV_Buzon}}" 
+                                             HorizontalOptions="EndAndExpand"                                      
+                                             Text="Ver más" Style="{StaticResource LestomaButtonStyle}"
+                                            Command="{Binding BindingContext.SeeMoreInfoCommand, Source={x:Reference LV_Buzon}}" 
                                              CommandParameter="{Binding .}" ImageSource="icon_see.png" ShowIcon="True">
                                 </button:SfButton>
                             </StackLayout>

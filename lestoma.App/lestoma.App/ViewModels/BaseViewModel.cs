@@ -1,5 +1,4 @@
 ﻿using Android.Bluetooth;
-using Android.OS;
 using lestoma.App.Views;
 using lestoma.App.Views.Account;
 using lestoma.CommonUtils.Constants;
@@ -14,10 +13,11 @@ using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Net.Sockets;
+using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -55,10 +55,13 @@ namespace lestoma.App.ViewModels
         #endregion
 
         #region Variables globales que quedan en persistencia
-        public string URL => Prism.PrismApplicationBase.Current.Resources["UrlAPI"].ToString();
-        public TokenDTO TokenUser => !string.IsNullOrEmpty(MovilSettings.Token) ? JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token) : null;
+        protected string URL_API => Prism.PrismApplicationBase.Current.Resources["UrlAPI"].ToString();
 
-        public int Rol => TokenUser != null ? TokenUser.User.RolId : 0;
+        protected string URL_DOMINIO => Prism.PrismApplicationBase.Current.Resources["UrlDominio"].ToString();
+
+        protected TokenDTO TokenUser => !string.IsNullOrEmpty(MovilSettings.Token) ? JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token) : null;
+
+        protected int Rol => TokenUser != null ? TokenUser.User.RolId : 0;
         #endregion
 
         #region Event handler
@@ -134,8 +137,8 @@ namespace lestoma.App.ViewModels
         {
             if (exception.Message.Contains("StatusCode"))
             {
-                Response error = JsonConvert.DeserializeObject<Response>(exception.Message);
-                await PopupNavigation.Instance.PushAsync(new MessagePopupPage($"Error {error.StatusCode}: {error.Mensaje}", Constants.ICON_ERROR));
+                ResponseDTO error = JsonConvert.DeserializeObject<ResponseDTO>(exception.Message);
+                await PopupNavigation.Instance.PushAsync(new MessagePopupPage($"Error {error.StatusCode}: {error.MensajeHttp}", Constants.ICON_ERROR));
             }
             else
             {
@@ -207,7 +210,7 @@ namespace lestoma.App.ViewModels
         #endregion
 
         #region Metodo parsear Data de un JSON OBJECT
-        public T ParsearData<T>(Response respuesta)
+        public T ParsearData<T>(ResponseDTO respuesta)
         {
             JObject Jobject = JObject.FromObject(respuesta);
             JToken jToken = Jobject.GetValue("Data");

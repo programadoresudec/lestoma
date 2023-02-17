@@ -1,13 +1,11 @@
-﻿using lestoma.App.Models;
-using lestoma.App.Views;
+﻿using Acr.UserDialogs;
+using lestoma.App.Models;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
-using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Upas
@@ -29,19 +27,13 @@ namespace lestoma.App.ViewModels.Upas
         public UpaRequest Upa
         {
             get => _upa;
-            set
-            {
-                SetProperty(ref _upa, value);
-            }
+            set => SetProperty(ref _upa, value);
         }
 
         public UpaModel Model
         {
             get => _model;
-            set
-            {
-                SetProperty(ref _model, value);
-            }
+            set => SetProperty(ref _model, value);
         }
         public Command CreateOrEditCommand { get; }
 
@@ -56,7 +48,7 @@ namespace lestoma.App.ViewModels.Upas
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
-            if (parameters.ContainsKey("upa"))
+            if (parameters.ContainsKey("upa") || Upa.Id != Guid.Empty)
             {
                 Upa = parameters.GetValue<UpaRequest>("upa");
                 Title = "Editar";
@@ -74,43 +66,42 @@ namespace lestoma.App.ViewModels.Upas
                 CargarDatos();
                 if (_model.AreFieldsValid())
                 {
-                    UpaRequest request = new UpaRequest
-                    {
-                        Id = Upa.Id == Guid.Empty ? Guid.Empty : Upa.Id,
-                        Nombre = _model.Nombre.Value.Trim(),
-                        Descripcion = _model.Descripcion.Value.Trim(),
-                        CantidadActividades = (short)Convert.ToInt32(_model.CantidadActividades.Value)
-                    };
+                    UserDialogs.Instance.ShowLoading("Guardando");
                     if (_apiService.CheckConnection())
                     {
-                        await _navigationService.NavigateAsync($"{nameof(LoadingPopupPage)}");
-
+                        UpaRequest request = new UpaRequest
+                        {
+                            Id = Upa.Id == Guid.Empty ? Guid.Empty : Upa.Id,
+                            Nombre = _model.Nombre.Value.Trim(),
+                            Descripcion = _model.Descripcion.Value.Trim(),
+                            CantidadActividades = (short)Convert.ToInt32(_model.CantidadActividades.Value)
+                        };
                         if (Upa.Id == Guid.Empty)
                         {
-                            Response respuesta = await _apiService.PostAsyncWithToken(URL, "upas/crear", request, TokenUser.Token);
+                            ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL_API, "upas/crear", request, TokenUser.Token);
                             if (respuesta.IsExito)
                             {
-                                AlertSuccess(respuesta.Mensaje);
+                                AlertSuccess(respuesta.MensajeHttp);
                                 var parameters = new NavigationParameters { { Constants.REFRESH, true } };
                                 await _navigationService.GoBackAsync(parameters, useModalNavigation: true, true);
                             }
                             else
                             {
-                                AlertWarning(respuesta.Mensaje);
+                                AlertWarning(respuesta.MensajeHttp);
                             }
                         }
                         else
                         {
-                            Response respuesta = await _apiService.PutAsyncWithToken(URL, "upas/editar", request, TokenUser.Token);
+                            ResponseDTO respuesta = await _apiService.PutAsyncWithToken(URL_API, "upas/editar", request, TokenUser.Token);
                             if (respuesta.IsExito)
                             {
-                                AlertSuccess(respuesta.Mensaje);
+                                AlertSuccess(respuesta.MensajeHttp);
                                 var parameters = new NavigationParameters { { Constants.REFRESH, true } };
                                 await _navigationService.GoBackAsync(parameters, useModalNavigation: true, true);
                             }
                             else
                             {
-                                AlertWarning(respuesta.Mensaje);
+                                AlertWarning(respuesta.MensajeHttp);
                             }
                         }
                     }
@@ -126,8 +117,7 @@ namespace lestoma.App.ViewModels.Upas
             }
             finally
             {
-                if (PopupNavigation.Instance.PopupStack.Any())
-                    await PopupNavigation.Instance.PopAsync();
+                UserDialogs.Instance.HideLoading();
             }
         }
     }

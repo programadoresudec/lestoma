@@ -23,7 +23,6 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
-
         <AbsoluteLayout>
             <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
                      AbsoluteLayout.LayoutFlags="All"  IsVisible="{Binding IsVisible}"
@@ -39,7 +38,7 @@
                     Margin="{core:OnPlatformOrientationThickness PhonePortrait='20,32',
                                                                  PhoneLandscape='150,32',
                                                                  TabletPortrait='200,50',
-                                                                 TabletLandscape='300,50',
+                                                                 TabletLandscape='100,50',
                                                                  Desktop='30'}"
                     Spacing="0"
                     VerticalOptions="FillAndExpand">
@@ -65,9 +64,9 @@
                                             VerticalOptions="FillAndExpand" />
                                         <inputLayout:SfTextInputLayout Hint="Nombre" FocusedColor="Black"  ContainerBackgroundColor="Transparent"
                                                  Margin="10,10,0,0">
-                                            <control:BorderlessEntry x:Name="NameEntry" Text="{Binding Usuario.Nombre}"
+                                            <control:BorderlessEntry x:Name="NameEntry" Text="{Binding Nombre}"
                                                      PlaceholderColor="#606a7b"
-                                                 
+                                                        Margin="15,0"
                                                      Style="{StaticResource BorderlessEntryStyle}" MaxLength="60" TextColor="#333942">
                                                 <Entry.Behaviors>
                                                     <behaviour:EntryLineValidationBehaviour IsValid="{Binding Name.IsValid}"/>
@@ -102,8 +101,8 @@
                                             VerticalOptions="FillAndExpand" />
                                         <inputLayout:SfTextInputLayout Hint="Apellido" FocusedColor="Black"  ContainerBackgroundColor="Transparent"
                                                   Margin="10,10,0,0">
-                                            <control:BorderlessEntry x:Name="LastNameEntry" Text="{Binding Usuario.Apellido}"
-                                                     PlaceholderColor="#606a7b"
+                                            <control:BorderlessEntry x:Name="LastNameEntry" Text="{Binding Apellido}"
+                                                     PlaceholderColor="#606a7b"  Margin="15,0"
                                                      Style="{StaticResource BorderlessEntryStyle}" MaxLength="60" TextColor="#333942">
                                                 <Entry.Behaviors>
                                                     <behaviour:EntryLineValidationBehaviour IsValid="{Binding LastName.IsValid}"/>
@@ -142,7 +141,7 @@
                                         <inputLayout:SfTextInputLayout Hint="Contraseña" FocusedColor="Black"  ContainerBackgroundColor="Transparent"
                                                   Margin="10,10,0,0" EnablePasswordVisibilityToggle="True">
                                             <control:BorderlessEntry x:Name="PasswordEntry" Text="{Binding Password.Item1.Value}"
-                                                     PlaceholderColor="#606a7b"
+                                                     PlaceholderColor="#606a7b"    Margin="15,0"
                                                      Style="{StaticResource BorderlessEntryStyle}" IsPassword="True" MaxLength="60" TextColor="#333942">
                                                 <Entry.Behaviors>
                                                     <behaviour:EntryLineValidationBehaviour IsValid="{Binding Password.Item1.IsValid}"/>
@@ -178,7 +177,7 @@
                                         <inputLayout:SfTextInputLayout Hint="Confirmar Contraseña" FocusedColor="Black"
                                                                        ContainerBackgroundColor="Transparent" Margin="10,10,0,0" 
                                                                        EnablePasswordVisibilityToggle="True">
-                                            <control:BorderlessEntry x:Name="ConfirmPasswordEntry" Text="{Binding Password.Item2.Value}"
+                                            <control:BorderlessEntry x:Name="ConfirmPasswordEntry" Text="{Binding Password.Item2.Value}" Margin="15,0"
                                                      PlaceholderColor="#606a7b" Style="{StaticResource BorderlessEntryStyle}" IsPassword="True"
                                                    MaxLength="60" TextColor="#333942">
                                                 <Entry.Behaviors>
@@ -206,7 +205,7 @@
                                         <!--  Label to display error message  -->
                                         <Label
                                             x:Name="estadoValidationLabel"
-                                            Margin="20,5,10,50"
+                                            Margin="20,5,10,50" 
                                             IsVisible="{Binding Estado.IsValid, Converter={StaticResource InverseBoolConverter}}"
                                             Style="{StaticResource SimpleLabelStyle}"
                                             Text="{Binding Estado.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
@@ -214,7 +213,7 @@
                                             VerticalOptions="FillAndExpand" />
                                         <inputLayout:SfTextInputLayout Hint="Seleccione Estado" HeightRequest="80" 
                                                                    ContainerBackgroundColor="Transparent" 
-                                                   Margin="10,0,0,0">
+                                                   Margin="10,10,0,0">
                                             <Picker x:Name="estadoEntry" TextColor="Black" ItemDisplayBinding="{Binding NombreEstado}"
                                              Style="{StaticResource BorderlessEntryStyle}" Margin="15,0" 
                                             SelectedItem="{Binding EstadoActual}" ItemsSource="{Binding Estados}">
@@ -247,7 +246,7 @@
                                             VerticalOptions="FillAndExpand" />
                                         <inputLayout:SfTextInputLayout Hint="Seleccione Rol" HeightRequest="80" 
                                                                    ContainerBackgroundColor="Transparent" 
-                                                   Margin="10,0,0,0">
+                                                   Margin="10,12,0,0">
                                             <Picker x:Name="RolEntry" TextColor="Black" ItemDisplayBinding="{Binding NombreRol}"
                                              Style="{StaticResource BorderlessEntryStyle}" Margin="15,0" 
                                             SelectedItem="{Binding RolActual}" ItemsSource="{Binding Roles}">
@@ -267,7 +266,7 @@
                             <buttons:SfButton
                             Command="{Binding CreateOrEditCommand}"
                             HorizontalOptions="FillAndExpand"
-                            Style="{StaticResource GradientButtonStyle}"
+                            Style="{StaticResource LestomaGradientButtonStyle}"
                             Text="GUARDAR" />
                         </StackLayout>
                     </StackLayout>

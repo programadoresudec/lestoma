@@ -16,10 +16,5 @@ namespace lestoma.App.Views.UpasActividades
         {
             InitializeComponent();
         }
-
-        private void LV_detalleUpasActividades_SwipeEnded(object sender, Syncfusion.ListView.XForms.SwipeEndedEventArgs e)
-        {
-
-        }
     }
 }

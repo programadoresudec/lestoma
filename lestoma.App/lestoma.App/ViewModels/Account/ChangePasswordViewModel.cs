@@ -2,7 +2,6 @@
 using lestoma.App.Validators.Rules;
 using lestoma.App.Views;
 using lestoma.App.Views.Account;
-using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
@@ -11,7 +10,6 @@ using Newtonsoft.Json;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using Xamarin.Forms;
 
@@ -32,7 +30,7 @@ namespace lestoma.App.ViewModels.Account
         public ChangePasswordViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
-            Title = "Iniciar Sesión";
+            Title = "Cuenta";
             _navigationService = navigationService;
             _apiService = apiService;
             this.InitializeProperties();
@@ -142,15 +140,15 @@ namespace lestoma.App.ViewModels.Account
                             OldPassword = this.CurrentPassword.Value,
                             NewPassword = this.Password.Item1.Value
                         };
-                        Response respuesta = await _apiService.PostAsyncWithToken(URL, "Account/changepassword", cambio, UserApp.Token);
+                        ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL_API, "Account/changepassword", cambio, UserApp.Token);
                         if (respuesta.IsExito)
                         {
-                            AlertSuccess(respuesta.Mensaje);
-                            await _navigationService.NavigateAsync($"/{nameof(AdminMasterDetailPage)}/NavigationPage/{nameof(SettingsPage)}");
+                            AlertSuccess(respuesta.MensajeHttp);
+                            await _navigationService.NavigateAsync($"/{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(SettingsPage)}");
                         }
                         else
                         {
-                            AlertError(respuesta.Mensaje);
+                            AlertError(respuesta.MensajeHttp);
                         }
                         ClosePopup();
                     }

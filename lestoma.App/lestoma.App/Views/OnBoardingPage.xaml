@@ -8,9 +8,9 @@
              x:Class="lestoma.App.Views.OnBoardingPage">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Color x:Key="BlueColor">#55669F</Color>
+
             <Style TargetType="Label">
-                <Setter Property="TextColor" Value="{StaticResource BlueColor}" />
+                <Setter Property="TextColor" Value="{StaticResource PantoneVerdeSecond}" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
@@ -23,15 +23,23 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
-            <Button Grid.Row="0"
+            <StackLayout Orientation="Horizontal" Margin="10,0,10,0">
+                <Button
                     HorizontalOptions="EndAndExpand"
-                    Margin="0,0,20,0"
+                    
                     FontSize="Medium"
+                    FontFamily="Montserrat-Bold"
                     FontAttributes="Bold"
-                    BackgroundColor="Transparent"
-                    TextColor="{StaticResource BlueColor}"
+                    BackgroundColor="Transparent"              
+                    TextColor="{StaticResource PantoneVerdeDark}"
                     Text="{Binding SkipButtonText}"
                     Command="{Binding SkipCommand}"/>
+                        <Label
+                        Margin="10,2,10,0" HorizontalOptions="Start"
+                        Style="{StaticResource IconLabelStyle}"
+                        Text="{StaticResource ArrowRight}" />
+            </StackLayout>
+
             <CarouselView x:Name="onBoardingCarousel"
                           Grid.Row="1"
                           ItemsSource="{Binding Items}"                          
@@ -60,7 +68,7 @@
             <IndicatorView
                     Grid.Row="2"
                     IndicatorsShape="Circle"
-                    IndicatorColor="{StaticResource BlueColor}"
+                    IndicatorColor="{StaticResource PantoneVerdeDark}"
                     SelectedIndicatorColor="DarkGray"
                     HorizontalOptions="Center"/>
         </Grid>

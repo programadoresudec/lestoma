@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              prism:ViewModelLocator.AutowireViewModel="True"
-            xmlns:ffimageloadingsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
+            xmlns:ffimageloadingsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms" 
+             xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
              NavigationPage.HasNavigationBar="False"
              x:Class="lestoma.App.Views.ModeOfflinePage">
     <ContentPage.Content>
@@ -13,7 +14,7 @@
                 <!--  Display the svg illustration image  -->
                 <ffimageloadingsvg:SvgCachedImage                                  
                                        Source="Icon_Mode_Offline.svg"
-                                       Aspect="AspectFill"
+                                       Aspect="AspectFit"
                                        WidthRequest="300" 
                                        FlexLayout.AlignSelf="Center"/>
                 <!--  Label to display header  -->
@@ -30,22 +31,20 @@
                     Margin="8,0,8,0"
                     FontSize="16"
                     Style="{StaticResource HeaderLabel}"
-                    Text="No tiene Conexión a Internet}"
+                    Text="No tiene Conexión a Internet"
                     TextColor="#333942"
                     VerticalTextAlignment="Center" />
             </StackLayout>
-
-            <!--  Try again button  -->
-            <Button x:Name="BT_Verificar"
+            
+            <buttons:SfButton
                 Grid.Row="1"
                 Margin="0,10,0,24"
                 TextColor="White"
                 CornerRadius="10"
-                Clicked="BT_Verificar_Clicked"
-                BackgroundColor="{StaticResource PantoneVerdeDark}"
-                Text="Ir A Modo Offline"
-                VerticalOptions="End"
-                WidthRequest="245" />
+            Command="{Binding NavigateMenuOfflineCommand}"
+                HorizontalOptions="Fill"
+                Style="{StaticResource LestomaButtonStyle}"
+                Text="Navegar en Modo Offline" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

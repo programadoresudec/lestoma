@@ -1,6 +1,5 @@
 ﻿using Rg.Plugins.Popup.Pages;
 using Rg.Plugins.Popup.Services;
-using Xamarin.Forms;
 
 namespace lestoma.App.Views
 {

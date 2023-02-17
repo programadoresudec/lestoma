@@ -1,17 +1,14 @@
-﻿using lestoma.App.Views;
+﻿using Acr.UserDialogs;
 using lestoma.App.Views.Actividades;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using Newtonsoft.Json;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Actividades
@@ -26,10 +23,15 @@ namespace lestoma.App.ViewModels.Actividades
         {
             _navigationService = navigationService;
             _apiService = apiService;
+            _actividades = new ObservableCollection<ActividadDTO>();
             EditCommand = new Command<object>(ActividadSelected, CanNavigate);
+            DeleteCommand = new Command<object>(DeleteClicked, CanNavigate);
             ServiceListadoActividades();
         }
         public Command EditCommand { get; set; }
+
+        public Command DeleteCommand { get; set; }
+
 
         public Command AddCommand
         {
@@ -42,47 +44,52 @@ namespace lestoma.App.ViewModels.Actividades
                 });
             }
         }
-        public override void OnNavigatedTo(INavigationParameters parameters)
+        public override async void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
-            if (parameters.ContainsKey("refresh"))
+            if (parameters.ContainsKey(Constants.REFRESH))
             {
-                ServiceListadoActividades(true);
+                var Result = await ListadoActual();
+                Actividades.Clear();
+                Actividades = new ObservableCollection<ActividadDTO>(Result);
             }
         }
-        public async void DeleteClicked()
+        public async void DeleteClicked(object obj)
         {
-            if (ItemDelete != null)
+            ActividadDTO detalle = (ActividadDTO)obj;
+            if (detalle == null)
+                return;
+            try
             {
-                try
+                UserDialogs.Instance.ShowLoading("Eliminando...");
+                if (_apiService.CheckConnection())
                 {
-                    await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-                    if (_apiService.CheckConnection())
+                    ResponseDTO response = await _apiService.DeleteAsyncWithToken(URL_API,
+                    "actividades", detalle.Id, TokenUser.Token);
+                    if (response.IsExito)
                     {
-                        Response response = await _apiService.DeleteAsyncWithToken(URL,
-                        "actividades", ItemDelete.Id, TokenUser.Token);
-                        if (response.IsExito)
-                        {
-                            AlertSuccess(response.Mensaje);
-                        }
-                        else
-                        {
-                            AlertWarning(response.Mensaje);
-                        }
+                        AlertSuccess(response.MensajeHttp);
+                        var Result = await ListadoActual();
+                        Actividades.Clear();
+                        Actividades = new ObservableCollection<ActividadDTO>(Result);
                     }
                     else
                     {
-                        AlertNoInternetConnection();
+                        AlertWarning(response.MensajeHttp);
                     }
                 }
-                catch (Exception ex)
+                else
                 {
-                    Debug.WriteLine(ex.Message);
+                    AlertNoInternetConnection();
                 }
-                finally
-                {
-                    await _navigationService.ClearPopupStackAsync();
-                }
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
             }
         }
 
@@ -117,7 +124,6 @@ namespace lestoma.App.ViewModels.Actividades
             get => _actividades;
             set => SetProperty(ref _actividades, value);
         }
-        public ActividadDTO ItemDelete { get; set; }
 
         public void LoadActividades()
         {
@@ -131,30 +137,39 @@ namespace lestoma.App.ViewModels.Actividades
             }
         }
 
-        private async void ServiceListadoActividades(bool refresh = false)
+
+        private async Task<List<ActividadDTO>> ListadoActual()
+        {
+            ResponseDTO response = await _apiService.GetListAsyncWithToken<List<ActividadDTO>>(URL_API, "actividades/listado", TokenUser.Token);
+            if (response.IsExito)
+            {
+                var listado = (List<ActividadDTO>)response.Data;
+                return listado;
+            }
+            return null;
+        }
+
+        public async void ServiceListadoActividades()
         {
             try
             {
-                if (!refresh)
-                    await _navigationService.NavigateAsync(nameof(LoadingPopupPage));
-
-                Actividades = new ObservableCollection<ActividadDTO>();
-                Response response = await _apiService.GetListAsyncWithToken<List<ActividadDTO>>(URL, "actividades/listado", TokenUser.Token);
+                IsBusy = true;
+                Actividades.Clear();
+                ResponseDTO response = await _apiService.GetListAsyncWithToken<List<ActividadDTO>>(URL_API, "actividades/listado", TokenUser.Token);
                 if (response.IsExito)
                 {
                     var listado = (List<ActividadDTO>)response.Data;
                     Actividades = new ObservableCollection<ActividadDTO>(listado);
-                    ClosePopup();
                 }
             }
             catch (Exception ex)
             {
-                if (!refresh)
-                    if (PopupNavigation.Instance.PopupStack.Any())
-                        await PopupNavigation.Instance.PopAsync();
                 SeeError(ex);
             }
-
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 }

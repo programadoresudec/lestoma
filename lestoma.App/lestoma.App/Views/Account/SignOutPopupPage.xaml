@@ -21,8 +21,8 @@
     <StackLayout VerticalOptions="CenterAndExpand"  Margin="20" Padding="20">
         <cards:SfCardView BackgroundColor="White" CornerRadius="10">
             <StackLayout Margin="20" Spacing="15">
-                <Image Source="icon_info.png" Aspect="AspectFit" WidthRequest="30"/>
-                <Label Text="¿Está seguro que quiere cerrar la sesión?" TextColor="Black" FontSize="Medium" HorizontalTextAlignment="Center" 
+                <Image Source="icon_info.png" Aspect="AspectFit" WidthRequest="40" HeightRequest="40"/>
+                <Label Text="¿Está seguro que desea cerrar la sesión?" TextColor="Black" FontSize="Medium" HorizontalTextAlignment="Center" 
                        VerticalTextAlignment="Center" FontAttributes="Italic"
                 VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" />
                 <Button HorizontalOptions="CenterAndExpand" BackgroundColor="{StaticResource PantoneVerdeDark}" CornerRadius="6" Text="Aceptar" TextColor="White"

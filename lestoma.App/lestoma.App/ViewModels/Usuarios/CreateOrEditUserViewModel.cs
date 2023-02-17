@@ -1,15 +1,14 @@
-﻿using Android.Runtime;
+﻿using Acr.UserDialogs;
+using Android.Runtime;
 using lestoma.App.Validators;
 using lestoma.App.Validators.Rules;
 using lestoma.App.ViewModels.Account;
-using lestoma.App.Views;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Newtonsoft.Json;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,6 +27,8 @@ namespace lestoma.App.ViewModels.Usuarios
         private ValidatableObject<string> rol;
         private InfoUserDTO _usuario;
         private RolDTO _rolActual;
+        private string _nombre;
+        private string _apellido;
         private EstadoDTO _estadoActual;
         private ObservableCollection<EstadoDTO> _estados;
         private ObservableCollection<RolDTO> _roles;
@@ -61,6 +62,24 @@ namespace lestoma.App.ViewModels.Usuarios
             set
             {
                 SetProperty(ref _rolActual, value);
+            }
+        }
+
+        public string Nombre
+        {
+            get => _nombre;
+            set
+            {
+                SetProperty(ref _nombre, value);
+            }
+        }
+
+        public string Apellido
+        {
+            get => _apellido;
+            set
+            {
+                SetProperty(ref _apellido, value);
             }
         }
 
@@ -107,6 +126,7 @@ namespace lestoma.App.ViewModels.Usuarios
         {
             get
             {
+
                 return this.estado;
             }
 
@@ -116,7 +136,10 @@ namespace lestoma.App.ViewModels.Usuarios
                 {
                     return;
                 }
-
+                if (_estadoActual != null)
+                {
+                    this.estado.Value = _estadoActual.NombreEstado;
+                }
                 this.SetProperty(ref this.estado, value);
             }
         }
@@ -133,7 +156,10 @@ namespace lestoma.App.ViewModels.Usuarios
                 {
                     return;
                 }
-
+                if (_rolActual != null)
+                {
+                    this.rol.Value = _rolActual.NombreRol;
+                }
                 this.SetProperty(ref this.rol, value);
             }
         }
@@ -192,18 +218,20 @@ namespace lestoma.App.ViewModels.Usuarios
         /// Initialize whether fieldsvalue are true or false.
         /// </summary>
         /// <returns>true or false </returns>
-        public bool AreFieldsValid()
+        public bool AreFieldsValid(bool isEdit = false)
         {
-            bool isPasswordValid = true;
-            bool isEmailValid = this.Email.Validate();
+            bool isPasswordValid = isEdit;
+            bool isEmailValid = isEdit;
             bool isNameValid = this.Name.Validate();
             bool isLastNameValid = this.LastName.Validate();
-            if (IsEdit)
-            {
-                isPasswordValid = this.Password.Validate();
-            }
             bool isEstadoValid = this.Estado.Validate();
             bool isRolValid = this.Rol.Validate();
+            if (!isEdit)
+            {
+                isEmailValid = this.Email.Validate();
+                isPasswordValid = this.Password.Validate();
+            }
+
             return isPasswordValid && isNameValid && isLastNameValid && isEmailValid && isRolValid && isEstadoValid;
         }
         /// <summary>
@@ -246,9 +274,10 @@ namespace lestoma.App.ViewModels.Usuarios
                 IsVisible = false;
                 var json = parameters.GetValue<string>("usuario");
                 _usuario = JsonConvert.DeserializeObject<InfoUserDTO>(json);
-                this.Usuario = _usuario;
                 Title = "Editar";
                 LoadListados(_usuario);
+                this.Nombre = _usuario.Nombre;
+                this.Apellido = _usuario.Apellido;
             }
             else
             {
@@ -260,26 +289,25 @@ namespace lestoma.App.ViewModels.Usuarios
 
         private void CargarDatos()
         {
-            Name.Value = Usuario != null ? Usuario.Nombre : string.Empty;
-            LastName.Value = Usuario != null ? Usuario.Apellido : string.Empty;
-            Email.Value = Usuario != null ? Usuario.Email : string.Empty;
-            Rol.Value = Usuario != null ? Usuario.Rol.NombreRol : string.Empty;
-            Estado.Value = Usuario != null ? Usuario.Estado.NombreEstado : string.Empty;
+            Name.Value = Nombre != null ? this.Nombre.Trim() : string.Empty;
+            LastName.Value = Apellido != null ? this.Apellido.Trim() : string.Empty;
+            Rol.Value = RolActual != null ? RolActual.NombreRol : string.Empty;
+            Estado.Value = EstadoActual != null ? EstadoActual.NombreEstado : string.Empty;
         }
 
         private async void CreateOrEditClicked(object obj)
         {
             try
             {
+                UserDialogs.Instance.ShowLoading("Guardando...");
                 CargarDatos();
-                if (this.AreFieldsValid())
+                var isedit = Usuario != null ? true : false;
+                if (this.AreFieldsValid(isedit))
                 {
 
                     if (_apiService.CheckConnection())
                     {
-                        await _navigationService.NavigateAsync($"{nameof(LoadingPopupPage)}");
-
-                        if (Usuario.Id == 0)
+                        if (Usuario == null)
                         {
                             var request = new RegistroRequest
                             {
@@ -287,18 +315,19 @@ namespace lestoma.App.ViewModels.Usuarios
                                 Apellido = LastName.Value,
                                 Email = Email.Value,
                                 EstadoId = EstadoActual.Id,
-                                RolId = RolActual.Id
+                                RolId = RolActual.Id,
+                                Clave = Password.Item1.Value,
                             };
-                            Response respuesta = await _apiService.PostAsyncWithToken(URL, "usuarios/crear", request, TokenUser.Token);
+                            ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL_API, "usuarios/crear", request, TokenUser.Token);
                             if (respuesta.IsExito)
                             {
-                                AlertSuccess(respuesta.Mensaje);
+                                AlertSuccess(respuesta.MensajeHttp);
                                 var parameters = new NavigationParameters { { Constants.REFRESH, true } };
                                 await _navigationService.GoBackAsync(parameters);
                             }
                             else
                             {
-                                AlertWarning(respuesta.Mensaje);
+                                AlertWarning(respuesta.MensajeHttp);
                             }
                         }
                         else
@@ -311,16 +340,16 @@ namespace lestoma.App.ViewModels.Usuarios
                                 EstadoId = EstadoActual.Id,
                                 RolId = RolActual.Id
                             };
-                            Response respuesta = await _apiService.PutAsyncWithToken(URL, "usuarios/editar", request, TokenUser.Token);
+                            ResponseDTO respuesta = await _apiService.PutAsyncWithToken(URL_API, "usuarios/editar", request, TokenUser.Token);
                             if (respuesta.IsExito)
                             {
-                                AlertSuccess(respuesta.Mensaje);
+                                AlertSuccess(respuesta.MensajeHttp);
                                 var parameters = new NavigationParameters { { Constants.REFRESH, true } };
                                 await _navigationService.GoBackAsync(parameters);
                             }
                             else
                             {
-                                AlertWarning(respuesta.Mensaje);
+                                AlertWarning(respuesta.MensajeHttp);
                             }
                         }
                     }
@@ -333,11 +362,11 @@ namespace lestoma.App.ViewModels.Usuarios
             catch (Exception ex)
             {
                 SeeError(ex);
+
             }
             finally
             {
-                if (PopupNavigation.Instance.PopupStack.Any())
-                    await PopupNavigation.Instance.PopAsync();
+                UserDialogs.Instance.HideLoading();
             }
         }
 
@@ -350,10 +379,10 @@ namespace lestoma.App.ViewModels.Usuarios
                 if (_apiService.CheckConnection())
                 {
 
-                    Response roles = await _apiService.GetListAsyncWithToken<List<RolDTO>>(URL,
+                    ResponseDTO roles = await _apiService.GetListAsyncWithToken<List<RolDTO>>(URL_API,
                            "usuarios/listado-roles", TokenUser.Token);
                     Roles = new ObservableCollection<RolDTO>((List<RolDTO>)roles.Data);
-                    Response estados = await _apiService.GetListAsyncWithToken<List<EstadoDTO>>(URL,
+                    ResponseDTO estados = await _apiService.GetListAsyncWithToken<List<EstadoDTO>>(URL_API,
                         "usuarios/listado-estados", TokenUser.Token);
                     Estados = new ObservableCollection<EstadoDTO>((List<EstadoDTO>)estados.Data);
                     if (infoUser != null)
