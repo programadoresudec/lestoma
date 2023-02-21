@@ -7,8 +7,8 @@
                         x:Class="lestoma.App.App">
     <Application.Resources>
         <ResourceDictionary>
-             <x:String x:Key="UrlAPI">https://www.lestoma.site/api/</x:String> 
-            <!--<x:String x:Key="UrlAPI">http://192.168.1.6:45455/api/</x:String>-->
+             <!--<x:String x:Key="UrlAPI">https://www.lestoma.site/api/</x:String>-->
+            <x:String x:Key="UrlAPI">https:/172.25.113.48:45456/api/</x:String>
             <x:String x:Key="UrlDominio">https://www.lestoma.site/</x:String>
             <ResourceDictionary.MergedDictionaries>
                 <themes:LightTheme />

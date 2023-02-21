@@ -170,7 +170,7 @@ namespace lestoma.App.ViewModels.Componentes
 
         private void LoadComponents()
         {
-            if (_isSuperAdmin == true)
+            if (_isSuperAdmin)
             {
                 ListarUpas();
             }
