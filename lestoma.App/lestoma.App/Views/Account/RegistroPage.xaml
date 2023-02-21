@@ -65,7 +65,8 @@
                             Style="{StaticResource DescriptionLabelStyle}"
                             Text="Crea tu cuenta"
                             TextColor="{DynamicResource Gray-White}" />
-
+                        <!--  Entry to get email ID from user  -->
+                        <local:LoginEmailEntry />
                         <StackLayout>
                             <!--  Entry to get username from user  -->
                             <border:SfBorder  BackgroundColor="{DynamicResource Gray-White}"
@@ -86,7 +87,7 @@
                                                  Margin="10,10,0,0">
                                         <control:BorderlessEntry x:Name="NameEntry" Text="{Binding Name.Value}"
                                                      PlaceholderColor="#606a7b"
-                                                 
+                                                     TabIndex="2" ReturnType="Next"
                                                      Style="{StaticResource BorderlessEntryStyle}" MaxLength="60" TextColor="#333942">
                                             <Entry.Behaviors>
                                                 <behaviour:EntryLineValidationBehaviour IsValid="{Binding Name.IsValid}"/>
@@ -122,7 +123,7 @@
                                     <inputLayout:SfTextInputLayout Hint="Apellido" FocusedColor="Black"  ContainerBackgroundColor="Transparent"
                                                   Margin="10,10,0,0">
                                         <control:BorderlessEntry x:Name="LastNameEntry" Text="{Binding LastName.Value}"
-                                                     PlaceholderColor="#606a7b"
+                                                     PlaceholderColor="#606a7b" TabIndex="3" ReturnType="Next"
                                                      Style="{StaticResource BorderlessEntryStyle}" MaxLength="60" TextColor="#333942">
                                             <Entry.Behaviors>
                                                 <behaviour:EntryLineValidationBehaviour IsValid="{Binding LastName.IsValid}"/>
@@ -138,8 +139,6 @@
                                 </Grid>
                             </border:SfBorder>
                         </StackLayout>
-                        <!--  Entry to get email ID from user  -->
-                        <local:LoginEmailEntry />
                         <StackLayout>
                             <!--  Entry to get password from user  -->
                             <border:SfBorder
@@ -161,7 +160,7 @@
                                     <inputLayout:SfTextInputLayout Hint="Contraseña" FocusedColor="Black"  ContainerBackgroundColor="Transparent"
                                                   Margin="10,10,0,0" EnablePasswordVisibilityToggle="True">
                                         <control:BorderlessEntry x:Name="PasswordEntry" Text="{Binding Password.Item1.Value}"
-                                                     PlaceholderColor="#606a7b"
+                                                     PlaceholderColor="#606a7b" TabIndex="4" ReturnType="Next"
                                                      Style="{StaticResource BorderlessEntryStyle}" IsPassword="True" MaxLength="60" TextColor="#333942">
                                             <Entry.Behaviors>
                                                 <behaviour:EntryLineValidationBehaviour IsValid="{Binding Password.Item1.IsValid}"/>
@@ -199,7 +198,7 @@
                                                                        EnablePasswordVisibilityToggle="True">
                                         <control:BorderlessEntry x:Name="ConfirmPasswordEntry" Text="{Binding Password.Item2.Value}"
                                                      PlaceholderColor="#606a7b" Style="{StaticResource BorderlessEntryStyle}" IsPassword="True"
-                                                   MaxLength="60" TextColor="#333942">
+                                                   TabIndex="5" ReturnType="Done" MaxLength="60" TextColor="#333942">
                                             <Entry.Behaviors>
                                                 <behaviour:EntryLineValidationBehaviour IsValid="{Binding Password.Item2.IsValid}"/>
                                             </Entry.Behaviors>

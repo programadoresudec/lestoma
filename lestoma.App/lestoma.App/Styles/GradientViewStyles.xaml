@@ -54,13 +54,13 @@
     </Style>
 
     <!--  Common style for pink gradient view  -->
-    <Style x:Key="PinkGradientStyle" TargetType="graphics:SfGradientView">
+    <Style x:Key="MenuGradientStyle" TargetType="graphics:SfGradientView">
         <Setter Property="BackgroundBrush">
             <Setter.Value>
                 <graphics:SfLinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                     <graphics:SfLinearGradientBrush.GradientStops>
-                        <graphics:SfGradientStop Offset="0.0" Color="#d54382" />
-                        <graphics:SfGradientStop Offset="1.0" Color="#7644ad" />
+                        <graphics:SfGradientStop Offset="0.0" Color="{DynamicResource Gray-600}" />
+                        <graphics:SfGradientStop Offset="1.0" Color="{DynamicResource Gray-100}" />
                     </graphics:SfLinearGradientBrush.GradientStops>
                 </graphics:SfLinearGradientBrush>
             </Setter.Value>

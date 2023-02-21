@@ -13,15 +13,15 @@
                         Direction="Column"
                         AlignItems="Center">
                         <Grid>
-                            <gradient:SfGradientView Style="{StaticResource Pantone2GradientStyle}" />
+                            <gradient:SfGradientView Style="{StaticResource MenuGradientStyle}" />
                             <ScrollView HorizontalOptions="Center">
                                 <StackLayout Spacing="0">
                                     <Label Text="Lestoma" Grid.Row="0" HorizontalOptions="Center" 
                                        Padding="5,20,5,5" FontAttributes="Italic,Bold" 
-                                       TextColor="{StaticResource PantoneAmarilloLight}" FontSize="Title">
+                                       TextColor="{StaticResource Gray-800}" FontSize="Title">
                                     </Label>
                                     <Label FontAttributes="Bold, Italic"
-                                       FontSize="Large" Grid.Row="1" TextColor="{StaticResource PantoneAmarilloLight}"
+                                       FontSize="Large" Grid.Row="1" TextColor="{StaticResource Gray-Black}"
                                        FontFamily="Lobster-Regular" Padding="10" 
                                        Text="{Binding UserApp.FullName}"/>
                                 </StackLayout>

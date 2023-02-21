@@ -52,37 +52,31 @@ namespace lestoma.App.ViewModels.Account
             {
                 try
                 {
-                    if (_apiService.CheckConnection())
-                    {
-                        await PopupNavigation.Instance.PushAsync(new LoadingPopupPage());
-                        ForgotPasswordRequest email = new ForgotPasswordRequest
-                        {
-                            Email = Email.Value,
-                        };
-                        ResponseDTO respuesta = await _apiService.PutAsync(URL_API, "Account/forgotpassword", email);
-                        if (respuesta.IsExito)
-                        {
-                            AlertSuccess(respuesta.MensajeHttp);
-                            await _navigationService.NavigateAsync($"{nameof(ResetPasswordPage)}"); ;
-                        }
-                        else
-                        {
-                            AlertError(respuesta.MensajeHttp);
-                        }
-                        ClosePopup();
-                    }
-                    else
+                    IsBusy = true;
+                    if (!_apiService.CheckConnection())
                     {
                         AlertNoInternetConnection();
+                        return;
                     }
+                    ForgotPasswordRequest email = new ForgotPasswordRequest
+                    {
+                        Email = Email.Value,
+                    };
+                    ResponseDTO respuesta = await _apiService.PutAsync(URL_API, "Account/forgotpassword", email);
+                    if (!respuesta.IsExito)
+                        return;
+                    AlertError(respuesta.MensajeHttp);
+                    AlertSuccess(respuesta.MensajeHttp);
+                    await _navigationService.NavigateAsync($"{nameof(ResetPasswordPage)}");
                 }
                 catch (Exception ex)
                 {
-                    if (PopupNavigation.Instance.PopupStack.Any())
-                        await PopupNavigation.Instance.PopAsync();
                     SeeError(ex);
                 }
-
+                finally
+                {
+                    IsBusy = false;
+                }
             }
         }
 

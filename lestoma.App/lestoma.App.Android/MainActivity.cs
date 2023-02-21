@@ -27,6 +27,7 @@ namespace lestoma.App.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             global::Rg.Plugins.Popup.Popup.Init(this);
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init(true);
+            global::Xamarin.Forms.FormsMaterial.Init(this, savedInstanceState);
             LoadApplication(new App(new AndroidInitializer()));
 
         }

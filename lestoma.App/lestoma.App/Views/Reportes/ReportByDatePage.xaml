@@ -1,24 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="http://prismlibrary.com" xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
-             prism:ViewModelLocator.AutowireViewModel="True"
+             xmlns:prism="http://prismlibrary.com" 
+             xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             prism:ViewModelLocator.AutowireViewModel="True" Title="{Binding Title}"
              x:Class="lestoma.App.Views.Reportes.ReportByDatePage">
     <ContentPage.Content>
-        <StackLayout Padding="10">
-            <?Selector de Upa?>
+        <StackLayout Padding="10" Spacing="20">
+            <StackLayout HorizontalOptions="EndAndExpand" Orientation="Horizontal">
+                <Label Margin="10,2,0,0" HorizontalOptions="Start"
+                        Style="{StaticResource IconLabelStyle}"
+                        Text="{StaticResource Filter}" />
+                <Button
+                    HorizontalOptions="EndAndExpand"
+                    FontSize="16" 
+                    FontFamily="Montserrat-SemiBold"
+                    BackgroundColor="Transparent"              
+                    TextColor="{StaticResource PantoneVerdeDark}"
+                    Text="Filtro Rango Fechas"
+                    Command="{Binding NavigatePopupFilterCommand}"/>
+            </StackLayout>
             <Label Text="Localizacion UPA" FontSize="Medium"/>
             <Picker Title="Seleccionar localizacion" x:Name="MainPickerUpa" 
                     ItemsSource="{Binding UpaList}" ItemDisplayBinding="{Binding Value}"/>
-            <?Selector documento?>
             <Label Text="Tipo documento" FontSize="Medium"/>
             <Picker Title="Seleccionar tipo de documento" 
                     x:Name="MainPickerDocumento" 
                     ItemsSource="{Binding DocumentoList}" ItemDisplayBinding="{Binding Value}"/>
-            <?Boton y label que imprime?>
-
             <buttons:SfButton
-            HorizontalOptions="CenterAndExpand"
+            HorizontalOptions="FillAndExpand"
             Command="{Binding DownloadCommand}"
              CornerRadius="4"
              Style="{StaticResource LestomaGradientButtonStyle}"

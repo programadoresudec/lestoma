@@ -39,6 +39,7 @@
     <Color x:Key="Orange">#ff844a</Color>
     <Color x:Key="Blue">#4acaff</Color>
     <Color x:Key="HyperLink">#567cd7</Color>
+    <!--Colors Lestoma-->
     <Color x:Key="PantoneVerdeDark">#00482B</Color>
     <Color x:Key="PantoneAmarilloLight">#FBE122</Color>
     <Color x:Key="PantoneVerdeSecond">#007B3E</Color>
@@ -46,6 +47,7 @@
     <Color x:Key="PantoneAmarilloSecond">#DAAA00</Color>
     <Color x:Key="PantoneGris">#4E4848</Color>
     <Color x:Key="PantoneGrisLight">#f6f7f8</Color>
+    <!--Colors Lestoma-->
     <Color x:Key="BackgroundIndicator">#FFFFFF</Color>
     <Color x:Key="TextIndicator">#000000</Color>
     <Color x:Key="Gray-100">#f6f7f8</Color>

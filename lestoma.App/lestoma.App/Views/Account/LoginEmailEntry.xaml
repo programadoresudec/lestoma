@@ -20,7 +20,8 @@
         <StackLayout>
             <border:SfBorder
                 BackgroundColor="{DynamicResource Gray-White}"
-                BorderColor="{Binding Path=IsFocused, Source={x:Reference EmailEntry}, Converter={x:StaticResource ColorConverter}, ConverterParameter=0}"
+                BorderColor="{Binding Path=IsFocused, Source={x:Reference EmailEntry}, 
+                Converter={x:StaticResource ColorConverter}, ConverterParameter=0}"
                 CornerRadius="4" HeightRequest="75"
                 Style="{StaticResource LoginFormBorderlessEntryBorderStyle}">
 
@@ -40,7 +41,7 @@
                         <control:BorderlessEntry
                         x:Name="EmailEntry"
                         Margin="15,0"
-                        HeightRequest="60"
+                        HeightRequest="60" TabIndex="1" ReturnType="Next"
                         Keyboard="Email"
                         PlaceholderColor="{StaticResource EntryPlaceholderColor}"
                         Style="{StaticResource BorderlessEntryStyle}"

@@ -192,6 +192,9 @@
     <EmbeddedResource Update="Views\OnBoardingPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Views\Reportes\FilterDatePopupPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\Reportes\ReportByDatePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -237,14 +240,12 @@
     <Compile Update="Views\MenuMasterDetailPage.xaml.cs">
       <DependentUpon>MenuMasterDetailPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\Reportes\FilterDatePopupPage.xaml.cs">
+      <DependentUpon>FilterDatePopupPage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Reportes\MenuReportsPage.xaml.cs">
       <DependentUpon>MenuReportsPage.xaml</DependentUpon>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ViewModels\Reportes\Admin\" />
-    <Folder Include="Views\Reportes\Admin\" />
   </ItemGroup>
 
   <ItemGroup>

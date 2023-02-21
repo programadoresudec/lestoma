@@ -61,7 +61,7 @@
                             TextColor="{DynamicResource Gray-White}" />
 
                         <!--  Entry to get email ID from user  -->
-                        <local:LoginEmailEntry Grid.Row="2" Padding="0,24" />
+                        <local:LoginEmailEntry Grid.Row="2" Padding="0,24" TabIndex="1"  />
 
                         <StackLayout Grid.Row="3">
                             <!--  Entry to get password from user  -->
@@ -85,7 +85,7 @@
                                     <inputLayout:SfTextInputLayout Hint="Contraseña" FocusedColor="Black"  ContainerBackgroundColor="Transparent"
                                                    EnablePasswordVisibilityToggle="true" Margin="10,10,0,0">
                                         <control:BorderlessEntry
-                                            x:Name="PasswordEntry"
+                                            x:Name="PasswordEntry" TabIndex="2" ReturnType="Done"
                                             Margin="15,0"
                                             IsPassword="True" MaxLength="60" 
                                             HeightRequest="60"

@@ -1,14 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="http://prismlibrary.com" xmlns:core="clr-namespace:Syncfusion.XForms.Core;assembly=Syncfusion.Core.XForms" 
-             xmlns:cards="clr-namespace:Syncfusion.XForms.Cards;assembly=Syncfusion.Cards.XForms" 
-             xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" 
-             xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" xmlns:control="clr-namespace:lestoma.App.Controls"
-             prism:ViewModelLocator.AutowireViewModel="True"
-              xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms"
-             x:Class="lestoma.App.Views.AboutPage"
-              Title="Acerca de Lestoma">
+<popup:PopupPage  xmlns="http://xamarin.com/schemas/2014/forms"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:prism="http://prismlibrary.com"
+                  xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+                  xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup" 
+                  xmlns:cards="clr-namespace:Syncfusion.XForms.Cards;assembly=Syncfusion.Cards.XForms"
+                  prism:ViewModelLocator.AutowireViewModel="True"
+                  xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                  xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms" 
+                  xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" 
+                  xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" 
+                  xmlns:core="clr-namespace:Syncfusion.XForms.Core;assembly=Syncfusion.Core.XForms" xmlns:reportes="clr-namespace:lestoma.App.ViewModels.Reportes" x:DataType="reportes:FilterDatePopupViewModel"
+                  x:Class="lestoma.App.Views.Reportes.FilterDatePopupPage">
+    <popup:PopupPage.Animation>
+        <animations:ScaleAnimation DurationIn="400"
+                                   DurationOut="300"
+                                   EasingIn="SinOut"
+                                   EasingOut="SinIn"
+                                   HasBackgroundAnimation="True"
+                                   PositionIn="Center"
+                                   PositionOut="Center"
+                                   ScaleIn="1.2"
+                                   ScaleOut="0.8" />
+    </popup:PopupPage.Animation>
     <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
         <cards:SfCardView BackgroundColor="White" CornerRadius="10" 
                           HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"
@@ -26,7 +40,7 @@
                         Padding="0" CornerRadius="40" HorizontalOptions="End">
                             <ContentView>
                                 <ContentView.GestureRecognizers>
-                                    <TapGestureRecognizer/>
+                                    <TapGestureRecognizer Tapped="OnCloseButtonTapped"/>
                                 </ContentView.GestureRecognizers>
                                 <Image Source="icon_close.png"  Aspect="AspectFill" />
                             </ContentView>
@@ -41,7 +55,7 @@
                                 <inputLayout:SfTextInputLayout Hint="Fecha" FocusedColor="Black" 
                                                                ContainerBackgroundColor="Transparent" HeightRequest="60">
                                     <DatePicker  MinimumDate="{Binding FinalMinimumDate}" Format="dd/MM/yyyy"
-                                     Date="{Binding FiltroDateModel.FechaFinal}" HorizontalOptions="FillAndExpand" 
+                                     Date="{Binding FiltroDateModel.FechaInicial}" HorizontalOptions="FillAndExpand" 
                                  MaximumDate="{x:Static sys:DateTime.Now}"/>
                                 </inputLayout:SfTextInputLayout>
                                 <Label Margin="0,15,0,0" TextColor="{StaticResource Gray-Black}" HorizontalOptions="Start"
@@ -70,7 +84,7 @@
                                 Text="{StaticResource Calendar}" />
                                 <inputLayout:SfTextInputLayout Hint="Hora" HorizontalOptions="EndAndExpand" FocusedColor="Black" 
                                                                ContainerBackgroundColor="Transparent" HeightRequest="60">
-                                    <TimePicker Time="{Binding FiltroDateModel.HoraInicial}" HorizontalOptions="EndAndExpand"/>
+                                    <TimePicker Time="{Binding FiltroDateModel.HoraFinal}" HorizontalOptions="EndAndExpand"/>
                                 </inputLayout:SfTextInputLayout>
                                 <Label Margin="0,15,0,0" TextColor="{StaticResource Gray-600}" HorizontalOptions="Start"
                                 FontFamily="FontsAwesome" Style="{StaticResource IconLabelStyle}" Text="{StaticResource Clock}"/>
@@ -79,8 +93,8 @@
                         <!--/tipo estado-->
                         <buttons:SfButton Margin="0,20,0,0"
                         HorizontalOptions="FillAndExpand" 
-                        Command="{Binding SaveEstadoCommand}"
-                        CornerRadius="4" IsVisible="{Binding IsEdit}"
+                        Command="{Binding SaveCommand}"
+                        CornerRadius="4" 
                         Style="{StaticResource LestomaGradientButtonStyle}"
                         Text="Guardar" />
                     </StackLayout>
@@ -88,4 +102,5 @@
             </ScrollView>
         </cards:SfCardView>
     </Grid>
-</ContentPage>
+</popup:PopupPage>
+    

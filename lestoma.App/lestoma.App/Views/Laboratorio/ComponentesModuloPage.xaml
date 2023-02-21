@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com" xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms" 
              xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms" 
-             xmlns:controls="clr-namespace:lestoma.App.Controls"
              prism:ViewModelLocator.AutowireViewModel="True" Title="{Binding Title}"
              x:Class="lestoma.App.Views.Laboratorio.ComponentesModuloPage">
     <Grid>
@@ -25,7 +24,7 @@
                                     AutoFitMode="Height" SelectionBackgroundColor="Transparent">
                 <syncfusion:SfListView.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout Orientation="Vertical"  Margin="0,10,0,10">
+                        <StackLayout Orientation="Vertical" Margin="0,10,0,10">
                             <StackLayout Orientation="Horizontal">
                                 <Label HorizontalOptions="Start"
                                         Margin="16,0,0,0"

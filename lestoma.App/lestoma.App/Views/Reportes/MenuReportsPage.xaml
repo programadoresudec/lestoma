@@ -1,56 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-            xmlns:prism="http://prismlibrary.com" xmlns:gradient="clr-namespace:Syncfusion.XForms.Graphics;assembly=Syncfusion.Core.XForms" xmlns:core="clr-namespace:Syncfusion.XForms.Core;assembly=Syncfusion.Core.XForms"
+            xmlns:prism="http://prismlibrary.com" 
+             xmlns:controls="clr-namespace:lestoma.App.Controls"
+            xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms" 
              prism:ViewModelLocator.AutowireViewModel="True" Title="Generación de reportes"
             x:Class="lestoma.App.Views.Reportes.MenuReportsPage">
-    <ContentPage.Content>
-        <ListView BackgroundColor="Transparent" 
-                	      ItemsSource="{Binding MenuReport}" 
-                	      HasUnevenRows="True" 
-                	      SeparatorVisibility="None">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <StackLayout BackgroundColor="White"
-                        Orientation="Vertical">
-                            <gradient:SfGradientView Style="{StaticResource PrimaryGradientStyle}" />
-                            <Frame 
-                                 Margin="{core:OnPlatformOrientationThickness PhonePortrait='20,32',
-                                                                 PhoneLandscape='40,15,40,0',
-                                                                 TabletPortrait='200,50',
-                                                                 TabletLandscape='200,30,200,10',
-                                                                 Desktop='30'}"
-                                 CornerRadius="20" Opacity="0.8"  
-                                   
-                                   BackgroundColor="{StaticResource PantoneVerdeSecond}" HasShadow="False">
-                                <Grid HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" BackgroundColor="Transparent">
-                                    <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer  Command="{Binding SelectMenuCommand}"/>
-                                    </Grid.GestureRecognizers>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
-                                    </Grid.ColumnDefinitions>
-                                    <Image Grid.Column="0"
-                                           Grid.Row="0"
+    <syncfusion:SfListView BackgroundColor="Transparent" ItemsSource="{Binding MenuReport}"
+                                    AutoFitMode="Height" SelectionBackgroundColor="Transparent">
+        <syncfusion:SfListView.ItemTemplate>
+            <DataTemplate>
+                <StackLayout BackgroundColor="{StaticResource Gray-White}" Orientation="Vertical">
+                    <Grid HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"  
+                          ColumnDefinitions="Auto, *, Auto"
+                          ColumnSpacing="0" RowSpacing="0"
+                          BackgroundColor="{StaticResource PantoneVerdeSecond}" Margin="20">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer  Command="{Binding SelectMenuCommand}"/>
+                        </Grid.GestureRecognizers>
+                        <Image HorizontalOptions="Start" Grid.Column="0"
+                                        Margin="16,10,0,10"
                                        VerticalOptions="CenterAndExpand"
-                                    	   HeightRequest="128"
+                                    	   HeightRequest="100"
                                     	   Source="{Binding Icon}"
                                     	   WidthRequest="128"/>
-                                    <Label Grid.Column="0"
-                                            Grid.Row="1"
-                                          VerticalOptions="CenterAndExpand"
-                                           FontAttributes="Bold"
-                                           FontSize="Large" HorizontalTextAlignment="Center"
+                        <Label VerticalOptions="CenterAndExpand" Grid.Column="1" 
+                                           FontFamily="Montserrat-SemiBold"
+                                             FontSize="12" Margin="5"
+                                            HorizontalTextAlignment="Center"
                                            TextColor="{StaticResource Gray-White}"
                                            Text="{Binding Title}"/>
-                                </Grid>
-                            </Frame>
-                        </StackLayout>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </ContentPage.Content>
+                        <Label
+                                    HorizontalOptions="EndAndExpand" Grid.Column="2"
+                                    Margin="16,8"
+                                    Style="{StaticResource IconLabelStyle}" TextColor="White"
+                                    Text="{StaticResource ArrowRight}" />
+                    </Grid>
+                    <BoxView  Style="{StaticResource HorizontalSeparatorStyle}" HeightRequest="1" />
+                </StackLayout>
+            </DataTemplate>
+        </syncfusion:SfListView.ItemTemplate>
+    </syncfusion:SfListView>
 </ContentPage>

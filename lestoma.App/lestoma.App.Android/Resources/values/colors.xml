@@ -4,4 +4,13 @@
     <color name="colorPrimary">#7E7D81</color>
     <color name="colorPrimaryDark">#5f5f61</color>
     <color name="colorAccent">#00A5F2</color>
+	<!--colors Lestoma-->
+	<color name="PantoneVerdeDark">#00482B</color>
+	<color name="PantoneAmarilloLight">#FBE122</color>
+	<color name="PantoneVerdeSecond">#007B3E</color>
+	<color name="PantoneVerdeThird">#79C000</color>
+	<color name="PantoneAmarilloSecond">#DAAA00</color>
+	<color name="PantoneGris">#4E4848</color>
+	<color name="PantoneGrisLight">#f6f7f8</color>
+	<!--colors Lestoma-->
 </resources>

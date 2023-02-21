@@ -66,4 +66,5 @@
     <x:String x:Key="ChangePassword">&#xe73f;</x:String>
     <x:String x:Key="Document">&#xe73a;</x:String>
     <x:String x:Key="Syncronization">&#x30;</x:String>
+    <x:String x:Key="Clock">&#xbc;</x:String>
 </ResourceDictionary>

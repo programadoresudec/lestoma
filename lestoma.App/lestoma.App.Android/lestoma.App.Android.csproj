@@ -122,6 +122,9 @@
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2515" />
     <PackageReference Include="Xamarin.Essentials.Interfaces" Version="1.7.0" />
     <PackageReference Include="Prism.DryIoc.Forms" Version="8.0.0.1909" />
+    <PackageReference Include="Xamarin.Forms.Visual.Material">
+      <Version>5.0.0.2545</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Plugin.DateTimePicker">
       <Version>1.0.3</Version>
     </PackageReference>

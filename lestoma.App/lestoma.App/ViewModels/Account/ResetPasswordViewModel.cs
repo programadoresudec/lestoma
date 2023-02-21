@@ -1,17 +1,11 @@
 ﻿using lestoma.App.Validators;
 using lestoma.App.Validators.Rules;
-using lestoma.App.Views;
 using lestoma.App.Views.Account;
-using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using Newtonsoft.Json;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
-using System.Diagnostics;
-using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -185,38 +179,35 @@ namespace lestoma.App.ViewModels.Account
                 VerificationCode.Value = $"{CodeOne}{CodeTwo}{CodeThree}{CodeFour}{CodeFive}{CodeSix}";
                 if (AreFieldsValid())
                 {
-                    await PopupNavigation.Instance.PushAsync(new LoadingPopupPage());
-                    if (_apiService.CheckConnection())
-                    {
-                        RecoverPasswordRequest recover = new RecoverPasswordRequest()
-                        {
-                            Codigo = VerificationCode.Value,
-                            Password = Password.Item1.Value
-                        };
-                        ResponseDTO respuesta = await _apiService.PutAsync(URL_API, "Account/recoverpassword", recover);
-                        if (respuesta.IsExito)
-                        {
-                            AlertSuccess(respuesta.MensajeHttp);
-                            await _navigationService.NavigateAsync(nameof(LoginPage));
-
-                        }
-                        else
-                        {
-                            AlertError(respuesta.MensajeHttp);
-                            ClosePopup();
-                        }
-                    }
-                    else
+                    IsBusy = true;
+                    if (!_apiService.CheckConnection())
                     {
                         AlertNoInternetConnection();
+                        return;
                     }
+                    RecoverPasswordRequest recover = new RecoverPasswordRequest()
+                    {
+                        Codigo = VerificationCode.Value,
+                        Password = Password.Item1.Value
+                    };
+                    ResponseDTO respuesta = await _apiService.PutAsync(URL_API, "Account/recoverpassword", recover);
+                    if (!respuesta.IsExito)
+                    {
+                        AlertError(respuesta.MensajeHttp);
+                        return;
+                    }
+                    AlertSuccess(respuesta.MensajeHttp);
+                    await _navigationService.NavigateAsync(nameof(LoginPage));
                 }
             }
             catch (Exception ex)
             {
-                if (PopupNavigation.Instance.PopupStack.Any())
-                    await PopupNavigation.Instance.PopAsync();
+
                 SeeError(ex);
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 

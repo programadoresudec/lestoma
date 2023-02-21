@@ -8,9 +8,17 @@ namespace lestoma.App.Models
     {
         public DateTime FechaInicial { get; set; }
         public DateTime FechaFinal { get; set; }
-        public string HoraInicial { get; set; }
-        public string HoraFinal { get; set; }
-        public DateTime FechaInicio => FechaInicial.Add(TimeSpan.Parse(HoraInicial));
-        public DateTime FechaFin =>  FechaFinal.Add(TimeSpan.Parse(HoraFinal));
+        public TimeSpan HoraInicial { get; set; }
+        public TimeSpan HoraFinal { get; set; }
+    }
+    public class FilterDate
+    {
+        public DateTime FechaInicio { get; set; }
+        public DateTime FechaFin { get; set; }
+
+        public DateTime ConcatenateDateTime(DateTime fecha, TimeSpan hora)
+        {
+            return fecha.Add(hora);
+        }
     }
 }
