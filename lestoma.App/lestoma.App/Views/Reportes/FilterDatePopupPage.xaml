@@ -10,7 +10,7 @@
                   xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms" 
                   xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" 
                   xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" 
-                  xmlns:core="clr-namespace:Syncfusion.XForms.Core;assembly=Syncfusion.Core.XForms" xmlns:reportes="clr-namespace:lestoma.App.ViewModels.Reportes" x:DataType="reportes:FilterDatePopupViewModel"
+                  xmlns:core="clr-namespace:Syncfusion.XForms.Core;assembly=Syncfusion.Core.XForms"
                   x:Class="lestoma.App.Views.Reportes.FilterDatePopupPage">
     <popup:PopupPage.Animation>
         <animations:ScaleAnimation DurationIn="400"
@@ -63,7 +63,7 @@
                                 Text="{StaticResource Calendar}" />
                                 <inputLayout:SfTextInputLayout Hint="Hora" HorizontalOptions="EndAndExpand" FocusedColor="Black" 
                                                                ContainerBackgroundColor="Transparent" HeightRequest="60">
-                                    <TimePicker Time="{Binding FiltroDateModel.HoraInicial}" HorizontalOptions="EndAndExpand"/>
+                                    <TimePicker HorizontalOptions="EndAndExpand"/>
                                 </inputLayout:SfTextInputLayout>
                                 <Label Margin="0,15,0,0" TextColor="{StaticResource Gray-600}" HorizontalOptions="Start"
                                 FontFamily="FontsAwesome" Style="{StaticResource IconLabelStyle}" Text="{StaticResource Clock}"/>
@@ -84,7 +84,7 @@
                                 Text="{StaticResource Calendar}" />
                                 <inputLayout:SfTextInputLayout Hint="Hora" HorizontalOptions="EndAndExpand" FocusedColor="Black" 
                                                                ContainerBackgroundColor="Transparent" HeightRequest="60">
-                                    <TimePicker Time="{Binding FiltroDateModel.HoraFinal}" HorizontalOptions="EndAndExpand"/>
+                                    <TimePicker HorizontalOptions="EndAndExpand"/>
                                 </inputLayout:SfTextInputLayout>
                                 <Label Margin="0,15,0,0" TextColor="{StaticResource Gray-600}" HorizontalOptions="Start"
                                 FontFamily="FontsAwesome" Style="{StaticResource IconLabelStyle}" Text="{StaticResource Clock}"/>
@@ -95,7 +95,7 @@
                         HorizontalOptions="FillAndExpand" 
                         Command="{Binding SaveCommand}"
                         CornerRadius="4" 
-                        Style="{StaticResource LestomaGradientButtonStyle}"
+                        Style="{StaticResource LestomaPopupGradientButtonStyle}"
                         Text="Guardar" />
                     </StackLayout>
                 </StackLayout>

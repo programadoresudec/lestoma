@@ -59,8 +59,8 @@
             <Setter.Value>
                 <graphics:SfLinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                     <graphics:SfLinearGradientBrush.GradientStops>
-                        <graphics:SfGradientStop Offset="0.0" Color="{DynamicResource Gray-600}" />
-                        <graphics:SfGradientStop Offset="1.0" Color="{DynamicResource Gray-100}" />
+                        <graphics:SfGradientStop Offset="0.0" Color="{DynamicResource Gray-200}" />
+                        <graphics:SfGradientStop Offset="1.0" Color="{DynamicResource Gray-200}" />
                     </graphics:SfLinearGradientBrush.GradientStops>
                 </graphics:SfLinearGradientBrush>
             </Setter.Value>

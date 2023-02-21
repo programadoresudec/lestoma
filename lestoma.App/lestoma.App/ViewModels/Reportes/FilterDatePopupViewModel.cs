@@ -18,6 +18,8 @@ namespace lestoma.App.ViewModels.Reportes
             {
                 FechaFinal = DateTime.Now,
                 FechaInicial = DateTime.Now,
+                HoraInicial = TimeSpan.Parse("6:00:00"),
+                HoraFinal = TimeSpan.FromDays(1),
             };
             _initialMinimumDate = DateTime.Now.AddMonths(6);
             _finalMinimumDate = _filtroDate.FechaInicial.AddDays(1);
@@ -41,7 +43,7 @@ namespace lestoma.App.ViewModels.Reportes
             get => _finalMinimumDate;
             set
             {
-                _finalMinimumDate = FiltroDateModel.FechaInicial.AddDays(1);
+                //_finalMinimumDate = FiltroDateModel.FechaInicial.AddDays(1);
                 SetProperty(ref _finalMinimumDate, value);
             }
         }
@@ -50,7 +52,7 @@ namespace lestoma.App.ViewModels.Reportes
 
         private void SaveClicked(object obj)
         {
-
+            Console.WriteLine(FiltroDateModel.FechaInicial);
         }
     }
 }

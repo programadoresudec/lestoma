@@ -29,10 +29,10 @@
                     ItemsSource="{Binding DocumentoList}" ItemDisplayBinding="{Binding Value}"/>
             <buttons:SfButton
             HorizontalOptions="FillAndExpand"
-            Command="{Binding DownloadCommand}"
+            Command="{Binding SendCommand}"
              CornerRadius="4"
              Style="{StaticResource LestomaGradientButtonStyle}"
-             Text="Descargar" />
+             Text="Enviar" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

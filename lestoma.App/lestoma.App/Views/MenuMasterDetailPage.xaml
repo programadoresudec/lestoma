@@ -18,10 +18,10 @@
                                 <StackLayout Spacing="0">
                                     <Label Text="Lestoma" Grid.Row="0" HorizontalOptions="Center" 
                                        Padding="5,20,5,5" FontAttributes="Italic,Bold" 
-                                       TextColor="{StaticResource Gray-800}" FontSize="Title">
+                                       TextColor="{StaticResource PantoneVerdeSecond}" FontSize="Title">
                                     </Label>
                                     <Label FontAttributes="Bold, Italic"
-                                       FontSize="Large" Grid.Row="1" TextColor="{StaticResource Gray-Black}"
+                                       FontSize="Large" Grid.Row="1" TextColor="{StaticResource PantoneVerdeSecond}"
                                        FontFamily="Lobster-Regular" Padding="10" 
                                        Text="{Binding UserApp.FullName}"/>
                                 </StackLayout>
