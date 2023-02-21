@@ -48,7 +48,6 @@ namespace lestoma.App.ViewModels.Reportes
             set => SetProperty(ref _upa, value);
             
         }
-
         public Command NavigatePopupFilterCommand
         {
             get
@@ -59,7 +58,6 @@ namespace lestoma.App.ViewModels.Reportes
                 });
             }
         }
-
         private async void ListarUpas() {
 
             if (_isSuperAdmin)
