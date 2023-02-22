@@ -10,9 +10,9 @@ using Xamarin.Forms.Xaml;
 namespace lestoma.App.Views.Reportes.SuperAdmin
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class ReporteComponetPage : ContentPage
+	public partial class ReporteComponentPage : ContentPage
 	{
-		public ReporteComponetPage ()
+		public ReporteComponentPage ()
 		{
 			InitializeComponent ();
 		}
