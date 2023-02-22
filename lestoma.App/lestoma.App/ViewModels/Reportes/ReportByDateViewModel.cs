@@ -2,14 +2,10 @@
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Interfaces;
-using lestoma.CommonUtils.Services;
-using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Reportes
@@ -19,7 +15,10 @@ namespace lestoma.App.ViewModels.Reportes
         private readonly IApiService _apiService;
         private NameDTO _upa;
         private ObservableCollection<NameDTO> _upas;
+        private NameDTO _tipoArchivo;
+        private ObservableCollection<NameDTO> _tipoArchivos;
         private bool _isSuperAdmin;
+    
 
         public ReportByDateViewModel(INavigationService navigation, IApiService apiService)
             : base(navigation)
@@ -28,13 +27,36 @@ namespace lestoma.App.ViewModels.Reportes
             _apiService = apiService;
             Title = "Reporte por rango de fecha";
             ListarUpas();
-
+            _tipoArchivos = new ObservableCollection<NameDTO>()
+            {
+                new NameDTO()
+                {
+                    Id = Guid.NewGuid(),
+                    Nombre = GrupoTipoArchivo.PDF.ToString(),
+                },
+                new NameDTO()
+                {
+                    Id = Guid.NewGuid(),
+                    Nombre = GrupoTipoArchivo.EXCEL.ToString(),
+                }
+            };
         }
         public ObservableCollection<NameDTO> Upas
         {
             get => _upas;
-
             set => SetProperty(ref _upas, value);
+        }
+
+        public ObservableCollection<NameDTO> TipoArchivos
+        {
+            get => _tipoArchivos;
+            set => SetProperty(ref _tipoArchivos, value);
+        }
+
+        public NameDTO TipoArchivo
+        {
+            get => _tipoArchivo;
+            set => SetProperty(ref _tipoArchivo, value);
         }
 
         public bool IsSuperAdmin
@@ -42,11 +64,12 @@ namespace lestoma.App.ViewModels.Reportes
             get => _isSuperAdmin;
             set => SetProperty(ref _isSuperAdmin, value);
         }
+
         public NameDTO Upa
         {
             get => _upa;
             set => SetProperty(ref _upa, value);
-            
+
         }
         public Command NavigatePopupFilterCommand
         {
@@ -58,7 +81,8 @@ namespace lestoma.App.ViewModels.Reportes
                 });
             }
         }
-        private async void ListarUpas() {
+        private async void ListarUpas()
+        {
 
             if (_isSuperAdmin)
             {

@@ -26,7 +26,7 @@
                                     	   WidthRequest="128"/>
                         <Label VerticalOptions="CenterAndExpand" Grid.Column="1" 
                                            FontFamily="Montserrat-SemiBold"
-                                             FontSize="12" Margin="5"
+                                             FontSize="15" Margin="5"
                                             HorizontalTextAlignment="Center"
                                            TextColor="{StaticResource Gray-White}"
                                            Text="{Binding Title}"/>

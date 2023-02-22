@@ -2,7 +2,9 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com" 
-             xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms" xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
+             xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms" 
+             xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
              prism:ViewModelLocator.AutowireViewModel="True" Title="{Binding Title}"
              x:Class="lestoma.App.Views.Reportes.ReportByDatePage">
     <ContentPage.Content>
@@ -24,19 +26,23 @@
                 <inputLayout:SfTextInputLayout Hint="Upas" HeightRequest="80" IsVisible="{Binding IsSuperAdmin}"
                                                    ContainerBackgroundColor="Transparent" VerticalOptions="Start"
                                                   Margin="10">
-                    <Picker x:Name="upaEntry" TextColor="Black" ItemDisplayBinding="{Binding Nombre}" IsVisible="{Binding IsSuperAdmin}"
+                    <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}" IsVisible="{Binding IsSuperAdmin}"
                                     Style="{StaticResource BorderlessEntryStyle}"
                                 SelectedItem="{Binding Upa}" ItemsSource="{Binding Upas}">
                     </Picker>
                 </inputLayout:SfTextInputLayout>
             </border:SfBorder>
-            <Label Text="Tipo Archivo" FontSize="Medium"/>
-            <Picker Title="Seleccionar tipo de Archivo" 
-                    x:Name="MainPickerDocumento" 
-                    ItemsSource="{Binding DocumentoList}" ItemDisplayBinding="{Binding Value}"/>
-            <buttons:SfButton
-            HorizontalOptions="FillAndExpand"
-            Command="{Binding SendCommand}"
+            <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
+                <inputLayout:SfTextInputLayout Hint="--seleccione tipo de archivo--" HeightRequest="80" ContainerBackgroundColor="Transparent" 
+                                               VerticalOptions="Start" Margin="10">
+                    <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
+                                    Style="{StaticResource BorderlessEntryStyle}"
+                                SelectedItem="{Binding TipoArchivo}" ItemsSource="{Binding TipoArchivos}">
+                    </Picker>
+                </inputLayout:SfTextInputLayout>
+            </border:SfBorder>
+            <buttons:SfButton HorizontalOptions="FillAndExpand"
+             Command="{Binding SendCommand}"
              CornerRadius="4"
              Style="{StaticResource LestomaGradientButtonStyle}"
              Text="Enviar" />
