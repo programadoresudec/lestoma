@@ -40,7 +40,7 @@ namespace lestoma.App.ViewModels.Modulos
                 CargarDatos();
                 if (_model.AreFieldsValid())
                 {
-                    UserDialogs.Instance.ShowLoading("Guardando");
+                    UserDialogs.Instance.ShowLoading("Guardando...");
                     if (_apiService.CheckConnection())
                     {
                         ModuloRequest request = new ModuloRequest

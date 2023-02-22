@@ -54,16 +54,15 @@
                             <StackLayout Orientation="Horizontal">
                                 <inputLayout:SfTextInputLayout Hint="Fecha" FocusedColor="Black" 
                                                                ContainerBackgroundColor="Transparent" HeightRequest="60">
-                                    <DatePicker  MinimumDate="{Binding FinalMinimumDate}" Format="dd/MM/yyyy"
-                                     Date="{Binding FiltroDateModel.FechaInicial}" HorizontalOptions="FillAndExpand" 
-                                 MaximumDate="{x:Static sys:DateTime.Now}"/>
+                                    <DatePicker Format="dd/MM/yyyy" MinimumDate="{Binding InitialMinimumDate}" Date="{Binding DateInitial}" 
+                                                HorizontalOptions="FillAndExpand"  MaximumDate="{x:Static sys:DateTime.Now}"/>
                                 </inputLayout:SfTextInputLayout>
                                 <Label Margin="0,15,0,0" TextColor="{StaticResource Gray-Black}" HorizontalOptions="Start"
                                 Style="{StaticResource IconLabelStyle}"
                                 Text="{StaticResource Calendar}" />
                                 <inputLayout:SfTextInputLayout Hint="Hora" HorizontalOptions="EndAndExpand" FocusedColor="Black" 
                                                                ContainerBackgroundColor="Transparent" HeightRequest="60">
-                                    <TimePicker HorizontalOptions="EndAndExpand"/>
+                                    <TimePicker HorizontalOptions="EndAndExpand" Time="{Binding SaveTimeInitial, Mode=TwoWay}"/>
                                 </inputLayout:SfTextInputLayout>
                                 <Label Margin="0,15,0,0" TextColor="{StaticResource Gray-600}" HorizontalOptions="Start"
                                 FontFamily="FontsAwesome" Style="{StaticResource IconLabelStyle}" Text="{StaticResource Clock}"/>
@@ -75,8 +74,8 @@
                             <StackLayout Orientation="Horizontal">
                                 <inputLayout:SfTextInputLayout Hint="Fecha" FocusedColor="Black" 
                                                                ContainerBackgroundColor="Transparent" HeightRequest="60">
-                                    <DatePicker  MinimumDate="{Binding FinalMinimumDate}" Format="dd/MM/yyyy"
-                                     Date="{Binding FiltroDateModel.FechaFinal}" HorizontalOptions="FillAndExpand" 
+                                    <DatePicker  Format="dd/MM/yyyy" IsEnabled="{Binding IsEnabled}"
+                                     Date="{Binding DateFinal}"  MinimumDate="{Binding FinalMinimumDate}" HorizontalOptions="FillAndExpand" 
                                  MaximumDate="{x:Static sys:DateTime.Now}"/>
                                 </inputLayout:SfTextInputLayout>
                                 <Label Margin="0,15,0,0" TextColor="{StaticResource Gray-Black}" HorizontalOptions="Start"
@@ -84,7 +83,7 @@
                                 Text="{StaticResource Calendar}" />
                                 <inputLayout:SfTextInputLayout Hint="Hora" HorizontalOptions="EndAndExpand" FocusedColor="Black" 
                                                                ContainerBackgroundColor="Transparent" HeightRequest="60">
-                                    <TimePicker HorizontalOptions="EndAndExpand"/>
+                                    <TimePicker HorizontalOptions="EndAndExpand" Time="{Binding SaveTimeFinal, Mode=TwoWay}" IsEnabled="{Binding IsEnabled}"/>
                                 </inputLayout:SfTextInputLayout>
                                 <Label Margin="0,15,0,0" TextColor="{StaticResource Gray-600}" HorizontalOptions="Start"
                                 FontFamily="FontsAwesome" Style="{StaticResource IconLabelStyle}" Text="{StaticResource Clock}"/>
