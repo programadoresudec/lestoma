@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms" xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             x:Class="lestoma.App.Views.Reportes.SuperAdmin.ReporteComponetPage">
+    <ContentPage.Content>
+        <StackLayout Padding="10" Spacing="20">
+            <StackLayout HorizontalOptions="EndAndExpand" Orientation="Horizontal">
+                <Label Margin="10,2,0,0" HorizontalOptions="Start"
+                        Style="{StaticResource IconLabelStyle}"
+                        Text="{StaticResource Filter}" />
+                <Button
+                    HorizontalOptions="EndAndExpand"
+                    FontSize="16" 
+                    FontFamily="Montserrat-SemiBold"
+                    BackgroundColor="Transparent"              
+                    TextColor="{StaticResource PantoneVerdeDark}"
+                    Text="Filtro Rango Fechas"
+                    Command="{Binding NavigatePopupFilterCommand}"/>
+            </StackLayout>
+            <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}" IsVisible="{Binding IsSuperAdmin}">
+                <inputLayout:SfTextInputLayout Hint="Upas" HeightRequest="80" IsVisible="{Binding IsSuperAdmin}"
+                                                   ContainerBackgroundColor="Transparent" VerticalOptions="Start"
+                                                  Margin="10">
+                    <Picker x:Name="upaEntry" TextColor="Black" ItemDisplayBinding="{Binding Nombre}" IsVisible="{Binding IsSuperAdmin}"
+                                    Style="{StaticResource BorderlessEntryStyle}"
+                                SelectedItem="{Binding Upa}" ItemsSource="{Binding Upas}">
+                    </Picker>
+                </inputLayout:SfTextInputLayout>
+            </border:SfBorder>
+            <Label Text="Tipo Archivo" FontSize="Medium"/>
+            <Picker Title="Seleccionar tipo de Archivo" 
+                    x:Name="MainPickerDocumento" 
+                    ItemsSource="{Binding DocumentoList}" ItemDisplayBinding="{Binding Value}"/>
+            <buttons:SfButton
+            HorizontalOptions="FillAndExpand"
+            Command="{Binding SendCommand}"
+             CornerRadius="4"
+             Style="{StaticResource LestomaGradientButtonStyle}"
+             Text="Enviar" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
