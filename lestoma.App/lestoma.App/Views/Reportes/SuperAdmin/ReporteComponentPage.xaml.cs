@@ -14,7 +14,7 @@ namespace lestoma.App.Views.Reportes.SuperAdmin
 	{
 		public ReporteComponentPage ()
 		{
-			InitializeComponent ();
+			InitializeComponent();
 		}
 	}
 }

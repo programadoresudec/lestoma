@@ -1,6 +1,7 @@
 ﻿using lestoma.App.Views.Reportes;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
+using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Services;
 using Prism.Commands;
@@ -9,6 +10,7 @@ using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using Xamarin.Forms;
 
@@ -19,6 +21,7 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
         private readonly IApiService _apiService;
         private NameDTO _upa;
         private ObservableCollection<NameDTO> _upas;
+        private ObservableCollection<NameDTO> _Components;
         private bool _isSuperAdmin;
 
         public ReportComponentViewModel(INavigationService navigationService, IApiService apiService) : base(navigationService)
@@ -34,7 +37,12 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
 
             set => SetProperty(ref _upas, value);
         }
+        public ObservableCollection<NameDTO> Components
+        {
+            get => _Components;
 
+            set => SetProperty(ref _Components, value);
+        }
         public bool IsSuperAdmin
         {
             get => _isSuperAdmin;
@@ -76,6 +84,33 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
                 }
             }
         }
+        private async void Componentes(Guid IdUpa)
+        {
+            IsBusy = true;
+            try
+            {
+                if (_apiService.CheckConnection())
+                {
+                    Components.Clear();
+                    ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<ComponenteDTO>(URL_API, $"componentes/paginar", TokenUser.Token);
+                    if (response.IsExito)
+                    {
+                        ResponseDTO Component = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API, $"componentes/listar-nombres-por-upa/{IdUpa}", TokenUser.Token);
+                        Components = new ObservableCollection<NameDTO>((List<NameDTO>)Component.Data);
+                        Components.Insert(0, new NameDTO { Id = Guid.Empty, Nombre = "Todas" });
+                    }
+                }
 
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+
+        }
     }
 }

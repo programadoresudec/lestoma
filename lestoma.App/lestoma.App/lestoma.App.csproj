@@ -38,6 +38,7 @@
     <PackageReference Include="Syncfusion.Xamarin.Buttons" Version="19.3.0.48" />
     <PackageReference Include="Syncfusion.Xamarin.Cards" Version="19.3.0.48" />
     <PackageReference Include="Syncfusion.Xamarin.Core" Version="19.3.0.48" />
+    <PackageReference Include="Syncfusion.Xamarin.SfAutoComplete" Version="19.3.0.48" />
     <PackageReference Include="Syncfusion.Xamarin.SfBusyIndicator" Version="19.3.0.48" />
     <PackageReference Include="Syncfusion.Xamarin.SfComboBox" Version="19.3.0.48" />
     <PackageReference Include="Syncfusion.Xamarin.SfListView" Version="19.3.0.48" />
@@ -204,7 +205,7 @@
     <EmbeddedResource Update="Views\Reportes\MenuReportsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Reportes\SuperAdmin\ReporteComponetPage.xaml">
+    <EmbeddedResource Update="Views\Reportes\SuperAdmin\ReporteComponentPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Sincronizaciones\SyncronizarDataPopupPage.xaml">
@@ -248,6 +249,9 @@
     </Compile>
     <Compile Update="Views\Reportes\MenuReportsPage.xaml.cs">
       <DependentUpon>MenuReportsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Reportes\SuperAdmin\ReporteComponentPage.xaml.cs">
+      <DependentUpon>ReporteComponentPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
