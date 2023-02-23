@@ -57,6 +57,15 @@
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>
+                                <Label HorizontalOptions="CenterAndExpand">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="Direccion de registro: " FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                            <Span Text="{Binding DireccionRegistro}" TextColor="Black" FontSize="Small" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                
                                 <Label>
                                     <Label.FormattedText>
                                         <FormattedString>
