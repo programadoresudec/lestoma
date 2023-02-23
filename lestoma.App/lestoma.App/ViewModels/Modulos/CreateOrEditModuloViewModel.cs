@@ -26,7 +26,42 @@ namespace lestoma.App.ViewModels.Modulos
             _model.AddValidationRules();
             CreateOrEditCommand = new Command(CreateOrEditarClicked);
         }
+
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            base.OnNavigatedTo(parameters);
+            if (parameters.ContainsKey("modulo") || Modulo.Id != Guid.Empty)
+            {
+                Modulo = parameters.GetValue<ModuloRequest>("modulo");
+                Title = "Editar";
+            }
+            else
+            {
+                Title = "Crear";
+            }
+        }
+
         public Command CreateOrEditCommand { get; set; }
+       
+        public ModuloRequest Modulo
+        {
+            get => _modulo;
+            set
+            {
+                SetProperty(ref _modulo, value);
+            }
+        }
+
+        public ParametrosModel Model
+        {
+            get => _model;
+            set
+            {
+                SetProperty(ref _model, value);
+            }
+        }
+
+
         private void CargarDatos()
         {
             Model.Nombre.Value = Modulo != null ? Modulo.Nombre : string.Empty;
@@ -85,37 +120,5 @@ namespace lestoma.App.ViewModels.Modulos
             }
         }
 
-        public ModuloRequest Modulo
-        {
-            get => _modulo;
-            set
-            {
-                SetProperty(ref _modulo, value);
-            }
-        }
-
-        public ParametrosModel Model
-        {
-            get => _model;
-            set
-            {
-                SetProperty(ref _model, value);
-            }
-        }
-
-
-        public override void OnNavigatedTo(INavigationParameters parameters)
-        {
-            base.OnNavigatedTo(parameters);
-            if (parameters.ContainsKey("modulo") || Modulo.Id != Guid.Empty)
-            {
-                Modulo = parameters.GetValue<ModuloRequest>("modulo");
-                Title = "Editar";
-            }
-            else
-            {
-                Title = "Crear";
-            }
-        }
     }
 }

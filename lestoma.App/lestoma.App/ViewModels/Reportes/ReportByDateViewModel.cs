@@ -5,10 +5,8 @@ using lestoma.App.Views.Reportes;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
-using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests.Filters;
-using Newtonsoft.Json;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
@@ -26,7 +24,7 @@ namespace lestoma.App.ViewModels.Reportes
         private NameDTO _tipoArchivo;
         private ObservableCollection<NameDTO> _tipoArchivos;
         private bool _isSuperAdmin;
-
+        private FiltroFechaModel _filtroFecha;
 
         public ReportByDateViewModel(INavigationService navigation, IApiService apiService)
             : base(navigation)
@@ -51,12 +49,25 @@ namespace lestoma.App.ViewModels.Reportes
             SendCommand = new Command(GenerateReportClicked);
 
         }
-
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            base.OnNavigatedTo(parameters);
+            if (parameters.ContainsKey("filtroFecha"))
+            {
+                FiltroFecha = parameters.GetValue<FiltroFechaModel>("filtroFecha");
+            }
+        }
         #region properties
         public ObservableCollection<NameDTO> Upas
         {
             get => _upas;
             set => SetProperty(ref _upas, value);
+        }
+
+        public FiltroFechaModel FiltroFecha
+        {
+            get => _filtroFecha;
+            set => SetProperty(ref _filtroFecha, value);
         }
 
         public ObservableCollection<NameDTO> TipoArchivos
@@ -101,9 +112,10 @@ namespace lestoma.App.ViewModels.Reportes
 
         private async void ListarUpas()
         {
-
+         
             if (_isSuperAdmin)
             {
+                UserDialogs.Instance.ShowLoading("Cargando...");
                 try
                 {
                     if (_apiService.CheckConnection())
@@ -116,6 +128,10 @@ namespace lestoma.App.ViewModels.Reportes
                 catch (Exception ex)
                 {
                     SeeError(ex);
+                }
+                finally
+                {
+                    UserDialogs.Instance.HideLoading();
                 }
             }
         }
@@ -136,21 +152,15 @@ namespace lestoma.App.ViewModels.Reportes
                 }
                 UserDialogs.Instance.ShowLoading("Enviando...");
 
-                var filtro = JsonConvert.DeserializeObject<FiltroFechaModel>(MovilSettings.FiltroFecha);
 
                 ReportFilterRequest reportFilterRequest = new ReportFilterRequest
                 {
                     TipoFormato = TipoArchivo.Nombre == GrupoTipoArchivo.PDF.ToString() ? GrupoTipoArchivo.PDF : GrupoTipoArchivo.EXCEL,
                     UpaId = Upa.Id,
-                    FechaInicial = filtro.FechaInicio,
-                    FechaFinal = filtro.FechaFin
+                    FechaInicial = _filtroFecha.FechaInicio,
+                    FechaFinal = _filtroFecha.FechaFin
                 };
                 var response = await _apiService.PostAsyncWithToken(URL_API, "reports-laboratory/by-date", reportFilterRequest, TokenUser.Token);
-                if (!response.IsExito)
-                {
-                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage(response.MensajeHttp, Constants.ICON_ERROR));
-                    return;
-                }
                 await PopupNavigation.Instance.PushAsync(new MessagePopupPage(response.MensajeHttp));
             }
             catch (Exception ex)
@@ -165,8 +175,8 @@ namespace lestoma.App.ViewModels.Reportes
 
         private bool Validations()
         {
-            FiltroFechaModel json = !string.IsNullOrWhiteSpace(MovilSettings.FiltroFecha) ? JsonConvert.DeserializeObject<FiltroFechaModel>(MovilSettings.FiltroFecha) : null;
-            bool isFiltroFechaValid = json != null;
+
+            bool isFiltroFechaValid = _filtroFecha != null;
             bool isUpaValid = Upa != null;
             bool istipoArchivoValid = TipoArchivo != null;
 

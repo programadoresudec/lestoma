@@ -4,11 +4,11 @@
              xmlns:prism="http://prismlibrary.com" 
              xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
              xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms" 
-             xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
+             xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" xmlns:control="clr-namespace:lestoma.App.Controls"
              prism:ViewModelLocator.AutowireViewModel="True" Title="{Binding Title}"
              x:Class="lestoma.App.Views.Reportes.ReportByDatePage">
     <ContentPage.Content>
-        <StackLayout Padding="10" Spacing="20" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+        <StackLayout  Margin="20,40" Spacing="20" VerticalOptions="StartAndExpand" HorizontalOptions="CenterAndExpand">
             <ScrollView>
                 <StackLayout>
                     <StackLayout HorizontalOptions="EndAndExpand" Orientation="Horizontal">
@@ -21,9 +21,37 @@
                     FontFamily="Montserrat-SemiBold"
                     BackgroundColor="Transparent"              
                     TextColor="{StaticResource PantoneVerdeDark}"
-                    Text="Filtro Rango Fechas"
+                    Text="Filtro Fecha"
                     Command="{Binding NavigatePopupFilterCommand}"/>
                     </StackLayout>
+                    <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Margin="0,0,0,20" TextColor="{StaticResource Gray-Black}" FontSize="Title" HorizontalOptions="Start"
+                                Style="{StaticResource IconLabelStyle}"
+                                Text="{StaticResource Calendar}" />
+                            <inputLayout:SfTextInputLayout Hint="Fecha Inicial" FocusedColor="Black" HorizontalOptions="FillAndExpand"
+                                                       ContainerBackgroundColor="Transparent">
+                                <control:BorderlessEntry  IsEnabled="False"
+                            Text="{Binding FiltroFecha.FechaInicio}"
+                            Style="{StaticResource BorderlessEntryStyle}" >
+                                </control:BorderlessEntry>
+                            </inputLayout:SfTextInputLayout>
+                        </StackLayout>
+                    </border:SfBorder>
+                    <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Margin="0,0,0,20" TextColor="{StaticResource Gray-Black}" FontSize="Title" HorizontalOptions="Start"
+                                Style="{StaticResource IconLabelStyle}"
+                                Text="{StaticResource Calendar}" />
+                            <inputLayout:SfTextInputLayout Hint="Fecha Final" FocusedColor="Black" HorizontalOptions="FillAndExpand"
+                                                       ContainerBackgroundColor="Transparent">
+                                <control:BorderlessEntry
+                            Text="{Binding FiltroFecha.FechaFin}" IsEnabled="False"
+                            Style="{StaticResource BorderlessEntryStyle}" >
+                                </control:BorderlessEntry>
+                            </inputLayout:SfTextInputLayout>
+                        </StackLayout>
+                    </border:SfBorder>
                     <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}" IsVisible="{Binding IsSuperAdmin}">
                         <inputLayout:SfTextInputLayout Hint="Upas" HeightRequest="80" IsVisible="{Binding IsSuperAdmin}"
                                                    ContainerBackgroundColor="Transparent" VerticalOptions="Start"

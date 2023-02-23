@@ -1,5 +1,4 @@
 ﻿using lestoma.App.ItemViewModels;
-using lestoma.App.Views;
 using lestoma.App.Views.Reportes;
 using lestoma.App.Views.Reportes.SuperAdmin;
 using lestoma.CommonUtils.Enums;
@@ -38,10 +37,10 @@ namespace lestoma.App.ViewModels.Reportes
                 PageName = $"{nameof(ReportByDatePage)}",
                 Title = "Generar reporte por fecha."
             });
-            menu.Add(new Menu   
+            menu.Add(new Menu
             {
                 Icon = "icon_report_components",
-                PageName = Rol == (int)TipoRol.SuperAdministrador ? $"{nameof(AboutPage)}" : $"{nameof(AboutPage)}",
+                PageName = $"{nameof(ReporteComponentPage)}",
                 Title = "Generar reporte por componentes."
             });
 

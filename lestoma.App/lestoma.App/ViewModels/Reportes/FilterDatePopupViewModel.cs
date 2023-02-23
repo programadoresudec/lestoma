@@ -1,4 +1,5 @@
 ﻿using Acr.UserDialogs;
+using Android.Transitions;
 using lestoma.App.Models;
 using lestoma.App.Views;
 using lestoma.CommonUtils.Constants;
@@ -104,9 +105,12 @@ namespace lestoma.App.ViewModels.Reportes
                     FechaFin = new DateTime(_fechaFinal.Value.Year, _fechaFinal.Value.Month, _fechaFinal.Value.Day,
                     _horaFinal.Value.Hours, _horaFinal.Value.Minutes, 00),
                 };
-                MovilSettings.FiltroFecha = JsonConvert.SerializeObject(rangos);
                 UserDialogs.Instance.HideLoading();
-                await _navigationService.GoBackAsync();
+                var parameters = new NavigationParameters
+                {
+                { "filtroFecha", rangos }
+            };
+                await _navigationService.GoBackAsync(parameters);
             }
             catch (Exception ex)
             {
