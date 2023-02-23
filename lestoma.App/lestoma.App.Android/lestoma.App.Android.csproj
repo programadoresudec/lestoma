@@ -92,6 +92,9 @@
     <PackageReference Include="Syncfusion.Xamarin.Core">
       <Version>19.3.0.48</Version>
     </PackageReference>
+    <PackageReference Include="Syncfusion.Xamarin.SfAutoComplete">
+      <Version>19.3.0.48</Version>
+    </PackageReference>
     <PackageReference Include="Syncfusion.Xamarin.SfBusyIndicator">
       <Version>19.3.0.48</Version>
     </PackageReference>

@@ -38,6 +38,7 @@
     <PackageReference Include="Syncfusion.Xamarin.Buttons" Version="19.3.0.48" />
     <PackageReference Include="Syncfusion.Xamarin.Cards" Version="19.3.0.48" />
     <PackageReference Include="Syncfusion.Xamarin.Core" Version="19.3.0.48" />
+    <PackageReference Include="Syncfusion.Xamarin.SfAutoComplete" Version="19.3.0.48" />
     <PackageReference Include="Syncfusion.Xamarin.SfBusyIndicator" Version="19.3.0.48" />
     <PackageReference Include="Syncfusion.Xamarin.SfComboBox" Version="19.3.0.48" />
     <PackageReference Include="Syncfusion.Xamarin.SfListView" Version="19.3.0.48" />
