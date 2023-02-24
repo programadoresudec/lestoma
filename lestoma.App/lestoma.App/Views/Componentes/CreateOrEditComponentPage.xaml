@@ -45,6 +45,18 @@
                     </inputLayout:SfTextInputLayout>
                 </border:SfBorder>
                 <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
+                    <inputLayout:SfTextInputLayout Hint="Dirección de registro"
+                                                   HeightRequest="80" IsEnabled="{Binding IsEdit}" 
+                                                   ContainerBackgroundColor="Transparent" 
+                                                   Margin="10">
+                        <Picker TextColor="Black"
+                                Style="{StaticResource BorderlessEntryStyle}"
+                                SelectedItem="{Binding DireccionRegistro}" ItemsSource="{Binding DireccionRegistros}">
+                        </Picker>
+                    </inputLayout:SfTextInputLayout>
+                </border:SfBorder>
+
+                <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
                     <inputLayout:SfTextInputLayout Hint="Actividades" HeightRequest="80" IsEnabled="{Binding IsEdit}" 
                                                    ContainerBackgroundColor="Transparent" 
                                                    Margin="10">

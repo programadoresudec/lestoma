@@ -1,4 +1,5 @@
 ﻿using Acr.UserDialogs;
+using ImTools;
 using lestoma.App.Models;
 using lestoma.App.Views;
 using lestoma.App.Views.Componentes;
@@ -16,6 +17,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Xamarin.Forms;
+using static Android.Renderscripts.Sampler;
 
 namespace lestoma.App.ViewModels.Componentes
 {
@@ -25,7 +27,10 @@ namespace lestoma.App.ViewModels.Componentes
         private ObservableCollection<NameDTO> _upas;
         private ObservableCollection<NameDTO> _modulos;
         private ObservableCollection<NameDTO> _actividades;
+        private ObservableCollection<byte> _direccionregistros;
+
         private NameDTO _upa;
+        private byte _direccionregistro;
         private NameDTO _modulo;
         private NameDTO _actividad;
         private InfoComponenteDTO _infoComponente;
@@ -43,8 +48,8 @@ namespace lestoma.App.ViewModels.Componentes
             _infoComponente = new InfoComponenteDTO();
             _isEdit = true;
             _iconStatusComponent = "icon_create.png";
+            LoadDirecciondeRegistro();
         }
-
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
@@ -78,6 +83,16 @@ namespace lestoma.App.ViewModels.Componentes
             set => SetProperty(ref _modulos, value);
         }
 
+        public ObservableCollection<byte> DireccionRegistros
+        {
+            get => _direccionregistros;
+            set => SetProperty(ref _direccionregistros, value);
+        }
+        public byte DireccionRegistro
+        {
+           get => _direccionregistro;
+           set => SetProperty(ref _direccionregistro, value);
+        }
         public ObservableCollection<NameDTO> Upas
         {
             get => _upas;
@@ -133,6 +148,13 @@ namespace lestoma.App.ViewModels.Componentes
         {
             get => _jsonEstadoComponente;
             set => SetProperty(ref _jsonEstadoComponente, value);
+        }
+        private void LoadDirecciondeRegistro()
+        {
+            for (byte i = Byte.MinValue ; i <= Byte.MaxValue ; i++)
+            {
+                _direccionregistros.Add(i);
+            }
         }
         private async void LoadLists(Guid id)
         {
