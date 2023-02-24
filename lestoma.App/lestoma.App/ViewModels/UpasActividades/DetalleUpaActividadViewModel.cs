@@ -24,7 +24,7 @@ namespace lestoma.App.ViewModels.UpasActividades
             LoadDetalle();
             LoadMoreItemsCommand = new Command<object>(LoadMoreItems, CanLoadMoreItems);
             EditCommand = new Command<object>(DetalleSelected, CanNavigate);
-            SeeActivitiesCommand = new Command<object>(OnSeeActivity, CanNavigate);
+            SeeActivitiesCommand = new Command<object>(OnSeeActivityClicked, CanNavigate);
         }
         public Command AddCommand
         {
@@ -90,7 +90,7 @@ namespace lestoma.App.ViewModels.UpasActividades
             set => SetProperty(ref itemTap, value);
         }
 
-        private async void OnSeeActivity(object obj)
+        private async void OnSeeActivityClicked(object obj)
         {
             DetalleUpaActividadDTO detalle = (DetalleUpaActividadDTO)obj;
             if (detalle == null)

@@ -155,7 +155,9 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<SyncronizarDataPopupPage, SyncronizarDataViewModel>();
             containerRegistry.RegisterForNavigation<FilterDatePopupPage, FilterDatePopupViewModel>();
             containerRegistry.RegisterForNavigation<ReporteComponentPage, ReportComponentViewModel>();
+            containerRegistry.RegisterForNavigation<InfoProtocolPopupPage, InfoProtocolPopupViewModel>();
             #endregion
+
 
         }
     }

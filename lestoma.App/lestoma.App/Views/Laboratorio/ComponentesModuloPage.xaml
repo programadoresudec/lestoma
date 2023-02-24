@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com" xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms" 
              xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms" 
+             xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms" 
+             xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
              prism:ViewModelLocator.AutowireViewModel="True" Title="{Binding Title}"
              x:Class="lestoma.App.Views.Laboratorio.ComponentesModuloPage">
     <Grid>
@@ -18,6 +20,19 @@
                 	                   ViewBoxHeight="80" />
         </Grid>
         <StackLayout Padding="10">
+            <StackLayout VerticalOptions="StartAndExpand">
+                <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}" IsVisible="{Binding IsSuperAdmin}">
+                    <inputLayout:SfTextInputLayout Hint="Protocolo" HeightRequest="80" IsVisible="{Binding IsSuperAdmin}"
+                                                   ContainerBackgroundColor="Transparent" VerticalOptions="Start"
+                                                  Margin="10">
+                        <Picker x:Name="upaEntry" TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
+                                    Style="{StaticResource BorderlessEntryStyle}"
+                                SelectedItem="{Binding Protocolo}" ItemsSource="{Binding Protocolos}">
+                        </Picker>
+                    </inputLayout:SfTextInputLayout>
+                </border:SfBorder>
+            </StackLayout>
+
             <syncfusion:SfListView  x:Name="LV_Componentes" 
                              ItemsSource="{Binding Componentes}"
                                     TapCommand="{Binding RedirectionTramaCommand}" 

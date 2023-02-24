@@ -1,11 +1,11 @@
-﻿using lestoma.CommonUtils.DTOs;
+﻿using Acr.UserDialogs;
+using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests.Filters;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 namespace lestoma.App.ViewModels.UpasActividades
 {
@@ -46,6 +46,7 @@ namespace lestoma.App.ViewModels.UpasActividades
             {
                 if (_apiService.CheckConnection())
                 {
+                    UserDialogs.Instance.ShowLoading("Cargando...");
                     ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
                         $"detalle-upas-actividades/listar-actividades-upa-usuario?UpaId={filtro.UpaId}&UsuarioId={filtro.UsuarioId}", TokenUser.Token);
                     if (response.IsExito)
@@ -64,7 +65,11 @@ namespace lestoma.App.ViewModels.UpasActividades
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                SeeError(ex);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
             }
         }
     }

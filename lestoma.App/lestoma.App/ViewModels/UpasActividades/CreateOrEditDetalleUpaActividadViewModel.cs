@@ -96,7 +96,7 @@ namespace lestoma.App.ViewModels.UpasActividades
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                SeeError(ex);
             }
         }
 
@@ -299,7 +299,7 @@ namespace lestoma.App.ViewModels.UpasActividades
         {
             try
             {
-                UserDialogs.Instance.ShowLoading("Guardando");
+                UserDialogs.Instance.ShowLoading("Guardando...");
                 var detalle = new CrearDetalleUpaActividadRequest
                 {
                     UpaId = Upa.Id,

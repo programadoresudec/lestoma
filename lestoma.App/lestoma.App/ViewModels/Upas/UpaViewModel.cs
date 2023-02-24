@@ -2,11 +2,11 @@
 using lestoma.App.Views.Upas;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
+using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Xamarin.Forms;
 
@@ -16,6 +16,7 @@ namespace lestoma.App.ViewModels.Upas
     {
         private readonly IApiService _apiService;
         private ObservableCollection<UpaDTO> _upas;
+        private Command<object> itemTap;
         public UpaViewModel(INavigationService navigationService, IApiService apiService) :
             base(navigationService)
         {
@@ -24,6 +25,19 @@ namespace lestoma.App.ViewModels.Upas
             EditCommand = new Command<object>(UpaSelected, CanNavigate);
             DeleteCommand = new Command<object>(DeleteClicked, CanNavigate);
             LoadUpas();
+            SeeProtocolsCommand = new Command<object>(OnSeeProtocolClicked, CanNavigate);
+        }
+
+        private async void OnSeeProtocolClicked(object obj)
+        {
+            UpaDTO detalle = (UpaDTO)obj;
+            if (detalle == null)
+                return;
+            var parameters = new NavigationParameters
+            {
+                { "protocolos", detalle.ProtocolosCOM }
+            };
+            await _navigationService.NavigateAsync($"{nameof(InfoProtocolPopupPage)}", parameters);
         }
 
         private bool CanNavigate(object arg)
@@ -39,6 +53,11 @@ namespace lestoma.App.ViewModels.Upas
 
         public Command EditCommand { get; set; }
         public Command DeleteCommand { get; set; }
+        public Command<object> SeeProtocolsCommand
+        {
+            get => itemTap;
+            set => SetProperty(ref itemTap, value);
+        }
         public Command AddCommand
         {
             get
@@ -135,12 +154,15 @@ namespace lestoma.App.ViewModels.Upas
             {
                 IsBusy = true;
                 Upas = new ObservableCollection<UpaDTO>();
-                ResponseDTO response = await _apiService.GetListAsyncWithToken<List<UpaDTO>>(URL_API,
-                    $"upas/listado", TokenUser.Token);
+                ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<UpaDTO>(URL_API,
+                    $"upas/paginar", TokenUser.Token);
                 if (response.IsExito)
                 {
-                    var listado = (List<UpaDTO>)response.Data;
-                    Upas = new ObservableCollection<UpaDTO>(listado);
+                    var paginador = (Paginador<UpaDTO>)response.Data;
+                    if (paginador.Datos.Count > 0)
+                    {
+                        Upas = new ObservableCollection<UpaDTO>(paginador.Datos);
+                    }
                 }
                 else
                 {
