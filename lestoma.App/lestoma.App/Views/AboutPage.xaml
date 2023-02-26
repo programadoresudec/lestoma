@@ -20,68 +20,35 @@
             <ScrollView>
                 <StackLayout VerticalOptions="End" WidthRequest="500" Margin="0,0,0,20">
                     <Grid Padding="30,25,25,0">
-                        <Label Text="Filtro" FontSize="Large"
+                        <Label Text="--Seleccione--" FontSize="Large"
                            HorizontalTextAlignment="Start" TextColor="{StaticResource PantoneVerdeDark}"></Label>
                         <Frame WidthRequest="32" HeightRequest="32"
                         Padding="0" CornerRadius="40" HorizontalOptions="End">
                             <ContentView>
                                 <ContentView.GestureRecognizers>
-                                    <TapGestureRecognizer/>
                                 </ContentView.GestureRecognizers>
                                 <Image Source="icon_close.png"  Aspect="AspectFill" />
                             </ContentView>
                         </Frame>
                     </Grid>
                     <StackLayout Spacing="10" Margin="20,20,30,10">
-                        <!--tipo estado-->
-                        <Label Text="Fecha de inicio" FontFamily="Montserrat-SemiBold" Margin="10,0,0,0" VerticalOptions="StartAndExpand" 
+                        <Label Text="Hora en la que se va generar el reporte diario" FontFamily="Montserrat-SemiBold" Margin="10,0,0,0" VerticalOptions="StartAndExpand" 
                        HorizontalOptions="StartAndExpand" FontSize="16"/>
-                        <border:SfBorder Style="{StaticResource ThemeBorderStyle}">
-                            <StackLayout Orientation="Horizontal">
-                                <inputLayout:SfTextInputLayout Hint="Fecha" FocusedColor="Black" 
-                                                               ContainerBackgroundColor="Transparent" HeightRequest="60">
-                                    <DatePicker  MinimumDate="{Binding FinalMinimumDate}" Format="dd/MM/yyyy"
-                                     Date="{Binding FiltroDateModel.FechaFinal}" HorizontalOptions="FillAndExpand" 
-                                 MaximumDate="{x:Static sys:DateTime.Now}"/>
+                        <border:SfBorder Style="{StaticResource ProfileBorderStyle}" Margin="20" Background="{StaticResource PantoneGrisLight}">
+                            <StackLayout Orientation="Horizontal" Background="transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                <Label TextColor="{StaticResource Gray-600}" HorizontalOptions="Start"
+                                FontFamily="FontsAwesome" FontSize="32" Style="{StaticResource IconLabelStyle}" Text="{StaticResource Clock}"/>
+                                <inputLayout:SfTextInputLayout Hint="Hora" HorizontalOptions="StartAndExpand" FocusedColor="Black" 
+                                                               ContainerBackgroundColor="Transparent" HeightRequest="60" >
+                                    <TimePicker HorizontalOptions="StartAndExpand" Time="{Binding SaveTimeInitial, Mode=TwoWay}"/>
                                 </inputLayout:SfTextInputLayout>
-                                <Label Margin="0,15,0,0" TextColor="{StaticResource Gray-Black}" HorizontalOptions="Start"
-                                Style="{StaticResource IconLabelStyle}"
-                                Text="{StaticResource Calendar}" />
-                                <inputLayout:SfTextInputLayout Hint="Hora" HorizontalOptions="EndAndExpand" FocusedColor="Black" 
-                                                               ContainerBackgroundColor="Transparent" HeightRequest="60">
-                                    <TimePicker Time="{Binding FiltroDateModel.HoraInicial}" HorizontalOptions="EndAndExpand"/>
-                                </inputLayout:SfTextInputLayout>
-                                <Label Margin="0,15,0,0" TextColor="{StaticResource Gray-600}" HorizontalOptions="Start"
-                                FontFamily="FontsAwesome" Style="{StaticResource IconLabelStyle}" Text="{StaticResource Clock}"/>
                             </StackLayout>
                         </border:SfBorder>
-                        <Label Text="Fecha de finalización" FontFamily="Montserrat-SemiBold" Margin="10,0,0,0"
-                               VerticalOptions="StartAndExpand" HorizontalOptions="StartAndExpand" FontSize="16"/>
-                        <border:SfBorder Style="{StaticResource ThemeBorderStyle}">
-                            <StackLayout Orientation="Horizontal">
-                                <inputLayout:SfTextInputLayout Hint="Fecha" FocusedColor="Black" 
-                                                               ContainerBackgroundColor="Transparent" HeightRequest="60">
-                                    <DatePicker  MinimumDate="{Binding FinalMinimumDate}" Format="dd/MM/yyyy"
-                                     Date="{Binding FiltroDateModel.FechaFinal}" HorizontalOptions="FillAndExpand" 
-                                 MaximumDate="{x:Static sys:DateTime.Now}"/>
-                                </inputLayout:SfTextInputLayout>
-                                <Label Margin="0,15,0,0" TextColor="{StaticResource Gray-Black}" HorizontalOptions="Start"
-                                Style="{StaticResource IconLabelStyle}"
-                                Text="{StaticResource Calendar}" />
-                                <inputLayout:SfTextInputLayout Hint="Hora" HorizontalOptions="EndAndExpand" FocusedColor="Black" 
-                                                               ContainerBackgroundColor="Transparent" HeightRequest="60">
-                                    <TimePicker Time="{Binding FiltroDateModel.HoraInicial}" HorizontalOptions="EndAndExpand"/>
-                                </inputLayout:SfTextInputLayout>
-                                <Label Margin="0,15,0,0" TextColor="{StaticResource Gray-600}" HorizontalOptions="Start"
-                                FontFamily="FontsAwesome" Style="{StaticResource IconLabelStyle}" Text="{StaticResource Clock}"/>
-                            </StackLayout>
-                        </border:SfBorder>
-                        <!--/tipo estado-->
                         <buttons:SfButton Margin="0,20,0,0"
                         HorizontalOptions="FillAndExpand" 
-                        Command="{Binding SaveEstadoCommand}"
-                        CornerRadius="4" IsVisible="{Binding IsEdit}"
-                        Style="{StaticResource LestomaGradientButtonStyle}"
+                        Command="{Binding SaveCommand}"
+                        CornerRadius="12" 
+                        Style="{StaticResource LestomaPopupGradientButtonStyle}"
                         Text="Guardar" />
                     </StackLayout>
                 </StackLayout>

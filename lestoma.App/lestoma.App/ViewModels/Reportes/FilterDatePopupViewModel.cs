@@ -1,10 +1,7 @@
 ﻿using Acr.UserDialogs;
-using Android.Transitions;
 using lestoma.App.Models;
 using lestoma.App.Views;
 using lestoma.CommonUtils.Constants;
-using lestoma.CommonUtils.Helpers;
-using Newtonsoft.Json;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
@@ -26,7 +23,7 @@ namespace lestoma.App.ViewModels.Reportes
         {
             SaveCommand = new Command(SaveClicked);
             _horaInicial = new TimeSpan(2, 0, 0);
-            _horaInicial = new TimeSpan(4, 0, 0);
+            _horaFinal = new TimeSpan(11, 0, 0);
         }
         public DateTime? DateInitial
         {
@@ -56,10 +53,6 @@ namespace lestoma.App.ViewModels.Reportes
         {
             get
             {
-                if (_horaInicial.Value != null)
-                {
-                    SaveTimeFinal = _horaInicial.Value.Add(new TimeSpan(1, 0, 0));
-                }
                 return _horaInicial;
             }
             set => SetProperty(ref _horaInicial, value);
@@ -93,7 +86,7 @@ namespace lestoma.App.ViewModels.Reportes
                 var error = this.Validations();
                 if (!error.valido)
                 {
-                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage(error.mensaje, Constants.ICON_WARNING));
+                    AlertWarning(error.mensaje);          
                     return;
                 }
                 UserDialogs.Instance.ShowLoading("Guardando...");

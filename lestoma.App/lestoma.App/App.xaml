@@ -2,13 +2,13 @@
 
 <prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
                         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                        xmlns:prism="http://prismlibrary.com"
+                        xmlns:prism="clr-namespace:Prism.DryIoc;assembly=Prism.DryIoc.Forms"
                         xmlns:themes="clr-namespace:lestoma.App.Themes;assembly=lestoma.App"
                         x:Class="lestoma.App.App">
     <Application.Resources>
         <ResourceDictionary>
-            <!--<x:String x:Key="UrlAPI">https://www.lestoma.site/api/</x:String>-->
-            <x:String x:Key="UrlAPI">http://192.168.1.6:45455/api/</x:String>
+            <x:String x:Key="UrlAPI">https://www.lestoma.site/api/</x:String>
+            <!--<x:String x:Key="UrlAPI">http://192.168.1.6:45455/api/</x:String>-->
             <x:String x:Key="UrlDominio">https://www.lestoma.site/</x:String>
             <ResourceDictionary.MergedDictionaries>
                 <themes:LightTheme />

@@ -38,6 +38,32 @@
         <Setter Property="FontFamily" Value="FontIcons" />
     </Style>
 
+    <Style x:Key="IndicatorLabelStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="FontFamily" Value="FontIcons" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor"
+                                        Value="LightGray" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Selected">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor"
+                                        Value="{DynamicResource PantoneVerdeDark}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
     <!--  Common style for Simple labels  -->
     <Style x:Key="SimpleLabelStyle" TargetType="Label">
         <Setter Property="FontSize" Value="12" />

@@ -39,7 +39,7 @@ namespace lestoma.App.ViewModels.Buzon
                 UserDialogs.Instance.ShowLoading("Cargando...");
                 if (_apiService.CheckConnection())
                 {
-                    var response = await _apiService.GetByIdAsyncWithToken(URL_API, $"buzon-de-reportes/info/{id}", TokenUser.Token);
+                    var response = await _apiService.GetAsyncWithToken(URL_API, $"buzon-de-reportes/info/{id}", TokenUser.Token);
                     if (!response.IsExito)
                     {
                         AlertWarning(response.MensajeHttp);

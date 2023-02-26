@@ -8,7 +8,6 @@
              x:Class="lestoma.App.Views.OnBoardingPage">
     <ContentPage.Resources>
         <ResourceDictionary>
-
             <Style TargetType="Label">
                 <Setter Property="TextColor" Value="{StaticResource PantoneVerdeSecond}" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
@@ -25,23 +24,21 @@
             </Grid.RowDefinitions>
             <StackLayout Orientation="Horizontal" Margin="10,0,10,0">
                 <Button
-                    HorizontalOptions="EndAndExpand"
-                    
+                    HorizontalOptions="EndAndExpand"         
                     FontSize="Medium"
                     FontFamily="Montserrat-Bold"
-                    FontAttributes="Bold"
                     BackgroundColor="Transparent"              
-                    TextColor="{StaticResource PantoneVerdeDark}"
+                    TextColor="{StaticResource PantoneVerdeSecond}"
                     Text="{Binding SkipButtonText}"
                     Command="{Binding SkipCommand}"/>
-                        <Label
+                <Label
                         Margin="10,2,10,0" HorizontalOptions="Start"
                         Style="{StaticResource IconLabelStyle}"
                         Text="{StaticResource ArrowRight}" />
             </StackLayout>
 
-            <CarouselView x:Name="onBoardingCarousel"
-                          Grid.Row="1"
+            <CarouselView IndicatorView="{x:Reference LestomaIndicator}"
+                          Grid.Row="1" 
                           ItemsSource="{Binding Items}"                          
                           VerticalOptions="Center"
                           Position="{Binding Position}">
@@ -50,27 +47,33 @@
                         <ContentView>
                             <FlexLayout Direction="Column"
                                     JustifyContent="SpaceEvenly">
-                                <Label Text="{Binding Title}"
-                                       FontAttributes="Bold"
-                                       FontSize="Title" />
+                                <Label Text="{Binding Title}" FontSize="20" FontFamily="Montserrat-SemiBold" />
                                 <ffimageloadingsvg:SvgCachedImage                                  
                                        Source="{Binding ImageUrl}"
                                        Aspect="AspectFill"
                                        WidthRequest="300" 
                                        FlexLayout.AlignSelf="Center"/>
-                                <Label Text="{Binding Content}"
-                                       FontSize="Body"/>
+                                <Label Text="{Binding Content}" FontFamily="Montserrat-Regular" TextColor="Black"
+                                       FontSize="Small"/>
                             </FlexLayout>
                         </ContentView>
                     </DataTemplate>
                 </CarouselView.ItemTemplate>
             </CarouselView>
-            <IndicatorView
+            <IndicatorView x:Name="LestomaIndicator"
                     Grid.Row="2"
                     IndicatorsShape="Circle"
-                    IndicatorColor="{StaticResource PantoneVerdeDark}"
-                    SelectedIndicatorColor="DarkGray"
-                    HorizontalOptions="Center"/>
+                    IndicatorColor="Transparent"
+                            Margin="0,50,0,40" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+                    SelectedIndicatorColor="Transparent">
+                <IndicatorView.IndicatorTemplate>
+                    <DataTemplate>
+                        <Label Style="{StaticResource IndicatorLabelStyle}"  VerticalOptions="CenterAndExpand" 
+                               HorizontalOptions="CenterAndExpand" Text="{StaticResource Indicator}"/>
+                    </DataTemplate>
+                </IndicatorView.IndicatorTemplate>
+
+            </IndicatorView>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

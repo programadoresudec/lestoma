@@ -152,7 +152,6 @@ namespace lestoma.App.ViewModels.Reportes
                 }
                 UserDialogs.Instance.ShowLoading("Enviando...");
 
-
                 ReportFilterRequest reportFilterRequest = new ReportFilterRequest
                 {
                     TipoFormato = TipoArchivo.Nombre == GrupoTipoArchivo.PDF.ToString() ? GrupoTipoArchivo.PDF : GrupoTipoArchivo.EXCEL,

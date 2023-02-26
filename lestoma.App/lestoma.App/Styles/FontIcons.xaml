@@ -22,7 +22,7 @@
     <x:String x:Key="Phone">&#xe71c;</x:String>
     <x:String x:Key="Sent">&#xe717;</x:String>
     <x:String x:Key="Viewed">&#xe71b;</x:String>
-    <x:String x:Key="New">&#xe720;</x:String>
+    <x:String x:Key="Indicator">&#xe720;</x:String>
     <x:String x:Key="Audio">&#xe722;</x:String>
     <x:String x:Key="Photo">&#xe71d;</x:String>
     <x:String x:Key="Video">&#xe718;</x:String>

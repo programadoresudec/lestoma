@@ -119,7 +119,7 @@ namespace lestoma.App.ViewModels
                         {
                             Icon =  "icon_detalles",
                             PageName = $"{nameof(DetalleUpaActividadPage)}",
-                            Title = "Detalle de upas con actividades"
+                            Title = "Asignación de upa-actividad al usuario"
                         },
                          new Menu
                         {
