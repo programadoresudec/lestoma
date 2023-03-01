@@ -53,7 +53,7 @@
                         <border:SfBorder Style="{StaticResource ProfileBorderStyle}" Margin="20" Background="{StaticResource PantoneGrisLight}">
                             <StackLayout Orientation="Horizontal" Background="transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
                                 <Label TextColor="{StaticResource Gray-600}" HorizontalOptions="Start"
-                                FontFamily="FontsAwesome" FontSize="32" Style="{StaticResource IconLabelStyle}" Text="{StaticResource Clock}"/>
+                                FontFamily="Fontello" FontSize="32" Style="{StaticResource IconLabelStyle}" Text="{StaticResource IconClock}"/>
                                 <inputLayout:SfTextInputLayout Hint="Hora" HorizontalOptions="StartAndExpand" FocusedColor="Black" 
                                                                ContainerBackgroundColor="Transparent" HeightRequest="60" >
                                     <TimePicker HorizontalOptions="StartAndExpand" Time="{Binding TimeForReportDaily, Mode=TwoWay}"/>

@@ -1,5 +1,4 @@
 ﻿using Acr.UserDialogs;
-using ImTools;
 using lestoma.App.Models;
 using lestoma.App.Views;
 using lestoma.App.Views.Componentes;
@@ -17,7 +16,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Xamarin.Forms;
-using static Android.Renderscripts.Sampler;
 
 namespace lestoma.App.ViewModels.Componentes
 {
@@ -27,10 +25,8 @@ namespace lestoma.App.ViewModels.Componentes
         private ObservableCollection<NameDTO> _upas;
         private ObservableCollection<NameDTO> _modulos;
         private ObservableCollection<NameDTO> _actividades;
-        private ObservableCollection<byte> _direccionregistros;
-
         private NameDTO _upa;
-        private byte _direccionregistro;
+        private int? _direccionregistro;
         private NameDTO _modulo;
         private NameDTO _actividad;
         private InfoComponenteDTO _infoComponente;
@@ -48,7 +44,7 @@ namespace lestoma.App.ViewModels.Componentes
             _infoComponente = new InfoComponenteDTO();
             _isEdit = true;
             _iconStatusComponent = "icon_create.png";
-            LoadDirecciondeRegistro();
+            Bytes = LoadBytes();
         }
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
@@ -82,16 +78,11 @@ namespace lestoma.App.ViewModels.Componentes
             get => _modulos;
             set => SetProperty(ref _modulos, value);
         }
-
-        public ObservableCollection<byte> DireccionRegistros
+        public List<int> Bytes { get; set; }
+        public int? DireccionRegistro
         {
-            get => _direccionregistros;
-            set => SetProperty(ref _direccionregistros, value);
-        }
-        public byte DireccionRegistro
-        {
-           get => _direccionregistro;
-           set => SetProperty(ref _direccionregistro, value);
+            get => _direccionregistro;
+            set => SetProperty(ref _direccionregistro, value);
         }
         public ObservableCollection<NameDTO> Upas
         {
@@ -149,12 +140,9 @@ namespace lestoma.App.ViewModels.Componentes
             get => _jsonEstadoComponente;
             set => SetProperty(ref _jsonEstadoComponente, value);
         }
-        private void LoadDirecciondeRegistro()
+        private List<int> LoadBytes()
         {
-            for (byte i = Byte.MinValue ; i <= Byte.MaxValue ; i++)
-            {
-                _direccionregistros.Add(i);
-            }
+            return Enumerable.Range(0, 256).ToList();
         }
         private async void LoadLists(Guid id)
         {
@@ -186,13 +174,13 @@ namespace lestoma.App.ViewModels.Componentes
                     }
                     if (id != Guid.Empty)
                     {
-                        var infoComponente = await _apiService.GetAsyncWithToken(URL_API,
-                            $"componentes/{id}", TokenUser.Token);
+                        var infoComponente = await _apiService.GetAsyncWithToken(URL_API, $"componentes/{id}", TokenUser.Token);
                         if (infoComponente.IsExito)
                         {
                             InfoComponente = ParsearData<InfoComponenteDTO>(infoComponente);
+                            DireccionRegistro = InfoComponente.DireccionDeRegistro;
                             var modulo = Modulos.Where(x => x.Id == InfoComponente.Modulo.Id).FirstOrDefault();
-                            var upa = Upas != null ? Upas.Where(x => x.Id == InfoComponente.Upa.Id).FirstOrDefault() : null;
+                            var upa = Upas?.Where(x => x.Id == InfoComponente.Upa.Id).FirstOrDefault();
                             var actividad = Actividades.Where(x => x.Id == InfoComponente.Actividad.Id).FirstOrDefault();
 
                             if (modulo != null && actividad != null)
@@ -253,7 +241,8 @@ namespace lestoma.App.ViewModels.Componentes
                                 Nombre = InfoComponente.Nombre,
                                 ActividadId = Actividad.Id,
                                 ModuloComponenteId = Modulo.Id,
-                                TipoEstadoComponente = InfoComponente.EstadoComponente
+                                TipoEstadoComponente = InfoComponente.EstadoComponente,
+                                DireccionRegistro = (byte)DireccionRegistro
                             };
                             if (Upa != null)
                             {
@@ -329,13 +318,13 @@ namespace lestoma.App.ViewModels.Componentes
             bool isUpaValid = Upa != null;
             bool isActividadValid = Actividad != null;
             bool isModuloValid = Modulo != null;
+            bool isDireccionValid = DireccionRegistro != null;
             bool isEstadoValid = InfoComponente.EstadoComponente != null;
-
             if (TokenUser.User.RolId == (int)TipoRol.Administrador)
             {
                 isUpaValid = true;
             }
-            return isNameValid && isEstadoValid && isUpaValid && isModuloValid && isActividadValid;
+            return isNameValid && isDireccionValid && isEstadoValid && isUpaValid && isModuloValid && isActividadValid;
         }
     }
 }

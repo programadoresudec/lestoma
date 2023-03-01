@@ -64,7 +64,7 @@ namespace lestoma.App.ViewModels.Upas
             {
                 return new Command(async () =>
                 {
-                    await _navigationService.NavigateAsync(nameof(CreateOrEditUpaPage), null, useModalNavigation: true, true);
+                    await _navigationService.NavigateAsync(nameof(CreateOrEditUpaPage));
                 });
             }
         }

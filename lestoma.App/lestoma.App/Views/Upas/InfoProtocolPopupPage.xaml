@@ -5,8 +5,8 @@
              xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup" 
              xmlns:cards="clr-namespace:Syncfusion.XForms.Cards;assembly=Syncfusion.Cards.XForms" 
              xmlns:core="clr-namespace:Syncfusion.XForms.Core;assembly=Syncfusion.Core.XForms" 
-                 xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
-                 prism:ViewModelLocator.AutowireViewModel="True"
+             xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
+             prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="lestoma.App.Views.Upas.InfoProtocolPopupPage">
     <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
         <cards:SfCardView BackgroundColor="White" CornerRadius="10" 
@@ -15,45 +15,47 @@
                                                                  TabletPortrait='200,50',
                                                                  TabletLandscape='200,50',
                                                                  Desktop='30'}">
-            <StackLayout VerticalOptions="End" WidthRequest="500"
+            <ScrollView>
+                <StackLayout VerticalOptions="End" WidthRequest="500"
                Margin="0,0,0,20">
-                <Grid Padding="30,25,25,0">
-                    <Label Text="Protocolos" FontSize="Large"  HorizontalTextAlignment="Start" 
+                    <Grid Padding="30,25,25,0">
+                        <Label Text="Protocolos" FontSize="Large"  HorizontalTextAlignment="Start" 
                            TextColor="{StaticResource PantoneVerdeDark}"></Label>
-                    <Frame WidthRequest="32" HeightRequest="32"
+                        <Frame WidthRequest="32" HeightRequest="32"
                         Padding="0" CornerRadius="40" HorizontalOptions="End">
-                        <ContentView>
-                            <ContentView.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnCloseButtonTapped" />
-                            </ContentView.GestureRecognizers>
-                            <Image Source="icon_close.png"  Aspect="AspectFill" />
-                        </ContentView>
-                    </Frame>
-                </Grid>
-                <StackLayout Margin="30,0,30,0" Spacing="15">
-                    <syncfusion:SfListView  HeightRequest="200" AutoFitMode="DynamicHeight" ItemsSource="{Binding Protocolos}"
+                            <ContentView>
+                                <ContentView.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnCloseButtonTapped" />
+                                </ContentView.GestureRecognizers>
+                                <Image Source="icon_close.png"  Aspect="AspectFill" />
+                            </ContentView>
+                        </Frame>
+                    </Grid>
+                    <StackLayout Margin="30,0,30,0" Spacing="15">
+                        <syncfusion:SfListView  HeightRequest="200" AutoFitMode="DynamicHeight" ItemsSource="{Binding Protocolos}"
                                        SelectionBackgroundColor="Transparent">
-                        <syncfusion:SfListView.ItemTemplate>
-                            <DataTemplate>
-                                <StackLayout Orientation="Vertical" VerticalOptions="Center">
-                                    <Label>
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="• " FontSize="Medium" TextColor="{StaticResource PantoneVerdeDark}"  />
-                                                <Span Text="{Binding Nombre}" FontSize="Medium" TextColor="{StaticResource PantoneVerdeDark}"  />
-                                                <Span Text="&#10;" TextColor="Transparent" FontSize="Small" />
-                                                <Span Text="{Binding PrimerByteTrama, StringFormat='Byte Decimal {0}'}" TextColor="Black" FontSize="Small" />
-                                                <Span Text="&#10;" TextColor="Transparent" FontSize="Small" />
-                                                <Span Text="{Binding ByteHexa, StringFormat='Byte Hexa {0}'}" TextColor="Black" FontSize="Small" />
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
-                                </StackLayout>
-                            </DataTemplate>
-                        </syncfusion:SfListView.ItemTemplate>
-                    </syncfusion:SfListView>
+                            <syncfusion:SfListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackLayout Orientation="Vertical" VerticalOptions="Center">
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="• " FontSize="Medium" TextColor="{StaticResource PantoneVerdeDark}"  />
+                                                    <Span Text="{Binding Nombre}" FontSize="Medium" TextColor="{StaticResource PantoneVerdeDark}"  />
+                                                    <Span Text="&#10;" TextColor="Transparent" FontSize="Small" />
+                                                    <Span Text="{Binding PrimerByteTrama, StringFormat='Byte Decimal {0}'}" TextColor="Black" FontSize="Small" />
+                                                    <Span Text="&#10;" TextColor="Transparent" FontSize="Small" />
+                                                    <Span Text="{Binding ByteHexa, StringFormat='Byte Hexa {0}'}" TextColor="Black" FontSize="Small" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </StackLayout>
+                                </DataTemplate>
+                            </syncfusion:SfListView.ItemTemplate>
+                        </syncfusion:SfListView>
+                    </StackLayout>
                 </StackLayout>
-            </StackLayout>
+            </ScrollView>
         </cards:SfCardView>
     </Grid>
 </popup:PopupPage>

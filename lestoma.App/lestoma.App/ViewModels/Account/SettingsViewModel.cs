@@ -17,7 +17,6 @@ namespace lestoma.App.ViewModels.Account
     [Preserve(AllMembers = true)]
     public class SettingsViewModel : BaseViewModel
     {
-        private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         private string _fullName;
         private bool _isOn;
@@ -26,7 +25,6 @@ namespace lestoma.App.ViewModels.Account
         public SettingsViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
-            _navigationService = navigationService;
             _apiService = apiService;
             EditProfileCommand = new Command(EditProfileClicked);
             ChangePasswordCommand = new Command(ChangePasswordClicked);

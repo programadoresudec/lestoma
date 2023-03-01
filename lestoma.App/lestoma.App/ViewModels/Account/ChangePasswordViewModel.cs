@@ -18,7 +18,6 @@ namespace lestoma.App.ViewModels.Account
     public class ChangePasswordViewModel : BaseViewModel
     {
         #region Fields
-        private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         private TokenDTO _userApp;
         private ValidatablePair<string> password;
@@ -31,7 +30,6 @@ namespace lestoma.App.ViewModels.Account
             : base(navigationService)
         {
             Title = "Cuenta";
-            _navigationService = navigationService;
             _apiService = apiService;
             this.InitializeProperties();
             this.AddValidationRules();

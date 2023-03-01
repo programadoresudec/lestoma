@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<popup:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup" 
+             xmlns:cards="clr-namespace:Syncfusion.XForms.Cards;assembly=Syncfusion.Cards.XForms" 
+             xmlns:core="clr-namespace:Syncfusion.XForms.Core;assembly=Syncfusion.Core.XForms" 
+                 xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" 
+                 xmlns:control="clr-namespace:lestoma.App.Controls" 
+                 xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" 
+                 prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="lestoma.App.Views.Upas.CreateProtocolPopupPage">
+    <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+        <cards:SfCardView BackgroundColor="White" CornerRadius="10" 
+                           Margin="{core:OnPlatformOrientationThickness  PhonePortrait='30,40',
+                                                                 PhoneLandscape='150,32',
+                                                                 TabletPortrait='200,50',
+                                                                 TabletLandscape='200,50',
+                                                                 Desktop='30'}">
+            <ScrollView>
+                <StackLayout VerticalOptions="End" WidthRequest="500"
+               Margin="0,0,0,20">
+                    <Grid Padding="30,25,25,0">
+                        <Label Text="Agregar Protocolo" FontSize="Large"  HorizontalTextAlignment="Start" 
+                           TextColor="{StaticResource PantoneVerdeDark}"></Label>
+                        <Frame WidthRequest="32" HeightRequest="32"
+                        Padding="0" CornerRadius="40" HorizontalOptions="End">
+                            <ContentView>
+                                <ContentView.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnCloseButtonTapped" />
+                                </ContentView.GestureRecognizers>
+                                <Image Source="icon_close.png"  Aspect="AspectFill" />
+                            </ContentView>
+                        </Frame>
+                    </Grid>
+                    <StackLayout Margin="30,0,30,0" Spacing="15">
+                        <inputLayout:SfTextInputLayout Hint="Nombre Protocolo"  HeightRequest="90"
+                                               FocusedColor="Black" ContainerBackgroundColor="Transparent">
+                            <control:BorderlessEntry x:Name="Byte" Text="{Binding Protocolo.Nombre}" 
+                                                     PlaceholderColor="#606a7b" Style="{StaticResource BorderlessEntryStyle}" 
+                                                   MaxLength="60" TextColor="#333942">
+                            </control:BorderlessEntry>
+                        </inputLayout:SfTextInputLayout>
+                        <inputLayout:SfTextInputLayout Hint=" Byte" FocusedColor="Black" HeightRequest="90"
+                                                   ContainerBackgroundColor="Transparent">
+                            <Picker TextColor="Black"
+                                Style="{StaticResource BorderlessEntryStyle}"
+                                SelectedItem="{Binding Protocolo.PrimerByteTrama}" ItemsSource="{Binding Bytes}">
+                            </Picker>
+                        </inputLayout:SfTextInputLayout>
+                        <inputLayout:SfTextInputLayout Hint="Sigla"  HeightRequest="90"
+                                               FocusedColor="Black" ContainerBackgroundColor="Transparent">
+                            <control:BorderlessEntry Text="{Binding Protocolo.Sigla}" 
+                                                     PlaceholderColor="#606a7b" Style="{StaticResource BorderlessEntryStyle}" 
+                                                   MaxLength="4" TextColor="#333942">
+                            </control:BorderlessEntry>
+                        </inputLayout:SfTextInputLayout>
+                    </StackLayout>
+                    <buttons:SfButton
+                        HorizontalOptions="FillAndExpand" Margin="20"
+                        Command="{Binding SaveCommand}"
+                        CornerRadius="12"
+                        Style="{StaticResource LestomaPopupGradientButtonStyle}"
+                        Text="Guardar" />
+                </StackLayout>
+            </ScrollView>
+        </cards:SfCardView>
+    </Grid>
+</popup:PopupPage>

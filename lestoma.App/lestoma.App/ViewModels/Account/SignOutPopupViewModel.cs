@@ -7,11 +7,10 @@ namespace lestoma.App.ViewModels.Account
 {
     public class SignOutPopupViewModel : BaseViewModel
     {
-        private readonly INavigationService _navigationService;
         public SignOutPopupViewModel(INavigationService navigationService)
             : base(navigationService)
         {
-            _navigationService = navigationService;
+
         }
         public Command SignOutCommand => new Command(SignOutCommandExecuted);
         public Command CancelarCommand => new Command(CancelarCommandExecuted);

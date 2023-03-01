@@ -13,7 +13,7 @@ namespace lestoma.App.ViewModels.UpasActividades
 {
     public class DetalleUpaActividadViewModel : BaseViewModel
     {
-        private IApiService _apiService;
+        private readonly IApiService _apiService;
         private ObservableCollection<DetalleUpaActividadDTO> _detalleUpaActividad;
         private Command<object> itemTap;
         public DetalleUpaActividadViewModel(INavigationService navigationService, IApiService apiService) :

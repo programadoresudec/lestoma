@@ -6,8 +6,8 @@
              xmlns:control="clr-namespace:lestoma.App.Controls" xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms"
              xmlns:behaviour="clr-namespace:lestoma.App.Behaviors" xmlns:converter="clr-namespace:lestoma.App.Converters"
              prism:ViewModelLocator.AutowireViewModel="True"  xmlns:ListCollection="clr-namespace:System.Collections.Generic;assembly=netstandard"
-             xmlns:upas="clr-namespace:lestoma.App.ViewModels.Upas" 
-             x:DataType="upas:CreateOrEditUpaViewModel"
+             xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
+             Title="{Binding Title}"
              x:Class="lestoma.App.Views.Upas.CreateOrEditUpaPage">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -16,135 +16,173 @@
             <converter:NameValidationConverter x:Key="FirstValidationErrorConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
-    <ContentPage.Content>
-        <Grid>
-            <StackLayout VerticalOptions="Start">
-                <StackLayout BackgroundColor="{StaticResource PantoneVerdeDark}" Orientation="Horizontal">
-                    <buttons:SfButton BackgroundColor="Transparent" HorizontalOptions="Start" Margin="10" VerticalOptions="CenterAndExpand"
-                                      ShowIcon="True" ImageSource="icon_leftarrow.png" Command="{Binding BackButtonCommand}"/>
-                    <Label Text="{Binding Title}" FontSize="20" TextColor="White" FontAttributes="Bold" VerticalOptions="CenterAndExpand"/>
-                </StackLayout>
-                <!--  nombre upa  -->
-                <StackLayout VerticalOptions="CenterAndExpand"  Margin="15" Padding="10" Spacing="15">
-                    <border:SfBorder BackgroundColor="{DynamicResource Gray-White}"
+    <StackLayout>
+        <ScrollView>
+            <!--  nombre upa  -->
+            <StackLayout VerticalOptions="CenterAndExpand"  Margin="15" Padding="10" Spacing="15">
+                <border:SfBorder BackgroundColor="{DynamicResource Gray-White}"
                          BorderColor="{Binding Source={x:Reference NombreEntry}, Path=IsFocused, Converter={StaticResource ColorConverter}, ConverterParameter=0}"
                          CornerRadius="4" Style="{StaticResource LoginFormBorderlessEntryBorderStyle}">
-                        <Grid ColumnDefinitions="*, Auto">
-                            <Label 
-                                x:Name="NombreValidationLabel"
-                                Margin="20,0,0,60" Grid.Row="0"
-                                IsVisible="{Binding Model.Nombre.IsValid, Converter={StaticResource InverseBoolConverter}}"
-                                Style="{StaticResource SimpleLabelStyle}"
-                                Text="{Binding Model.Nombre.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
-                                TextColor="{DynamicResource Red}"
-                                VerticalOptions="FillAndExpand" />
-                            <inputLayout:SfTextInputLayout Hint="Nombre UPA"  Grid.Row="0" FocusedColor="Black" ContainerBackgroundColor="Transparent"
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Label 
+                                    x:Name="NombreValidationLabel"
+                                    Margin="20,0,0,60" Grid.Row="0"
+                                    IsVisible="{Binding Model.Nombre.IsValid, Converter={StaticResource InverseBoolConverter}}"
+                                    Style="{StaticResource SimpleLabelStyle}"
+                                    Text="{Binding Model.Nombre.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+                                    TextColor="{DynamicResource Red}"
+                                    VerticalOptions="FillAndExpand" />
+                        <inputLayout:SfTextInputLayout Hint="Nombre UPA"  Grid.Row="0" FocusedColor="Black" ContainerBackgroundColor="Transparent"
                                                    Margin="10,0,0,0">
-                                <control:BorderlessEntry
-                            x:Name="NombreEntry"
-                            Margin="15,0" 
-                            MaxLength="60" 
-                            PlaceholderColor="#606a7b"
-                            Style="{StaticResource BorderlessEntryStyle}"
-                            Text="{Binding Upa.Nombre}">
-                                    <Entry.Behaviors>
-                                        <behaviour:EntryLineValidationBehaviour IsValid="{Binding Model.Nombre.IsValid}" />
-                                    </Entry.Behaviors>
-                                </control:BorderlessEntry>
-                            </inputLayout:SfTextInputLayout>
-                            <Label Grid.Column="1"
+                            <control:BorderlessEntry
+                                        x:Name="NombreEntry"
+                                        Margin="15,0" 
+                                        MaxLength="60" 
+                                        PlaceholderColor="#606a7b"
+                                        Style="{StaticResource BorderlessEntryStyle}"
+                                        Text="{Binding Upa.Nombre}">
+                                <Entry.Behaviors>
+                                    <behaviour:EntryLineValidationBehaviour IsValid="{Binding Model.Nombre.IsValid}" />
+                                </Entry.Behaviors>
+                            </control:BorderlessEntry>
+                        </inputLayout:SfTextInputLayout>
+                        <Label Grid.Column="1"
                        IsVisible="{Binding Path=IsVisible, Source={x:Reference NombreValidationLabel}}"
                        Style="{StaticResource ErrorIconLabelStyle}"
                        Text="{StaticResource Error}" />
-                        </Grid>
-                    </border:SfBorder>
-                    <!--  nombre upa  -->
-                    <!--  descripcion upa -->
-                    <border:SfBorder BackgroundColor="{DynamicResource Gray-White}"
+                    </Grid>
+                </border:SfBorder>
+                <!--  nombre upa  -->
+                <!--  descripcion upa -->
+                <border:SfBorder BackgroundColor="{DynamicResource Gray-White}"
                         BorderColor="{Binding Source={x:Reference DescripcionEntry}, Path=IsFocused, Converter={StaticResource ColorConverter}, ConverterParameter=0}"
                         CornerRadius="4" Style="{StaticResource LoginFormBorderlessEntryBorderStyle}">
-                        <Grid ColumnDefinitions="*, Auto">
-                            <Label Grid.Row="0"
-                            x:Name="descripcionValidationLabel"
-                            Margin="20,0,0,60"
-                            IsVisible="{Binding Model.Descripcion.IsValid, Converter={StaticResource InverseBoolConverter}}"
-                            Style="{StaticResource SimpleLabelStyle}"
-                            Text="{Binding Model.Descripcion.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
-                            TextColor="{DynamicResource Red}"
-                            VerticalOptions="FillAndExpand" />
-                            <inputLayout:SfTextInputLayout Hint="Descripción" Grid.Row="0" FocusedColor="Black" ContainerBackgroundColor="Transparent"
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Label Grid.Row="0"
+                                       x:Name="descripcionValidationLabel"
+                                       Margin="20,0,0,60"
+                                       IsVisible="{Binding Model.Descripcion.IsValid, Converter={StaticResource InverseBoolConverter}}"
+                                       Style="{StaticResource SimpleLabelStyle}"
+                                       Text="{Binding Model.Descripcion.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+                                       TextColor="{DynamicResource Red}"
+                                       VerticalOptions="FillAndExpand" />
+                        <inputLayout:SfTextInputLayout Hint="Descripción" Grid.Row="0" FocusedColor="Black" ContainerBackgroundColor="Transparent"
                                                    Margin="10,10,0,0">
-                                <control:BorderlessEditor
+                            <control:BorderlessEditor
                                          x:Name="DescripcionEntry"
                                          Margin="15,0" 
                                          MaxLength="500" 
                                          IsExpandable="True"
                                          Style="{StaticResource BorderlessEditorStyle}"
                                          Text="{Binding Upa.Descripcion}">
-                                    <Editor.Behaviors>
-                                        <behaviour:EditorLineValidationBehaviour IsValid="{Binding Model.Descripcion.IsValid}" />
-                                    </Editor.Behaviors>
-                                </control:BorderlessEditor>
-                            </inputLayout:SfTextInputLayout>
-                            <Label Grid.Column="1" Margin="15,10,15,0"
+                                <Editor.Behaviors>
+                                    <behaviour:EditorLineValidationBehaviour IsValid="{Binding Model.Descripcion.IsValid}" />
+                                </Editor.Behaviors>
+                            </control:BorderlessEditor>
+                        </inputLayout:SfTextInputLayout>
+                        <Label Grid.Column="1" Margin="15,10,15,0"
                        IsVisible="{Binding Path=IsVisible, Source={x:Reference descripcionValidationLabel}}"
                        Style="{StaticResource ErrorIconLabelStyle}"
                        Text="{StaticResource Error}" />
-                        </Grid>
-                    </border:SfBorder>
-                    <!--  descripcion upa -->
+                    </Grid>
+                </border:SfBorder>
+                <!--  descripcion upa -->
 
-                    <!--  cantidad actividades -->
-                    <Label 
-                         x:Name="cantidadValidationLabel"
-                         Margin="15,-3,0,0"
-                         IsVisible="{Binding Model.CantidadActividades.IsValid, Converter={StaticResource InverseBoolConverter}}"
-                         Style="{StaticResource SimpleLabelStyle}"
-                         Text="{Binding Model.CantidadActividades.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
-                         TextColor="{DynamicResource Red}"
-                         VerticalOptions="FillAndExpand" />
-                    <border:SfBorder BackgroundColor="{DynamicResource Gray-White}"
+                <!--  cantidad actividades -->
+                <Label 
+                            x:Name="cantidadValidationLabel"
+                            Margin="15,-3,0,0"
+                            IsVisible="{Binding Model.CantidadActividades.IsValid, Converter={StaticResource InverseBoolConverter}}"
+                            Style="{StaticResource SimpleLabelStyle}"
+                            Text="{Binding Model.CantidadActividades.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+                            TextColor="{DynamicResource Red}"
+                            VerticalOptions="FillAndExpand" />
+                <border:SfBorder BackgroundColor="{DynamicResource Gray-White}"
                                      BorderColor="{Binding Source={x:Reference cantidadEntry}, Path=IsFocused, Converter={StaticResource ColorConverter}, ConverterParameter=0}"
                                      CornerRadius="4" HeightRequest="80" Style="{StaticResource LoginFormBorderlessEntryBorderStyle}">
-                        <Grid ColumnDefinitions="*, Auto">
-                            <inputLayout:SfTextInputLayout Hint="cantidad de actividades" HeightRequest="80" ContainerBackgroundColor="Transparent" 
+                    <Grid ColumnDefinitions="*, Auto">
+                        <inputLayout:SfTextInputLayout Hint="cantidad de actividades" HeightRequest="80" ContainerBackgroundColor="Transparent" 
                                                    Margin="10,0,0,0">
-                                <Picker x:Name="cantidadEntry" Margin="15,0"  Title="--Seleccione--" FontFamily="Montserrat-Regular" 
-                                        TitleColor="{StaticResource PantoneVerdeSecond}"
-                                SelectedItem="{Binding Upa.CantidadActividades}">
-                                    <Picker.Behaviors>
-                                        <behaviour:PickerLineValidationBehaviour IsValid="{Binding Model.CantidadActividades.IsValid}" />
-                                    </Picker.Behaviors>
-                                    <Picker.ItemsSource>
-                                        <ListCollection:List x:TypeArguments="x:Int16">
-                                            <x:Int16>1</x:Int16>
-                                            <x:Int16>2</x:Int16>
-                                            <x:Int16>3</x:Int16>
-                                            <x:Int16>4</x:Int16>
-                                            <x:Int16>5</x:Int16>
-                                            <x:Int16>6</x:Int16>
-                                            <x:Int16>7</x:Int16>
-                                            <x:Int16>8</x:Int16>
-                                        </ListCollection:List>
-                                    </Picker.ItemsSource>
-                                </Picker>
-                            </inputLayout:SfTextInputLayout>
-                            <Label Grid.Column="1"
-                       IsVisible="{Binding Path=IsVisible, Source={x:Reference cantidadValidationLabel}}"
-                       Style="{StaticResource ErrorIconLabelStyle}"
-                       Text="{StaticResource Error}" />
-                        </Grid>
-                    </border:SfBorder>
-                    <!--  cantidad actividades -->
-                    <buttons:SfButton
+                            <Picker x:Name="cantidadEntry" Margin="15,0"  Title="--Seleccione--" FontFamily="Montserrat-Regular" 
+                                        TitleColor="{StaticResource PantoneVerdeSecond}" SelectedItem="{Binding Upa.CantidadActividades}">
+                                <Picker.Behaviors>
+                                    <behaviour:PickerLineValidationBehaviour IsValid="{Binding Model.CantidadActividades.IsValid}" />
+                                </Picker.Behaviors>
+                                <Picker.ItemsSource>
+                                    <ListCollection:List x:TypeArguments="x:Int16">
+                                        <x:Int16>1</x:Int16>
+                                        <x:Int16>2</x:Int16>
+                                        <x:Int16>3</x:Int16>
+                                        <x:Int16>4</x:Int16>
+                                        <x:Int16>5</x:Int16>
+                                        <x:Int16>6</x:Int16>
+                                        <x:Int16>7</x:Int16>
+                                        <x:Int16>8</x:Int16>
+                                    </ListCollection:List>
+                                </Picker.ItemsSource>
+                            </Picker>
+                        </inputLayout:SfTextInputLayout>
+                        <Label Grid.Column="1"
+                                       IsVisible="{Binding Path=IsVisible, Source={x:Reference cantidadValidationLabel}}"
+                                       Style="{StaticResource ErrorIconLabelStyle}"
+                                       Text="{StaticResource Error}" />
+                    </Grid>
+                </border:SfBorder>
+                <!--  cantidad actividades -->
+                <buttons:SfButton
+                            HorizontalOptions="StartAndExpand"
+                            Command="{Binding AddProtocolCommand}"
+                            CornerRadius="4" Margin="15,20,0,15" ImageSource="icon_create.png" ShowIcon="True"
+                            Style="{StaticResource LestomaButtonStyle}"
+                            Text="Agregar Protocolo" />
+                <syncfusion:SfListView x:Name="LV_Protocolos" IsVisible="{Binding IsVisibleProtocols}" ItemsSource="{Binding Protocolos}" AutoFitMode="DynamicHeight"
+                                       SelectionBackgroundColor="Transparent">
+                    <syncfusion:SfListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand">
+                                <StackLayout>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Nombre: " TextColor="Black" FontFamily="Montserrat-SemiBold"/>
+                                                <Span Text="{Binding Nombre}"  FontFamily="Montserrat-Regular" TextColor="{StaticResource Gray-900}" FontSize="Small" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Byte: " TextColor="Black" FontFamily="Montserrat-SemiBold"/>
+                                                <Span Text="{Binding PrimerByteTrama}"  FontFamily="Montserrat-Regular" TextColor="{StaticResource Gray-900}" FontSize="Small" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Sigla: " TextColor="Black" FontFamily="Montserrat-SemiBold"/>
+                                                <Span Text="{Binding Sigla}"  FontFamily="Montserrat-Regular" TextColor="{StaticResource Gray-900}" FontSize="Small" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </StackLayout>
+                                <buttons:SfButton Margin="0,5,0,10" CornerRadius="5" HorizontalOptions="EndAndExpand" 
+                                                      BackgroundColor="{StaticResource Transparent}" 
+                                            Command="{Binding BindingContext.DeleteCommand, Source={x:Reference LV_Protocolos}}" 
+                                             CommandParameter="{Binding .}" ImageSource="icon_delete.png" ImageAlignment="End" ShowIcon="True">
+                                </buttons:SfButton>
+                            </StackLayout>
+                        </DataTemplate>
+                    </syncfusion:SfListView.ItemTemplate>
+                </syncfusion:SfListView>
+            </StackLayout>
+        </ScrollView>
+        <buttons:SfButton
                         HorizontalOptions="FillAndExpand"
                         Command="{Binding CreateOrEditCommand}"
                         CornerRadius="4" Margin="15"
                         Style="{StaticResource LestomaGradientButtonStyle}"
                         Text="Guardar" />
-                </StackLayout>
-            </StackLayout>
-        </Grid>
-    </ContentPage.Content>
+    </StackLayout>
 </ContentPage>
     

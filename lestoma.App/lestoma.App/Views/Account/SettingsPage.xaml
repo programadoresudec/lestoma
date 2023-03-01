@@ -34,8 +34,9 @@
                 <Label
                         Grid.Column="0"
                         Margin="16,0,0,0"
+                        FontFamily="Fontello"
                         Style="{StaticResource IconLabelStyle}"
-                        Text="{StaticResource Account}" />
+                        Text="{StaticResource IconUser}" />
                 <!--  Edit profile label  -->
                 <Label
                         Grid.Column="1"
@@ -67,8 +68,9 @@
                 <Label
                         Grid.Column="0"
                         Margin="16,0,0,0"
+                        FontFamily="Fontello"
                         Style="{StaticResource IconLabelStyle}"
-                        Text="{StaticResource ChangePassword}" />
+                        Text="{StaticResource IconLock}" />
                 <!--  Change password label  -->
                 <Label
                         Grid.Column="1"
@@ -111,9 +113,9 @@
                 <Label
                         Grid.Column="0"
                         Margin="16,0,0,0"
-                        FontFamily="FontsAwesome"
+                        FontFamily="Fontello"
                         Style="{StaticResource IconLabelStyle}"
-                        Text="{StaticResource Syncronization}" />
+                        Text="{StaticResource IconSync}" />
                 <!--  Edit profile label  -->
                 <Label
                         Grid.Column="1"
@@ -142,11 +144,11 @@
                     Tapped="False">
                 <Label
                         Grid.Column="0"
-                        FontFamily="FontsAwesome"
+                        FontFamily="Fontello"
                         Margin="16,0,0,0"
                         Style="{StaticResource IconLabelStyle}"
-                        Text="{StaticResource Syncronization}" />
-              
+                        Text="{StaticResource IconSync}" />
+
                 <Label
                         Grid.Column="1"
                         Margin="16,12"
@@ -267,8 +269,9 @@
                 <Label
                         Grid.Column="0"
                         Margin="16,0,0,0"
+                        FontFamily="Fontello"
                         Style="{StaticResource IconLabelStyle}"
-                        Text="{StaticResource Help}" />
+                        Text="{StaticResource IconHelpCircled}" />
                 <!--  Help text label  -->
                 <Label
                         Grid.Column="1"
@@ -299,8 +302,9 @@
                 <Label
                         Grid.Column="0"
                         Margin="16,0,0,0"
+                        FontFamily="Fontello"
                         Style="{StaticResource IconLabelStyle}"
-                        Text="{StaticResource Document}" />
+                        Text="{StaticResource IconDocText}" />
                 <!--  Help text label  -->
                 <Label
                         Grid.Column="1"
@@ -338,8 +342,9 @@
                 <Label
                         Grid.Column="0"
                         Margin="16,0,0,0"
+                        FontFamily="Fontello"
                         Style="{StaticResource IconLabelStyle}"
-                        Text="{StaticResource Logout}" />
+                        Text="{StaticResource IconOff}" />
                 <!--  Help text label  -->
                 <Label
                         Grid.Column="1"

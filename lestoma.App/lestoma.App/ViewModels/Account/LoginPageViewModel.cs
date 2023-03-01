@@ -23,7 +23,6 @@ namespace lestoma.App.ViewModels.Account
     public class LoginPageViewModel : LoginViewModel
     {
         #region Fields
-        private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         private ValidatableObject<string> password;
 
@@ -36,7 +35,6 @@ namespace lestoma.App.ViewModels.Account
         {
             Title = "Iniciar Sesión";
             IsBusy = false;
-            _navigationService = navigationService;
             _apiService = apiService;
             InitializeProperties();
             AddValidationRules();

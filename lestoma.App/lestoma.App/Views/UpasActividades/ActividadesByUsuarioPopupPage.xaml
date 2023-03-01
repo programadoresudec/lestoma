@@ -28,41 +28,43 @@
                                                                  TabletPortrait='200,50',
                                                                  TabletLandscape='200,50',
                                                                  Desktop='30'}">
-            <StackLayout VerticalOptions="End" WidthRequest="500"
+            <ScrollView>
+                <StackLayout VerticalOptions="End" WidthRequest="500"
                Margin="0,0,0,20">
-                <Grid Padding="30,25,25,0">
-                    <Label Text="Actividades" FontSize="Large"  HorizontalTextAlignment="Start" 
+                    <Grid Padding="30,25,25,0">
+                        <Label Text="Actividades" FontSize="Large"  HorizontalTextAlignment="Start" 
                            TextColor="{StaticResource PantoneVerdeDark}"></Label>
-                    <Frame WidthRequest="32" HeightRequest="32"
+                        <Frame WidthRequest="32" HeightRequest="32"
                         Padding="0" CornerRadius="40" HorizontalOptions="End">
-                        <ContentView>
-                            <ContentView.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnCloseButtonTapped" />
-                            </ContentView.GestureRecognizers>
-                            <Image Source="icon_close.png"  Aspect="AspectFill" />
-                        </ContentView>
-                    </Frame>
-                </Grid>
-                <StackLayout Margin="30,0,30,0" Spacing="15">
-                    <syncfusion:SfListView x:Name="actividades" HeightRequest="200" AutoFitMode="DynamicHeight" ItemsSource="{Binding Actividades}"
+                            <ContentView>
+                                <ContentView.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnCloseButtonTapped" />
+                                </ContentView.GestureRecognizers>
+                                <Image Source="icon_close.png"  Aspect="AspectFill" />
+                            </ContentView>
+                        </Frame>
+                    </Grid>
+                    <StackLayout Margin="30,0,30,0" Spacing="15">
+                        <syncfusion:SfListView x:Name="actividades" HeightRequest="200" AutoFitMode="DynamicHeight" ItemsSource="{Binding Actividades}"
                                        SelectionBackgroundColor="Transparent">
-                        <syncfusion:SfListView.ItemTemplate>
-                            <DataTemplate>
-                                <StackLayout Orientation="Vertical" VerticalOptions="Center">
-                                    <Label>
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="• " FontSize="Large" TextColor="{StaticResource PantoneVerdeSecond}"  />
-                                                <Span Text="{Binding Nombre}" TextColor="Black" FontSize="Small" />
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
-                                </StackLayout>
-                            </DataTemplate>
-                        </syncfusion:SfListView.ItemTemplate>
-                    </syncfusion:SfListView>
+                            <syncfusion:SfListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackLayout Orientation="Vertical" VerticalOptions="Center">
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="• " FontSize="Large" TextColor="{StaticResource PantoneVerdeSecond}"  />
+                                                    <Span Text="{Binding Nombre}" TextColor="Black" FontSize="Small" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </StackLayout>
+                                </DataTemplate>
+                            </syncfusion:SfListView.ItemTemplate>
+                        </syncfusion:SfListView>
+                    </StackLayout>
                 </StackLayout>
-            </StackLayout>
+            </ScrollView>
         </cards:SfCardView>
     </Grid>
 </popup:PopupPage>

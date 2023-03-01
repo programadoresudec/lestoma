@@ -45,7 +45,7 @@ using Xamarin.Forms;
 [assembly: ExportFont("Montserrat-Regular.ttf", Alias = "Montserrat-Regular")]
 [assembly: ExportFont("Montserrat-SemiBold.ttf", Alias = "Montserrat-SemiBold")]
 [assembly: ExportFont("UIFontIcons.ttf", Alias = "FontIcons")]
-[assembly: ExportFont("FontAwesome.ttf", Alias = "FontsAwesome")]
+[assembly: ExportFont("fontello.ttf", Alias = "Fontello")]
 namespace lestoma.App
 {
     public partial class App
@@ -156,9 +156,8 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<FilterDatePopupPage, FilterDatePopupViewModel>();
             containerRegistry.RegisterForNavigation<ReporteComponentPage, ReportComponentViewModel>();
             containerRegistry.RegisterForNavigation<InfoProtocolPopupPage, InfoProtocolPopupViewModel>();
+            containerRegistry.RegisterForNavigation<CreateProtocolPopupPage, CreateProtocolPopupViewModel>();
             #endregion
-
-
         }
     }
 }

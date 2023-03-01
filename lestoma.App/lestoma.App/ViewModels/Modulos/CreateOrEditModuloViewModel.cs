@@ -1,12 +1,10 @@
 ﻿using Acr.UserDialogs;
 using lestoma.App.Models;
-using lestoma.App.Views;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
 using Xamarin.Forms;
 
@@ -42,7 +40,7 @@ namespace lestoma.App.ViewModels.Modulos
         }
 
         public Command CreateOrEditCommand { get; set; }
-       
+
         public ModuloRequest Modulo
         {
             get => _modulo;

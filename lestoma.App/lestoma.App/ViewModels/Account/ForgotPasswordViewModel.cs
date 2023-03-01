@@ -1,12 +1,9 @@
-﻿using lestoma.App.Views;
-using lestoma.App.Views.Account;
+﻿using lestoma.App.Views.Account;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
-using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -20,7 +17,6 @@ namespace lestoma.App.ViewModels.Account
     {
 
         #region Fields
-        private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         #endregion
 
@@ -28,7 +24,6 @@ namespace lestoma.App.ViewModels.Account
         public ForgotPasswordViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
-            _navigationService = navigationService;
             _apiService = apiService;
             this.SignUpCommand = new Command(this.SignUpClicked);
             this.SendCommand = new Command(this.SendClicked);

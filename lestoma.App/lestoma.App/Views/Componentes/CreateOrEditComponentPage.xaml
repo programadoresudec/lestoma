@@ -51,7 +51,7 @@
                                                    Margin="10">
                         <Picker TextColor="Black"
                                 Style="{StaticResource BorderlessEntryStyle}"
-                                SelectedItem="{Binding DireccionRegistro}" ItemsSource="{Binding DireccionRegistros}">
+                                SelectedItem="{Binding DireccionRegistro}" ItemsSource="{Binding Bytes}">
                         </Picker>
                     </inputLayout:SfTextInputLayout>
                 </border:SfBorder>

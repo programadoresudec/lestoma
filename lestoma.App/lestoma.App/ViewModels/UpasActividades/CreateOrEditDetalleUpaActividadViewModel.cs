@@ -16,7 +16,7 @@ namespace lestoma.App.ViewModels.UpasActividades
 {
     public class CreateOrEditDetalleUpaActividadViewModel : BaseViewModel
     {
-        private IApiService _apiService;
+        private readonly IApiService _apiService;
         private ObservableCollection<UserDTO> _users;
         private UserDTO _user;
         private ObservableCollection<NameDTO> _upas;

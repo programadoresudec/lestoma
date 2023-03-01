@@ -25,7 +25,7 @@ namespace lestoma.App.ViewModels.Componentes
         public ComponentViewModel(INavigationService navigationService, IApiService apiService) :
             base(navigationService)
         {
-            _isSuperAdmin = TokenUser.User.RolId == (int)TipoRol.SuperAdministrador ? true : false;
+            _isSuperAdmin = TokenUser.User.RolId == (int)TipoRol.SuperAdministrador;
             _apiService = apiService;
             EditCommand = new Command<object>(ComponentSelected, CanNavigate);
             VerEstadoCommand = new Command<object>(OnSeeStatusSelected, CanNavigate);
@@ -95,7 +95,7 @@ namespace lestoma.App.ViewModels.Componentes
         private async void ComponentSelected(object objeto)
         {
             var list = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
-            var component = list.ItemData as ComponenteDTO;
+            ComponenteDTO component = list.ItemData as ComponenteDTO;
 
             if (component == null)
                 return;

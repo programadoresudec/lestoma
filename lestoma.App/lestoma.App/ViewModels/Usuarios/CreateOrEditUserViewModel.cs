@@ -301,7 +301,7 @@ namespace lestoma.App.ViewModels.Usuarios
             {
                 UserDialogs.Instance.ShowLoading("Guardando...");
                 CargarDatos();
-                var isedit = Usuario != null ? true : false;
+                var isedit = Usuario != null;
                 if (this.AreFieldsValid(isedit))
                 {
 

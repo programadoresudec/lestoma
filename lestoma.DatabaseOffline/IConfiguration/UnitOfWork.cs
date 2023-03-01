@@ -12,26 +12,12 @@ namespace lestoma.DatabaseOffline.IConfiguration
         public UnitOfWork()
         {
             _contextOffline = new DatabaseOffline(DBPath);
-            ActividadRepository actividadContext = new ActividadRepository(_contextOffline);
             ComponenteRepository componenteContext = new ComponenteRepository(_contextOffline);
-            UpaRepository upaContext = new UpaRepository(_contextOffline);
-            ModuloRepository moduloContext = new ModuloRepository(_contextOffline);
             LaboratorioRepository laboratorioContext = new LaboratorioRepository(_contextOffline);
-
-            Actividades = actividadContext;
-            Modulos = moduloContext;
-            Upas = upaContext;
             Laboratorio = laboratorioContext;
             Componentes = componenteContext;
         }
-
         public string DBPath { get; set; }
-
-        public IActividadRepository Actividades { get; set; }
-
-        public IModuloRepository Modulos { get; set; }
-
-        public IUpaRepository Upas { get; set; }
 
         public ILaboratorioRepository Laboratorio { get; set; }
 
@@ -42,7 +28,6 @@ namespace lestoma.DatabaseOffline.IConfiguration
             await _contextOffline.SaveChangesAsync();
             return true;
         }
-
 
         public void Dispose()
         {

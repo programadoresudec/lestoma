@@ -23,7 +23,6 @@ namespace lestoma.App.ViewModels.Account
         private ValidatableObject<string> name;
         private ValidatableObject<string> lastName;
         private ValidatablePair<string> password;
-        private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         #endregion
 
@@ -36,7 +35,6 @@ namespace lestoma.App.ViewModels.Account
             : base(navigationService)
         {
             Title = "Registrarse";
-            _navigationService = navigationService;
             _apiService = apiService;
             this.InitializeProperties();
             this.AddValidationRules();

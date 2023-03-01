@@ -27,7 +27,6 @@ namespace lestoma.App.ViewModels.Account
         private string _codeFour;
         private string _codeFive;
         private string _codeSix;
-        private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
         #endregion
 
@@ -39,7 +38,6 @@ namespace lestoma.App.ViewModels.Account
         public ResetPasswordViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
-            _navigationService = navigationService;
             _apiService = apiService;
             this.InitializeProperties();
             this.AddValidationRules();

@@ -11,48 +11,56 @@
               Title="Acerca de Lestoma">
     <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
         <cards:SfCardView BackgroundColor="White" CornerRadius="10" 
-                          HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"
                            Margin="{core:OnPlatformOrientationThickness  PhonePortrait='30,40',
                                                                  PhoneLandscape='150,32',
                                                                  TabletPortrait='200,50',
                                                                  TabletLandscape='200,50',
                                                                  Desktop='30'}">
-            <ScrollView>
-                <StackLayout VerticalOptions="End" WidthRequest="500" Margin="0,0,0,20">
-                    <Grid Padding="30,25,25,0">
-                        <Label Text="--Seleccione--" FontSize="Large"
-                           HorizontalTextAlignment="Start" TextColor="{StaticResource PantoneVerdeDark}"></Label>
-                        <Frame WidthRequest="32" HeightRequest="32"
+            <StackLayout VerticalOptions="End" WidthRequest="500"
+               Margin="0,0,0,20">
+                <Grid Padding="30,25,25,0">
+                    <Label Text="Agregar Protocolo" FontSize="Large"  HorizontalTextAlignment="Start" 
+                           TextColor="{StaticResource PantoneVerdeDark}"></Label>
+                    <Frame WidthRequest="32" HeightRequest="32"
                         Padding="0" CornerRadius="40" HorizontalOptions="End">
-                            <ContentView>
-                                <ContentView.GestureRecognizers>
-                                </ContentView.GestureRecognizers>
-                                <Image Source="icon_close.png"  Aspect="AspectFill" />
-                            </ContentView>
-                        </Frame>
-                    </Grid>
-                    <StackLayout Spacing="10" Margin="20,20,30,10">
-                        <Label Text="Hora en la que se va generar el reporte diario" FontFamily="Montserrat-SemiBold" Margin="10,0,0,0" VerticalOptions="StartAndExpand" 
-                       HorizontalOptions="StartAndExpand" FontSize="16"/>
-                        <border:SfBorder Style="{StaticResource ProfileBorderStyle}" Margin="20" Background="{StaticResource PantoneGrisLight}">
-                            <StackLayout Orientation="Horizontal" Background="transparent" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
-                                <Label TextColor="{StaticResource Gray-600}" HorizontalOptions="Start"
-                                FontFamily="FontsAwesome" FontSize="32" Style="{StaticResource IconLabelStyle}" Text="{StaticResource Clock}"/>
-                                <inputLayout:SfTextInputLayout Hint="Hora" HorizontalOptions="StartAndExpand" FocusedColor="Black" 
-                                                               ContainerBackgroundColor="Transparent" HeightRequest="60" >
-                                    <TimePicker HorizontalOptions="StartAndExpand" Time="{Binding SaveTimeInitial, Mode=TwoWay}"/>
-                                </inputLayout:SfTextInputLayout>
-                            </StackLayout>
-                        </border:SfBorder>
-                        <buttons:SfButton Margin="0,20,0,0"
-                        HorizontalOptions="FillAndExpand" 
-                        Command="{Binding SaveCommand}"
-                        CornerRadius="12" 
+                        <ContentView>
+                            <ContentView.GestureRecognizers>
+                         
+                            </ContentView.GestureRecognizers>
+                            <Image Source="icon_close.png"  Aspect="AspectFill" />
+                        </ContentView>
+                    </Frame>
+                </Grid>
+                <StackLayout Margin="30,0,30,0" Spacing="15">
+                    <inputLayout:SfTextInputLayout Hint="Nombre Protocolo"  HeightRequest="90"
+                                               FocusedColor="Black" ContainerBackgroundColor="Transparent">
+                        <control:BorderlessEntry x:Name="Byte" Text="{Binding Protocolo.Nombre}" 
+                                                     PlaceholderColor="#606a7b" Style="{StaticResource BorderlessEntryStyle}" 
+                                                   MaxLength="4" TextColor="#333942">
+                        </control:BorderlessEntry>
+                    </inputLayout:SfTextInputLayout>
+                    <inputLayout:SfTextInputLayout Hint=" Byte" FocusedColor="Black" HeightRequest="90"
+                                                   ContainerBackgroundColor="Transparent">
+                        <Picker TextColor="Black"
+                                Style="{StaticResource BorderlessEntryStyle}"
+                                SelectedItem="{Binding Protocolo.PrimerByteTrama}" ItemsSource="{Binding Bytes}">
+                        </Picker>
+                    </inputLayout:SfTextInputLayout>
+                    <inputLayout:SfTextInputLayout Hint="Sigla"  HeightRequest="90"
+                                               FocusedColor="Black" ContainerBackgroundColor="Transparent">
+                        <control:BorderlessEntry Text="{Binding Protocolo.Sigla}" 
+                                                     PlaceholderColor="#606a7b" Style="{StaticResource BorderlessEntryStyle}" 
+                                                   MaxLength="4" TextColor="#333942">
+                        </control:BorderlessEntry>
+                    </inputLayout:SfTextInputLayout>
+                </StackLayout>
+                <buttons:SfButton
+                        HorizontalOptions="FillAndExpand" Margin="20"
+                        Command="{Binding SaveEstadoCommand}"
+                        CornerRadius="12" IsVisible="{Binding IsEdit}"
                         Style="{StaticResource LestomaPopupGradientButtonStyle}"
                         Text="Guardar" />
-                    </StackLayout>
-                </StackLayout>
-            </ScrollView>
+            </StackLayout>
         </cards:SfCardView>
     </Grid>
 </ContentPage>
