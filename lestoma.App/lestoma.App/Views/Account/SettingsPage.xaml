@@ -251,10 +251,10 @@
                     Tapped="False">
                 <Label
                         Grid.Column="0"
-                        FontFamily="FontsAwesome"
+                        FontFamily="Fontello"
                         Margin="16,0,0,0"
                         Style="{StaticResource IconLabelStyle}"
-                        Text="{StaticResource Bluetooth}" />
+                        Text="{StaticResource iconBluetooth}" />
 
                 <Label
                         Grid.Column="1"
