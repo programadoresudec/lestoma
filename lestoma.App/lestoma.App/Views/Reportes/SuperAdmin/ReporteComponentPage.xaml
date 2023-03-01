@@ -2,52 +2,114 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              prism:ViewModelLocator.AutowireViewModel="True" Title="{Binding Title}"
              xmlns:prism="http://prismlibrary.com" 
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms"
              xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" 
              xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:autocomplete="clr-namespace:Syncfusion.SfAutoComplete.XForms;assembly=Syncfusion.SfAutoComplete.XForms" xmlns:control="clr-namespace:lestoma.App.Controls"
              x:Class="lestoma.App.Views.Reportes.SuperAdmin.ReporteComponentPage">
     <ContentPage.Content>
-        <StackLayout Padding="10" Spacing="20">
-            <StackLayout HorizontalOptions="EndAndExpand" Orientation="Horizontal">
-                <Label Margin="10,2,0,0" HorizontalOptions="Start"
+        <StackLayout  Margin="15,40" Spacing="20" VerticalOptions="StartAndExpand" HorizontalOptions="FillAndExpand">
+            <ScrollView>
+                <StackLayout>
+                    <StackLayout HorizontalOptions="EndAndExpand" Orientation="Horizontal">
+                        <Label Margin="0,2,0,0" HorizontalOptions="Start"
                         Style="{StaticResource IconLabelStyle}"
                         Text="{StaticResource Filter}" />
-                <Button
-                    HorizontalOptions="EndAndExpand"
-                    FontSize="16" 
-                    FontFamily="Montserrat-SemiBold"
-                    BackgroundColor="Transparent"              
-                    TextColor="{StaticResource PantoneVerdeDark}"
-                    Text="Filtro Rango Fechas"
-                    Command="{Binding NavigatePopupFilterCommand}"/>
-            </StackLayout>
-            <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}" IsVisible="{Binding IsSuperAdmin}">
-                <inputLayout:SfTextInputLayout Hint="Upas" HeightRequest="80" IsVisible="{Binding IsSuperAdmin}"
-                                                   ContainerBackgroundColor="Transparent" VerticalOptions="Start"
+                        <Button
+                             HorizontalOptions="EndAndExpand"
+                             FontSize="16" 
+                             FontFamily="Montserrat-SemiBold"
+                             BackgroundColor="Transparent"              
+                             TextColor="{StaticResource PantoneVerdeDark}"
+                             Text="Filtro Fecha"
+                             Command="{Binding NavigatePopupFilterCommand}"/>
+                    </StackLayout>
+                    <border:SfBorder HeightRequest="80" Style="{StaticResource ThemeBorderStyle}">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Margin="5,15,0,0" TextColor="{StaticResource Gray-Black}" FontSize="Title" HorizontalOptions="Start"
+                                Style="{StaticResource IconLabelStyle}"
+                                Text="{StaticResource Calendar}" />
+                            <inputLayout:SfTextInputLayout Hint="Fecha Inicial" FocusedColor="Black" IsEnabled="False"
+                                                           Margin="0,10,10,10" HorizontalOptions="FillAndExpand"
+                                                       ContainerBackgroundColor="Transparent">
+                                <control:BorderlessEntry  IsEnabled="False"
+                            Text="{Binding FiltroFecha.FechaInicio}"
+                            Style="{StaticResource BorderlessEntryStyle}" >
+                                </control:BorderlessEntry>
+                            </inputLayout:SfTextInputLayout>
+                        </StackLayout>
+                    </border:SfBorder>
+                    <border:SfBorder HeightRequest="80" Style="{StaticResource ThemeBorderStyle}">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Margin="5,15,0,0" TextColor="{StaticResource Gray-Black}" FontSize="Title" HorizontalOptions="Start"
+                                Style="{StaticResource IconLabelStyle}"
+                                Text="{StaticResource Calendar}" />
+                            <inputLayout:SfTextInputLayout Hint="Fecha Final" FocusedColor="Black" IsEnabled="False"
+                                                           Margin="0,10,10,10" HorizontalOptions="FillAndExpand"
+                                                       ContainerBackgroundColor="Transparent">
+                                <control:BorderlessEntry
+                            Text="{Binding FiltroFecha.FechaFin}" IsEnabled="False"
+                            Style="{StaticResource BorderlessEntryStyle}" >
+                                </control:BorderlessEntry>
+                            </inputLayout:SfTextInputLayout>
+                        </StackLayout>
+                    </border:SfBorder>
+                    <border:SfBorder HeightRequest="80" Style="{StaticResource ThemeBorderStyle}" IsVisible="{Binding IsSuperAdmin}">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Margin="10,20,0,10" TextColor="{StaticResource Gray-Black}" FontSize="Medium" HorizontalOptions="Start"
+                                Style="{StaticResource IconLabelStyle}" FontFamily="fontello"
+                                Text="{StaticResource IconEnvira}" />
+                            <inputLayout:SfTextInputLayout Hint="Upas" HeightRequest="80" IsVisible="{Binding IsSuperAdmin}"
+                                                   ContainerBackgroundColor="Transparent"   HorizontalOptions="FillAndExpand"
                                                   Margin="10">
-                    <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}" IsVisible="{Binding IsSuperAdmin}"
+                                <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}" IsVisible="{Binding IsSuperAdmin}"
                                     Style="{StaticResource BorderlessEntryStyle}"
                                 SelectedItem="{Binding Upa}" ItemsSource="{Binding Upas}">
-                    </Picker>
-                </inputLayout:SfTextInputLayout>
-            </border:SfBorder>
-            <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
-                <inputLayout:SfTextInputLayout Hint="Componentes" HeightRequest="80"
-                                                   ContainerBackgroundColor="Transparent" VerticalOptions="Start"
-                                                  Margin="10">
-                  
+                                </Picker>
+                            </inputLayout:SfTextInputLayout>
+                        </StackLayout>
+                    </border:SfBorder>
 
-                </inputLayout:SfTextInputLayout>
-            </border:SfBorder>
-            <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
-                <inputLayout:SfTextInputLayout Hint="--seleccione tipo de archivo--" HeightRequest="80" ContainerBackgroundColor="Transparent" 
-                                               VerticalOptions="Start" Margin="10">
-                    <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
+                    <border:SfBorder HeightRequest="80" Style="{StaticResource ThemeBorderStyle}" IsVisible="{Binding IsSuperAdmin}">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Margin="10,20,0,10" TextColor="{StaticResource Gray-Black}" FontSize="Medium" HorizontalOptions="Start"
+                                Style="{StaticResource IconLabelStyle}" FontFamily="fontello"
+                                Text="{StaticResource IconMicrochip}" />
+                            <inputLayout:SfTextInputLayout Hint="Componentes" HeightRequest="80" IsVisible="{Binding IsSuperAdmin}"
+                                                   ContainerBackgroundColor="Transparent"  HorizontalOptions="FillAndExpand" IsEnabled="{Binding IsEnabled}"
+                                                  Margin="10">
+                                <autocomplete:SfAutoComplete IsEnabled="{Binding IsEnabled}"
+                                     EnableAutoSize="True"
+                                     DisplayMemberPath="Nombre" 
+                                     MultiSelectMode="Token" 
+                                     TokensWrapMode="Wrap"
+                                     DataSource="{Binding Components}">
+                                </autocomplete:SfAutoComplete>
+                            </inputLayout:SfTextInputLayout>
+                        </StackLayout>
+                    </border:SfBorder>
+                    
+                    <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Margin="5,15,0,0" TextColor="{StaticResource Gray-Black}" FontSize="Medium" HorizontalOptions="Start"
+                                Style="{StaticResource IconLabelStyle}" FontFamily="fontello"
+                                Text="{StaticResource IconFilePdf}" />
+                            <Label Margin="0,15,0,0" TextColor="{StaticResource Gray-Black}" FontSize="Medium" HorizontalOptions="Start"
+                                Style="{StaticResource IconLabelStyle}" FontFamily="fontello"
+                                Text="{StaticResource IconFileExcel}" />
+                            <inputLayout:SfTextInputLayout Hint="--seleccione tipo de archivo--" Margin="0,10,20,0" 
+                                                           HorizontalOptions="FillAndExpand"
+                                                           HeightRequest="80" ContainerBackgroundColor="Transparent"  >
+                                <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
                                     Style="{StaticResource BorderlessEntryStyle}"
                                 SelectedItem="{Binding TipoArchivo}" ItemsSource="{Binding TipoArchivos}">
-                    </Picker>
-                </inputLayout:SfTextInputLayout>
-            </border:SfBorder>
+                                </Picker>
+                            </inputLayout:SfTextInputLayout>
+                        </StackLayout>
+                    </border:SfBorder>
+                </StackLayout>
+            </ScrollView>
             <buttons:SfButton HorizontalOptions="FillAndExpand"
              Command="{Binding SendCommand}"
              CornerRadius="4"

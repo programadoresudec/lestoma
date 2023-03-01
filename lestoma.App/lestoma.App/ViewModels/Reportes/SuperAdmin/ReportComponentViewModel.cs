@@ -1,17 +1,11 @@
 ﻿using lestoma.App.Views.Reportes;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
-using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
-using lestoma.CommonUtils.Services;
-using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Reportes.SuperAdmin
@@ -23,12 +17,14 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
         private ObservableCollection<NameDTO> _upas;
         private ObservableCollection<NameDTO> _Components;
         private bool _isSuperAdmin;
+        private bool _isEnabled;
 
         public ReportComponentViewModel(INavigationService navigationService, IApiService apiService) : base(navigationService)
         {
-            _isSuperAdmin = TokenUser.User.RolId == (int)TipoRol.SuperAdministrador ? true : false;
+            _isSuperAdmin = TokenUser.User.RolId == (int)TipoRol.SuperAdministrador;
             _apiService = apiService;
             Title = "Reporte por rango de fecha";
+            _Components = new ObservableCollection<NameDTO>();
             ListarUpas();
         }
         public ObservableCollection<NameDTO> Upas
@@ -48,10 +44,19 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
             get => _isSuperAdmin;
             set => SetProperty(ref _isSuperAdmin, value);
         }
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set => SetProperty(ref _isEnabled, value);
+        }
         public NameDTO Upa
         {
             get => _upa;
-            set => SetProperty(ref _upa, value);
+            set
+            {
+                SetProperty(ref _upa, value);
+                ListarComponentes(_upa.Id);
+            }
 
         }
         public Command NavigatePopupFilterCommand
@@ -66,7 +71,6 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
         }
         private async void ListarUpas()
         {
-
             if (_isSuperAdmin)
             {
                 try
@@ -84,19 +88,19 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
                 }
             }
         }
-        private async void Componentes(Guid IdUpa)
+        private async void ListarComponentes(Guid IdUpa)
         {
             IsBusy = true;
+            IsEnabled = true;
             try
             {
                 if (_apiService.CheckConnection())
                 {
                     Components.Clear();
-                    ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<ComponenteDTO>(URL_API, $"componentes/paginar", TokenUser.Token);
+                    ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API, $"componentes/listar-nombres-por-upa/{IdUpa}", TokenUser.Token);
                     if (response.IsExito)
                     {
-                        ResponseDTO Component = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API, $"componentes/listar-nombres-por-upa/{IdUpa}", TokenUser.Token);
-                        Components = new ObservableCollection<NameDTO>((List<NameDTO>)Component.Data);
+                        Components = new ObservableCollection<NameDTO>((List<NameDTO>)response.Data);
                         Components.Insert(0, new NameDTO { Id = Guid.Empty, Nombre = "Todas" });
                     }
                 }
