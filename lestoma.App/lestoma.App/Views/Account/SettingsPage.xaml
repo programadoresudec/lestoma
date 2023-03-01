@@ -242,7 +242,37 @@
                     </VisualStateManager.VisualStateGroups>
                 </buttons:SfSwitch>
             </Grid>
+            <BoxView Style="{StaticResource HorizontalSeparatorStyle}" />
+            
+            <controls:TapAnimationGrid
+                    BackgroundColor="{DynamicResource Gray-Bg}"
+                    ColumnDefinitions="Auto, *, Auto"
+                    ColumnSpacing="0"
+                    Command="{Binding MigrateDataToServerCommand}"
+                    RowSpacing="0"
+                    Tapped="False">
+                <Label
+                        Grid.Column="0"
+                        FontFamily="Fontello"
+                        Margin="16,0,0,0"
+                        Style="{StaticResource IconLabelStyle}"
+                        Text="{StaticResource iconBluetooth}" />
 
+                <Label
+                        Grid.Column="1"
+                        Margin="16,12"
+                        FontFamily="Montserrat-Medium"
+                        HorizontalOptions="Start"
+                        Style="{StaticResource TitleLabelStyle}"
+                        Text="Configuracion de Bluetooth"
+                        VerticalOptions="Center" />
+                <!--  Navigation icon  -->
+                <Label
+                        Grid.Column="2"
+                        Margin="16,8"
+                        Style="{StaticResource IconLabelStyle}"
+                        Text="{StaticResource Next}" />
+            </controls:TapAnimationGrid>
             <BoxView Style="{StaticResource HorizontalSeparatorStyle}" />
 
             <!--  Header label for Support setting  -->
