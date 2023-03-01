@@ -243,6 +243,21 @@
 
             <BoxView Style="{StaticResource HorizontalSeparatorStyle}" />
 
+            <Label
+                        Grid.Column="0"
+                        Margin="16,0,0,0"
+                        Style="{StaticResource IconLabelStyle}"
+                        Text="{StaticResource Document}" />
+            <!--  Help text label  -->
+            <Label
+                        Grid.Column="1"
+                        Margin="16,12"
+                        FontFamily="Montserrat-Medium"
+                        HorizontalOptions="Start"
+                        Style="{StaticResource TitleLabelStyle}"
+                        Text="Configuracion de Bluetooth"
+                        VerticalOptions="Center" />
+
             <!--  Header label for Support setting  -->
             <Label
                     Margin="16,40,0,16"
