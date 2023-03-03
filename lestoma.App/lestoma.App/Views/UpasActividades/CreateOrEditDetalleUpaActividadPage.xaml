@@ -67,13 +67,13 @@
                                FontSize="Medium"  FontAttributes="Bold"/>
                         <StackLayout>
                             <buttons:SfChipGroup x:Name="chipsActividades"
-				            ItemsSource="{Binding ActividadesAdd}" 
-				            ChipPadding="10,10,0,0" 
-                            ChipBackgroundColor="{StaticResource PantoneAmarilloLight}"
-                            ChipTextColor="Black"
-                            ChipTextSize="Small"
-                            CloseButtonColor="{StaticResource PantoneVerdeSecond}"
-                       	    DisplayMemberPath="Nombre">
+				                ItemsSource="{Binding ActividadesAdd}" 
+				                ChipPadding="10,10,0,0" 
+                                ChipBackgroundColor="{StaticResource PantoneAmarilloLight}"
+                                ChipTextColor="Black"
+                                ChipTextSize="Small"
+                                CloseButtonColor="{StaticResource PantoneVerdeSecond}"
+                       	        DisplayMemberPath="Nombre">
                                 <buttons:SfChipGroup.Behaviors>
                                     <prism:EventToCommandBehavior EventName="ItemRemoved"
                                           Command="{Binding ItemRemoveCommand}" EventArgsParameterPath="RemovedItem" />

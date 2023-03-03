@@ -53,7 +53,7 @@
                                 <Label HorizontalOptions="CenterAndExpand">
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="{Binding Nombre}"  FontFamily="Montserrat-Bold" TextColor="{StaticResource PantoneVerdeSecond}" FontSize="Body" />
+                                            <Span Text="{Binding Nombre}" FontFamily="Montserrat-Bold" TextColor="{StaticResource PantoneVerdeSecond}" FontSize="Body" />
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>

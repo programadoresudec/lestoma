@@ -130,7 +130,7 @@
                 </border:SfBorder>
                 <!--  cantidad actividades -->
                 <buttons:SfButton
-                            HorizontalOptions="StartAndExpand"
+                            HorizontalOptions="StartAndExpand" IsVisible="{Binding IsVisibleButton}"
                             Command="{Binding AddProtocolCommand}"
                             CornerRadius="4" Margin="15,20,0,15" ImageSource="icon_create.png" ShowIcon="True"
                             Style="{StaticResource LestomaButtonStyle}"

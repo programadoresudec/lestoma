@@ -5,8 +5,10 @@
               prism:ViewModelLocator.AutowireViewModel="True"
              xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms" 
              xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
-             xmlns:helper="clr-namespace:Syncfusion.ListView.XForms.Helpers;assembly=Syncfusion.SfListView.XForms" xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms"
-             x:Class="lestoma.App.Views.UpasActividades.DetalleUpaActividadPage" Title="Detalle Upas-Actividades">
+             xmlns:helper="clr-namespace:Syncfusion.ListView.XForms.Helpers;assembly=Syncfusion.SfListView.XForms" 
+             xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms"
+             x:Class="lestoma.App.Views.UpasActividades.DetalleUpaActividadPage" 
+             Title="{Binding Title}">
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="icon_plus.png" Command="{Binding AddCommand}"/>
     </ContentPage.ToolbarItems>

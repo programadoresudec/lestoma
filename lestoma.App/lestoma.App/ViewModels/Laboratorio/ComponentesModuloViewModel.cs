@@ -19,7 +19,7 @@ namespace lestoma.App.ViewModels.Laboratorio
         {
             _apiService = apiService;
             RedirectionTramaCommand = new Command<object>(ComponentSelected, CanNavigate);
-            Title = "Componentes";
+            Title = "Seleccione uno o mas componentes";
 
         }
         private bool CanNavigate(object arg)

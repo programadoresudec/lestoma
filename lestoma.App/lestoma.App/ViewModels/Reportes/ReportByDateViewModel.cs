@@ -18,6 +18,7 @@ namespace lestoma.App.ViewModels.Reportes
 {
     public class ReportByDateViewModel : BaseViewModel
     {
+        #region attributes
         private readonly IApiService _apiService;
         private NameDTO _upa;
         private ObservableCollection<NameDTO> _upas;
@@ -25,9 +26,11 @@ namespace lestoma.App.ViewModels.Reportes
         private ObservableCollection<NameDTO> _tipoArchivos;
         private bool _isSuperAdmin;
         private FiltroFechaModel _filtroFecha;
+        #endregion
 
+        #region constructor
         public ReportByDateViewModel(INavigationService navigation, IApiService apiService)
-            : base(navigation)
+           : base(navigation)
         {
             _isSuperAdmin = TokenUser.User.RolId == (int)TipoRol.SuperAdministrador ? true : false;
             _apiService = apiService;
@@ -48,15 +51,9 @@ namespace lestoma.App.ViewModels.Reportes
             };
             SendCommand = new Command(GenerateReportClicked);
 
-        }
-        public override void OnNavigatedTo(INavigationParameters parameters)
-        {
-            base.OnNavigatedTo(parameters);
-            if (parameters.ContainsKey("filtroFecha"))
-            {
-                FiltroFecha = parameters.GetValue<FiltroFechaModel>("filtroFecha");
-            }
-        }
+        } 
+        #endregion
+       
         #region properties
         public ObservableCollection<NameDTO> Upas
         {
@@ -110,9 +107,18 @@ namespace lestoma.App.ViewModels.Reportes
 
         #endregion
 
+        #region Methods
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            base.OnNavigatedTo(parameters);
+            if (parameters.ContainsKey("filtroFecha"))
+            {
+                FiltroFecha = parameters.GetValue<FiltroFechaModel>("filtroFecha");
+            }
+        }
         private async void ListarUpas()
         {
-         
+
             if (_isSuperAdmin)
             {
                 UserDialogs.Instance.ShowLoading("Cargando...");
@@ -184,6 +190,7 @@ namespace lestoma.App.ViewModels.Reportes
                 isUpaValid = true;
             }
             return isFiltroFechaValid && isUpaValid && istipoArchivoValid;
-        }
+        } 
+        #endregion
     }
 }

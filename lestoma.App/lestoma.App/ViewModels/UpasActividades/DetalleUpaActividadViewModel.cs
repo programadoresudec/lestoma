@@ -22,6 +22,7 @@ namespace lestoma.App.ViewModels.UpasActividades
             _apiService = apiService;
             _detalleUpaActividad = new ObservableCollection<DetalleUpaActividadDTO>();
             LoadDetalle();
+            Title = "Asignar upa y actividades";
             LoadMoreItemsCommand = new Command<object>(LoadMoreItems, CanLoadMoreItems);
             EditCommand = new Command<object>(DetalleSelected, CanNavigate);
             SeeActivitiesCommand = new Command<object>(OnSeeActivityClicked, CanNavigate);

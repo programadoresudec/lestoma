@@ -18,7 +18,7 @@ namespace lestoma.App.ViewModels.Laboratorio
              base(navigationService)
         {
             _apiService = apiService;
-            Title = "Modulos";
+            Title = "Seleccione un modulo";
             _modulos = new ObservableCollection<NameDTO>();
             SeeComponentCommand = new Command<object>(ModuloSelected, CanNavigate);
             LoadModulos();

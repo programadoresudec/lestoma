@@ -6,7 +6,7 @@
              xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms"
              xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" 
              xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
-             xmlns:autocomplete="clr-namespace:Syncfusion.SfAutoComplete.XForms;assembly=Syncfusion.SfAutoComplete.XForms" xmlns:control="clr-namespace:lestoma.App.Controls"
+             xmlns:autocomplete="clr-namespace:Syncfusion.SfAutoComplete.XForms;assembly=Syncfusion.SfAutoComplete.XForms" xmlns:control="clr-namespace:lestoma.App.Controls" xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
              x:Class="lestoma.App.Views.Reportes.SuperAdmin.ReporteComponentPage">
     <ContentPage.Content>
         <StackLayout  Margin="15,40" Spacing="20" VerticalOptions="StartAndExpand" HorizontalOptions="FillAndExpand">
@@ -70,26 +70,42 @@
                             </inputLayout:SfTextInputLayout>
                         </StackLayout>
                     </border:SfBorder>
-
-                    <border:SfBorder HeightRequest="80" Style="{StaticResource ThemeBorderStyle}" IsVisible="{Binding IsSuperAdmin}">
+                    <border:SfBorder HeightRequest="80" Style="{StaticResource ThemeBorderStyle}">
                         <StackLayout Orientation="Horizontal">
                             <Label Margin="10,20,0,10" TextColor="{StaticResource Gray-Black}" FontSize="Medium" HorizontalOptions="Start"
                                 Style="{StaticResource IconLabelStyle}" FontFamily="fontello"
                                 Text="{StaticResource IconMicrochip}" />
-                            <inputLayout:SfTextInputLayout Hint="Componentes" HeightRequest="80" IsVisible="{Binding IsSuperAdmin}"
-                                                   ContainerBackgroundColor="Transparent"  HorizontalOptions="FillAndExpand" IsEnabled="{Binding IsEnabled}"
+                            <inputLayout:SfTextInputLayout Hint="Componentes" HeightRequest="80" ContainerBackgroundColor="Transparent" 
+                                                           HorizontalOptions="FillAndExpand" IsEnabled="{Binding IsEnabled}"
                                                   Margin="10">
-                                <autocomplete:SfAutoComplete IsEnabled="{Binding IsEnabled}"
-                                     EnableAutoSize="True"
-                                     DisplayMemberPath="Nombre" 
-                                     MultiSelectMode="Token" 
-                                     TokensWrapMode="Wrap"
-                                     DataSource="{Binding Components}">
-                                </autocomplete:SfAutoComplete>
+                                <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}" IsEnabled="{Binding IsChecked}" IsVisible="{Binding IsSuperAdmin}"
+                                    Style="{StaticResource BorderlessEntryStyle}"  SelectedItem="{Binding ComponentSelected}"
+                                ItemsSource="{Binding Components}">
+                                </Picker>
                             </inputLayout:SfTextInputLayout>
                         </StackLayout>
                     </border:SfBorder>
-                    
+                    <buttons:SfChipGroup 
+				                ItemsSource="{Binding ComponentsAdd}" 
+				                ChipPadding="10,10,0,0" 
+                                ChipBackgroundColor="{StaticResource PantoneAmarilloLight}"
+                                ChipTextColor="{StaticResource Gray-800}"
+                                ChipTextSize="Small"
+                                CloseButtonColor="{StaticResource PantoneVerdeSecond}"
+                       	        DisplayMemberPath="Nombre">
+                        <buttons:SfChipGroup.Behaviors>
+                            <prism:EventToCommandBehavior EventName="ItemRemoved" Command="{Binding ItemRemoveCommand}" EventArgsParameterPath="RemovedItem" />
+                        </buttons:SfChipGroup.Behaviors>
+                        <buttons:SfChipGroup.ChipLayout>
+                            <FlexLayout 
+                                        HorizontalOptions="Start"
+						                Direction="RowReverse" 
+						                Wrap="Wrap"
+						                JustifyContent="Start"         
+						                AlignContent="Start" 
+						                AlignItems="Start"/>
+                        </buttons:SfChipGroup.ChipLayout>
+                    </buttons:SfChipGroup>
                     <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
                         <StackLayout Orientation="Horizontal">
                             <Label Margin="5,15,0,0" TextColor="{StaticResource Gray-Black}" FontSize="Medium" HorizontalOptions="Start"

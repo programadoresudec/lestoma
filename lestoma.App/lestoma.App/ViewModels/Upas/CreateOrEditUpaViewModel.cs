@@ -9,7 +9,9 @@ using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace lestoma.App.ViewModels.Upas
 {
@@ -19,6 +21,7 @@ namespace lestoma.App.ViewModels.Upas
         private UpaModel _model;
         private UpaRequest _upa;
         private bool _isVisibleProtocols;
+        private bool _isVisibleButton;
         private ObservableCollection<ProtocoloModel> _protocolos;
         public CreateOrEditUpaViewModel(INavigationService navigationService, IApiService apiService)
            : base(navigationService)
@@ -27,6 +30,7 @@ namespace lestoma.App.ViewModels.Upas
             _model.AddValidationRules();
             _apiService = apiService;
             _upa = new UpaRequest();
+            _isVisibleButton = true;
             _protocolos = new ObservableCollection<ProtocoloModel>();
             CreateOrEditCommand = new Command(CreateOrEditClicked);
         }
@@ -35,6 +39,8 @@ namespace lestoma.App.ViewModels.Upas
             get => _upa;
             set => SetProperty(ref _upa, value);
         }
+
+
 
         public UpaModel Model
         {
@@ -47,6 +53,14 @@ namespace lestoma.App.ViewModels.Upas
             get => _isVisibleProtocols;
             set => SetProperty(ref _isVisibleProtocols, value);
         }
+
+
+        public bool isVisibleButton
+        {
+            get => _isVisibleButton;
+            set => SetProperty(ref _isVisibleButton, value);
+        }
+
         public ObservableCollection<ProtocoloModel> Protocolos
         {
             get => _protocolos;
@@ -79,6 +93,8 @@ namespace lestoma.App.ViewModels.Upas
             {
                 Upa = parameters.GetValue<UpaRequest>("upa");
                 Title = "Editar";
+                IsVisibleProtocols = false;
+                isVisibleButton = false;
             }
             else
             {
@@ -98,8 +114,14 @@ namespace lestoma.App.ViewModels.Upas
             try
             {
                 CargarDatos();
+
                 if (_model.AreFieldsValid())
                 {
+                    if (_protocolos.Count == 0)
+                    {
+                        AlertWarning("Agregue un protocolo.");
+                        return;
+                    }
                     UserDialogs.Instance.ShowLoading("Guardando...");
                     if (!_apiService.CheckConnection())
                     {
@@ -111,8 +133,14 @@ namespace lestoma.App.ViewModels.Upas
                         Id = Upa.Id == Guid.Empty ? Guid.Empty : Upa.Id,
                         Nombre = _model.Nombre.Value.Trim(),
                         Descripcion = _model.Descripcion.Value.Trim(),
-                        CantidadActividades = (short)Convert.ToInt32(_model.CantidadActividades.Value)
+                        CantidadActividades = (short)Convert.ToInt32(_model.CantidadActividades.Value),
                     };
+                    Protocolos.ForEach(x => request.ProtocolosCOM.Add(new ProtocoloDTO
+                    {
+                        Nombre = x.Nombre,
+                        PrimerByteTrama = (byte)x.PrimerByteTrama,
+                        Sigla = x.Sigla
+                    }));
                     if (Upa.Id == Guid.Empty)
                     {
                         ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL_API, "upas/crear", request, TokenUser.Token);
