@@ -60,10 +60,8 @@
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>
-                                <Label FontFamily="Montserrat-Bold" Text="Auditoría" TextColor="{StaticResource PantoneGris}" FontSize="15">
-                                    
-                                </Label>
-                                    <StackLayout Margin="15,0,0,0">
+                                <Label FontFamily="Montserrat-Bold" Text="Auditoría" TextColor="{StaticResource PantoneGris}" FontSize="15"/>
+                                <StackLayout Margin="15,0,0,0">
                                     <Label>
                                         <Label.FormattedText>
                                             <FormattedString>

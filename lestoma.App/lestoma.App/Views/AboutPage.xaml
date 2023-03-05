@@ -11,56 +11,89 @@
               Title="Acerca de Lestoma">
     <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
         <cards:SfCardView BackgroundColor="White" CornerRadius="10" 
+                          HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"
                            Margin="{core:OnPlatformOrientationThickness  PhonePortrait='30,40',
                                                                  PhoneLandscape='150,32',
                                                                  TabletPortrait='200,50',
                                                                  TabletLandscape='200,50',
                                                                  Desktop='30'}">
-            <StackLayout VerticalOptions="End" WidthRequest="500"
-               Margin="0,0,0,20">
-                <Grid Padding="30,25,25,0">
-                    <Label Text="Agregar Protocolo" FontSize="Large"  HorizontalTextAlignment="Start" 
-                           TextColor="{StaticResource PantoneVerdeDark}"></Label>
-                    <Frame WidthRequest="32" HeightRequest="32"
+            <ScrollView>
+                <StackLayout VerticalOptions="End" WidthRequest="500" Margin="0,0,0,20">
+                    <Grid Padding="30,25,25,0">
+                        <Label Text="Filtro" FontSize="Large"
+                           HorizontalTextAlignment="Start" TextColor="{StaticResource PantoneVerdeDark}"></Label>
+                        <Frame WidthRequest="32" HeightRequest="32"
                         Padding="0" CornerRadius="40" HorizontalOptions="End">
-                        <ContentView>
-                            <ContentView.GestureRecognizers>
-                         
-                            </ContentView.GestureRecognizers>
-                            <Image Source="icon_close.png"  Aspect="AspectFill" />
-                        </ContentView>
-                    </Frame>
-                </Grid>
-                <StackLayout Margin="30,0,30,0" Spacing="15">
-                    <inputLayout:SfTextInputLayout Hint="Nombre Protocolo"  HeightRequest="90"
-                                               FocusedColor="Black" ContainerBackgroundColor="Transparent">
-                        <control:BorderlessEntry x:Name="Byte" Text="{Binding Protocolo.Nombre}" 
-                                                     PlaceholderColor="#606a7b" Style="{StaticResource BorderlessEntryStyle}" 
-                                                   MaxLength="4" TextColor="#333942">
-                        </control:BorderlessEntry>
-                    </inputLayout:SfTextInputLayout>
-                    <inputLayout:SfTextInputLayout Hint=" Byte" FocusedColor="Black" HeightRequest="90"
-                                                   ContainerBackgroundColor="Transparent">
-                        <Picker TextColor="Black"
-                                Style="{StaticResource BorderlessEntryStyle}"
-                                SelectedItem="{Binding Protocolo.PrimerByteTrama}" ItemsSource="{Binding Bytes}">
-                        </Picker>
-                    </inputLayout:SfTextInputLayout>
-                    <inputLayout:SfTextInputLayout Hint="Sigla"  HeightRequest="90"
-                                               FocusedColor="Black" ContainerBackgroundColor="Transparent">
-                        <control:BorderlessEntry Text="{Binding Protocolo.Sigla}" 
-                                                     PlaceholderColor="#606a7b" Style="{StaticResource BorderlessEntryStyle}" 
-                                                   MaxLength="4" TextColor="#333942">
-                        </control:BorderlessEntry>
-                    </inputLayout:SfTextInputLayout>
-                </StackLayout>
-                <buttons:SfButton
-                        HorizontalOptions="FillAndExpand" Margin="20"
-                        Command="{Binding SaveEstadoCommand}"
-                        CornerRadius="12" IsVisible="{Binding IsEdit}"
+                            <ContentView>
+                                <ContentView.GestureRecognizers>
+
+                                </ContentView.GestureRecognizers>
+                                <Image Source="icon_close.png"  Aspect="AspectFill" />
+                            </ContentView>
+                        </Frame>
+                    </Grid>
+                    <StackLayout Spacing="10" Margin="20,20,30,10" HorizontalOptions="FillAndExpand">
+                        <!--tipo estado-->
+                        <Label Text="Fecha de inicio" FontFamily="Montserrat-SemiBold" Margin="10,0,0,0" VerticalOptions="StartAndExpand" 
+                       HorizontalOptions="StartAndExpand" FontSize="16"/>
+                        <border:SfBorder Style="{StaticResource ThemeBorderStyle}">
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                <inputLayout:SfTextInputLayout Hint="Fecha" FocusedColor="Black" HorizontalOptions="FillAndExpand"
+                                                               ContainerBackgroundColor="Transparent" HeightRequest="80">
+                                    <Grid>
+                                        <DatePicker HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy" 
+                                            Date="{Binding DateInitial}" Grid.Column="0" MinimumDate="{Binding InitialMinimumDate}" 
+                                            MaximumDate="{x:Static sys:DateTime.Now}"/>
+                                        <Label  Margin="0,13,-5,0" TextColor="{StaticResource Gray-Black}"
+                                            Style="{StaticResource IconLabelStyle}" FontFamily="Fontello" HorizontalOptions="EndAndExpand"
+                                            Text="{StaticResource IconCalendar}" />
+                                    </Grid>
+                                </inputLayout:SfTextInputLayout>
+                                <inputLayout:SfTextInputLayout Hint="Hora" Margin="40,0,0,0" FocusedColor="Black" HorizontalOptions="FillAndExpand"
+                                                               ContainerBackgroundColor="Transparent" HeightRequest="80">
+                                    <Grid>
+                                        <TimePicker Time="{Binding SaveTimeInitial, Mode=TwoWay}" HorizontalOptions="FillAndExpand" Grid.Column="0"/>
+                                        <Label Margin="0,15,-5,0"  TextColor="{StaticResource Gray-600}" HorizontalOptions="EndAndExpand"
+                                            FontFamily="Fontello" Style="{StaticResource IconLabelStyle}" Text="{StaticResource IconClock}"/>
+                                    </Grid>
+                                </inputLayout:SfTextInputLayout>
+                            </StackLayout>
+                        </border:SfBorder>
+                        <Label Text="Fecha de finalización" FontFamily="Montserrat-SemiBold" Margin="10,0,0,0"
+                               VerticalOptions="StartAndExpand" HorizontalOptions="StartAndExpand" FontSize="16"/>
+                        <border:SfBorder Style="{StaticResource ThemeBorderStyle}">
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                <inputLayout:SfTextInputLayout Hint="Fecha" FocusedColor="Black" HorizontalOptions="FillAndExpand"
+                                                               ContainerBackgroundColor="Transparent" HeightRequest="80">
+                                    <Grid>
+                                        <DatePicker HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy" IsEnabled="{Binding IsEnabled}"
+                                            Date="{Binding DateFinal}" Grid.Column="0" MinimumDate="{Binding FinalMinimumDate}" 
+                                            MaximumDate="{x:Static sys:DateTime.Now}"/>
+                                        <Label  Margin="0,13,-5,0" TextColor="{StaticResource Gray-Black}"
+                                            Style="{StaticResource IconLabelStyle}" FontFamily="Fontello" HorizontalOptions="EndAndExpand"
+                                            Text="{StaticResource IconCalendar}" />
+                                    </Grid>
+                                </inputLayout:SfTextInputLayout>
+                                <inputLayout:SfTextInputLayout Hint="Hora" Margin="40,0,0,0" FocusedColor="Black" HorizontalOptions="FillAndExpand"
+                                                               ContainerBackgroundColor="Transparent" HeightRequest="80">
+                                    <Grid>
+                                        <TimePicker Time="{Binding SaveTimeFinal, Mode=TwoWay}" HorizontalOptions="FillAndExpand" Grid.Column="0" IsEnabled="{Binding IsEnabled}"/>
+                                        <Label Margin="0,15,-5,0"  TextColor="{StaticResource Gray-600}" HorizontalOptions="EndAndExpand"
+                                            FontFamily="Fontello" Style="{StaticResource IconLabelStyle}" Text="{StaticResource IconClock}"/>
+                                    </Grid>
+                                </inputLayout:SfTextInputLayout>
+                            </StackLayout>
+                        </border:SfBorder>
+                        <!--/tipo estado-->
+                        <buttons:SfButton Margin="0,20,0,0"
+                        HorizontalOptions="FillAndExpand" 
+                        Command="{Binding SaveCommand}"
+                        CornerRadius="4" 
                         Style="{StaticResource LestomaPopupGradientButtonStyle}"
                         Text="Guardar" />
-            </StackLayout>
+                    </StackLayout>
+                </StackLayout>
+            </ScrollView>
         </cards:SfCardView>
     </Grid>
 </ContentPage>

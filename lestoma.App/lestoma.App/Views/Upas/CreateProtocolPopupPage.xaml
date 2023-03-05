@@ -48,7 +48,7 @@
                                 SelectedItem="{Binding Protocolo.PrimerByteTrama}" ItemsSource="{Binding Bytes}">
                             </Picker>
                         </inputLayout:SfTextInputLayout>
-                        <inputLayout:SfTextInputLayout Hint="Sigla"  HeightRequest="90"
+                        <inputLayout:SfTextInputLayout Hint="Sigla" HeightRequest="90"
                                                FocusedColor="Black" ContainerBackgroundColor="Transparent">
                             <control:BorderlessEntry Text="{Binding Protocolo.Sigla}" 
                                                      PlaceholderColor="#606a7b" Style="{StaticResource BorderlessEntryStyle}" 

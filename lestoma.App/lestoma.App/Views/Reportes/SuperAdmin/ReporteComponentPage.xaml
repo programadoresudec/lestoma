@@ -55,15 +55,15 @@
                             </inputLayout:SfTextInputLayout>
                         </StackLayout>
                     </border:SfBorder>
-                    <border:SfBorder HeightRequest="80" Style="{StaticResource ThemeBorderStyle}" IsVisible="{Binding IsSuperAdmin}">
+                    <border:SfBorder HeightRequest="80" Style="{StaticResource ThemeBorderStyle}" IsEnabled="{Binding IsSuperAdmin}">
                         <StackLayout Orientation="Horizontal">
                             <Label Margin="10,20,0,10" TextColor="{StaticResource Gray-Black}" FontSize="Medium" HorizontalOptions="Start"
                                 Style="{StaticResource IconLabelStyle}" FontFamily="fontello"
                                 Text="{StaticResource IconEnvira}" />
-                            <inputLayout:SfTextInputLayout Hint="Upas" HeightRequest="80" IsVisible="{Binding IsSuperAdmin}"
+                            <inputLayout:SfTextInputLayout Hint="Upa" HeightRequest="80" IsEnabled="{Binding IsSuperAdmin}"
                                                    ContainerBackgroundColor="Transparent"   HorizontalOptions="FillAndExpand"
                                                   Margin="10">
-                                <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}" IsVisible="{Binding IsSuperAdmin}"
+                                <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}" IsEnabled="{Binding IsSuperAdmin}"
                                     Style="{StaticResource BorderlessEntryStyle}"
                                 SelectedItem="{Binding Upa}" ItemsSource="{Binding Upas}">
                                 </Picker>

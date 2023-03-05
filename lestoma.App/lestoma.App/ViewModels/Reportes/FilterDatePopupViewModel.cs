@@ -1,9 +1,6 @@
 ﻿using Acr.UserDialogs;
 using lestoma.App.Models;
-using lestoma.App.Views;
-using lestoma.CommonUtils.Constants;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
 using Xamarin.Forms;
 
@@ -86,7 +83,7 @@ namespace lestoma.App.ViewModels.Reportes
                 var error = this.Validations();
                 if (!error.valido)
                 {
-                    AlertWarning(error.mensaje);          
+                    AlertWarning(error.mensaje);
                     return;
                 }
                 UserDialogs.Instance.ShowLoading("Guardando...");
@@ -113,6 +110,9 @@ namespace lestoma.App.ViewModels.Reportes
 
         private (string mensaje, bool valido) Validations()
         {
+            if (_fechaInicial == null && _fechaFinal == null)
+                return ("la fecha inicial y la final son requeridos.", false);
+
             int rangoHoras = TimeSpan.Compare(_horaFinal.Value, _horaInicial.Value);
             var valorRangoFechas = (_fechaFinal.Value.Date - _fechaInicial.Value.Date).TotalHours;
 

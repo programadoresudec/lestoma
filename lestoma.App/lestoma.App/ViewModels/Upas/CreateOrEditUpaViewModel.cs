@@ -1,7 +1,6 @@
 ﻿using Acr.UserDialogs;
 using lestoma.App.Models;
 using lestoma.App.Views.Upas;
-using lestoma.App.Views.UpasActividades;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
@@ -9,7 +8,6 @@ using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -55,7 +53,7 @@ namespace lestoma.App.ViewModels.Upas
         }
 
 
-        public bool isVisibleButton
+        public bool IsVisibleButton
         {
             get => _isVisibleButton;
             set => SetProperty(ref _isVisibleButton, value);
@@ -94,7 +92,7 @@ namespace lestoma.App.ViewModels.Upas
                 Upa = parameters.GetValue<UpaRequest>("upa");
                 Title = "Editar";
                 IsVisibleProtocols = false;
-                isVisibleButton = false;
+                IsVisibleButton = false;
             }
             else
             {

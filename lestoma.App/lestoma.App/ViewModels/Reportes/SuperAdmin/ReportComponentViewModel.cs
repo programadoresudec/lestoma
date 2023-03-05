@@ -7,7 +7,6 @@ using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests.Filters;
-using Newtonsoft.Json;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
@@ -41,11 +40,10 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
         {
             _isSuperAdmin = TokenUser.User.RolId == (int)TipoRol.SuperAdministrador;
             _apiService = apiService;
-            Title = "Reporte por rango de fecha y componentes";
+            Title = "Reporte por fechas y componentes";
             _Components = new ObservableCollection<ComponenteCheckModel>();
             ListarUpas();
             _componentsAdd = new ObservableCollection<ComponenteCheckModel>();
-            ItemRemoveCommand = new Command((param) => ItemRemoveClicked(param));
             SendCommand = new Command(GenerateReportClicked);
             _tipoArchivos = new ObservableCollection<NameDTO>()
             {
@@ -175,26 +173,34 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
         }
         private async void ListarUpas()
         {
-            if (_isSuperAdmin)
+            try
             {
-                try
+                if (_apiService.CheckConnection())
                 {
-                    if (_apiService.CheckConnection())
+                    UserDialogs.Instance.ShowLoading("Cargando...");
+                    ResponseDTO upas = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API, "upas/listar-nombres", TokenUser.Token);
+                    Upas = new ObservableCollection<NameDTO>((List<NameDTO>)upas.Data);
+                    Upas.Insert(0, new NameDTO { Id = Guid.Empty, Nombre = "Todas" });
+                    if (!IsSuperAdmin)
                     {
-                        UserDialogs.Instance.ShowLoading("Cargando...");
-                        ResponseDTO upas = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API, "upas/listar-nombres", TokenUser.Token);
-                        Upas = new ObservableCollection<NameDTO>((List<NameDTO>)upas.Data);
-                        Upas.Insert(0, new NameDTO { Id = Guid.Empty, Nombre = "Todas" });
+                        ResponseDTO response = await _apiService.GetAsyncWithToken(URL_API, "usuarios/upa-asignada", TokenUser.Token);
+                        if (response.IsExito)
+                        {
+                            var upa = ParsearData<NameDTO>(response);
+                            var selected = Upas.Where(x => x.Id == upa.Id).FirstOrDefault();
+                            Upa = selected;
+                            ListarComponentes(upa.Id);
+                        }
                     }
                 }
-                catch (Exception ex)
-                {
-                    SeeError(ex);
-                }
-                finally
-                {
-                    UserDialogs.Instance.HideLoading();
-                }
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
             }
         }
         private async void GenerateReportClicked(object obj)
@@ -226,7 +232,7 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
                         UpaId = Upa.Id
                     }
                 };
-              
+
                 var response = await _apiService.PostAsyncWithToken(URL_API, "reports-laboratory/by-components", reportComponentFilterRequest, TokenUser.Token);
                 await PopupNavigation.Instance.PushAsync(new MessagePopupPage(response.MensajeHttp));
             }
@@ -255,18 +261,26 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
 
         private async void ListarComponentes(Guid IdUpa)
         {
-            IsEnabled = true;
+
             try
             {
                 if (_apiService.CheckConnection())
                 {
                     UserDialogs.Instance.ShowLoading("Cargando...");
                     Components.Clear();
-                    ResponseDTO response = await _apiService.GetListAsyncWithToken<List<ComponenteCheckModel>>(URL_API, 
+                    ComponentsAdd.Clear();
+                    ResponseDTO response = await _apiService.GetListAsyncWithToken<List<ComponenteCheckModel>>(URL_API,
                         $"componentes/listar-nombres-por-upa/{IdUpa}", TokenUser.Token);
                     if (response.IsExito)
                     {
                         Components = new ObservableCollection<ComponenteCheckModel>((List<ComponenteCheckModel>)response.Data);
+                        if (Components.Count == 0)
+                        {
+                            AlertWarning("No hay componentes.");
+                            return;
+                        }
+
+                        IsEnabled = true;
                         Components.Insert(0, new ComponenteCheckModel { Id = Guid.Empty, Nombre = "Todas" });
                     }
                 }
@@ -282,34 +296,7 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
             }
         }
 
-        private void ItemRemoveClicked(object param)
-        {
-            try
-            {
-                var sfChip = param as Syncfusion.XForms.Buttons.SfChip;
-                if (sfChip != null)
-                {
-                    var dataContext = GetInternalProperty(typeof(Syncfusion.XForms.Buttons.SfChip), sfChip, "DataContext");
-                    var removeActividad = dataContext;
-                    var json = JsonConvert.SerializeObject(removeActividad);
-                    json = json.TrimStart(new char[] { '[' }).TrimEnd(new char[] { ']' });
-                    var componente = JsonConvert.DeserializeObject<ComponenteCheckModel>(json);
-                    if (componente != null)
-                    {
-                        var obj = ComponentsAdd.Where(x => x.Id == componente.Id).FirstOrDefault();
-                        ComponentsAdd.Remove(obj);
-                        if (ComponentsAdd.Count == 0)
-                        {
-                            ComponentSelected = null;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                SeeError(ex);
-            }
-        }
+
         #endregion
     }
 }

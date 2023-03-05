@@ -12,6 +12,7 @@ using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Reportes
@@ -32,7 +33,7 @@ namespace lestoma.App.ViewModels.Reportes
         public ReportByDateViewModel(INavigationService navigation, IApiService apiService)
            : base(navigation)
         {
-            _isSuperAdmin = TokenUser.User.RolId == (int)TipoRol.SuperAdministrador ? true : false;
+            _isSuperAdmin = TokenUser.User.RolId == (int)TipoRol.SuperAdministrador;
             _apiService = apiService;
             Title = "Reporte por rango de fecha";
             ListarUpas();
@@ -51,9 +52,9 @@ namespace lestoma.App.ViewModels.Reportes
             };
             SendCommand = new Command(GenerateReportClicked);
 
-        } 
+        }
         #endregion
-       
+
         #region properties
         public ObservableCollection<NameDTO> Upas
         {
@@ -118,27 +119,33 @@ namespace lestoma.App.ViewModels.Reportes
         }
         private async void ListarUpas()
         {
-
-            if (_isSuperAdmin)
+            UserDialogs.Instance.ShowLoading("Cargando...");
+            try
             {
-                UserDialogs.Instance.ShowLoading("Cargando...");
-                try
+                if (_apiService.CheckConnection())
                 {
-                    if (_apiService.CheckConnection())
+                    ResponseDTO upas = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API, "upas/listar-nombres", TokenUser.Token);
+                    Upas = new ObservableCollection<NameDTO>((List<NameDTO>)upas.Data);
+                    Upas.Insert(0, new NameDTO { Id = Guid.Empty, Nombre = "Todas" });
+                    if (!IsSuperAdmin)
                     {
-                        ResponseDTO upas = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API, "upas/listar-nombres", TokenUser.Token);
-                        Upas = new ObservableCollection<NameDTO>((List<NameDTO>)upas.Data);
-                        Upas.Insert(0, new NameDTO { Id = Guid.Empty, Nombre = "Todas" });
+                        ResponseDTO response = await _apiService.GetAsyncWithToken(URL_API, "usuarios/upa-asignada", TokenUser.Token);
+                        if (response.IsExito)
+                        {
+                            var upa = ParsearData<NameDTO>(response);
+                            var selected = Upas.Where(x => x.Id == upa.Id).FirstOrDefault();
+                            Upa = selected;
+                        }
                     }
                 }
-                catch (Exception ex)
-                {
-                    SeeError(ex);
-                }
-                finally
-                {
-                    UserDialogs.Instance.HideLoading();
-                }
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
             }
         }
         private async void GenerateReportClicked(object obj)
@@ -190,7 +197,7 @@ namespace lestoma.App.ViewModels.Reportes
                 isUpaValid = true;
             }
             return isFiltroFechaValid && isUpaValid && istipoArchivoValid;
-        } 
+        }
         #endregion
     }
 }

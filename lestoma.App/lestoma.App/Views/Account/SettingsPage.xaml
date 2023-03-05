@@ -20,41 +20,6 @@
                     TextColor="{DynamicResource Gray-800}"
                     VerticalOptions="Center"
                     VerticalTextAlignment="Center" />
-
-                <!--  Grid for Edit profile label and navigation bar icon  -->
-                <controls:TapAnimationGrid
-                    BackgroundColor="{DynamicResource Gray-Bg}"
-                    ColumnDefinitions="Auto, *, Auto"
-                    ColumnSpacing="0"
-                    Command="{Binding EditProfileCommand}"
-                    RowSpacing="0"
-                    Tapped="False">
-
-                    <!--  Edit profile icon  -->
-                    <Label
-                        Grid.Column="0"
-                        Margin="16,0,0,0"
-                        FontFamily="Fontello"
-                        Style="{StaticResource IconLabelStyle}"
-                        Text="{StaticResource IconUser}" />
-                    <!--  Edit profile label  -->
-                    <Label
-                        Grid.Column="1"
-                        Margin="16,12"
-                        FontFamily="Montserrat-Medium"
-                        HorizontalOptions="Start"
-                        Style="{StaticResource TitleLabelStyle}"
-                        Text="Editar Perfil"
-                        VerticalOptions="Center" />
-                    <!--  Navigation icon  -->
-                    <Label
-                        Grid.Column="2"
-                        Margin="16,8"
-                        Style="{StaticResource IconLabelStyle}"
-                        Text="{StaticResource Next}" />
-                </controls:TapAnimationGrid>
-                <BoxView Style="{StaticResource HorizontalSeparatorStyle}" />
-
                 <!--  Grid for Change password label and navigation bar icon  -->
                 <controls:TapAnimationGrid
                     BackgroundColor="{DynamicResource Gray-Bg}"
@@ -207,6 +172,7 @@
                         Style="{StaticResource IconLabelStyle}"
                         Text="{StaticResource Next}" />
                 </controls:TapAnimationGrid>
+                <BoxView Style="{StaticResource HorizontalSeparatorStyle}" />
                 <controls:TapAnimationGrid
                     BackgroundColor="{DynamicResource Gray-Bg}"
                     ColumnDefinitions="Auto, *, Auto"
@@ -238,8 +204,6 @@
                         Text="{StaticResource Next}" />
                 </controls:TapAnimationGrid>
                 <BoxView Style="{StaticResource HorizontalSeparatorStyle}" />
-
-
                 <controls:TapAnimationGrid
                     BackgroundColor="{DynamicResource Gray-Bg}"
                     ColumnDefinitions="Auto, *, Auto"

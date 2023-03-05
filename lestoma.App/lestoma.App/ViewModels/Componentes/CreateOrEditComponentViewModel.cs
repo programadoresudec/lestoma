@@ -52,7 +52,7 @@ namespace lestoma.App.ViewModels.Componentes
             if (parameters.ContainsKey("idComponent"))
             {
                 var Id = parameters.GetValue<Guid>("idComponent");
-                Title = "Editar";
+                Title = "Editar Componente";
                 _iconStatusComponent = "icon_edit.png";
                 IsEdit = false;
                 LoadLists(Id);
@@ -65,7 +65,7 @@ namespace lestoma.App.ViewModels.Componentes
             else
             {
                 _iconStatusComponent = "icon_create.png";
-                Title = "Crear";
+                Title = "Crear Componente";
                 LoadLists(Guid.Empty);
             }
         }
