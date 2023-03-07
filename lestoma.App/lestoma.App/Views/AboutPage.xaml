@@ -26,7 +26,7 @@
                         Padding="0" CornerRadius="40" HorizontalOptions="End">
                             <ContentView>
                                 <ContentView.GestureRecognizers>
-
+                             
                                 </ContentView.GestureRecognizers>
                                 <Image Source="icon_close.png"  Aspect="AspectFill" />
                             </ContentView>
@@ -44,7 +44,7 @@
                                         <DatePicker HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy" 
                                             Date="{Binding DateInitial}" Grid.Column="0" MinimumDate="{Binding InitialMinimumDate}" 
                                             MaximumDate="{x:Static sys:DateTime.Now}"/>
-                                        <Label  Margin="0,13,-5,0" TextColor="{StaticResource Gray-Black}"
+                                        <Label  Margin="0,13,0,0" Padding="0,0,-9,0" TextColor="{StaticResource Gray-Black}"
                                             Style="{StaticResource IconLabelStyle}" FontFamily="Fontello" HorizontalOptions="EndAndExpand"
                                             Text="{StaticResource IconCalendar}" />
                                     </Grid>
@@ -53,7 +53,7 @@
                                                                ContainerBackgroundColor="Transparent" HeightRequest="80">
                                     <Grid>
                                         <TimePicker Time="{Binding SaveTimeInitial, Mode=TwoWay}" HorizontalOptions="FillAndExpand" Grid.Column="0"/>
-                                        <Label Margin="0,15,-5,0"  TextColor="{StaticResource Gray-600}" HorizontalOptions="EndAndExpand"
+                                        <Label Margin="0,15,0,0" Padding="0,0,-9,0"  TextColor="{StaticResource Gray-600}" HorizontalOptions="EndAndExpand"
                                             FontFamily="Fontello" Style="{StaticResource IconLabelStyle}" Text="{StaticResource IconClock}"/>
                                     </Grid>
                                 </inputLayout:SfTextInputLayout>
@@ -69,7 +69,7 @@
                                         <DatePicker HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy" IsEnabled="{Binding IsEnabled}"
                                             Date="{Binding DateFinal}" Grid.Column="0" MinimumDate="{Binding FinalMinimumDate}" 
                                             MaximumDate="{x:Static sys:DateTime.Now}"/>
-                                        <Label  Margin="0,13,-5,0" TextColor="{StaticResource Gray-Black}"
+                                        <Label  Margin="0,13,0,0" Padding="0,0,-10,0" TextColor="{StaticResource Gray-Black}"
                                             Style="{StaticResource IconLabelStyle}" FontFamily="Fontello" HorizontalOptions="EndAndExpand"
                                             Text="{StaticResource IconCalendar}" />
                                     </Grid>
@@ -77,8 +77,8 @@
                                 <inputLayout:SfTextInputLayout Hint="Hora" Margin="40,0,0,0" FocusedColor="Black" HorizontalOptions="FillAndExpand"
                                                                ContainerBackgroundColor="Transparent" HeightRequest="80">
                                     <Grid>
-                                        <TimePicker Time="{Binding SaveTimeFinal, Mode=TwoWay}" HorizontalOptions="FillAndExpand" Grid.Column="0" IsEnabled="{Binding IsEnabled}"/>
-                                        <Label Margin="0,15,-5,0"  TextColor="{StaticResource Gray-600}" HorizontalOptions="EndAndExpand"
+                                        <TimePicker Time="{Binding SaveTimeFinal, Mode=TwoWay}"  Grid.Column="0" IsEnabled="{Binding IsEnabled}"/>
+                                        <Label TextColor="{StaticResource Gray-600}" HorizontalOptions="EndAndExpand" Margin="0,15,0,0" Padding="0,0,-9,0"
                                             FontFamily="Fontello" Style="{StaticResource IconLabelStyle}" Text="{StaticResource IconClock}"/>
                                     </Grid>
                                 </inputLayout:SfTextInputLayout>
