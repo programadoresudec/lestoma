@@ -27,11 +27,11 @@
                 </gauge:LinearScale.MinorTickSettings>
 
                 <gauge:LinearScale.GradientStops>
-                    <gauge:GaugeGradientStop Value="0"  Color="#51c9e1"/>
-                    <gauge:GaugeGradientStop Value="15" Color="#93e9e1"/>
-                    <gauge:GaugeGradientStop Value="30" Color="#c5e692"/>
-                    <gauge:GaugeGradientStop Value="45" Color="#fedd2b"/>
-                    <gauge:GaugeGradientStop Value="60" Color="#e87813"/>
+                    <gauge:GaugeGradientStop Value="0"  Color="#082DF3"/>
+                    <gauge:GaugeGradientStop Value="15" Color="#3EAD14"/>
+                    <gauge:GaugeGradientStop Value="30" Color="#044D09"/>
+                    <gauge:GaugeGradientStop Value="45" Color="#FE972B"/>
+                    <gauge:GaugeGradientStop Value="60" Color="#E81313"/>
 
                 </gauge:LinearScale.GradientStops>
             </gauge:LinearScale>
