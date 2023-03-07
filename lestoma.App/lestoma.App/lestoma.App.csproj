@@ -127,6 +127,24 @@
     <EmbeddedResource Update="Views\Actividades\CrearOrEditActividadPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="ViewModels\Laboratorio\Laboratorio\EstadoActuadoresPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ViewModels\Laboratorio\Laboratorio\LecturaSensoresPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ViewModels\Laboratorio\Laboratorio\SetPointPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Laboratorio\EstadoActuadorPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Laboratorio\LecturaSensorPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Laboratorio\SetPointPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\MenuMasterDetailPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -169,10 +187,10 @@
     <EmbeddedResource Update="Views\DashboardHangFirePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Laboratorio\ComponentesModuloPage.xaml">
+    <EmbeddedResource Update="ViewModels\Laboratorio\Laboratorio\ComponentesModuloPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Laboratorio\ModulosUpaPage.xaml">
+    <EmbeddedResource Update="ViewModels\Laboratorio\Laboratorio\ModulosUpaPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\LoadingPopupPage.xaml">
@@ -244,7 +262,7 @@
     <Compile Update="Styles\NavigationStyles.xaml.cs">
       <DependentUpon>NavigationStyles.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\Laboratorio\ComponentesModuloPage.xaml.cs">
+    <Compile Update="ViewModels\Laboratorio\Laboratorio\ComponentesModuloPage.xaml.cs">
       <DependentUpon>ComponentesModuloPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\MenuMasterDetailPage.xaml.cs">
