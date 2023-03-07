@@ -101,6 +101,9 @@
     <PackageReference Include="Syncfusion.Xamarin.SfComboBox">
       <Version>19.3.0.48</Version>
     </PackageReference>
+    <PackageReference Include="Syncfusion.Xamarin.SfGauge">
+      <Version>19.3.0.48</Version>
+    </PackageReference>
     <PackageReference Include="Syncfusion.Xamarin.SfListView">
       <Version>19.3.0.48</Version>
     </PackageReference>
