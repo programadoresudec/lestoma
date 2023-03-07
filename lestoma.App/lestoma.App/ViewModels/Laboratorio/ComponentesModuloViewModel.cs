@@ -1,5 +1,6 @@
 ﻿using lestoma.App.Views.Modulos;
 using lestoma.CommonUtils.DTOs;
+using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Interfaces;
 using Prism.Navigation;
 using System;
@@ -48,7 +49,7 @@ namespace lestoma.App.ViewModels.Laboratorio
         private async void ComponentSelected(object objeto)
         {
             var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
-            var componente = lista.ItemData as NameDTO;
+            var componente = lista.ItemData as ComponentePorModuloDTO;
             if (componente == null)
                 return;
 
