@@ -38,8 +38,6 @@ namespace lestoma.App.ViewModels.Upas
             set => SetProperty(ref _upa, value);
         }
 
-
-
         public UpaModel Model
         {
             get => _model;
@@ -51,7 +49,6 @@ namespace lestoma.App.ViewModels.Upas
             get => _isVisibleProtocols;
             set => SetProperty(ref _isVisibleProtocols, value);
         }
-
 
         public bool IsVisibleButton
         {
@@ -72,7 +69,7 @@ namespace lestoma.App.ViewModels.Upas
             {
                 return new Command(async () =>
                 {
-                    await _navigationService.NavigateAsync(nameof(CreateProtocolPopupPage));
+                    await _navigationService.NavigateAsync(nameof(CreateEditProtocolPopupPage));
                 });
             }
         }
@@ -133,7 +130,7 @@ namespace lestoma.App.ViewModels.Upas
                         Descripcion = _model.Descripcion.Value.Trim(),
                         CantidadActividades = (short)Convert.ToInt32(_model.CantidadActividades.Value),
                     };
-                    Protocolos.ForEach(x => request.ProtocolosCOM.Add(new ProtocoloDTO
+                    Protocolos.ForEach(x => request.ProtocolosCOM.Add(new ProtocoloRequest
                     {
                         Nombre = x.Nombre,
                         PrimerByteTrama = (byte)x.PrimerByteTrama,
@@ -149,7 +146,7 @@ namespace lestoma.App.ViewModels.Upas
                         }
                         AlertSuccess(respuesta.MensajeHttp);
                         var parameters = new NavigationParameters { { Constants.REFRESH, true } };
-                        await _navigationService.GoBackAsync(parameters, useModalNavigation: true, true);
+                        await _navigationService.GoBackAsync(parameters);
                     }
                     else
                     {
@@ -161,7 +158,7 @@ namespace lestoma.App.ViewModels.Upas
                         }
                         AlertSuccess(respuesta.MensajeHttp);
                         var parameters = new NavigationParameters { { Constants.REFRESH, true } };
-                        await _navigationService.GoBackAsync(parameters, useModalNavigation: true, true);
+                        await _navigationService.GoBackAsync(parameters);
                     }
                 }
             }

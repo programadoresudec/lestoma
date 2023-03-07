@@ -1,4 +1,5 @@
 ﻿using lestoma.CommonUtils.DTOs;
+using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,13 +8,13 @@ namespace lestoma.App.ViewModels
 {
     public class InfoProtocolPopupViewModel : BaseViewModel
     {
-        private ObservableCollection<ProtocoloDTO> _protocolos;
+        private ObservableCollection<ProtocoloRequest> _protocolos;
         public InfoProtocolPopupViewModel(INavigationService navigationService) :
             base(navigationService)
         {
 
         }
-        public ObservableCollection<ProtocoloDTO> Protocolos
+        public ObservableCollection<ProtocoloRequest> Protocolos
         {
             get => _protocolos;
             set => SetProperty(ref _protocolos, value);
@@ -24,7 +25,7 @@ namespace lestoma.App.ViewModels
             if (parameters.ContainsKey("protocolos"))
             {
                 var protocolos = parameters.GetValue<object>("protocolos");
-                Protocolos = new ObservableCollection<ProtocoloDTO>((List<ProtocoloDTO>)protocolos);
+                Protocolos = new ObservableCollection<ProtocoloRequest>((List<ProtocoloRequest>)protocolos);
             }
         }
     }

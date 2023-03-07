@@ -9,7 +9,7 @@
                  xmlns:control="clr-namespace:lestoma.App.Controls" 
                  xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" 
                  prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="lestoma.App.Views.Upas.CreateProtocolPopupPage">
+             x:Class="lestoma.App.Views.Upas.CreateEditProtocolPopupPage">
     <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
         <cards:SfCardView BackgroundColor="White" CornerRadius="10" 
                            Margin="{core:OnPlatformOrientationThickness  PhonePortrait='30,40',

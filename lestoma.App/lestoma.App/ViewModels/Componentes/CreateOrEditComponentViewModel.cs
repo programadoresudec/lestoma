@@ -218,7 +218,7 @@ namespace lestoma.App.ViewModels.Componentes
                     new InfoEstadoComponenteModel
                     {
                         Estado = InfoComponente.Id != Guid.Empty ? InfoComponente.EstadoComponente : null,
-                        IsEdit = true
+                        IsEdit = IsEdit
                     }
                 }
             };
@@ -311,9 +311,6 @@ namespace lestoma.App.ViewModels.Componentes
 
         private bool AreFieldsValid()
         {
-            InfoComponente.EstadoComponente = !string.IsNullOrWhiteSpace(MovilSettings.EstadoComponente)
-                ? JsonConvert.DeserializeObject<EstadoComponenteDTO>(MovilSettings.EstadoComponente)
-                : null;
             bool isNameValid = !string.IsNullOrWhiteSpace(InfoComponente.Nombre);
             bool isUpaValid = Upa != null;
             bool isActividadValid = Actividad != null;

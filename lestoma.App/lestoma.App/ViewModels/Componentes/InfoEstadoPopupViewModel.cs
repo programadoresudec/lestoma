@@ -1,15 +1,14 @@
-﻿using System;
-using lestoma.App.Models;
+﻿using lestoma.App.Models;
+using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
+using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Listados;
+using Newtonsoft.Json;
 using Prism.Navigation;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using lestoma.CommonUtils.Helpers;
-using Newtonsoft.Json;
-using Rg.Plugins.Popup.Services;
 using Xamarin.Forms;
-using lestoma.CommonUtils.Constants;
 
 namespace lestoma.App.ViewModels.Componentes
 {
@@ -90,9 +89,19 @@ namespace lestoma.App.ViewModels.Componentes
 
         private void LoadEstadosComponente(EstadoComponenteDTO estadoComponente)
         {
-            Estados = new ObservableCollection<EstadoComponenteDTO>(new ListadoEstadoComponente().Listado);
+            ListadoEstadoComponente estados = new ListadoEstadoComponente();
+            if (!IsEdit)
+            {
+                Estados = new ObservableCollection<EstadoComponenteDTO>(estados.EstadosCreate());
+            }
+            else
+            {
+                Estados = new ObservableCollection<EstadoComponenteDTO>(estados.Listado);
+            }
+
             if (Estados.Count > 0)
             {
+
                 var data = Estados.Where(x => x.Id == estadoComponente.Id).FirstOrDefault();
                 if (data != null)
                 {

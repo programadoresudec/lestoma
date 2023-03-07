@@ -223,7 +223,7 @@
     <EmbeddedResource Update="Views\Upas\CreateOrEditUpaPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Upas\CreateProtocolPopupPage.xaml">
+    <EmbeddedResource Update="Views\Upas\CreateEditProtocolPopupPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Upas\InfoProtocolPopupPage.xaml">
@@ -258,6 +258,9 @@
     </Compile>
     <Compile Update="Views\Reportes\SuperAdmin\ReporteComponentPage.xaml.cs">
       <DependentUpon>ReporteComponentPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Upas\CreateEditProtocolPopupPage.xaml.cs">
+      <DependentUpon>CreateEditProtocolPopupPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 

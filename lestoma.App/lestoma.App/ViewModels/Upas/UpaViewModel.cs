@@ -28,23 +28,6 @@ namespace lestoma.App.ViewModels.Upas
             SeeProtocolsCommand = new Command<object>(OnSeeProtocolClicked, CanNavigate);
         }
 
-        private async void OnSeeProtocolClicked(object obj)
-        {
-            UpaDTO detalle = (UpaDTO)obj;
-            if (detalle == null)
-                return;
-            var parameters = new NavigationParameters
-            {
-                { "protocolos", detalle.ProtocolosCOM }
-            };
-            await _navigationService.NavigateAsync($"{nameof(InfoProtocolPopupPage)}", parameters);
-        }
-
-        private bool CanNavigate(object arg)
-        {
-            return true;
-        }
-
         public ObservableCollection<UpaDTO> Upas
         {
             get => _upas;
@@ -99,7 +82,22 @@ namespace lestoma.App.ViewModels.Upas
 
         }
 
+        private async void OnSeeProtocolClicked(object obj)
+        {
+            UpaDTO detalle = (UpaDTO)obj;
+            if (detalle == null)
+                return;
+            var parameters = new NavigationParameters
+            {
+                { "protocolos", detalle.ProtocolosCOM }
+            };
+            await _navigationService.NavigateAsync($"{nameof(InfoProtocolPopupPage)}", parameters);
+        }
 
+        private bool CanNavigate(object arg)
+        {
+            return true;
+        }
         private void LoadUpas()
         {
             if (_apiService.CheckConnection())

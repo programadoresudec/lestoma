@@ -4,9 +4,9 @@ using System;
 
 namespace lestoma.App.Views.Upas
 {
-    public partial class CreateProtocolPopupPage : PopupPage
+    public partial class CreateEditProtocolPopupPage : PopupPage
     {
-        public CreateProtocolPopupPage()
+        public CreateEditProtocolPopupPage()
         {
             InitializeComponent();
         }
