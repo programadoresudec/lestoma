@@ -68,6 +68,14 @@
                                     FontSize="12"
                                     HorizontalOptions="StartAndExpand"
                                     Style="{StaticResource TitleLabelStyle}"
+                                    Text="{Binding DireccionRegistro, StringFormat='Dirección de Registro - {0}'}"
+                                    VerticalOptions="Center" />
+                                    <Label
+                                    Margin="16,0,0,0"
+                                    FontFamily="Montserrat-Regular"
+                                    FontSize="12"
+                                    HorizontalOptions="StartAndExpand"
+                                    Style="{StaticResource TitleLabelStyle}"
                                     Text="{Binding Actividad, StringFormat='ACTIVIDAD - {0}'}"
                                     VerticalOptions="Center" />
                                 </StackLayout>
