@@ -6,6 +6,7 @@ using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Laboratorio
@@ -15,12 +16,15 @@ namespace lestoma.App.ViewModels.Laboratorio
         private readonly IApiService _apiService;
         private ObservableCollection<ComponentePorModuloDTO> _componentes;
         private Guid _moduloId;
+        private int? _esclavo;
+
         public ComponentesModuloViewModel(INavigationService navigationService, IApiService apiService) :
              base(navigationService)
         {
             _apiService = apiService;
             RedirectionTramaCommand = new Command<object>(ComponentSelected, CanNavigate);
             Title = "Seleccione uno o mas componentes";
+            Bytes = LoadBytes();
 
         }
         private bool CanNavigate(object arg)
@@ -36,6 +40,17 @@ namespace lestoma.App.ViewModels.Laboratorio
                 LoadComponents();
             }
 
+        }
+
+        public List<int> Bytes { get; set; }
+        public int? Escalvo
+        {
+            get => _esclavo;
+            set => SetProperty(ref _esclavo, value);
+        }
+        private List<int> LoadBytes()
+        {
+            return Enumerable.Range(0, 256).ToList();
         }
 
         public ObservableCollection<ComponentePorModuloDTO> Componentes
