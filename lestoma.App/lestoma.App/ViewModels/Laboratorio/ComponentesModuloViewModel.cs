@@ -1,5 +1,7 @@
-﻿using lestoma.App.Views.Modulos;
+﻿using lestoma.App.Views.Laboratorio;
+using lestoma.App.Views.Modulos;
 using lestoma.CommonUtils.DTOs;
+using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Interfaces;
 using Prism.Navigation;
 using System;
@@ -48,7 +50,7 @@ namespace lestoma.App.ViewModels.Laboratorio
         private async void ComponentSelected(object objeto)
         {
             var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
-            var componente = lista.ItemData as NameDTO;
+            var componente = lista.ItemData as ComponentePorModuloDTO;
             if (componente == null)
                 return;
 
@@ -56,7 +58,18 @@ namespace lestoma.App.ViewModels.Laboratorio
             {
                 { "ModuloId", componente.Id }
             };
-            await _navigationService.NavigateAsync(nameof(CreateOrEditModuloPage), parameters);
+            if (EnumConfig.GetDescription(TipoEstadoComponente.Lectura).Equals(componente.EstadoComponente.TipoEstado))
+            {
+                await _navigationService.NavigateAsync(nameof(LecturaSensorPage), parameters);
+            }
+            if (EnumConfig.GetDescription(TipoEstadoComponente.OnOff).Equals(componente.EstadoComponente.TipoEstado))
+            {
+                await _navigationService.NavigateAsync(nameof(EstadoActuadorPage), parameters);
+            }
+            else
+            {
+                await _navigationService.NavigateAsync(nameof(SetPointPage), parameters);
+            }
 
         }
         private void LoadComponents()
