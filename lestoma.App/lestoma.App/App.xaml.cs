@@ -161,7 +161,6 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<LecturaSensorPage, LecturaSensorViewModel>();
             containerRegistry.RegisterForNavigation<EstadoActuadorPage, EstadoActuadorViewModel>();
             #endregion
-
         }
     }
 }

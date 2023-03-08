@@ -70,8 +70,6 @@ namespace lestoma.App.ViewModels.Laboratorio
             {
                 await _navigationService.NavigateAsync(nameof(SetPointPage), parameters);
             }
-
-            
         }
         private void LoadComponents()
         {
