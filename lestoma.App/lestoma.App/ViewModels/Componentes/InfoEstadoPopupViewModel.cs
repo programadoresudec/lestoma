@@ -90,18 +90,10 @@ namespace lestoma.App.ViewModels.Componentes
         private void LoadEstadosComponente(EstadoComponenteDTO estadoComponente)
         {
             ListadoEstadoComponente estados = new ListadoEstadoComponente();
-            if (!IsEdit)
-            {
-                Estados = new ObservableCollection<EstadoComponenteDTO>(estados.EstadosCreate());
-            }
-            else
-            {
-                Estados = new ObservableCollection<EstadoComponenteDTO>(estados.Listado);
-            }
+            Estados = new ObservableCollection<EstadoComponenteDTO>(estados.Listado);
 
             if (Estados.Count > 0)
             {
-
                 var data = Estados.Where(x => x.Id == estadoComponente.Id).FirstOrDefault();
                 if (data != null)
                 {
