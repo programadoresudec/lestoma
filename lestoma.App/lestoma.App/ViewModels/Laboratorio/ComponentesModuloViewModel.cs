@@ -1,5 +1,4 @@
 ﻿using lestoma.App.Views.Laboratorio;
-using lestoma.App.Views.Modulos;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Interfaces;
@@ -62,7 +61,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             {
                 await _navigationService.NavigateAsync(nameof(LecturaSensorPage), parameters);
             }
-            if (EnumConfig.GetDescription(TipoEstadoComponente.OnOff).Equals(componente.EstadoComponente.TipoEstado))
+            else if (EnumConfig.GetDescription(TipoEstadoComponente.OnOff).Equals(componente.EstadoComponente.TipoEstado))
             {
                 await _navigationService.NavigateAsync(nameof(EstadoActuadorPage), parameters);
             }
