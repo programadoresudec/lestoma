@@ -128,9 +128,6 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<CrearReporteDelBuzonPage, CrearReporteDelBuzonViewModel>();
             containerRegistry.RegisterForNavigation<SignOutPopupPage, SignOutPopupViewModel>();
             containerRegistry.RegisterForNavigation<LoadingPopupPage>();
-            containerRegistry.RegisterForNavigation<SetPointPage, SetPointViewModel>();
-            containerRegistry.RegisterForNavigation<LecturaSensorPage, LecturaSensorViewModel>();
-            containerRegistry.RegisterForNavigation<EstadoActuadorPage, EstadoActuadorViewModel>();
             containerRegistry.RegisterForNavigation<ActividadPage, ActividadViewModel>();
             containerRegistry.RegisterForNavigation<CrearOrEditActividadPage, CrearOrEditActividadViewModel>();
             containerRegistry.RegisterForNavigation<UpaPage, UpaViewModel>();
@@ -160,7 +157,8 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<ReporteComponentPage, ReportComponentViewModel>();
             containerRegistry.RegisterForNavigation<InfoProtocolPopupPage, InfoProtocolPopupViewModel>();
             containerRegistry.RegisterForNavigation<CreateEditProtocolPopupPage, CreateEditProtocolPopupViewModel>();
-            #endregion      
+            #endregion
+           
         }
     }
 }
