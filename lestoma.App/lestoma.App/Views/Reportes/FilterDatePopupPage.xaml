@@ -63,11 +63,11 @@
                                             Text="{StaticResource IconCalendar}" />
                                     </Grid>
                                 </inputLayout:SfTextInputLayout>
-                                <inputLayout:SfTextInputLayout Hint="Hora" Margin="40,0,0,0" FocusedColor="Black" HorizontalOptions="FillAndExpand"
+                                <inputLayout:SfTextInputLayout Hint="Hora" FocusedColor="Black" HorizontalOptions="FillAndExpand"
                                                                ContainerBackgroundColor="Transparent" HeightRequest="80">
                                     <Grid>
                                         <TimePicker Time="{Binding SaveTimeInitial, Mode=TwoWay}" HorizontalOptions="FillAndExpand" Grid.Column="0"/>
-                                        <Label Margin="0,15,-5,0"  TextColor="{StaticResource Gray-600}" HorizontalOptions="EndAndExpand"
+                                        <Label Margin="0,15,0,0"  TextColor="{StaticResource Gray-600}" HorizontalOptions="EndAndExpand"
                                             FontFamily="Fontello" Style="{StaticResource IconLabelStyle}" Text="{StaticResource IconClock}"/>
                                     </Grid>
                                 </inputLayout:SfTextInputLayout>
@@ -83,16 +83,16 @@
                                         <DatePicker HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy" IsEnabled="{Binding IsEnabled}"
                                             Date="{Binding DateFinal}" Grid.Column="0" MinimumDate="{Binding FinalMinimumDate}" 
                                             MaximumDate="{x:Static sys:DateTime.Now}"/>
-                                        <Label  Margin="0,13,-5,0" TextColor="{StaticResource Gray-Black}"
+                                        <Label  Margin="0,13,0,0" TextColor="{StaticResource Gray-Black}"
                                             Style="{StaticResource IconLabelStyle}" FontFamily="Fontello" HorizontalOptions="EndAndExpand"
                                             Text="{StaticResource IconCalendar}" />
                                     </Grid>
                                 </inputLayout:SfTextInputLayout>
-                                <inputLayout:SfTextInputLayout Hint="Hora" Margin="40,0,0,0" FocusedColor="Black" HorizontalOptions="FillAndExpand"
+                                <inputLayout:SfTextInputLayout Hint="Hora" FocusedColor="Black" HorizontalOptions="FillAndExpand"
                                                                ContainerBackgroundColor="Transparent" HeightRequest="80">
                                     <Grid>
                                         <TimePicker Time="{Binding SaveTimeFinal, Mode=TwoWay}" HorizontalOptions="FillAndExpand" Grid.Column="0" IsEnabled="{Binding IsEnabled}"/>
-                                        <Label Margin="0,15,-5,0"  TextColor="{StaticResource Gray-600}" HorizontalOptions="EndAndExpand"
+                                        <Label Margin="0,15,0,0"  TextColor="{StaticResource Gray-600}" HorizontalOptions="EndAndExpand"
                                             FontFamily="Fontello" Style="{StaticResource IconLabelStyle}" Text="{StaticResource IconClock}"/>
                                     </Grid>
                                 </inputLayout:SfTextInputLayout>

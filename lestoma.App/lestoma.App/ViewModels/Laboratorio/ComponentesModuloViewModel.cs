@@ -66,11 +66,10 @@ namespace lestoma.App.ViewModels.Laboratorio
             {
                 await _navigationService.NavigateAsync(nameof(EstadoActuadorPage), parameters);
             }
-            else 
+            else
             {
                 await _navigationService.NavigateAsync(nameof(SetPointPage), parameters);
             }
-            
 
             
         }

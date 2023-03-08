@@ -157,8 +157,11 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<ReporteComponentPage, ReportComponentViewModel>();
             containerRegistry.RegisterForNavigation<InfoProtocolPopupPage, InfoProtocolPopupViewModel>();
             containerRegistry.RegisterForNavigation<CreateEditProtocolPopupPage, CreateEditProtocolPopupViewModel>();
+            containerRegistry.RegisterForNavigation<SetPointPage, SetPointViewModel>();
+            containerRegistry.RegisterForNavigation<LecturaSensorPage, LecturaSensorViewModel>();
+            containerRegistry.RegisterForNavigation<EstadoActuadorPage, EstadoActuadorViewModel>();
             #endregion
-           
+
         }
     }
 }
