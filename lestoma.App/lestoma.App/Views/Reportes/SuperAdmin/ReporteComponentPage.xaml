@@ -94,7 +94,9 @@
                                 CloseButtonColor="{StaticResource PantoneVerdeSecond}"
                        	        DisplayMemberPath="Nombre">
                         <buttons:SfChipGroup.Behaviors>
-                            <prism:EventToCommandBehavior EventName="ItemRemoved" Command="{Binding ItemRemoveCommand}" EventArgsParameterPath="RemovedItem" />
+                            <prism:EventToCommandBehavior EventName="ItemRemoved" 
+                                                          Command="{Binding ItemRemoveCommand}"
+                                                          EventArgsParameterPath="RemovedItem" />
                         </buttons:SfChipGroup.Behaviors>
                         <buttons:SfChipGroup.ChipLayout>
                             <FlexLayout 

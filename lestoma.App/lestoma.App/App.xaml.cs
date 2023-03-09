@@ -160,7 +160,9 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<SetPointPage, SetPointViewModel>();
             containerRegistry.RegisterForNavigation<LecturaSensorPage, LecturaSensorViewModel>();
             containerRegistry.RegisterForNavigation<EstadoActuadorPage, EstadoActuadorViewModel>();
+            containerRegistry.RegisterForNavigation<MACBluetoothPopupPage, MACBluetoothPopupViewModel>();
             #endregion
+
         }
     }
 }

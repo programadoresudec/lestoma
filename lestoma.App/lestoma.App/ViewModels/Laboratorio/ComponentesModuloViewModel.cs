@@ -33,7 +33,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             LoadUpas();
             Bytes = LoadBytes();
         }
-           
+
 
         #region Properties
         public Command RedirectionTramaCommand { get; set; }
@@ -79,13 +79,13 @@ namespace lestoma.App.ViewModels.Laboratorio
             set => SetProperty(ref _componentes, value);
         }
         public List<int> Bytes { get; set; }
-        
+
         public int? Escalvo
         {
             get => _esclavo;
             set => SetProperty(ref _esclavo, value);
         }
-        
+
         private List<int> LoadBytes()
         {
             return Enumerable.Range(0, 256).ToList();
@@ -112,20 +112,28 @@ namespace lestoma.App.ViewModels.Laboratorio
         {
             try
             {
-                // consume service en la nube
-                if (_apiService.CheckConnection())
+                if (_isSuperAdmin)
                 {
-                    ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API, "upas/listar-nombres", TokenUser.Token);
-                    if (response.IsExito)
+                    // consume service en la nube
+                    if (_apiService.CheckConnection())
                     {
-                        Upas = new ObservableCollection<NameDTO>((List<NameDTO>)response.Data);
-                    }      
+                        ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API, "upas/listar-nombres", TokenUser.Token);
+                        if (response.IsExito)
+                        {
+                            Upas = new ObservableCollection<NameDTO>((List<NameDTO>)response.Data);
+                        }
+                    }
+                    // consume service en la bd del dispositivo movil
+                    else
+                    {
+
+                    }
                 }
-                // consume service en la bd del dispositivo movil
                 else
                 {
-
+                    ListarProtocolos(Guid.Empty);
                 }
+
             }
             catch (Exception ex)
             {
@@ -156,7 +164,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                     if (response.IsExito)
                     {
                         Protocolos = new ObservableCollection<NameProtocoloDTO>((List<NameProtocoloDTO>)response.Data);
-                    } 
+                    }
                 }
                 else
                 {

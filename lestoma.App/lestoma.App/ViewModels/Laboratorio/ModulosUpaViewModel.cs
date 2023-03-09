@@ -1,7 +1,13 @@
-﻿using lestoma.App.Views.Laboratorio;
+﻿using Android.Bluetooth;
+using Java.Util;
+using lestoma.App.Views;
+using lestoma.App.Views.Laboratorio;
 using lestoma.CommonUtils.DTOs;
+using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
+using Plugin.Toast;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,7 +19,10 @@ namespace lestoma.App.ViewModels.Laboratorio
     {
         private readonly IApiService _apiService;
         private ObservableCollection<NameDTO> _modulos;
-
+        private bool _isCheckConnection;
+        private BluetoothSocket btSocket = null;
+        private string address;
+        private static UUID MY_UUID = UUID.FromString("00001101-0000-1000-8000-00805F9B34FB");
         public ModulosUpaViewModel(INavigationService navigationService, IApiService apiService) :
              base(navigationService)
         {
@@ -22,12 +31,14 @@ namespace lestoma.App.ViewModels.Laboratorio
             _modulos = new ObservableCollection<NameDTO>();
             SeeComponentCommand = new Command<object>(ModuloSelected, CanNavigate);
             LoadModulos();
+            address = MovilSettings.MacBluetooth;
+            ConnectionBluetoothCommand = new Command(ConectarBluetoothClicked);
         }
+
         private bool CanNavigate(object arg)
         {
             return true;
         }
-
 
         public ObservableCollection<NameDTO> Modulos
         {
@@ -35,6 +46,12 @@ namespace lestoma.App.ViewModels.Laboratorio
             set => SetProperty(ref _modulos, value);
         }
 
+        public bool IsCheckConnection
+        {
+            get => _isCheckConnection;
+            set => SetProperty(ref _isCheckConnection, value);
+        }
+        public Command ConnectionBluetoothCommand { get; set; }
         public Command SeeComponentCommand { get; set; }
 
         private async void ModuloSelected(object objeto)
@@ -54,7 +71,8 @@ namespace lestoma.App.ViewModels.Laboratorio
         }
         private void LoadModulos()
         {
-            if (_apiService.CheckConnection())
+            IsCheckConnection = _apiService.CheckConnection();
+            if (IsCheckConnection)
             {
                 ConsumoService();
             }
@@ -63,6 +81,59 @@ namespace lestoma.App.ViewModels.Laboratorio
                 ConsumoServiceLocal();
             }
         }
+
+        private async void ConectarBluetoothClicked(object obj)
+        {
+            await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Conectando..."));
+            try
+            {
+                mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
+                if (!mBluetoothAdapter.IsEnabled)
+                {
+                    CrossToastPopUp.Current.ShowToastError("Tiene que prender el bluetooth", Plugin.Toast.Abstractions.ToastLength.Long);
+                    return;
+                }
+                //Iniciamos la conexion con el arduino
+                BluetoothDevice device = mBluetoothAdapter.GetRemoteDevice(address);
+                System.Console.WriteLine("Conexion en curso" + device);
+
+                //Indicamos al adaptador que ya no sea visible
+                mBluetoothAdapter.CancelDiscovery();
+                if (btSocket == null)
+                {
+                    btSocket = device.CreateRfcommSocketToServiceRecord(MY_UUID);
+                    await btSocket.ConnectAsync();
+                    if (btSocket.IsConnected)
+                    {
+                        CrossToastPopUp.Current.ShowToastSuccess("Conexión Establecida.", Plugin.Toast.Abstractions.ToastLength.Long);
+                    }
+                }
+                else
+                {
+                    //Inicamos el socket de comunicacion con el arduino
+                    btSocket.Close();
+                    btSocket = device.CreateRfcommSocketToServiceRecord(MY_UUID);
+                    await btSocket.ConnectAsync();
+                    if (btSocket.IsConnected)
+                    {
+                        CrossToastPopUp.Current.ShowToastSuccess("Conexión Establecida.", Plugin.Toast.Abstractions.ToastLength.Long);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //en caso de generarnos error cerramos el socket
+                LestomaLog.Error(ex.Message);
+
+                SeeError(ex);
+                btSocket.Close();
+            }
+            finally
+            {
+                await _navigationService.ClearPopupStackAsync();
+            }
+        }
+
         private void ConsumoServiceLocal()
         {
             throw new NotImplementedException();

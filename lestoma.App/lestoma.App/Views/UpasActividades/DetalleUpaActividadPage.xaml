@@ -38,69 +38,76 @@
 
                 <syncfusion:SfListView.ItemTemplate>
                     <DataTemplate>
-                        <Frame Margin="5,10,5,10" CornerRadius="10" Padding="5" BackgroundColor="{StaticResource PantoneGrisLight}">
+                        <Frame Margin="0,5,0,5" CornerRadius="10" Padding="5" BackgroundColor="{StaticResource PantoneGrisLight}">
                             <StackLayout Orientation="Vertical" VerticalOptions="Center">
-                                <Label>
+                                <Label HorizontalOptions="CenterAndExpand">
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="Nombre Usuario: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" FontAttributes="Bold"/>
-                                            <Span Text="{Binding User.FullName}" TextColor="Black" FontSize="Small" />
+                                            <Span Text="{Binding User.FullName}" FontFamily="Montserrat-Bold" TextColor="{StaticResource PantoneVerdeSecond}" FontSize="Body" />
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>
                                 <Label>
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="Nombre Upa: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" FontAttributes="Bold"/>
-                                            <Span Text="{Binding Upa.Nombre}" TextColor="Black" FontSize="Small" />
+                                            <Span Text="Upa asignada: " TextColor="Black" FontFamily="Montserrat-SemiBold"/>
+                                            <Span Text="{Binding Upa.Nombre}" FontFamily="Montserrat-Regular" TextColor="{StaticResource Gray-900}" FontSize="Small" />
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>
                                 <Label>
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="Cantidad de actividades: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" FontAttributes="Bold"/>
-                                            <Span Text="{Binding Upa.CantidadActividades}" TextColor="Black" FontSize="Small" />
+                                            <Span Text="Actividades asignadas: " TextColor="Black" FontFamily="Montserrat-SemiBold"/>
+                                            <Span Text="{Binding Upa.CantidadActividades}" FontFamily="Montserrat-Regular" TextColor="{StaticResource Gray-900}" FontSize="Small" />
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>
-                                <Label>
-                                    <Label.FormattedText>
-                                        <FormattedString>
-                                            <Span Text="Fecha ultimo acceso: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" 
-                                              FontAttributes="Bold"/>
-                                            <Span Text="{Binding FechaCreacionServer}" TextColor="Black" FontSize="Small" />
-                                        </FormattedString>
-                                    </Label.FormattedText>
-                                </Label>
-                                <Label>
-                                    <Label.FormattedText>
-                                        <FormattedString>
-                                            <Span Text="IP: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" FontAttributes="Bold"/>
-                                            <Span Text="{Binding Ip}" TextColor="Black" FontSize="Small" />
-                                        </FormattedString>
-                                    </Label.FormattedText>
-                                </Label>
-                                <Label>
-                                    <Label.FormattedText>
-                                        <FormattedString>
-                                            <Span Text="Usuario ultimo acceso: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" 
-                                              FontAttributes="Bold"/>
-                                            <Span Text="{Binding Session}" TextColor="Black" FontSize="Small" />
-                                        </FormattedString>
-                                    </Label.FormattedText>
-                                </Label>
-                                <Label>
-                                    <Label.FormattedText>
-                                        <FormattedString>
-                                            <Span Text="Tipo Aplicación ultimo acceso: " FontSize="Small" TextColor="{StaticResource PantoneVerdeSecond}" 
-                                              FontAttributes="Bold"/>
-                                            <Span Text="{Binding TipoDeAplicacion}" TextColor="Black" FontSize="Small" />
-                                        </FormattedString>
-                                    </Label.FormattedText>
-                                </Label>
+                                <Label FontFamily="Montserrat-Bold" Text="Auditoría" TextColor="{StaticResource PantoneGris}" FontSize="15"/>
+                                <StackLayout Margin="15,0,0,0">
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Creado: " FontSize="13" TextColor="Black" FontFamily="Montserrat-SemiBold"/>
+                                                <Span Text="{Binding FechaCreacionServer}" FontFamily="Montserrat-Regular" TextColor="{StaticResource Gray-900}" FontSize="13"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Actualizado: " FontSize="13" TextColor="Black" FontFamily="Montserrat-SemiBold"/>
+                                                <Span Text="{Binding FechaActualizacionServer, TargetNullValue='N/A'}"  FontFamily="Montserrat-Regular" TextColor="{StaticResource Gray-900}" FontSize="13"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="IP modificación: " FontSize="13" TextColor="Black" FontFamily="Montserrat-SemiBold"/>
+                                                <Span Text="{Binding Ip}" FontFamily="Montserrat-Regular" TextColor="{StaticResource Gray-900}" FontSize="13" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="usuario ultima modificación: " FontSize="13" TextColor="Black" FontFamily="Montserrat-SemiBold"/>
+                                                <Span Text="{Binding Session}" FontFamily="Montserrat-Regular" TextColor="{StaticResource Gray-900}" FontSize="13" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Aplicación ultima modificación: " FontSize="13" TextColor="Black" FontFamily="Montserrat-SemiBold"/>
+                                                <Span Text="{Binding TipoDeAplicacion}" FontFamily="Montserrat-Regular" TextColor="{StaticResource Gray-900}" FontSize="13" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </StackLayout>
                                 <button:SfButton x:Name="button" HeightRequest="35" CornerRadius="5" Margin="10"
-                                             HorizontalOptions="EndAndExpand" TextColor="White"                                        
+                                             HorizontalOptions="EndAndExpand" TextColor="White" FontFamily="Montserrat-SemiBold"                                       
                                              Text="Ver Actividades" BackgroundColor="{StaticResource PantoneAmarilloSecond}"
                                             Command="{Binding BindingContext.SeeActivitiesCommand, Source={x:Reference LV_detalleUpasActividades}}" 
                                              CommandParameter="{Binding .}" ImageSource="icon_see.png" ShowIcon="True">

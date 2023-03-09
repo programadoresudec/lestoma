@@ -30,19 +30,21 @@
                 	                   ViewBoxHeight="80" />
         </Grid>
         <StackLayout Padding="10">
-            <syncfusion:SfListView x:Name="LV_Upas" AutoFitMode="Height" TapCommand="{Binding EditCommand}"
+            <syncfusion:SfListView x:Name="LV_Upas" AutoFitMode="DynamicHeight" TapCommand="{Binding EditCommand}"
                              ItemsSource="{Binding Upas}" SelectionBackgroundColor="Transparent">
 
                 <syncfusion:SfListView.ItemTemplate>
                     <DataTemplate>
                         <Frame Margin="5,10,5,10" CornerRadius="10" BackgroundColor="{StaticResource PantoneGrisLight}">
                             <StackLayout Orientation="Vertical">
-                                <Label Text="{Binding Nombre}" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontFamily="Montserrat-Bold" TextColor="{StaticResource PantoneVerdeSecond}" FontSize="Body"/>
+                                <Label Text="{Binding Nombre}" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontFamily="Montserrat-Bold"
+                                       TextColor="{StaticResource PantoneVerdeSecond}" FontSize="Body"/>
                                 <Label>
                                     <Label.FormattedText>
                                         <FormattedString>
                                             <Span Text="Cantidad actividades: " TextColor="Black" FontFamily="Montserrat-SemiBold"/>
-                                            <Span Text="{Binding CantidadActividades}" FontFamily="Montserrat-Regular" TextColor="{StaticResource Gray-900}" FontSize="Small" />
+                                            <Span Text="{Binding CantidadActividades}" FontFamily="Montserrat-Regular" TextColor="{StaticResource Gray-900}" 
+                                                  FontSize="Small" />
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>
