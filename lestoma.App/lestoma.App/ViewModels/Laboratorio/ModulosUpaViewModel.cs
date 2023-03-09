@@ -1,4 +1,5 @@
-﻿using Android.Bluetooth;
+﻿using Acr.UserDialogs;
+using Android.Bluetooth;
 using Java.Util;
 using lestoma.App.Views;
 using lestoma.App.Views.Laboratorio;
@@ -84,19 +85,21 @@ namespace lestoma.App.ViewModels.Laboratorio
 
         private async void ConectarBluetoothClicked(object obj)
         {
-            await PopupNavigation.Instance.PushAsync(new LoadingPopupPage("Conectando..."));
             try
-            {
+            {         
                 mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
                 if (!mBluetoothAdapter.IsEnabled)
                 {
-                    CrossToastPopUp.Current.ShowToastError("Tiene que prender el bluetooth", Plugin.Toast.Abstractions.ToastLength.Long);
+                    AlertError("Debe prender el bluetooth.");
                     return;
                 }
                 //Iniciamos la conexion con el arduino
+                if (string.IsNullOrWhiteSpace(address)) {
+                    AlertError("No hay conexión de MAC a ningún Bluetooth.");
+                    return;
+                }
+                UserDialogs.Instance.ShowLoading("Conectando...");
                 BluetoothDevice device = mBluetoothAdapter.GetRemoteDevice(address);
-                System.Console.WriteLine("Conexion en curso" + device);
-
                 //Indicamos al adaptador que ya no sea visible
                 mBluetoothAdapter.CancelDiscovery();
                 if (btSocket == null)
@@ -105,7 +108,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                     await btSocket.ConnectAsync();
                     if (btSocket.IsConnected)
                     {
-                        CrossToastPopUp.Current.ShowToastSuccess("Conexión Establecida.", Plugin.Toast.Abstractions.ToastLength.Long);
+                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage("Conexión establecida."));
                     }
                 }
                 else
@@ -116,7 +119,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                     await btSocket.ConnectAsync();
                     if (btSocket.IsConnected)
                     {
-                        CrossToastPopUp.Current.ShowToastSuccess("Conexión Establecida.", Plugin.Toast.Abstractions.ToastLength.Long);
+                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage("Conexión establecida."));
                     }
                 }
             }
@@ -124,13 +127,12 @@ namespace lestoma.App.ViewModels.Laboratorio
             {
                 //en caso de generarnos error cerramos el socket
                 LestomaLog.Error(ex.Message);
-
-                SeeError(ex);
                 btSocket.Close();
+                SeeError(ex);
             }
             finally
             {
-                await _navigationService.ClearPopupStackAsync();
+                UserDialogs.Instance.HideLoading();
             }
         }
 

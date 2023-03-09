@@ -31,29 +31,28 @@
                         </Picker>
                     </inputLayout:SfTextInputLayout>
                 </border:SfBorder>
-                <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
-                    <inputLayout:SfTextInputLayout Hint="Protocolo" HeightRequest="80" ContainerBackgroundColor="Transparent" VerticalOptions="Start"
+                <StackLayout Orientation="Horizontal">
+                    <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
+                        <inputLayout:SfTextInputLayout Hint="Protocolo" HeightRequest="80" ContainerBackgroundColor="Transparent" VerticalOptions="Start"
                                                   Margin="10">
-                        <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
+                            <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
                                     Style="{StaticResource BorderlessEntryStyle}"
                                 SelectedItem="{Binding Protocolo}" ItemsSource="{Binding Protocolos}">
-                        </Picker>
-                    </inputLayout:SfTextInputLayout>
-                </border:SfBorder>
-            </StackLayout>
-            <StackLayout VerticalOptions="StartAndExpand">
-                <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
-                    <inputLayout:SfTextInputLayout Hint="Número de Esclavo" HeightRequest="80"
+                            </Picker>
+                        </inputLayout:SfTextInputLayout>
+                    </border:SfBorder>
+                    <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
+                        <inputLayout:SfTextInputLayout Hint="Número de Esclavo" HeightRequest="80"
                                                    ContainerBackgroundColor="Transparent" VerticalOptions="Start"
                                                   Margin="10">
-                        <Picker TextColor="Black"
+                            <Picker TextColor="Black"
                                     Style="{StaticResource BorderlessEntryStyle}"
                                 SelectedItem="{Binding Esclavo}" ItemsSource="{Binding Bytes}">
-                        </Picker>
-                    </inputLayout:SfTextInputLayout>
-                </border:SfBorder>
+                            </Picker>
+                        </inputLayout:SfTextInputLayout>
+                    </border:SfBorder>
+                </StackLayout>
             </StackLayout>
-
             <syncfusion:SfListView  x:Name="LV_Componentes" 
                              ItemsSource="{Binding Componentes}"
                                     TapCommand="{Binding RedirectionTramaCommand}" 

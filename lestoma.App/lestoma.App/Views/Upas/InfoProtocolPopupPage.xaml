@@ -40,11 +40,10 @@
                                     <StackLayout Orientation="Vertical" Spacing="10">
                                         <StackLayout Orientation="Horizontal">
                                             <Label HorizontalOptions="Start"
-                                        Margin="16,0,0,0"
-                                        FontFamily="Fontello"
-                                        Style="{StaticResource IconLabelStyle}"
-                                        Text="{StaticResource IconPlug}" />
-                                            <!--  Edit profile label  -->
+                                                   Margin="16,0,0,0"
+                                                   FontFamily="Fontello"
+                                                   Style="{StaticResource IconLabelStyle}"
+                                                   Text="{StaticResource IconPlug}" />
                                             <StackLayout Orientation="Vertical">
                                                 <Label
                                                 Margin="16,0,0,0"
@@ -70,11 +69,9 @@
                                                 Text="{Binding ByteHexa, StringFormat='Byte Hexa {0}'}"
                                                 VerticalOptions="Center" />
                                             </StackLayout>
-                                            <!--  Navigation icon  -->
                                             <Label
                                             HorizontalOptions="EndAndExpand"
-                                            Margin="16,8"
-                                            FontSize="Body"
+                                            Margin="16,8"       
                                             FontFamily="Fontello"        
                                             Style="{StaticResource IconLabelStyle}"
                                             Text="{StaticResource IconEdit}" />

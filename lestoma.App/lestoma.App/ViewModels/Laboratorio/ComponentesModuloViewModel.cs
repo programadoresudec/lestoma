@@ -1,4 +1,5 @@
-﻿using lestoma.App.Views.Laboratorio;
+﻿using Acr.UserDialogs;
+using lestoma.App.Views.Laboratorio;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Interfaces;
@@ -157,7 +158,7 @@ namespace lestoma.App.ViewModels.Laboratorio
         {
             try
             {
-                IsBusy = true;
+                UserDialogs.Instance.ShowLoading("Cargando...");
                 if (_apiService.CheckConnection())
                 {
                     ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameProtocoloDTO>>(URL_API, $"upas/listar-nombres-protocolo/{UpaId}", TokenUser.Token);
@@ -177,7 +178,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             }
             finally
             {
-                IsBusy = false;
+                UserDialogs.Instance.HideLoading();
             }
 
         }

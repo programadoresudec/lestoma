@@ -35,14 +35,20 @@ namespace lestoma.App.ViewModels
         }
         private async void EditProtocolClicked(object obj)
         {
-            ProtocoloRequest protocolo = (ProtocoloRequest)obj;
-            if (protocolo == null)
-                return;
-            var parameters = new NavigationParameters
+            try
             {
-                { "dataProtocolo", protocolo }
-            };
-            await _navigationService.NavigateAsync($"{nameof(CreateEditProtocolPopupPage)}", parameters);
+                var list = obj as Syncfusion.ListView.XForms.ItemTappedEventArgs;
+                ProtocoloRequest protocolo = list.ItemData as ProtocoloRequest;
+
+                if (protocolo == null)
+                    return;
+                var parameters = new NavigationParameters { { "dataProtocolo", protocolo } };
+                await _navigationService.NavigateAsync($"{nameof(CreateEditProtocolPopupPage)}", parameters);
+            }
+            catch (System.Exception ex)
+            {
+                SeeError(ex);
+            }
         }
     }
 }
