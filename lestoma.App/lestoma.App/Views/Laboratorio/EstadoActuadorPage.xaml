@@ -26,7 +26,7 @@
                         Style="{StaticResource TitleLabelStyle}"
                         Text="Estado Actuador"
                         VerticalOptions="Center" />
-        <!--  Actudor switch  -->
+        <!--  Actuador switch  -->
         <buttons:SfSwitch
                         Grid.Column="2" IsOn="{Binding IsOn}"
                         Margin="8,0"
