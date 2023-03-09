@@ -27,6 +27,7 @@
                             </gauge:LinearScale.MinorTickSettings>
                             <gauge:LinearScale.Pointers>
                                 <gauge:BarPointer  Value="30" CornerRadiusType="End" EnableAnimation = "True" Color = "{StaticResource PantoneVerdeSecond}" Thickness = "50"/>
+                                <gauge:SymbolPointer Value="70" Color="DeepSkyBlue" Thickness="30"/>
                             </gauge:LinearScale.Pointers>
                         </gauge:LinearScale>
                     </gauge:SfLinearGauge.Scales>

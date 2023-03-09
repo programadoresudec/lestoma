@@ -1,8 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="http://prismlibrary.com"
+             xmlns:prism="http://prismlibrary.com" xmlns:gauge="clr-namespace:Syncfusion.SfGauge.XForms;assembly=Syncfusion.SfGauge.XForms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="lestoma.App.Views.Laboratorio.SetPointPage">
-  
+
+
+    <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+        <Label
+          FontFamily="Montserrat-SemiBold"
+          HorizontalOptions="Center"
+          Style="{StaticResource TitleLabelStyle}"
+          Text="{Binding Nombre}"
+          VerticalOptions="Center" />
+        <ScrollView>
+            <Grid>
+                <gauge:SfLinearGauge Orientation="OrientationVertical" HeightRequest="700" MinimumHeightRequest="200"
+                                     HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <gauge:SfLinearGauge.Scales>
+                        <gauge:LinearScale MinimumValue="5" MaximumValue="200" Interval="10"
+                            ScaleBarColor="{StaticResource Gray-100}" LabelColor="#424242" CornerRadiusType="End" CornerRadius="20"
+                                           ScaleBarSize = "80" LabelFontSize ="14">
+                            <gauge:LinearScale.MajorTickSettings>
+                                <gauge:LinearTickSettings Thickness="1" Color ="#9E9E9E" Length = "10"/>
+                            </gauge:LinearScale.MajorTickSettings>
+                            <gauge:LinearScale.MinorTickSettings>
+                                <gauge:LinearTickSettings Thickness="1"  Color="Gray" Length="3"/>
+                            </gauge:LinearScale.MinorTickSettings>
+                            <gauge:LinearScale.Pointers>
+                                <gauge:BarPointer  Value="30" CornerRadiusType="End" EnableAnimation = "True" Color = "{StaticResource PantoneVerdeSecond}" Thickness = "50"/>
+                                <gauge:SymbolPointer Value="70" Color="DeepSkyBlue" Thickness="30"/>
+                            </gauge:LinearScale.Pointers>
+                        </gauge:LinearScale>
+                    </gauge:SfLinearGauge.Scales>
+
+                </gauge:SfLinearGauge>
+            </Grid>
+        </ScrollView>
+    </StackLayout>
 </ContentPage>
