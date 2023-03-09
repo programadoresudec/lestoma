@@ -18,7 +18,7 @@
                     <gauge:SfLinearGauge.Scales>
                         <gauge:LinearScale MinimumValue="5" MaximumValue="200" Interval="10"
                             ScaleBarColor="{StaticResource Gray-100}" LabelColor="#424242" CornerRadiusType="End" CornerRadius="20"
-                                           ScaleBarSize = "80" LabelFontSize ="14" MinorTicksPerInterval ="0">
+                                           ScaleBarSize = "80" LabelFontSize ="14">
                             <gauge:LinearScale.MajorTickSettings>
                                 <gauge:LinearTickSettings Thickness="1" Color ="#9E9E9E" Length = "10"/>
                             </gauge:LinearScale.MajorTickSettings>
@@ -26,7 +26,7 @@
                                 <gauge:LinearTickSettings Thickness="1"  Color="Gray" Length="3"/>
                             </gauge:LinearScale.MinorTickSettings>
                             <gauge:LinearScale.Pointers>
-                                <gauge:BarPointer  Value="25" CornerRadiusType="End" EnableAnimation = "True" Color = "{StaticResource PantoneVerdeSecond}" Thickness = "50"/>
+                                <gauge:BarPointer  Value="30" CornerRadiusType="End" EnableAnimation = "True" Color = "{StaticResource PantoneVerdeSecond}" Thickness = "50"/>
                             </gauge:LinearScale.Pointers>
                         </gauge:LinearScale>
                     </gauge:SfLinearGauge.Scales>

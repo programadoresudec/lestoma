@@ -9,6 +9,7 @@ namespace lestoma.App.ViewModels.Laboratorio
 {
     public class LecturaSensorViewModel : BaseViewModel
     {
+      
         public LecturaSensorViewModel(INavigationService navigationService) : base(navigationService)
         {
 

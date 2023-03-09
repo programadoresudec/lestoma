@@ -22,6 +22,16 @@
         <StackLayout Padding="10">
             <StackLayout VerticalOptions="StartAndExpand">
                 <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}" IsVisible="{Binding IsSuperAdmin}">
+                    <inputLayout:SfTextInputLayout Hint="Upas" HeightRequest="80" IsVisible="{Binding IsSuperAdmin}"
+                                                   ContainerBackgroundColor="Transparent" VerticalOptions="Start"
+                                                  Margin="10">
+                        <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
+                                    Style="{StaticResource BorderlessEntryStyle}"
+                                SelectedItem="{Binding Upa}" ItemsSource="{Binding Upas}">
+                        </Picker>
+                    </inputLayout:SfTextInputLayout>
+                </border:SfBorder>
+                <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}" IsVisible="{Binding IsSuperAdmin}">
                     <inputLayout:SfTextInputLayout Hint="Protocolo" HeightRequest="80" IsVisible="{Binding IsSuperAdmin}"
                                                    ContainerBackgroundColor="Transparent" VerticalOptions="Start"
                                                   Margin="10">
