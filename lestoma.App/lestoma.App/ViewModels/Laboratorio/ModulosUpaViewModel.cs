@@ -21,9 +21,6 @@ namespace lestoma.App.ViewModels.Laboratorio
         private readonly IApiService _apiService;
         private ObservableCollection<NameDTO> _modulos;
         private bool _isCheckConnection;
-        private BluetoothSocket btSocket = null;
-        private string address;
-        private static UUID MY_UUID = UUID.FromString("00001101-0000-1000-8000-00805F9B34FB");
         public ModulosUpaViewModel(INavigationService navigationService, IApiService apiService) :
              base(navigationService)
         {
@@ -32,8 +29,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             _modulos = new ObservableCollection<NameDTO>();
             SeeComponentCommand = new Command<object>(ModuloSelected, CanNavigate);
             LoadModulos();
-            address = MovilSettings.MacBluetooth;
-            ConnectionBluetoothCommand = new Command(ConectarBluetoothClicked);
+           
         }
 
         private bool CanNavigate(object arg)
@@ -52,7 +48,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             get => _isCheckConnection;
             set => SetProperty(ref _isCheckConnection, value);
         }
-        public Command ConnectionBluetoothCommand { get; set; }
+     
         public Command SeeComponentCommand { get; set; }
 
         private async void ModuloSelected(object objeto)
@@ -83,58 +79,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             }
         }
 
-        private async void ConectarBluetoothClicked(object obj)
-        {
-            try
-            {         
-                mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-                if (!mBluetoothAdapter.IsEnabled)
-                {
-                    AlertError("Debe prender el bluetooth.");
-                    return;
-                }
-                //Iniciamos la conexion con el arduino
-                if (string.IsNullOrWhiteSpace(address)) {
-                    AlertError("No hay conexión de MAC a ningún Bluetooth.");
-                    return;
-                }
-                UserDialogs.Instance.ShowLoading("Conectando...");
-                BluetoothDevice device = mBluetoothAdapter.GetRemoteDevice(address);
-                //Indicamos al adaptador que ya no sea visible
-                mBluetoothAdapter.CancelDiscovery();
-                if (btSocket == null)
-                {
-                    btSocket = device.CreateRfcommSocketToServiceRecord(MY_UUID);
-                    await btSocket.ConnectAsync();
-                    if (btSocket.IsConnected)
-                    {
-                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage("Conexión establecida."));
-                    }
-                }
-                else
-                {
-                    //Inicamos el socket de comunicacion con el arduino
-                    btSocket.Close();
-                    btSocket = device.CreateRfcommSocketToServiceRecord(MY_UUID);
-                    await btSocket.ConnectAsync();
-                    if (btSocket.IsConnected)
-                    {
-                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage("Conexión establecida."));
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                //en caso de generarnos error cerramos el socket
-                LestomaLog.Error(ex.Message);
-                btSocket.Close();
-                SeeError(ex);
-            }
-            finally
-            {
-                UserDialogs.Instance.HideLoading();
-            }
-        }
+       
 
         private void ConsumoServiceLocal()
         {

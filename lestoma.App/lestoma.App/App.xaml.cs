@@ -116,7 +116,6 @@ namespace lestoma.App
             containerRegistry.RegisterPopupNavigationService();
             containerRegistry.RegisterPopupDialogService();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
-            containerRegistry.RegisterForNavigation<MandarTramar, MandarTramaViewModel>();
             containerRegistry.RegisterForNavigation<RegistroPage, RegistroViewModel>();
             containerRegistry.RegisterForNavigation<AboutPage, AboutPageViewModel>();
             containerRegistry.RegisterForNavigation<ForgotPasswordPage, ForgotPasswordViewModel>();

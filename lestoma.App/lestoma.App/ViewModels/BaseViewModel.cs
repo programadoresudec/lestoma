@@ -1,4 +1,7 @@
-﻿using Android.Bluetooth;
+﻿using Acr.UserDialogs;
+using Android.Bluetooth;
+using Android.Locations;
+using Java.Util;
 using lestoma.App.Views;
 using lestoma.App.Views.Account;
 using lestoma.CommonUtils.Constants;
@@ -13,8 +16,6 @@ using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Net.Sockets;
-using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
@@ -29,10 +30,13 @@ namespace lestoma.App.ViewModels
     {
 
         #region Fields
-
+        private static string Address;
+        private static UUID MY_UUID = UUID.FromString("00001101-0000-1000-8000-00805F9B34FB");
         private Command<object> backButtonCommand;
         private bool isBusy;
         public BluetoothAdapter mBluetoothAdapter { get; set; }
+        public static BluetoothSocket btSocket = null;
+
         protected INavigationService _navigationService { get; private set; }
         private string _title;
         public string Title
@@ -50,8 +54,6 @@ namespace lestoma.App.ViewModels
             get { return isBusy; }
             set { SetProperty(ref isBusy, value); }
         }
-
-
         #endregion
 
         #region Variables globales que quedan en persistencia
@@ -77,11 +79,13 @@ namespace lestoma.App.ViewModels
         {
             _navigationService = navigationService;
             ActivarBluetoothCommand = new Command(OnBluetoothClicked);
+            ConnectionBluetoothCommand = new Command(ConectarBluetoothClicked);
+            Address = MovilSettings.MacBluetooth;
         }
-
         #endregion
 
         #region Commands
+        public Command ConnectionBluetoothCommand { get; set; }
 
         public Command<object> BackButtonCommand
         {
@@ -102,14 +106,18 @@ namespace lestoma.App.ViewModels
         }
         public Command ActivarBluetoothCommand { get; }
 
-        public async void OnBluetoothClicked()
+
+        #endregion
+
+        #region Methods
+        protected async void OnBluetoothClicked()
         {
 
-#pragma warning disable CS0618 // Type or member is obsolete
-            mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-#pragma warning restore CS0618 // Type or member is obsolete
-            //Verificamos que este habilitado
-#pragma warning disable CS0618 // Type or member is obsolete
+            #pragma warning disable CS0618 // Type or member is obsolete
+                        mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
+            #pragma warning restore CS0618 // Type or member is obsolete
+                        //Verificamos que este habilitado
+            #pragma warning disable CS0618 // Type or member is obsolete
             if (!mBluetoothAdapter.Enable())
             {
                 await Application.Current.MainPage.DisplayAlert("Bluetooth", "Bluetooth desactivado", "OK");
@@ -123,10 +131,60 @@ namespace lestoma.App.ViewModels
                 return;
             }
         }
-        #endregion
 
-        #region Methods
-
+        protected async void ConectarBluetoothClicked(object obj)
+        {
+            try
+            {
+                mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
+                if (!mBluetoothAdapter.IsEnabled)
+                {
+                    AlertError("Debe prender el bluetooth.");
+                    return;
+                }
+                //Iniciamos la conexion con el arduino
+                if (string.IsNullOrWhiteSpace(Address))
+                {
+                    AlertError("No hay conexión de MAC a ningún Bluetooth.");
+                    return;
+                }
+                UserDialogs.Instance.ShowLoading("Conectando...");
+                BluetoothDevice device = mBluetoothAdapter.GetRemoteDevice(Address);
+                //Indicamos al adaptador que ya no sea visible
+                mBluetoothAdapter.CancelDiscovery();
+                if (btSocket == null)
+                {
+                    btSocket = device.CreateRfcommSocketToServiceRecord(MY_UUID);
+                    await btSocket.ConnectAsync();
+                    if (btSocket.IsConnected)
+                    {
+                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage("Conexión establecida."));
+                    }
+                }
+                else
+                {
+                    //Inicamos el socket de comunicacion con el arduino
+                    btSocket.Close();
+                    btSocket = device.CreateRfcommSocketToServiceRecord(MY_UUID);
+                    await btSocket.ConnectAsync();
+                    if (btSocket.IsConnected)
+                    {
+                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage("Conexión establecida."));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //en caso de generarnos error cerramos el socket
+                LestomaLog.Error(ex.Message);
+                btSocket.Close();
+                SeeError(ex);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+        }
         protected async void ClosePopup()
         {
             await _navigationService.ClearPopupStackAsync();

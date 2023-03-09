@@ -1,15 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="http://prismlibrary.com" xmlns:gauge="clr-namespace:Syncfusion.SfGauge.XForms;assembly=Syncfusion.SfGauge.XForms"
+             xmlns:prism="http://prismlibrary.com" 
+             xmlns:gauge="clr-namespace:Syncfusion.SfGauge.XForms;assembly=Syncfusion.SfGauge.XForms" 
              prism:ViewModelLocator.AutowireViewModel="True"
+             Title="Lectura"
              x:Class="lestoma.App.Views.Laboratorio.LecturaSensorPage">
     <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
         <Label
           FontFamily="Montserrat-SemiBold"
           HorizontalOptions="Center"
           Style="{StaticResource TitleLabelStyle}"
-          Text="{Binding Nombre}"
+          Text="{Binding TramaComponente.NombreComponente}"
           VerticalOptions="Center" />
         <ScrollView>
             <Grid>
@@ -26,8 +28,8 @@
                                 <gauge:LinearTickSettings Thickness="1"  Color="Gray" Length="3"/>
                             </gauge:LinearScale.MinorTickSettings>
                             <gauge:LinearScale.Pointers>
-                                <gauge:BarPointer  Value="30" CornerRadiusType="End" EnableAnimation = "True" Color = "{StaticResource PantoneVerdeSecond}" Thickness = "50"/>
-                                <gauge:SymbolPointer Value="70" Color="DeepSkyBlue" Thickness="30"/>
+                                <gauge:BarPointer  Value="{Binding Valor}" CornerRadiusType="End" EnableAnimation = "True" 
+                                                   Color = "{StaticResource PantoneVerdeSecond}" Thickness = "50"/>
                             </gauge:LinearScale.Pointers>
                         </gauge:LinearScale>
                     </gauge:SfLinearGauge.Scales>

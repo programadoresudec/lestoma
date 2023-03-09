@@ -2,7 +2,9 @@
 using lestoma.App.Views.Laboratorio;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
+using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
+using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
@@ -81,7 +83,7 @@ namespace lestoma.App.ViewModels.Laboratorio
         }
         public List<int> Bytes { get; set; }
 
-        public int? Escalvo
+        public int? Esclavo
         {
             get => _esclavo;
             set => SetProperty(ref _esclavo, value);
@@ -227,13 +229,31 @@ namespace lestoma.App.ViewModels.Laboratorio
             if (componente == null)
                 return;
 
+            
+
+            var request = new TramaComponenteRequest
+            {
+                NombreComponente = componente.Nombre,
+                TramaOchoBytes = new List<byte>()
+                {
+                    Protocolo.PrimerByteTrama,
+                    (byte)Esclavo.Value,
+                    componente.EstadoComponente.ByteDecimalFuncion,
+                    componente.DireccionRegistro,
+                    0,
+                    0,
+                    0,
+                    0
+                }
+            };
+
             var parameters = new NavigationParameters
             {
-                { "", componente.Id }
+                { "tramaComponente", request }
             };
+
             if (EnumConfig.GetDescription(TipoEstadoComponente.Lectura).Equals(componente.EstadoComponente.TipoEstado))
             {
-
                 await _navigationService.NavigateAsync(nameof(LecturaSensorPage), parameters);
             }
             else if (EnumConfig.GetDescription(TipoEstadoComponente.OnOff).Equals(componente.EstadoComponente.TipoEstado))

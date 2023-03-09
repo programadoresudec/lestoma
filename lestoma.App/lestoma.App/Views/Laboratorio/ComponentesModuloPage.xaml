@@ -88,7 +88,7 @@
                                     FontSize="12"
                                     HorizontalOptions="StartAndExpand"
                                     Style="{StaticResource TitleLabelStyle}"
-                                    Text="{Binding DireccionRegistro, StringFormat='Dirección de Registro - {0}'}"
+                                    Text="{Binding DireccionRegistro, StringFormat='Dirección de Registro: {0}'}"
                                     VerticalOptions="Center" />
                                     <Label
                                     Margin="16,0,0,0"
