@@ -6,6 +6,7 @@ using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Laboratorio
@@ -20,6 +21,8 @@ namespace lestoma.App.ViewModels.Laboratorio
         private NameProtocoloDTO _protocolo;
         private bool _isSuperAdmin;
         private Guid _moduloId;
+        private int? _esclavo;
+
         public ComponentesModuloViewModel(INavigationService navigationService, IApiService apiService) :
              base(navigationService)
         {
@@ -28,7 +31,9 @@ namespace lestoma.App.ViewModels.Laboratorio
             RedirectionTramaCommand = new Command<object>(ComponentSelected, CanNavigate);
             Title = "Seleccione un componente";
             LoadUpas();
+            Bytes = LoadBytes();
         }
+           
 
         #region Properties
         public Command RedirectionTramaCommand { get; set; }
@@ -73,6 +78,19 @@ namespace lestoma.App.ViewModels.Laboratorio
             get => _componentes;
             set => SetProperty(ref _componentes, value);
         }
+        public List<int> Bytes { get; set; }
+        
+        public int? Escalvo
+        {
+            get => _esclavo;
+            set => SetProperty(ref _esclavo, value);
+        }
+        
+        private List<int> LoadBytes()
+        {
+            return Enumerable.Range(0, 256).ToList();
+        }
+
         #endregion
 
         #region Methods

@@ -16,9 +16,7 @@
         <Entry x:Name="trama" Text="{Binding Trama}" Placeholder="envie la trama.">
 
         </Entry>
-        <Button Text="Conectar"  BackgroundColor="{StaticResource PantoneVerdeDark}" TextColor="White" Command="{Binding ConnectionBluetoothCommand}">
-
-        </Button>
+        
         <Button Text="Enviar trama" BackgroundColor="{StaticResource PantoneVerdeDark}" TextColor="White" Command="{Binding MandarRespuestaCommand}">
 
         </Button>

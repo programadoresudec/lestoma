@@ -50,6 +50,13 @@
                     </DataTemplate>
                 </syncfusion:SfListView.ItemTemplate>
             </syncfusion:SfListView>
+
+            <Button HorizontalOptions="EndAndExpand" CornerRadius="25" Text="Conectar"  BackgroundColor="{StaticResource PantoneVerdeDark}" TextColor="White" Command="{Binding ConnectionBluetoothCommand}">
+
+            </Button>
         </StackLayout>
+
+        
+
     </Grid>
 </ContentPage>

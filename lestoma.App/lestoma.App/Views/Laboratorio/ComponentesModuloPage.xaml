@@ -35,9 +35,21 @@
                     <inputLayout:SfTextInputLayout Hint="Protocolo" HeightRequest="80" IsVisible="{Binding IsSuperAdmin}"
                                                    ContainerBackgroundColor="Transparent" VerticalOptions="Start"
                                                   Margin="10">
-                        <Picker x:Name="upaEntry" TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
+                        <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
                                     Style="{StaticResource BorderlessEntryStyle}"
                                 SelectedItem="{Binding Protocolo}" ItemsSource="{Binding Protocolos}">
+                        </Picker>
+                    </inputLayout:SfTextInputLayout>
+                </border:SfBorder>
+            </StackLayout>
+            <StackLayout VerticalOptions="StartAndExpand">
+                <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
+                    <inputLayout:SfTextInputLayout Hint="Nuemero de Esclavo" HeightRequest="80"
+                                                   ContainerBackgroundColor="Transparent" VerticalOptions="Start"
+                                                  Margin="10">
+                        <Picker TextColor="Black"
+                                    Style="{StaticResource BorderlessEntryStyle}"
+                                SelectedItem="{Binding Esclavo}" ItemsSource="{Binding Bytes}">
                         </Picker>
                     </inputLayout:SfTextInputLayout>
                 </border:SfBorder>

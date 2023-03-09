@@ -9,91 +9,22 @@
               xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms"
              x:Class="lestoma.App.Views.AboutPage"
               Title="Acerca de Lestoma">
-    <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
-        <cards:SfCardView BackgroundColor="White" CornerRadius="10" 
-                          HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"
-                           Margin="{core:OnPlatformOrientationThickness  PhonePortrait='30,40',
-                                                                 PhoneLandscape='150,32',
-                                                                 TabletPortrait='200,50',
-                                                                 TabletLandscape='200,50',
-                                                                 Desktop='30'}">
-            <ScrollView>
-                <StackLayout VerticalOptions="End" WidthRequest="500" Margin="0,0,0,20">
-                    <Grid Padding="30,25,25,0">
-                        <Label Text="Filtro" FontSize="Large"
-                           HorizontalTextAlignment="Start" TextColor="{StaticResource PantoneVerdeDark}"></Label>
-                        <Frame WidthRequest="32" HeightRequest="32"
-                        Padding="0" CornerRadius="40" HorizontalOptions="End">
-                            <ContentView>
-                                <ContentView.GestureRecognizers>
 
-                                </ContentView.GestureRecognizers>
-                                <Image Source="icon_close.png"  Aspect="AspectFill" />
-                            </ContentView>
-                        </Frame>
-                    </Grid>
-                    <StackLayout Spacing="10" Margin="20,20,30,10" HorizontalOptions="FillAndExpand">
-                        <!--tipo estado-->
-                        <Label Text="Fecha de inicio" FontFamily="Montserrat-SemiBold" Margin="10,0,0,0" VerticalOptions="StartAndExpand" 
-                       HorizontalOptions="StartAndExpand" FontSize="16"/>
-                        <border:SfBorder Style="{StaticResource ThemeBorderStyle}">
-                            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                                <inputLayout:SfTextInputLayout Hint="Fecha" FocusedColor="Black" HorizontalOptions="FillAndExpand"
-                                                               ContainerBackgroundColor="Transparent" HeightRequest="80">
-                                    <Grid>
-                                        <DatePicker HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy" 
-                                            Date="{Binding DateInitial}" Grid.Column="0" MinimumDate="{Binding InitialMinimumDate}" 
-                                            MaximumDate="{x:Static sys:DateTime.Now}"/>
-                                        <Label  Margin="0,13,-5,0" TextColor="{StaticResource Gray-Black}"
-                                            Style="{StaticResource IconLabelStyle}" FontFamily="Fontello" HorizontalOptions="EndAndExpand"
-                                            Text="{StaticResource IconCalendar}" />
-                                    </Grid>
-                                </inputLayout:SfTextInputLayout>
-                                <inputLayout:SfTextInputLayout Hint="Hora" Margin="40,0,0,0" FocusedColor="Black" HorizontalOptions="FillAndExpand"
-                                                               ContainerBackgroundColor="Transparent" HeightRequest="80">
-                                    <Grid>
-                                        <TimePicker Time="{Binding SaveTimeInitial, Mode=TwoWay}" HorizontalOptions="FillAndExpand" Grid.Column="0"/>
-                                        <Label Margin="0,15,-5,0"  TextColor="{StaticResource Gray-600}" HorizontalOptions="EndAndExpand"
-                                            FontFamily="Fontello" Style="{StaticResource IconLabelStyle}" Text="{StaticResource IconClock}"/>
-                                    </Grid>
-                                </inputLayout:SfTextInputLayout>
-                            </StackLayout>
-                        </border:SfBorder>
-                        <Label Text="Fecha de finalización" FontFamily="Montserrat-SemiBold" Margin="10,0,0,0"
-                               VerticalOptions="StartAndExpand" HorizontalOptions="StartAndExpand" FontSize="16"/>
-                        <border:SfBorder Style="{StaticResource ThemeBorderStyle}">
-                            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                                <inputLayout:SfTextInputLayout Hint="Fecha" FocusedColor="Black" HorizontalOptions="FillAndExpand"
-                                                               ContainerBackgroundColor="Transparent" HeightRequest="80">
-                                    <Grid>
-                                        <DatePicker HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy" IsEnabled="{Binding IsEnabled}"
-                                            Date="{Binding DateFinal}" Grid.Column="0" MinimumDate="{Binding FinalMinimumDate}" 
-                                            MaximumDate="{x:Static sys:DateTime.Now}"/>
-                                        <Label  Margin="0,13,-5,0" TextColor="{StaticResource Gray-Black}"
-                                            Style="{StaticResource IconLabelStyle}" FontFamily="Fontello" HorizontalOptions="EndAndExpand"
-                                            Text="{StaticResource IconCalendar}" />
-                                    </Grid>
-                                </inputLayout:SfTextInputLayout>
-                                <inputLayout:SfTextInputLayout Hint="Hora" Margin="40,0,0,0" FocusedColor="Black" HorizontalOptions="FillAndExpand"
-                                                               ContainerBackgroundColor="Transparent" HeightRequest="80">
-                                    <Grid>
-                                        <TimePicker Time="{Binding SaveTimeFinal, Mode=TwoWay}" HorizontalOptions="FillAndExpand" Grid.Column="0" IsEnabled="{Binding IsEnabled}"/>
-                                        <Label Margin="0,15,-5,0"  TextColor="{StaticResource Gray-600}" HorizontalOptions="EndAndExpand"
-                                            FontFamily="Fontello" Style="{StaticResource IconLabelStyle}" Text="{StaticResource IconClock}"/>
-                                    </Grid>
-                                </inputLayout:SfTextInputLayout>
-                            </StackLayout>
-                        </border:SfBorder>
-                        <!--/tipo estado-->
-                        <buttons:SfButton Margin="0,20,0,0"
-                        HorizontalOptions="FillAndExpand" 
-                        Command="{Binding SaveCommand}"
-                        CornerRadius="4" 
-                        Style="{StaticResource LestomaPopupGradientButtonStyle}"
-                        Text="Guardar" />
-                    </StackLayout>
-                </StackLayout>
-            </ScrollView>
-        </cards:SfCardView>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="bluetooth.png" Order="Primary" Command="{Binding ActivarBluetoothCommand}"/>
+        <ToolbarItem Text="Ayuda"
+                 Order="Secondary"/>
+        <ToolbarItem Text="Cerrar Sesión" Command="{Binding OnSignOutCommand}"
+                 Order="Secondary"/>
+    </ContentPage.ToolbarItems>
+    
+    
+    <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+         
+        <Label Text="Aplicativo móvil el cual realice un control del sistema acuapónico en la finca el vergel de la Universidad Cundinamarca extensión Facatativá,mejorando así la producción de esta misma." 
+         HorizontalTextAlignment="Center" 
+         Margin="10,10" FontFamily="Montserrat-Regular"
+         TextColor="{StaticResource Gray-Black}" FontSize="Title">
+        </Label>
     </Grid>
 </ContentPage>
