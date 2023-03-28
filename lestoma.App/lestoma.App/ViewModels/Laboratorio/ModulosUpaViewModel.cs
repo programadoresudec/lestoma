@@ -1,14 +1,7 @@
-﻿using Acr.UserDialogs;
-using Android.Bluetooth;
-using Java.Util;
-using lestoma.App.Views;
-using lestoma.App.Views.Laboratorio;
+﻿using lestoma.App.Views.Laboratorio;
 using lestoma.CommonUtils.DTOs;
-using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
-using Plugin.Toast;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -29,7 +22,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             _modulos = new ObservableCollection<NameDTO>();
             SeeComponentCommand = new Command<object>(ModuloSelected, CanNavigate);
             LoadModulos();
-           
+
         }
 
         private bool CanNavigate(object arg)
@@ -48,7 +41,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             get => _isCheckConnection;
             set => SetProperty(ref _isCheckConnection, value);
         }
-     
+
         public Command SeeComponentCommand { get; set; }
 
         private async void ModuloSelected(object objeto)
@@ -79,7 +72,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             }
         }
 
-       
+
 
         private void ConsumoServiceLocal()
         {

@@ -1,6 +1,5 @@
 ﻿using Acr.UserDialogs;
 using Android.Bluetooth;
-using Android.Locations;
 using Java.Util;
 using lestoma.App.Views;
 using lestoma.App.Views.Account;
@@ -16,6 +15,8 @@ using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Net.Sockets;
+using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
@@ -113,11 +114,11 @@ namespace lestoma.App.ViewModels
         protected async void OnBluetoothClicked()
         {
 
-            #pragma warning disable CS0618 // Type or member is obsolete
-                        mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-            #pragma warning restore CS0618 // Type or member is obsolete
-                        //Verificamos que este habilitado
-            #pragma warning disable CS0618 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete
+            mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
+#pragma warning restore CS0618 // Type or member is obsolete
+            //Verificamos que este habilitado
+#pragma warning disable CS0618 // Type or member is obsolete
             if (!mBluetoothAdapter.Enable())
             {
                 await Application.Current.MainPage.DisplayAlert("Bluetooth", "Bluetooth desactivado", "OK");
@@ -189,7 +190,18 @@ namespace lestoma.App.ViewModels
         {
             await _navigationService.ClearPopupStackAsync();
         }
-
+        protected static string GetLocalIPAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            return string.Empty;
+        }
 
         protected async void SeeError(Exception exception)
         {
