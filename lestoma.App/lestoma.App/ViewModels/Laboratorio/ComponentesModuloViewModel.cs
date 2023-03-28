@@ -233,6 +233,7 @@ namespace lestoma.App.ViewModels.Laboratorio
 
             var request = new TramaComponenteRequest
             {
+                ComponenteId = componente.Id,
                 NombreComponente = componente.Nombre,
                 TramaOchoBytes = new List<byte>()
                 {

@@ -21,10 +21,10 @@
         </Grid>
         <StackLayout Padding="10">
             <StackLayout VerticalOptions="StartAndExpand">
-                <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}" IsVisible="{Binding IsSuperAdmin}">
-                    <inputLayout:SfTextInputLayout Hint="Upas" HeightRequest="80" IsVisible="{Binding IsSuperAdmin}"
+                <border:SfBorder HeightRequest="70" Style="{StaticResource ThemeBorderStyle}" IsVisible="{Binding IsSuperAdmin}">
+                    <inputLayout:SfTextInputLayout Hint="Upa" HeightRequest="60" IsVisible="{Binding IsSuperAdmin}"
                                                    ContainerBackgroundColor="Transparent" VerticalOptions="Start"
-                                                  Margin="10">
+                                                  Margin="0">
                         <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
                                     Style="{StaticResource BorderlessEntryStyle}"
                                 SelectedItem="{Binding Upa}" ItemsSource="{Binding Upas}">
@@ -32,19 +32,19 @@
                     </inputLayout:SfTextInputLayout>
                 </border:SfBorder>
                 <StackLayout Orientation="Horizontal">
-                    <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
-                        <inputLayout:SfTextInputLayout Hint="Protocolo" HeightRequest="80" ContainerBackgroundColor="Transparent" VerticalOptions="Start"
-                                                  Margin="10">
+                    <border:SfBorder HeightRequest="70" Style="{StaticResource ThemeBorderStyle}">
+                        <inputLayout:SfTextInputLayout Hint="Protocolo" HeightRequest="60" ContainerBackgroundColor="Transparent" VerticalOptions="Start"
+                                                  Margin="0">
                             <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
                                     Style="{StaticResource BorderlessEntryStyle}"
                                 SelectedItem="{Binding Protocolo}" ItemsSource="{Binding Protocolos}">
                             </Picker>
                         </inputLayout:SfTextInputLayout>
                     </border:SfBorder>
-                    <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
-                        <inputLayout:SfTextInputLayout Hint="Número de Esclavo" HeightRequest="80"
+                    <border:SfBorder HeightRequest="70" Style="{StaticResource ThemeBorderStyle}">
+                        <inputLayout:SfTextInputLayout Hint="Esclavo" HeightRequest="60"
                                                    ContainerBackgroundColor="Transparent" VerticalOptions="Start"
-                                                  Margin="10">
+                                                  Margin="0">
                             <Picker TextColor="Black"
                                     Style="{StaticResource BorderlessEntryStyle}"
                                 SelectedItem="{Binding Esclavo}" ItemsSource="{Binding Bytes}">

@@ -112,7 +112,7 @@ namespace lestoma.App.ViewModels.Upas
 
                 if (_model.AreFieldsValid())
                 {
-                    if (_protocolos.Count == 0)
+                    if (_isVisibleProtocols && _protocolos.Count == 0)
                     {
                         AlertWarning("Agregue un protocolo.");
                         return;

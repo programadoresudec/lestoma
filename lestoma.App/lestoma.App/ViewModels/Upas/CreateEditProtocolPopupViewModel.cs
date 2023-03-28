@@ -1,12 +1,10 @@
 ﻿using Acr.UserDialogs;
 using lestoma.App.Models;
-using lestoma.App.Views.Upas;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
-using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -96,8 +94,7 @@ namespace lestoma.App.ViewModels.Upas
                     }
                     AlertSuccess(respuesta.MensajeHttp);
                     var parameters = new NavigationParameters { { Constants.REFRESH, true } };
-                    await _navigationService.NavigateAsync(nameof(UpaPage), parameters);
-
+                    await _navigationService.ClearPopupStackAsync(parameters);
                 }
                 else
                 {

@@ -1,11 +1,15 @@
-﻿using lestoma.CommonUtils.Helpers;
+﻿using Acr.UserDialogs;
+using lestoma.App.Views;
+using lestoma.CommonUtils.Constants;
+using lestoma.CommonUtils.DTOs;
+using lestoma.CommonUtils.Helpers;
+using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
-using Plugin.Toast;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,13 +20,16 @@ namespace lestoma.App.ViewModels.Laboratorio
     {
         CancellationTokenSource tcs = new CancellationTokenSource();
         CancellationToken token = new CancellationToken();
-
+        private readonly IApiService _apiService;
         private float _valorTemperatura;
+        private LaboratorioRequest _laboratorioRequest;
         private TramaComponenteRequest _componenteRequest;
-        public LecturaSensorViewModel(INavigationService navigationService) : 
+        public LecturaSensorViewModel(INavigationService navigationService, IApiService apiService) :
             base(navigationService)
         {
-            _componenteRequest  = new TramaComponenteRequest();
+            _apiService = apiService;
+            _componenteRequest = new TramaComponenteRequest();
+            _laboratorioRequest = new LaboratorioRequest();
         }
 
         public TramaComponenteRequest TramaComponente
@@ -47,6 +54,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                 SendTrama(tramaCompleta);
             }
         }
+
         private async void SendTrama(List<byte> tramaCompleta)
         {
             try
@@ -60,13 +68,22 @@ namespace lestoma.App.ViewModels.Laboratorio
                 if (btSocket.IsConnected)
                 {
                     await btSocket.OutputStream.WriteAsync(tramaCompleta.ToArray(), 0, tramaCompleta.Count, token);
-                    ReceivedData();
+
+                    var tramaRecibida = await ReceivedData();
+                    if (string.IsNullOrWhiteSpace(tramaRecibida))
+                    {
+                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener la trama.", icon: Constants.ICON_WARNING));
+                        return;
+                    }
+                    Valor = Reutilizables.ConvertReceivedTramaToResult(tramaRecibida);
+                    SaveData(Reutilizables.ByteArrayToHexString(tramaCompleta.ToArray()), tramaRecibida);
                 }
             }
             catch (Exception ex)
             {
                 LestomaLog.Error(ex.Message);
                 btSocket.Close();
+                SeeError(ex);
             }
             finally
             {
@@ -74,20 +91,52 @@ namespace lestoma.App.ViewModels.Laboratorio
             }
         }
 
-        private async void ReceivedData()
+        private async void SaveData(string TramaEnviada, string tramaRecibida)
         {
-            if (btSocket == null)
+            try
             {
-                CrossToastPopUp.Current.ShowToastError($"Error: Conectese al bluetooth correspondiente.");
-                return;
+                _laboratorioRequest.Ip = GetLocalIPAddress();
+                _laboratorioRequest.TramaEnviada = TramaEnviada;
+                _laboratorioRequest.TramaRecibida = tramaRecibida;
+                _laboratorioRequest.ComponenteId = _componenteRequest.ComponenteId;
+                if (_apiService.CheckConnection())
+                {
+                    _laboratorioRequest.EstadoInternet = true;
+                    _laboratorioRequest.SetPointOut = Valor;
+                    UserDialogs.Instance.ShowLoading("Enviando al servidor...");
+                    ResponseDTO response = await _apiService.PostAsyncWithToken(URL_API, "laboratorio-lestoma/crear-detalle",
+                        _laboratorioRequest, TokenUser.Token);
+                    if (response.IsExito)
+                    {
+                        AlertError(response.MensajeHttp);
+                        return;
+                    }
+                    AlertSuccess(response.MensajeHttp);
+                }
+                else
+                {
+                    _laboratorioRequest.EstadoInternet = false;
+                    _laboratorioRequest.FechaCreacionDispositivo = DateTime.Now;
+                    UserDialogs.Instance.ShowLoading("Guardando localmente...");
+                }
             }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+        }
+
+        private async Task<string> ReceivedData()
+        {
             string TramaHexadecimal = string.Empty;
             var inputstream = btSocket.InputStream;
             byte[] bufferRecibido = new byte[10];  // buffer store for the stream
-            List<string> tramaDividida = new List<string>();
-
             int recibido = 0; // bytes returned from read()
-            await Task.Run(async () =>
+            return await Task.Run(async () =>
             {
                 while (true)
                 {
@@ -116,21 +165,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                         break;
                     }
                 }
-                tramaDividida = Reutilizables.Split(TramaHexadecimal, 2).ToList();
-
-                List<byte> temperatura = new List<byte>();
-
-                for (int i = 0; i < tramaDividida.Count; i++)
-                {
-                    if (i == 4 || i == 5 || i == 6 || i == 7)
-                    {
-                        byte[] byteTemperatura = new byte[1];
-                        byteTemperatura = Reutilizables.StringToByteArray(tramaDividida[i]);
-                        temperatura.Add(byteTemperatura.ElementAt(0));
-                    }
-                }
-                var valor = Reutilizables.ByteToIEEEFloatingPoint(temperatura.ToArray());
-                Valor = valor;
+                return TramaHexadecimal;
             });
         }
     }
