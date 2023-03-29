@@ -1,80 +1,68 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="http://prismlibrary.com" xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms" 
+             xmlns:prism="http://prismlibrary.com" 
              xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms" 
              xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms" 
              xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
              prism:ViewModelLocator.AutowireViewModel="True" Title="{Binding Title}"
              x:Class="lestoma.App.Views.Laboratorio.ComponentesModuloPage">
-    <Grid>
-        <Grid Opacity=".8" BackgroundColor="Black" IsVisible="{Binding IsBusy}">
-            <busyindicator:SfBusyIndicator AnimationType="Cupertino" 
-                	                   BackgroundColor="{StaticResource PantoneGrisLight}"
-                	                   HorizontalOptions="Center"
-                	                   TextColor="Black"
-                	                   IsBusy="{Binding IsBusy}"
-                	                   Title="Cargando..."
-                	                   VerticalOptions="Center"
-                	                   ViewBoxWidth="80"
-                	                   ViewBoxHeight="80" />
-        </Grid>
-        <StackLayout Padding="10">
-            <StackLayout VerticalOptions="StartAndExpand">
-                <border:SfBorder HeightRequest="70" Style="{StaticResource ThemeBorderStyle}" IsVisible="{Binding IsSuperAdmin}">
-                    <inputLayout:SfTextInputLayout Hint="Upa" HeightRequest="60" IsVisible="{Binding IsSuperAdmin}"
+    <StackLayout Padding="10">
+        <StackLayout VerticalOptions="StartAndExpand">
+            <border:SfBorder HeightRequest="70" Style="{StaticResource ThemeBorderStyle}" IsEnabled="{Binding IsSuperAdmin}">
+                <inputLayout:SfTextInputLayout Hint="Upa" HeightRequest="60" IsEnabled="{Binding IsSuperAdmin}"
                                                    ContainerBackgroundColor="Transparent" VerticalOptions="Start"
+                                                  Margin="0">
+                    <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}" IsEnabled="{Binding IsSuperAdmin}"
+                                    Style="{StaticResource BorderlessEntryStyle}"
+                                SelectedItem="{Binding Upa}" ItemsSource="{Binding Upas}">
+                    </Picker>
+                </inputLayout:SfTextInputLayout>
+            </border:SfBorder>
+            <StackLayout Orientation="Horizontal">
+                <border:SfBorder HeightRequest="70" Style="{StaticResource ThemeBorderStyle}">
+                    <inputLayout:SfTextInputLayout Hint="Protocolo" HeightRequest="60" ContainerBackgroundColor="Transparent" VerticalOptions="Start"
                                                   Margin="0">
                         <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
                                     Style="{StaticResource BorderlessEntryStyle}"
-                                SelectedItem="{Binding Upa}" ItemsSource="{Binding Upas}">
+                                SelectedItem="{Binding Protocolo}" ItemsSource="{Binding Protocolos}">
                         </Picker>
                     </inputLayout:SfTextInputLayout>
                 </border:SfBorder>
-                <StackLayout Orientation="Horizontal">
-                    <border:SfBorder HeightRequest="70" Style="{StaticResource ThemeBorderStyle}">
-                        <inputLayout:SfTextInputLayout Hint="Protocolo" HeightRequest="60" ContainerBackgroundColor="Transparent" VerticalOptions="Start"
-                                                  Margin="0">
-                            <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
-                                    Style="{StaticResource BorderlessEntryStyle}"
-                                SelectedItem="{Binding Protocolo}" ItemsSource="{Binding Protocolos}">
-                            </Picker>
-                        </inputLayout:SfTextInputLayout>
-                    </border:SfBorder>
-                    <border:SfBorder HeightRequest="70" Style="{StaticResource ThemeBorderStyle}">
-                        <inputLayout:SfTextInputLayout Hint="Esclavo" HeightRequest="60"
+                <border:SfBorder HeightRequest="70" Style="{StaticResource ThemeBorderStyle}">
+                    <inputLayout:SfTextInputLayout Hint="Esclavo" HeightRequest="60"
                                                    ContainerBackgroundColor="Transparent" VerticalOptions="Start"
                                                   Margin="0">
-                            <Picker TextColor="Black"
+                        <Picker TextColor="Black"
                                     Style="{StaticResource BorderlessEntryStyle}"
                                 SelectedItem="{Binding Esclavo}" ItemsSource="{Binding Bytes}">
-                            </Picker>
-                        </inputLayout:SfTextInputLayout>
-                    </border:SfBorder>
-                </StackLayout>
+                        </Picker>
+                    </inputLayout:SfTextInputLayout>
+                </border:SfBorder>
             </StackLayout>
-            <syncfusion:SfListView  x:Name="LV_Componentes" 
+        </StackLayout>
+        <syncfusion:SfListView  x:Name="LV_Componentes" 
                              ItemsSource="{Binding Componentes}"
                                     TapCommand="{Binding RedirectionTramaCommand}" 
                                     AutoFitMode="Height" SelectionBackgroundColor="Transparent">
-                <syncfusion:SfListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout Orientation="Vertical" Margin="0,10,0,10">
-                            <StackLayout Orientation="Horizontal">
-                                <Label HorizontalOptions="Start"
+            <syncfusion:SfListView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout Orientation="Vertical" Margin="0,10,0,10">
+                        <StackLayout Orientation="Horizontal">
+                            <Label HorizontalOptions="Start"
                                         Margin="16,0,0,0"
                                         Style="{StaticResource IconLabelStyle}"
                                         Text="{StaticResource Category}" />
-                                <!--  Edit profile label  -->
-                                <StackLayout Orientation="Vertical">
-                                    <Label
+                            <!--  Edit profile label  -->
+                            <StackLayout Orientation="Vertical">
+                                <Label
                                     Margin="16,0,0,0"
                                     FontFamily="Montserrat-SemiBold"
                                     HorizontalOptions="StartAndExpand"
                                     Style="{StaticResource TitleLabelStyle}"
                                     Text="{Binding Nombre}"
                                     VerticalOptions="Center" />
-                                    <Label
+                                <Label
                                     Margin="16,0,0,0"
                                     FontFamily="Montserrat-Regular"
                                     FontSize="12"
@@ -82,7 +70,7 @@
                                     Style="{StaticResource TitleLabelStyle}"
                                     Text="{Binding EstadoComponente.TipoEstado, StringFormat='ESTADO - {0}'}"
                                     VerticalOptions="Center" />
-                                    <Label
+                                <Label
                                     Margin="16,0,0,0"
                                     FontFamily="Montserrat-Regular"
                                     FontSize="12"
@@ -90,7 +78,7 @@
                                     Style="{StaticResource TitleLabelStyle}"
                                     Text="{Binding DireccionRegistro, StringFormat='Dirección de Registro: {0}'}"
                                     VerticalOptions="Center" />
-                                    <Label
+                                <Label
                                     Margin="16,0,0,0"
                                     FontFamily="Montserrat-Regular"
                                     FontSize="12"
@@ -98,19 +86,18 @@
                                     Style="{StaticResource TitleLabelStyle}"
                                     Text="{Binding Actividad, StringFormat='ACTIVIDAD - {0}'}"
                                     VerticalOptions="Center" />
-                                </StackLayout>
-                                <!--  Navigation icon  -->
-                                <Label
+                            </StackLayout>
+                            <!--  Navigation icon  -->
+                            <Label
                                     HorizontalOptions="EndAndExpand"
                                     Margin="16,8"
                                     Style="{StaticResource IconLabelStyle}"
                                     Text="{StaticResource Next}" />
-                            </StackLayout>
-                            <BoxView  Style="{StaticResource HorizontalSeparatorStyle}" HeightRequest="2" />
                         </StackLayout>
-                    </DataTemplate>
-                </syncfusion:SfListView.ItemTemplate>
-            </syncfusion:SfListView>
-        </StackLayout>
-    </Grid>
+                        <BoxView  Style="{StaticResource HorizontalSeparatorStyle}" HeightRequest="2" />
+                    </StackLayout>
+                </DataTemplate>
+            </syncfusion:SfListView.ItemTemplate>
+        </syncfusion:SfListView>
+    </StackLayout>
 </ContentPage>

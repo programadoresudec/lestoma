@@ -138,7 +138,7 @@
                                             Command="{Binding BindingContext.VerEstadoCommand, Source={x:Reference LV_Componentes}}" 
                                              CommandParameter="{Binding .}" ImageSource="icon_see.png" ShowIcon="True">
                                     </button:SfButton>
-                                    <button:SfButton x:Name="buttonDelete" HeightRequest="35" CornerRadius="5" Margin="10"
+                                    <button:SfButton x:Name="buttonDelete" HeightRequest="35" CornerRadius="5" Margin="10" IsVisible="{Binding IsSuperAdmin}"
                                              HorizontalOptions="EndAndExpand" BackgroundColor="{StaticResource PantoneGrisLight}"
                                             Command="{Binding BindingContext.DeleteCommand, Source={x:Reference LV_Componentes}}" 
                                              CommandParameter="{Binding .}" ImageSource="icon_delete.png" ImageAlignment="End" ShowIcon="True">

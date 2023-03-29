@@ -1,11 +1,13 @@
 ﻿using Acr.UserDialogs;
+using lestoma.App.Views;
 using lestoma.App.Views.Laboratorio;
+using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
-using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -61,6 +63,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             {
                 SetProperty(ref _upa, value);
                 ListarProtocolos(_upa.Id);
+                LoadComponents(_upa.Id);
             }
         }
         public ObservableCollection<NameProtocoloDTO> Protocolos
@@ -91,7 +94,7 @@ namespace lestoma.App.ViewModels.Laboratorio
 
         private List<int> LoadBytes()
         {
-            return Enumerable.Range(0, 256).ToList();
+            return Enumerable.Range(0, 10).ToList();
         }
 
         #endregion
@@ -103,7 +106,6 @@ namespace lestoma.App.ViewModels.Laboratorio
             if (parameters.ContainsKey("ModuloId"))
             {
                 _moduloId = parameters.GetValue<Guid>("ModuloId");
-                LoadComponents();
             }
         }
 
@@ -115,47 +117,95 @@ namespace lestoma.App.ViewModels.Laboratorio
         {
             try
             {
-                if (_isSuperAdmin)
+                UserDialogs.Instance.ShowLoading("Cargando...");
+                // consume service en la nube
+                if (_apiService.CheckConnection())
                 {
-                    // consume service en la nube
-                    if (_apiService.CheckConnection())
+                    ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API, "upas/listar-nombres", TokenUser.Token);
+                    if (response.IsExito)
                     {
-                        ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API, "upas/listar-nombres", TokenUser.Token);
+                        Upas = new ObservableCollection<NameDTO>((List<NameDTO>)response.Data);
+                    }
+                    if (!IsSuperAdmin)
+                    {
+                        ResponseDTO upaAsignada = await _apiService.GetAsyncWithToken(URL_API, "usuarios/upa-asignada", TokenUser.Token);
                         if (response.IsExito)
                         {
-                            Upas = new ObservableCollection<NameDTO>((List<NameDTO>)response.Data);
+                            var upa = ParsearData<NameDTO>(upaAsignada);
+                            var selected = Upas.Where(x => x.Id == upa.Id).FirstOrDefault();
+                            Upa = selected;
+                            ListarComponentesOnline(upa.Id);
                         }
-                    }
-                    // consume service en la bd del dispositivo movil
-                    else
-                    {
-
+                        ListarProtocolos(Upa.Id);
                     }
                 }
+                // consume service en la bd del dispositivo movil
                 else
                 {
-                    ListarProtocolos(Guid.Empty);
-                }
 
+                }
             }
             catch (Exception ex)
             {
                 SeeError(ex);
             }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
 
         }
-        private void LoadComponents()
+        private void LoadComponents(Guid upaId)
         {
             if (_apiService.CheckConnection())
             {
-                ConsumoService();
+                ListarComponentesOnline(upaId);
             }
             else
             {
-                ConsumoServiceLocal();
+                ListarComponentesOffline(upaId);
             }
         }
 
+
+        private void ListarComponentesOffline(Guid upaId)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        private async void ListarComponentesOnline(Guid upaId)
+        {
+            try
+            {
+                UserDialogs.Instance.ShowLoading("Cargando...");
+                Componentes = new ObservableCollection<ComponentePorModuloDTO>();
+                ResponseDTO response = await _apiService.GetListAsyncWithToken<List<ComponentePorModuloDTO>>(URL_API,
+                    $"laboratorio-lestoma/listar-componentes-upa-modulo?UpaId={upaId}&ModuloId={_moduloId}", TokenUser.Token);
+                if (response.IsExito)
+                {
+                    var listado = (List<ComponentePorModuloDTO>)response.Data;
+                    if (listado.Count == 0)
+                    {
+                        AlertWarning("No hay componentes con la upa seleccionada.");
+                        return;
+                    }
+                    Componentes = new ObservableCollection<ComponentePorModuloDTO>(listado);
+                }
+                else
+                {
+                    AlertWarning(response.MensajeHttp);
+                }
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+        }
         private async void ListarProtocolos(Guid UpaId)
         {
             try
@@ -163,7 +213,8 @@ namespace lestoma.App.ViewModels.Laboratorio
                 UserDialogs.Instance.ShowLoading("Cargando...");
                 if (_apiService.CheckConnection())
                 {
-                    ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameProtocoloDTO>>(URL_API, $"upas/listar-nombres-protocolo/{UpaId}", TokenUser.Token);
+                    ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameProtocoloDTO>>(URL_API,
+                        $"upas/listar-nombres-protocolo/{UpaId}", TokenUser.Token);
                     if (response.IsExito)
                     {
                         Protocolos = new ObservableCollection<NameProtocoloDTO>((List<NameProtocoloDTO>)response.Data);
@@ -185,88 +236,70 @@ namespace lestoma.App.ViewModels.Laboratorio
 
         }
 
-        private void ConsumoServiceLocal()
-        {
-            throw new NotImplementedException();
-        }
-
-
-        private async void ConsumoService()
+        private async void ComponentSelected(object objeto)
         {
             try
             {
-                IsBusy = true;
-                Componentes = new ObservableCollection<ComponentePorModuloDTO>();
-                ResponseDTO response = await _apiService.GetListAsyncWithToken<List<ComponentePorModuloDTO>>(URL_API,
-                    $"laboratorio-lestoma/listar-componentes-modulo/{_moduloId}", TokenUser.Token);
-                if (response.IsExito)
+                if (!AreFieldsValid())
                 {
-                    var listado = (List<ComponentePorModuloDTO>)response.Data;
-                    if (listado.Count > 0)
-                    {
-                        Componentes = new ObservableCollection<ComponentePorModuloDTO>(listado);
-                    }
+                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage(@$"Error: Todos los campos son obligatorios.", Constants.ICON_WARNING));
+                    return;
+                }
+                var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
+                var componente = lista.ItemData as ComponentePorModuloDTO;
+                if (componente == null)
+                    return;
+                var request = new TramaComponenteRequest
+                {
+                    ComponenteId = componente.Id,
+                    NombreComponente = componente.Nombre,
+                    TramaOchoBytes = new List<byte>()
+                                     {
+                                         Protocolo.PrimerByteTrama,
+                                         (byte)Esclavo.Value,
+                                         componente.EstadoComponente.ByteDecimalFuncion,
+                                         componente.DireccionRegistro,
+                                         0,
+                                         0,
+                                         0,
+                                         0
+                                     }
+                };
+
+                var parameters = new NavigationParameters
+            {
+                { "tramaComponente", request }
+            };
+
+                if (EnumConfig.GetDescription(TipoEstadoComponente.Lectura).Equals(componente.EstadoComponente.TipoEstado))
+                {
+                    await _navigationService.NavigateAsync(nameof(LecturaSensorPage), parameters);
+                }
+                else if (EnumConfig.GetDescription(TipoEstadoComponente.OnOff).Equals(componente.EstadoComponente.TipoEstado))
+                {
+                    await _navigationService.NavigateAsync(nameof(EstadoActuadorPage), parameters);
                 }
                 else
                 {
-                    AlertWarning(response.MensajeHttp);
+                    await _navigationService.NavigateAsync(nameof(SetPointPage), parameters);
                 }
             }
             catch (Exception ex)
             {
                 SeeError(ex);
             }
-            finally
-            {
-                IsBusy = false;
-            }
-
         }
-        private async void ComponentSelected(object objeto)
+        private bool AreFieldsValid()
         {
-            var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
-            var componente = lista.ItemData as ComponentePorModuloDTO;
-            if (componente == null)
-                return;
-
-            
-
-            var request = new TramaComponenteRequest
+            bool isUpaValid = Upa != null;
+            bool isProtocoloValid = Protocolo != null;
+            bool isEsclavoValid = Esclavo != null;
+            if (TokenUser.User.RolId == (int)TipoRol.Administrador)
             {
-                ComponenteId = componente.Id,
-                NombreComponente = componente.Nombre,
-                TramaOchoBytes = new List<byte>()
-                {
-                    Protocolo.PrimerByteTrama,
-                    (byte)Esclavo.Value,
-                    componente.EstadoComponente.ByteDecimalFuncion,
-                    componente.DireccionRegistro,
-                    0,
-                    0,
-                    0,
-                    0
-                }
-            };
-
-            var parameters = new NavigationParameters
-            {
-                { "tramaComponente", request }
-            };
-
-            if (EnumConfig.GetDescription(TipoEstadoComponente.Lectura).Equals(componente.EstadoComponente.TipoEstado))
-            {
-                await _navigationService.NavigateAsync(nameof(LecturaSensorPage), parameters);
+                isUpaValid = true;
             }
-            else if (EnumConfig.GetDescription(TipoEstadoComponente.OnOff).Equals(componente.EstadoComponente.TipoEstado))
-            {
-                await _navigationService.NavigateAsync(nameof(EstadoActuadorPage), parameters);
-            }
-            else
-            {
-                await _navigationService.NavigateAsync(nameof(SetPointPage), parameters);
-            }
+            return isUpaValid && isProtocoloValid && isEsclavoValid;
         }
-
         #endregion
     }
 }

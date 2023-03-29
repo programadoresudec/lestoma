@@ -106,7 +106,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                     UserDialogs.Instance.ShowLoading("Enviando al servidor...");
                     ResponseDTO response = await _apiService.PostAsyncWithToken(URL_API, "laboratorio-lestoma/crear-detalle",
                         _laboratorioRequest, TokenUser.Token);
-                    if (response.IsExito)
+                    if (!response.IsExito)
                     {
                         AlertError(response.MensajeHttp);
                         return;
