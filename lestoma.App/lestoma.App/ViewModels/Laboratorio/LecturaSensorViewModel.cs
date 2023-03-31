@@ -50,7 +50,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             if (parameters.ContainsKey("tramaComponente"))
             {
                 TramaComponente = parameters.GetValue<TramaComponenteRequest>("tramaComponente");
-                var tramaCompleta = Reutilizables.TramaConCRC(TramaComponente.TramaOchoBytes);
+                var tramaCompleta = Reutilizables.TramaConCRC16Modbus(TramaComponente.TramaOchoBytes);
                 SendTrama(tramaCompleta);
             }
         }

@@ -1,41 +1,27 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+﻿<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
              xmlns:behaviors="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="lestoma.App.Views.Laboratorio.EstadoActuadorPage">
-    <Grid
-                    BackgroundColor="{DynamicResource Gray-Bg}"
-                    ColumnDefinitions="Auto, *, Auto"
-                    ColumnSpacing="0"
-                    RowSpacing="0">
-        <!--  Actuador icon  -->
+    <StackLayout Margin="20" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
         <Label
-                        Grid.Column="0"
-                        Margin="16,0,0,0"
-                        Style="{StaticResource IconLabelStyle}"
-                        Text="{StaticResource IconKey}" />
-        <!--  Actuador label  -->
-        <Label
-                        Grid.Column="1"
-                        Margin="16,12"
-                        FontFamily="Montserrat-Medium"
-                        HorizontalOptions="Start"
-                        Style="{StaticResource TitleLabelStyle}"
-                        Text="Estado Actuador"
-                        VerticalOptions="Center" />
-        <!--  Actuador switch  -->
+          FontFamily="Montserrat-SemiBold"
+          HorizontalOptions="Center"
+          Style="{StaticResource TitleLabelStyle}"
+          Text="{Binding TramaComponente.NombreComponente}"
+          VerticalOptions="Center" />
         <buttons:SfSwitch
-                        Grid.Column="2" IsOn="{Binding IsOn}"
-                        Margin="8,0"
-                        AllowIndeterminateState="False"
-                        HeightRequest="28" 
-                        VisualType="Cupertino" >
+            IsOn="{Binding IsOn}" 
+            MinimumHeightRequest="300"
+            HeightRequest="300"
+            IsEnabled="{Binding IsEnabled}"
+            WidthRequest="500"
+            VisualType="Cupertino">
             <buttons:SfSwitch.Behaviors>
-                <behaviors:EventToCommandBehavior Command="{Binding StateChangedCommand}" 
-                                                          EventName="StateChanged"/>
+                <behaviors:EventToCommandBehavior Command="{Binding ChangeStatedCommand}" 
+                                                  EventName="StateChanged"/>
             </buttons:SfSwitch.Behaviors>
             <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="CommonStates">
@@ -43,12 +29,17 @@
                         <VisualState.Setters>
                             <Setter Property="SwitchSettings">
                                 <Setter.Value>
-                                    <buttons:CupertinoSwitchSettings
-                                                    x:TypeArguments="buttons:OnState"
-                                                    ThumbBorderColor="{DynamicResource Gray-White}"
-                                                    ThumbColor="{DynamicResource Gray-White}"
-                                                    TrackBorderColor="{DynamicResource Gray-200}"
-                                                    TrackColor="{DynamicResource PantoneVerdeThird}" />
+                                    <buttons:CupertinoSwitchSettings                                    
+                                        x:TypeArguments="buttons:OnState"
+                                        TrackHeightRequest="75" TrackWidthRequest="175" 
+                                        ThumbHeightRequest="60" ThumbWidthRequest="60" 
+                                        ThumbCornerRadius="40" TrackCornerRadius="40"
+                                        TrackImageSource="icon_fish_on.png"
+                                        TrackBorderWidth="5" ThumbBorderWidth ="5"
+                                        TrackBorderColor="{StaticResource PantoneVerdeThird}"
+                                        ThumbBorderColor="{StaticResource Gray-White}"
+                                        ThumbImageSource="icon_on.png"
+                                      />
                                 </Setter.Value>
                             </Setter>
                         </VisualState.Setters>
@@ -58,11 +49,16 @@
                             <Setter Property="SwitchSettings">
                                 <Setter.Value>
                                     <buttons:CupertinoSwitchSettings
-                                                    x:TypeArguments="buttons:OffState"
-                                                    ThumbBorderColor="{DynamicResource Gray-300}"
-                                                    ThumbColor="{DynamicResource Gray-White}"
-                                                    TrackBorderColor="{DynamicResource Gray-300}"
-                                                    TrackColor="{DynamicResource Gray-300}" />
+                                        x:TypeArguments="buttons:OffState" 
+                                        ThumbCornerRadius="40" TrackCornerRadius="40"
+                                        TrackHeightRequest="75" TrackWidthRequest="175" 
+                                        ThumbHeightRequest="60" ThumbWidthRequest="60"                               
+                                        TrackImageSource="icon_fish_off.png"
+                                        TrackBorderWidth="5" ThumbBorderWidth ="5"
+                                        TrackColor="{StaticResource Red}"
+                                        TrackBorderColor="{StaticResource Red}"
+                                      ThumbBorderColor="{StaticResource Gray-White}"
+                                        ThumbImageSource="icon_off.png" />
                                 </Setter.Value>
                             </Setter>
                         </VisualState.Setters>
@@ -70,5 +66,5 @@
                 </VisualStateGroup>
             </VisualStateManager.VisualStateGroups>
         </buttons:SfSwitch>
-    </Grid>
+    </StackLayout>
 </ContentPage>
