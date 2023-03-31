@@ -76,8 +76,8 @@ namespace lestoma.App.ViewModels.Laboratorio
             if (parameters.ContainsKey("tramaComponente"))
             {
                 TramaComponente = parameters.GetValue<TramaComponenteRequest>("tramaComponente");
-                var tramaCompleta = Reutilizables.TramaConCRC16Modbus(TramaComponente.TramaOchoBytes);
-                SendTrama(tramaCompleta);
+                var tramaAEnviar = Reutilizables.TramaConCRC16Modbus(new List<byte>(TramaComponente.TramaOchoBytes));
+                SendTrama(tramaAEnviar);
             }
         }
         private void StatedSelected(object obj)
@@ -87,13 +87,13 @@ namespace lestoma.App.ViewModels.Laboratorio
             TramaComponente.TramaOchoBytes[5] = bytesFlotante[1];
             TramaComponente.TramaOchoBytes[6] = bytesFlotante[2];
             TramaComponente.TramaOchoBytes[7] = bytesFlotante[3];
-            var tramaCompleta = Reutilizables.TramaConCRC16Modbus(TramaComponente.TramaOchoBytes);
-            SendTrama(tramaCompleta, true);
+            var tramaAEnviar = Reutilizables.TramaConCRC16Modbus(new List<byte>(TramaComponente.TramaOchoBytes));
+            SendTrama(tramaAEnviar, true);
 
         }
 
 
-        private async void SendTrama(List<byte> tramaCompleta, bool EditState = false)
+        private async void SendTrama(List<byte> tramaEnviada, bool EditState = false)
         {
             try
             {
@@ -105,7 +105,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                 Debug.WriteLine("Conectado");
                 if (btSocket.IsConnected)
                 {
-                    await btSocket.OutputStream.WriteAsync(tramaCompleta.ToArray(), 0, tramaCompleta.Count, token);
+                    await btSocket.OutputStream.WriteAsync(tramaEnviada.ToArray(), 0, tramaEnviada.Count, token);
 
                     var tramaRecibida = await ReceivedData();
                     if (string.IsNullOrWhiteSpace(tramaRecibida))
@@ -134,7 +134,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                     {
                         IsOn = Valor == 1 ? true : false;
                     }
-                    SaveData(Reutilizables.ByteArrayToHexString(tramaCompleta.ToArray()), tramaRecibida);
+                    SaveData(Reutilizables.ByteArrayToHexString(tramaEnviada.ToArray()), tramaRecibida, EditState);
                 }
             }
             catch (Exception ex)
@@ -149,7 +149,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             }
         }
 
-        private async void SaveData(string TramaEnviada, string tramaRecibida)
+        private async void SaveData(string TramaEnviada, string tramaRecibida, bool EditState)
         {
             try
             {
@@ -161,6 +161,11 @@ namespace lestoma.App.ViewModels.Laboratorio
                 {
                     _laboratorioRequest.EstadoInternet = true;
                     _laboratorioRequest.SetPointOut = Valor;
+                    if (EditState)
+                    {
+                        _laboratorioRequest.SetPointIn = IsOn ? 1 : 0;
+
+                    }
                     UserDialogs.Instance.ShowLoading("Enviando al servidor...");
                     ResponseDTO response = await _apiService.PostAsyncWithToken(URL_API, "laboratorio-lestoma/crear-detalle",
                         _laboratorioRequest, TokenUser.Token);
