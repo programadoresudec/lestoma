@@ -1,7 +1,6 @@
 ﻿using Acr.UserDialogs;
 using lestoma.App.Views;
 using lestoma.App.Views.Account;
-using lestoma.App.Views.Sincronizaciones;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
@@ -26,7 +25,6 @@ namespace lestoma.App.ViewModels.Account
             : base(navigationService)
         {
             _apiService = apiService;
-            EditProfileCommand = new Command(EditProfileClicked);
             ChangePasswordCommand = new Command(ChangePasswordClicked);
             HelpCommand = new Command(HelpClicked);
             LogoutCommand = new Command(LogoutClicked);
@@ -50,11 +48,21 @@ namespace lestoma.App.ViewModels.Account
         #endregion
 
         #region Commands
-        public Command EditProfileCommand { get; set; }
         public Command ChangePasswordCommand { get; set; }
         public Command HelpCommand { get; set; }
         public Command LogoutCommand { get; set; }
         public Command StateChangedCommand { get; set; }
+
+        public Command SetUpBluetoothCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    await _navigationService.NavigateAsync(nameof(MACBluetoothPopupPage));
+                });
+            }
+        }
 
         public Command MigrateDataToDeviceCommand
         {
@@ -93,11 +101,7 @@ namespace lestoma.App.ViewModels.Account
         {
             return true;
         }
-        private void EditProfileClicked(object obj)
-        {
-            // Do something
-        }
-
+ 
         private async void ChangePasswordClicked(object obj)
         {
             await _navigationService.NavigateAsync($"{nameof(ChangePasswordPage)}");

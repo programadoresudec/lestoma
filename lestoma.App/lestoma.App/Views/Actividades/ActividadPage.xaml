@@ -29,7 +29,7 @@
 
                 <syncfusion:SfListView.ItemTemplate>
                     <DataTemplate>
-                        <Frame Margin="5,10,5,10" CornerRadius="10" BackgroundColor="{StaticResource PantoneGrisLight}">
+                        <Frame Margin="0,5,0,5" CornerRadius="10" BackgroundColor="{StaticResource PantoneGrisLight}">
                             <StackLayout Orientation="Vertical" VerticalOptions="Center">
                                 <Label Text="{Binding Nombre}" HorizontalTextAlignment="Center" FontFamily="Montserrat-Bold" TextColor="{StaticResource PantoneVerdeSecond}" FontSize="Body"/>
                                 <Label FontFamily="Montserrat-Bold" Text="Auditoría" TextColor="{StaticResource PantoneGris}" FontSize="15"/>

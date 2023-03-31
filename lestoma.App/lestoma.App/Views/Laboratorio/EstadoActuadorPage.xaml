@@ -1,8 +1,70 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+﻿<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
+             xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:behaviors="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="lestoma.App.Views.Laboratorio.EstadoActuadorPage">
-  
+    <StackLayout Margin="20" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+        <Label
+          FontFamily="Montserrat-SemiBold"
+          HorizontalOptions="Center"
+          Style="{StaticResource TitleLabelStyle}"
+          Text="{Binding TramaComponente.NombreComponente}"
+          VerticalOptions="Center" />
+        <buttons:SfSwitch
+            IsOn="{Binding IsOn}" 
+            MinimumHeightRequest="300"
+            HeightRequest="300"
+            IsEnabled="{Binding IsEnabled}"
+            WidthRequest="500"
+            VisualType="Cupertino">
+            <buttons:SfSwitch.Behaviors>
+                <behaviors:EventToCommandBehavior Command="{Binding ChangeStatedCommand}" 
+                                                  EventName="StateChanged"/>
+            </buttons:SfSwitch.Behaviors>
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="On">
+                        <VisualState.Setters>
+                            <Setter Property="SwitchSettings">
+                                <Setter.Value>
+                                    <buttons:CupertinoSwitchSettings                                    
+                                        x:TypeArguments="buttons:OnState"
+                                        TrackHeightRequest="75" TrackWidthRequest="175" 
+                                        ThumbHeightRequest="60" ThumbWidthRequest="60" 
+                                        ThumbCornerRadius="40" TrackCornerRadius="40"
+                                        TrackImageSource="icon_fish_on.png"
+                                        TrackBorderWidth="5" ThumbBorderWidth ="5"
+                                        TrackBorderColor="{StaticResource PantoneVerdeThird}"
+                                        ThumbBorderColor="{StaticResource Gray-White}"
+                                        ThumbImageSource="icon_on.png"
+                                      />
+                                </Setter.Value>
+                            </Setter>
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Off">
+                        <VisualState.Setters>
+                            <Setter Property="SwitchSettings">
+                                <Setter.Value>
+                                    <buttons:CupertinoSwitchSettings
+                                        x:TypeArguments="buttons:OffState" 
+                                        ThumbCornerRadius="40" TrackCornerRadius="40"
+                                        TrackHeightRequest="75" TrackWidthRequest="175" 
+                                        ThumbHeightRequest="60" ThumbWidthRequest="60"                               
+                                        TrackImageSource="icon_fish_off.png"
+                                        TrackBorderWidth="5" ThumbBorderWidth ="5"
+                                        TrackColor="{StaticResource Red}"
+                                        TrackBorderColor="{StaticResource Red}"
+                                      ThumbBorderColor="{StaticResource Gray-White}"
+                                        ThumbImageSource="icon_off.png" />
+                                </Setter.Value>
+                            </Setter>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+        </buttons:SfSwitch>
+    </StackLayout>
 </ContentPage>

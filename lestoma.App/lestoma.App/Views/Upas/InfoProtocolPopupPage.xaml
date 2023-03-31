@@ -19,7 +19,7 @@
                 <StackLayout VerticalOptions="End" WidthRequest="500"
                Margin="0,0,0,20">
                     <Grid Padding="30,25,25,0">
-                        <Label Text="Protocolos De Comunicación" FontSize="Large"  HorizontalTextAlignment="Start" 
+                        <Label Text="Protocolos" FontSize="Large"  HorizontalTextAlignment="Start" 
                            TextColor="{StaticResource PantoneVerdeDark}"></Label>
                         <Frame WidthRequest="32" HeightRequest="32"
                         Padding="0" CornerRadius="40" HorizontalOptions="End">
@@ -31,20 +31,19 @@
                             </ContentView>
                         </Frame>
                     </Grid>
-                    <StackLayout Margin="30,0,30,0" Spacing="15">
+                    <StackLayout Margin="30,0,30,0">
                         <syncfusion:SfListView  HeightRequest="200" AutoFitMode="DynamicHeight"
                                                      TapCommand="{Binding EditProtocolCommand}" ItemsSource="{Binding Protocolos}"
                                        SelectionBackgroundColor="Transparent">
                             <syncfusion:SfListView.ItemTemplate>
                                 <DataTemplate>
-                                    <StackLayout Orientation="Vertical">
+                                    <StackLayout Orientation="Vertical" Spacing="10">
                                         <StackLayout Orientation="Horizontal">
                                             <Label HorizontalOptions="Start"
-                                        Margin="16,0,0,0"
-                                        FontFamily="Fontello"
-                                        Style="{StaticResource IconLabelStyle}"
-                                        Text="{StaticResource IconPlug}" />
-                                            <!--  Edit profile label  -->
+                                                   Margin="16,0,0,0"
+                                                   FontFamily="Fontello"
+                                                   Style="{StaticResource IconLabelStyle}"
+                                                   Text="{StaticResource IconPlug}" />
                                             <StackLayout Orientation="Vertical">
                                                 <Label
                                                 Margin="16,0,0,0"
@@ -70,10 +69,9 @@
                                                 Text="{Binding ByteHexa, StringFormat='Byte Hexa {0}'}"
                                                 VerticalOptions="Center" />
                                             </StackLayout>
-                                            <!--  Navigation icon  -->
                                             <Label
                                             HorizontalOptions="EndAndExpand"
-                                            Margin="16,8"
+                                            Margin="16,8"       
                                             FontFamily="Fontello"        
                                             Style="{StaticResource IconLabelStyle}"
                                             Text="{StaticResource IconEdit}" />

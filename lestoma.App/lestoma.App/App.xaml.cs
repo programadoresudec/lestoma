@@ -116,7 +116,6 @@ namespace lestoma.App
             containerRegistry.RegisterPopupNavigationService();
             containerRegistry.RegisterPopupDialogService();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
-            containerRegistry.RegisterForNavigation<MandarTramar, MandarTramaViewModel>();
             containerRegistry.RegisterForNavigation<RegistroPage, RegistroViewModel>();
             containerRegistry.RegisterForNavigation<AboutPage, AboutPageViewModel>();
             containerRegistry.RegisterForNavigation<ForgotPasswordPage, ForgotPasswordViewModel>();
@@ -160,7 +159,9 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<SetPointPage, SetPointViewModel>();
             containerRegistry.RegisterForNavigation<LecturaSensorPage, LecturaSensorViewModel>();
             containerRegistry.RegisterForNavigation<EstadoActuadorPage, EstadoActuadorViewModel>();
+            containerRegistry.RegisterForNavigation<MACBluetoothPopupPage, MACBluetoothPopupViewModel>();
             #endregion
+
         }
     }
 }

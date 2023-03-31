@@ -35,7 +35,7 @@ namespace lestoma.App.ViewModels.Upas
                 if (protocolo != null)
                 {
                     IsEdit = true;
-                    var byteResult = Bytes.Where(x => x == (int)protocolo.PrimerByteTrama).FirstOrDefault();
+                    var byteResult = Bytes.Where(x => x == protocolo.PrimerByteTrama).FirstOrDefault();
                     Protocolo = new ProtocoloModel
                     {
                         Id = protocolo.Id,
@@ -94,7 +94,7 @@ namespace lestoma.App.ViewModels.Upas
                     }
                     AlertSuccess(respuesta.MensajeHttp);
                     var parameters = new NavigationParameters { { Constants.REFRESH, true } };
-                    await _navigationService.GoBackAsync(parameters);
+                    await _navigationService.ClearPopupStackAsync(parameters);
                 }
                 else
                 {

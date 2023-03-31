@@ -24,8 +24,8 @@ namespace lestoma.App.ViewModels.Upas
             _upas = new ObservableCollection<UpaDTO>();
             EditCommand = new Command<object>(UpaSelected, CanNavigate);
             DeleteCommand = new Command<object>(DeleteClicked, CanNavigate);
-            LoadUpas();
             SeeProtocolsCommand = new Command<object>(OnSeeProtocolClicked, CanNavigate);
+            LoadUpas();
         }
 
         public ObservableCollection<UpaDTO> Upas

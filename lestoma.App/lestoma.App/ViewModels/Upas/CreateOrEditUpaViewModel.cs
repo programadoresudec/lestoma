@@ -7,6 +7,7 @@ using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -19,7 +20,7 @@ namespace lestoma.App.ViewModels.Upas
         private UpaModel _model;
         private UpaRequest _upa;
         private bool _isVisibleProtocols;
-        private bool _isVisibleButton;
+        private bool _isCreate;
         private ObservableCollection<ProtocoloModel> _protocolos;
         public CreateOrEditUpaViewModel(INavigationService navigationService, IApiService apiService)
            : base(navigationService)
@@ -28,9 +29,10 @@ namespace lestoma.App.ViewModels.Upas
             _model.AddValidationRules();
             _apiService = apiService;
             _upa = new UpaRequest();
-            _isVisibleButton = true;
+            _isCreate = true;
             _protocolos = new ObservableCollection<ProtocoloModel>();
             CreateOrEditCommand = new Command(CreateOrEditClicked);
+            DeleteCommand = new Command<object>(DeleteClicked, CanNavigate);
         }
         public UpaRequest Upa
         {
@@ -50,10 +52,10 @@ namespace lestoma.App.ViewModels.Upas
             set => SetProperty(ref _isVisibleProtocols, value);
         }
 
-        public bool IsVisibleButton
+        public bool IsCreate
         {
-            get => _isVisibleButton;
-            set => SetProperty(ref _isVisibleButton, value);
+            get => _isCreate;
+            set => SetProperty(ref _isCreate, value);
         }
 
         public ObservableCollection<ProtocoloModel> Protocolos
@@ -61,7 +63,7 @@ namespace lestoma.App.ViewModels.Upas
             get => _protocolos;
             set => SetProperty(ref _protocolos, value);
         }
-
+        public Command DeleteCommand { get; set; }
         public Command CreateOrEditCommand { get; }
         public Command AddProtocolCommand
         {
@@ -73,13 +75,6 @@ namespace lestoma.App.ViewModels.Upas
                 });
             }
         }
-        private void CargarDatos()
-        {
-            Model.Nombre.Value = Upa != null ? Upa.Nombre : string.Empty;
-            Model.CantidadActividades.Value = Upa == null ? string.Empty : Upa.CantidadActividades
-                > 0 ? Upa.CantidadActividades.ToString() : string.Empty;
-            Model.Descripcion.Value = Upa != null ? Upa.Descripcion : string.Empty;
-        }
 
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
@@ -89,7 +84,7 @@ namespace lestoma.App.ViewModels.Upas
                 Upa = parameters.GetValue<UpaRequest>("upa");
                 Title = "Editar";
                 IsVisibleProtocols = false;
-                IsVisibleButton = false;
+                IsCreate = false;
             }
             else
             {
@@ -103,7 +98,40 @@ namespace lestoma.App.ViewModels.Upas
                 Title = "Crear";
             }
         }
-
+        private bool CanNavigate(object arg)
+        {
+            return true;
+        }
+        private void CargarDatos()
+        {
+            Model.Nombre.Value = Upa != null ? Upa.Nombre : string.Empty;
+            Model.CantidadActividades.Value = Upa == null ? string.Empty : Upa.CantidadActividades
+                > 0 ? Upa.CantidadActividades.ToString() : string.Empty;
+            Model.Descripcion.Value = Upa != null ? Upa.Descripcion : string.Empty;
+        }
+        private void DeleteClicked(object obj)
+        {
+            ProtocoloModel protocol = (ProtocoloModel)obj;
+            if (protocol == null)
+                return;
+            try
+            {
+                UserDialogs.Instance.ShowLoading("Eliminando...");
+                var select = Protocolos.Remove(protocol);
+                if (Protocolos.Count == 0)
+                {
+                    IsVisibleProtocols = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+        }
         private async void CreateOrEditClicked(object obj)
         {
             try
@@ -112,7 +140,7 @@ namespace lestoma.App.ViewModels.Upas
 
                 if (_model.AreFieldsValid())
                 {
-                    if (_protocolos.Count == 0)
+                    if (IsCreate && Protocolos.Count == 0)
                     {
                         AlertWarning("Agregue un protocolo.");
                         return;
@@ -129,6 +157,7 @@ namespace lestoma.App.ViewModels.Upas
                         Nombre = _model.Nombre.Value.Trim(),
                         Descripcion = _model.Descripcion.Value.Trim(),
                         CantidadActividades = (short)Convert.ToInt32(_model.CantidadActividades.Value),
+                        ProtocolosCOM = new List<ProtocoloRequest>()
                     };
                     Protocolos.ForEach(x => request.ProtocolosCOM.Add(new ProtocoloRequest
                     {

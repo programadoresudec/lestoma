@@ -61,6 +61,7 @@ namespace lestoma.App.ViewModels.Componentes
             get => _isSuperAdmin;
             set => SetProperty(ref _isSuperAdmin, value);
         }
+
         public NameDTO Upa
         {
             get => _upa;

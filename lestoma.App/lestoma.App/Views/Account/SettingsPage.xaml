@@ -148,7 +148,7 @@
                     BackgroundColor="{DynamicResource Gray-Bg}"
                     ColumnDefinitions="Auto, *, Auto"
                     ColumnSpacing="0"
-                    Command="{Binding MigrateDataToServerCommand}"
+                    Command="{Binding SetUpBluetoothCommand}"
                     RowSpacing="0"
                     Tapped="False">
                     <Label

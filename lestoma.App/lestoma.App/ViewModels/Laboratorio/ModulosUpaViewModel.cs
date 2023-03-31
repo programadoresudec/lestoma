@@ -13,7 +13,7 @@ namespace lestoma.App.ViewModels.Laboratorio
     {
         private readonly IApiService _apiService;
         private ObservableCollection<NameDTO> _modulos;
-
+        private bool _isCheckConnection;
         public ModulosUpaViewModel(INavigationService navigationService, IApiService apiService) :
              base(navigationService)
         {
@@ -22,17 +22,24 @@ namespace lestoma.App.ViewModels.Laboratorio
             _modulos = new ObservableCollection<NameDTO>();
             SeeComponentCommand = new Command<object>(ModuloSelected, CanNavigate);
             LoadModulos();
+
         }
+
         private bool CanNavigate(object arg)
         {
             return true;
         }
 
-
         public ObservableCollection<NameDTO> Modulos
         {
             get => _modulos;
             set => SetProperty(ref _modulos, value);
+        }
+
+        public bool IsCheckConnection
+        {
+            get => _isCheckConnection;
+            set => SetProperty(ref _isCheckConnection, value);
         }
 
         public Command SeeComponentCommand { get; set; }
@@ -54,7 +61,8 @@ namespace lestoma.App.ViewModels.Laboratorio
         }
         private void LoadModulos()
         {
-            if (_apiService.CheckConnection())
+            IsCheckConnection = _apiService.CheckConnection();
+            if (IsCheckConnection)
             {
                 ConsumoService();
             }
@@ -63,6 +71,9 @@ namespace lestoma.App.ViewModels.Laboratorio
                 ConsumoServiceLocal();
             }
         }
+
+
+
         private void ConsumoServiceLocal()
         {
             throw new NotImplementedException();
