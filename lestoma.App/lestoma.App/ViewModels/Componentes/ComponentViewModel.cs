@@ -158,7 +158,7 @@ namespace lestoma.App.ViewModels.Componentes
                 {
                     {
                         "estadoComponente",
-                        new InfoEstadoComponenteModel { Estado = detalle.TipoEstadoComponente, IsEdit = false }
+                        new InfoEstadoComponenteModel { Estado = detalle.TipoEstadoComponente, IsCreated = false }
                     }
                 };
                 await _navigationService.NavigateAsync($"{nameof(InfoEstadoPopupPage)}", parameters);

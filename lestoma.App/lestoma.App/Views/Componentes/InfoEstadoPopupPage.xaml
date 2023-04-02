@@ -45,13 +45,13 @@
                             </ContentView>
                         </Frame>
                     </Grid>
-                    <StackLayout Spacing="20" Margin="30,0,30,20">
+                    <StackLayout Spacing="20" Margin="30,20">
                         <!--tipo estado-->
-                        <inputLayout:SfTextInputLayout Hint="Tipo Estado"  HeightRequest="90"
+                        <inputLayout:SfTextInputLayout Hint="Tipo Estado"  HeightRequest="90" IsEnabled="{Binding IsSuperAdmin}"
                                                FocusedColor="Black" ContainerBackgroundColor="Transparent">
                             <Picker
-                                ItemsSource="{Binding Estados}" IsEnabled="{Binding IsEdit}" ItemDisplayBinding="{Binding TipoEstado}"
-                                SelectedItem="{Binding EstadoComponente}"  TextColor="Black"
+                                ItemsSource="{Binding Estados}" IsEnabled="{Binding IsSuperAdmin}" ItemDisplayBinding="{Binding TipoEstado}"
+                                SelectedItem="{Binding EstadoComponente}" TextColor="Black"
                                />
                         </inputLayout:SfTextInputLayout>
                         <inputLayout:SfTextInputLayout Hint=" Byte" IsEnabled="False" FocusedColor="Black" HeightRequest="90"
@@ -61,14 +61,11 @@
                                                    MaxLength="4" TextColor="#333942">
                             </control:BorderlessEntry>
                         </inputLayout:SfTextInputLayout>
-                        <Label Text="{Binding Error}"
-                        IsVisible="{Binding IsVisible}"
-                        Style="{StaticResource ErrorIconLabelStyle}"/>
                         <!--/tipo estado-->
                         <buttons:SfButton
-                        HorizontalOptions="FillAndExpand" 
-                        Command="{Binding SaveEstadoCommand}"
-                        CornerRadius="4" IsVisible="{Binding IsEdit}"
+                        HorizontalOptions="FillAndExpand" IsVisible="{Binding IsSuperAdmin}"
+                        Command="{Binding SaveEstadoCommand}" 
+                        CornerRadius="8" 
                         Style="{StaticResource LestomaGradientButtonStyle}"
                         Text="Guardar" />
                     </StackLayout>

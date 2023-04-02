@@ -8,6 +8,7 @@ using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
+using lestoma.CommonUtils.Requests.Filters;
 using Newtonsoft.Json;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
@@ -30,22 +31,27 @@ namespace lestoma.App.ViewModels.Componentes
         private NameDTO _modulo;
         private NameDTO _actividad;
         private InfoComponenteDTO _infoComponente;
-        private bool _isEdit;
+        private bool _isCreated;
         private bool _isVisible;
         private string _iconStatusComponent;
         private string _jsonEstadoComponente;
+        private bool _isSuperAdmin;
+        private bool _isVisibleDireccionRegistro = true;
+        private ObservableCollection<int> _direccionesNoUtilizadas;
 
         public CreateOrEditComponentViewModel(INavigationService navigationService, IApiService apiService) :
             base(navigationService)
         {
+            _isSuperAdmin = TokenUser.User.RolId == (int)TipoRol.SuperAdministrador;
             _apiService = apiService;
             CreateOrEditCommand = new Command(CreateOrEditClicked);
             AddStatusComponentCommand = new Command(AddStatusComponentClicked);
             _infoComponente = new InfoComponenteDTO();
-            _isEdit = true;
             _iconStatusComponent = "icon_create.png";
-            Bytes = LoadBytes();
         }
+
+
+
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
@@ -54,7 +60,8 @@ namespace lestoma.App.ViewModels.Componentes
                 var Id = parameters.GetValue<Guid>("idComponent");
                 Title = "Editar Componente";
                 _iconStatusComponent = "icon_edit.png";
-                IsEdit = false;
+                IsCreated = false;
+                _isVisibleDireccionRegistro = false;
                 LoadLists(Id);
             }
             else if (parameters.ContainsKey(Constants.REFRESH))
@@ -64,6 +71,7 @@ namespace lestoma.App.ViewModels.Componentes
             }
             else
             {
+                IsSuperAdmin = true;
                 _iconStatusComponent = "icon_create.png";
                 Title = "Crear Componente";
                 LoadLists(Guid.Empty);
@@ -78,7 +86,18 @@ namespace lestoma.App.ViewModels.Componentes
             get => _modulos;
             set => SetProperty(ref _modulos, value);
         }
-        public List<int> Bytes { get; set; }
+        public bool IsSuperAdmin
+        {
+            get => _isSuperAdmin;
+            set => SetProperty(ref _isSuperAdmin, value);
+        }
+
+        public ObservableCollection<int> DireccionesNoUtilizadas
+        {
+            get => _direccionesNoUtilizadas;
+            set => SetProperty(ref _direccionesNoUtilizadas, value);
+        }
+
         public int? DireccionRegistro
         {
             get => _direccionregistro;
@@ -99,30 +118,50 @@ namespace lestoma.App.ViewModels.Componentes
         public NameDTO Actividad
         {
             get => _actividad;
-            set => SetProperty(ref _actividad, value);
+            set
+            {
+                SetProperty(ref _actividad, value);
+                if (_isVisibleDireccionRegistro)
+                {
+                    LoadDireccionesDeRegistro();
+                }
+
+            }
         }
         public NameDTO Upa
         {
             get => _upa;
-            set => SetProperty(ref _upa, value);
+            set
+            {
+                SetProperty(ref _upa, value);
+                if (_isVisibleDireccionRegistro)
+                {
+                    LoadDireccionesDeRegistro();
+                }
+            }
         }
 
         public NameDTO Modulo
         {
             get => _modulo;
-            set => SetProperty(ref _modulo, value);
+            set
+            {
+                SetProperty(ref _modulo, value);
+                if (_isVisibleDireccionRegistro)
+                {
+                    LoadDireccionesDeRegistro();
+                }
+            }
         }
-
-
         public InfoComponenteDTO InfoComponente
         {
             get => _infoComponente;
             set => SetProperty(ref _infoComponente, value);
         }
-        public bool IsEdit
+        public bool IsCreated
         {
-            get => _isEdit;
-            set => SetProperty(ref _isEdit, value);
+            get => _isCreated;
+            set => SetProperty(ref _isCreated, value);
         }
 
         public bool IsVisible
@@ -140,15 +179,54 @@ namespace lestoma.App.ViewModels.Componentes
             get => _jsonEstadoComponente;
             set => SetProperty(ref _jsonEstadoComponente, value);
         }
-        private List<int> LoadBytes()
+
+        private async void LoadDireccionesDeRegistro()
         {
-            return Enumerable.Range(0, 256).ToList();
+            try
+            {
+                if (Title.Contains("Crear") && TokenUser.User.RolId == (int)TipoRol.Administrador)
+                {
+                    _upa = new NameDTO();
+                }
+                UserDialogs.Instance.ShowLoading("Cargando...");
+                if (_apiService.CheckConnection() && _upa != null && _modulo != null && _actividad != null)
+                {
+                    IsCreated = true;
+                    var upaModuleActivityFilterRequest = new UpaModuleActivityFilterRequest
+                    {
+                        UpaId = _upa.Id,
+                        ModuloId = _modulo.Id,
+                        ActividadId = _actividad.Id
+                    };
+                    var queryString = Reutilizables.GenerateQueryString(upaModuleActivityFilterRequest);
+                    ResponseDTO direcciones = await _apiService.GetListAsyncWithToken<List<int>>(URL_API,
+                                                $"componentes/direcciones-de-registro-upa-modulo{queryString}", TokenUser.Token);
+                    DireccionesNoUtilizadas = new ObservableCollection<int>((List<int>)direcciones.Data);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                SeeError(ex);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+
         }
+
+
         private async void LoadLists(Guid id)
         {
             try
             {
                 UserDialogs.Instance.ShowLoading("Cargando...");
+                if (!IsCreated)
+                {
+                    DireccionesNoUtilizadas = new ObservableCollection<int>(Enumerable.Range(0, 256).ToList());
+                }
+
                 if (_apiService.CheckConnection())
                 {
                     ResponseDTO modulos = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
@@ -218,7 +296,7 @@ namespace lestoma.App.ViewModels.Componentes
                     new InfoEstadoComponenteModel
                     {
                         Estado = InfoComponente.Id != Guid.Empty ? InfoComponente.EstadoComponente : null,
-                        IsEdit = IsEdit
+                        IsCreated = Title.Contains("Crear")? true: false
                     }
                 }
             };
@@ -272,11 +350,19 @@ namespace lestoma.App.ViewModels.Componentes
                                 TipoEstadoComponente = InfoComponente.EstadoComponente,
                                 Nombre = InfoComponente.Nombre,
                                 ActividadId = Actividad.Id,
-                                UpaId = Upa.Id,
+                                UpaId = Upa != null ? Upa.Id : Guid.Empty,
                                 ModuloComponenteId = Modulo.Id
                             };
-                            ResponseDTO respuesta = await _apiService.PutAsyncWithToken(URL_API, "componentes/editar",
-                                EditRequest, TokenUser.Token);
+
+                            ResponseDTO respuesta;
+                            if (_isSuperAdmin)
+                            {
+                                respuesta = await _apiService.PutAsyncWithToken(URL_API, "componentes/editar-super-admin", EditRequest, TokenUser.Token);
+                            }
+                            else
+                            {
+                                respuesta = await _apiService.PutAsyncWithToken(URL_API, "componentes/editar-admin", EditRequest, TokenUser.Token);
+                            }
                             if (respuesta.IsExito)
                             {
                                 AlertSuccess(respuesta.MensajeHttp);
