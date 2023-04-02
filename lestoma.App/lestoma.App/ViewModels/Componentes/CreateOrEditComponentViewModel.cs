@@ -246,8 +246,9 @@ namespace lestoma.App.ViewModels.Componentes
                     else
                     {
                         IsVisible = false;
+                       
                         ResponseDTO actividades = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
-                        $"detalle-upas-actividades/listar-actividades-upa-usuario?UpaId={Guid.Empty}&UsuarioId={TokenUser.User.Id}", TokenUser.Token);
+                        $"detalle-upas-actividades/listar-por-usuario", TokenUser.Token);
                         Actividades = new ObservableCollection<NameDTO>((List<NameDTO>)actividades.Data);
                     }
                     if (id != Guid.Empty)
