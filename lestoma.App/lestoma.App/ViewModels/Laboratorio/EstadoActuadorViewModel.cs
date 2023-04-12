@@ -38,8 +38,6 @@ namespace lestoma.App.ViewModels.Laboratorio
             ChangeStatedCommand = new Command<object>(StatedSelected, CanNavigate);
         }
 
-
-
         private bool CanNavigate(object arg)
         {
             return true;

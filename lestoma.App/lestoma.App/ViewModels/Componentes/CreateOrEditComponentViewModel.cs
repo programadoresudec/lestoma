@@ -246,7 +246,6 @@ namespace lestoma.App.ViewModels.Componentes
                     else
                     {
                         IsVisible = false;
-                       
                         ResponseDTO actividades = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
                         $"detalle-upas-actividades/listar-por-usuario", TokenUser.Token);
                         Actividades = new ObservableCollection<NameDTO>((List<NameDTO>)actividades.Data);
@@ -309,81 +308,78 @@ namespace lestoma.App.ViewModels.Componentes
             try
             {
                 UserDialogs.Instance.ShowLoading("Guardando...");
-                if (this.AreFieldsValid())
+                if (!AreFieldsValid())
                 {
-                    if (_apiService.CheckConnection())
-                    {
-                        if (InfoComponente.Id == Guid.Empty)
-                        {
-                            var createRequest = new CreateComponenteRequest
-                            {
-                                Nombre = InfoComponente.Nombre,
-                                ActividadId = Actividad.Id,
-                                ModuloComponenteId = Modulo.Id,
-                                TipoEstadoComponente = InfoComponente.EstadoComponente,
-                                DireccionRegistro = (byte)DireccionRegistro
-                            };
-                            if (Upa != null)
-                            {
-                                createRequest.UpaId = Upa.Id;
-                            }
-                            else
-                            {
-                                createRequest.UpaId = Guid.Empty;
-                            }
-                            ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL_API, "componentes/crear", createRequest, TokenUser.Token);
-                            if (respuesta.IsExito)
-                            {
-                                AlertSuccess(respuesta.MensajeHttp);
-                                var parameters = new NavigationParameters { { Constants.REFRESH, true } };
-                                await _navigationService.GoBackAsync(parameters);
-                            }
-                            else
-                            {
-                                AlertWarning(respuesta.MensajeHttp);
-                            }
-                        }
-                        else
-                        {
-                            var EditRequest = new EditComponenteRequest
-                            {
-                                Id = InfoComponente.Id,
-                                TipoEstadoComponente = InfoComponente.EstadoComponente,
-                                Nombre = InfoComponente.Nombre,
-                                ActividadId = Actividad.Id,
-                                UpaId = Upa != null ? Upa.Id : Guid.Empty,
-                                ModuloComponenteId = Modulo.Id
-                            };
+                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage(@$"Error: Todos los campos son obligatorios.", Constants.ICON_WARNING));
+                    return;
 
-                            ResponseDTO respuesta;
-                            if (_isSuperAdmin)
-                            {
-                                respuesta = await _apiService.PutAsyncWithToken(URL_API, "componentes/editar-super-admin", EditRequest, TokenUser.Token);
-                            }
-                            else
-                            {
-                                respuesta = await _apiService.PutAsyncWithToken(URL_API, "componentes/editar-admin", EditRequest, TokenUser.Token);
-                            }
-                            if (respuesta.IsExito)
-                            {
-                                AlertSuccess(respuesta.MensajeHttp);
-                                var parameters = new NavigationParameters { { Constants.REFRESH, true } };
-                                await _navigationService.GoBackAsync(parameters);
-                            }
-                            else
-                            {
-                                AlertWarning(respuesta.MensajeHttp);
-                            }
-                        }
+                }
+                if (!_apiService.CheckConnection())
+                {
+                    AlertNoInternetConnection();
+                    return;
+                }
+                if (InfoComponente.Id == Guid.Empty)
+                {
+                    var createRequest = new CreateComponenteRequest
+                    {
+                        Nombre = InfoComponente.Nombre,
+                        ActividadId = Actividad.Id,
+                        ModuloComponenteId = Modulo.Id,
+                        TipoEstadoComponente = InfoComponente.EstadoComponente,
+                        DireccionRegistro = (byte)DireccionRegistro
+                    };
+                    if (Upa != null)
+                    {
+                        createRequest.UpaId = Upa.Id;
                     }
                     else
                     {
-                        AlertNoInternetConnection();
+                        createRequest.UpaId = Guid.Empty;
+                    }
+                    ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL_API, "componentes/crear", createRequest, TokenUser.Token);
+                    if (respuesta.IsExito)
+                    {
+                        AlertSuccess(respuesta.MensajeHttp);
+                        var parameters = new NavigationParameters { { Constants.REFRESH, true } };
+                        await _navigationService.GoBackAsync(parameters);
+                    }
+                    else
+                    {
+                        AlertWarning(respuesta.MensajeHttp);
                     }
                 }
                 else
                 {
-                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage(@$"Error: Todos los campos son obligatorios.", Constants.ICON_WARNING));
+                    var EditRequest = new EditComponenteRequest
+                    {
+                        Id = InfoComponente.Id,
+                        TipoEstadoComponente = InfoComponente.EstadoComponente,
+                        Nombre = InfoComponente.Nombre,
+                        ActividadId = Actividad.Id,
+                        UpaId = Upa != null ? Upa.Id : Guid.Empty,
+                        ModuloComponenteId = Modulo.Id
+                    };
+
+                    ResponseDTO respuesta;
+                    if (_isSuperAdmin)
+                    {
+                        respuesta = await _apiService.PutAsyncWithToken(URL_API, "componentes/editar-super-admin", EditRequest, TokenUser.Token);
+                    }
+                    else
+                    {
+                        respuesta = await _apiService.PutAsyncWithToken(URL_API, "componentes/editar-admin", EditRequest, TokenUser.Token);
+                    }
+                    if (respuesta.IsExito)
+                    {
+                        AlertSuccess(respuesta.MensajeHttp);
+                        var parameters = new NavigationParameters { { Constants.REFRESH, true } };
+                        await _navigationService.GoBackAsync(parameters);
+                    }
+                    else
+                    {
+                        AlertWarning(respuesta.MensajeHttp);
+                    }
                 }
             }
             catch (Exception ex)

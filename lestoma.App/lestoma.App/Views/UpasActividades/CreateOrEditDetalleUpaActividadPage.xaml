@@ -21,7 +21,7 @@
             <StackLayout>
                 <border:SfBorder HeightRequest="80" Style="{StaticResource ThemeBorderStyle}" IsVisible="{Binding IsCreated}">
                     <StackLayout Orientation="Horizontal" IsVisible="{Binding IsCreated}">
-                        <Label Margin="10,20,0,10" TextColor="{StaticResource Gray-Black}" FontSize="Medium" HorizontalOptions="Start"
+                        <Label Margin="10,0,0,10" TextColor="{StaticResource Gray-Black}" FontSize="Medium" HorizontalOptions="Start"
                                 Style="{StaticResource IconLabelStyle}" FontFamily="fontello"
                                 Text="{StaticResource IconUsers}" IsVisible="{Binding IsCreated}"/>
                         <inputLayout:SfTextInputLayout Hint="Usuarios" HeightRequest="80" ContainerBackgroundColor="Transparent" 
@@ -49,7 +49,7 @@
                 </StackLayout>
                 <border:SfBorder HeightRequest="80" Style="{StaticResource ThemeBorderStyle}">
                     <StackLayout Orientation="Horizontal">
-                        <Label Margin="10,20,0,10" TextColor="{StaticResource Gray-Black}" FontSize="Medium" HorizontalOptions="Start"
+                        <Label Margin="10,0,0,10" TextColor="{StaticResource Gray-Black}" FontSize="Medium" HorizontalOptions="Start"
                                 Style="{StaticResource IconLabelStyle}" FontFamily="fontello"
                                 Text="{StaticResource IconEnvira}" />
                         <inputLayout:SfTextInputLayout Hint="Upas" HorizontalOptions="FillAndExpand" HeightRequest="80" 
@@ -64,7 +64,7 @@
 
                 <border:SfBorder HeightRequest="80" Style="{StaticResource ThemeBorderStyle}">
                     <StackLayout Orientation="Horizontal">
-                        <Label Margin="10,20,0,10" TextColor="{StaticResource Gray-Black}" FontSize="Medium" HorizontalOptions="Start"
+                        <Label Margin="10,0,0,10" TextColor="{StaticResource Gray-Black}" FontSize="Medium" HorizontalOptions="Start"
                                 Style="{StaticResource IconLabelStyle}" FontFamily="fontello"
                                 Text="{StaticResource IconTasks}" />
                         <inputLayout:SfTextInputLayout Hint="Actividades" HorizontalOptions="FillAndExpand"

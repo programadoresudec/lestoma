@@ -267,9 +267,9 @@ namespace lestoma.App.ViewModels.Laboratorio
                 };
 
                 var parameters = new NavigationParameters
-            {
-                { "tramaComponente", request }
-            };
+                {
+                    { "tramaComponente", request }
+                };
 
                 if (EnumConfig.GetDescription(TipoEstadoComponente.Lectura).Equals(componente.EstadoComponente.TipoEstado))
                 {
@@ -279,9 +279,9 @@ namespace lestoma.App.ViewModels.Laboratorio
                 {
                     await _navigationService.NavigateAsync(nameof(EstadoActuadorPage), parameters);
                 }
-                else
+                else if (EnumConfig.GetDescription(TipoEstadoComponente.Ajuste).Equals(componente.EstadoComponente.TipoEstado))
                 {
-                    await _navigationService.NavigateAsync(nameof(SetPointPage), parameters);
+                    await _navigationService.NavigateAsync(nameof(InputSetPointPopupPage), parameters);
                 }
             }
             catch (Exception ex)

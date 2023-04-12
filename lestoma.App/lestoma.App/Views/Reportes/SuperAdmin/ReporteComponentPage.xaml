@@ -49,8 +49,8 @@
                                                            Margin="0,10,10,10" HorizontalOptions="FillAndExpand"
                                                        ContainerBackgroundColor="Transparent">
                                 <control:BorderlessEntry
-                            Text="{Binding FiltroFecha.FechaFin}" IsEnabled="False"
-                            Style="{StaticResource BorderlessEntryStyle}" >
+                                    Text="{Binding FiltroFecha.FechaFin}" IsEnabled="False"
+                                    Style="{StaticResource BorderlessEntryStyle}" >
                                 </control:BorderlessEntry>
                             </inputLayout:SfTextInputLayout>
                         </StackLayout>

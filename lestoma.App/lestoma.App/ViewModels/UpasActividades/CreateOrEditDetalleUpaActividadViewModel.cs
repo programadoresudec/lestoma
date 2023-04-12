@@ -1,4 +1,5 @@
 ﻿using Acr.UserDialogs;
+using lestoma.App.Views;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
@@ -6,6 +7,7 @@ using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using lestoma.CommonUtils.Requests.Filters;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -125,6 +127,19 @@ namespace lestoma.App.ViewModels.UpasActividades
             get => _isEdit;
             set => SetProperty(ref _isEdit, value);
         }
+
+        private bool AreFieldsValid()
+        {
+
+            bool isUserValid = User != null;
+            bool isUpaValid = Upa != null;
+            bool isActividadValid = Actividad != null;
+            if (IsEdit)
+            {
+                isActividadValid = true;
+            }
+            return isUserValid && isUpaValid && isActividadValid;
+        }
         private void AddActivity(NameDTO activity)
         {
             try
@@ -157,57 +172,66 @@ namespace lestoma.App.ViewModels.UpasActividades
             try
             {
                 UserDialogs.Instance.ShowLoading("Cargando...");
-                if (_apiService.CheckConnection())
-                {
-                    ResponseDTO actividades = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API, "actividades/listar-nombres", TokenUser.Token);
-                    ResponseDTO usuarios;
-                    if (!IsEdit)
-                    {
-                        usuarios = await _apiService.GetListAsyncWithToken<List<UserDTO>>(URL_API, "usuarios/activos-sin-upa", TokenUser.Token);
-                    }
-                    else
-                    {
-                        usuarios = await _apiService.GetListAsyncWithToken<List<UserDTO>>(URL_API, "usuarios/listar", TokenUser.Token);
-                    }
-                    ResponseDTO upas = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API, "upas/listar-nombres", TokenUser.Token);
-                    var listadoActividades = (List<NameDTO>)actividades.Data;
-                    var listadoUsuarios = (List<UserDTO>)usuarios.Data;
-                    var listadoUpas = (List<NameDTO>)upas.Data;
-                    Upas = new ObservableCollection<NameDTO>(listadoUpas);
-                    Usuarios = new ObservableCollection<UserDTO>(listadoUsuarios);
-                    if (detalleUpaActividad == null)
-                    {
-                        Actividades = new ObservableCollection<NameDTO>(listadoActividades);
-                        Actividades.Insert(0, new NameDTO { Id = Guid.Empty, Nombre = "Todas" });
-                    }
-                    else
-                    {
-                        IsVisibleActividades = true;
-                        Upa = Upas.Where(x => x.Id == detalleUpaActividad.UpaId).FirstOrDefault();
-                        User = Usuarios.Where(x => x.Id == detalleUpaActividad.UsuarioId).FirstOrDefault();
-                        UpaUserFilterRequest upaUserFilterRequest = new UpaUserFilterRequest
-                        {
-                            UpaId = Upa.Id,
-                            UsuarioId = User.Id
-                        };
-                        string queryString = Reutilizables.GenerateQueryString(upaUserFilterRequest);
-                        ResponseDTO listaActividadesxUser = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
-                          $"detalle-upas-actividades/listar-por-usuario{queryString}", TokenUser.Token);
-                        if (listaActividadesxUser.IsExito)
-                        {
-                            var listado = (List<NameDTO>)listaActividadesxUser.Data;
-                            Actividades = new ObservableCollection<NameDTO>(listadoActividades);
-                            Actividades.Insert(0, new NameDTO { Id = Guid.Empty, Nombre = "Todas" });
-                            ActividadesAdd = new ObservableCollection<NameDTO>(listado);
-                        }
-                    }
-                }
-                else
+                if (!_apiService.CheckConnection())
                 {
                     AlertNoInternetConnection();
                     await _navigationService.GoBackAsync();
                 }
-
+                ResponseDTO actividades = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API, "actividades/listar-nombres", TokenUser.Token);
+                ResponseDTO usuarios;
+                if (!IsEdit)
+                {
+                    usuarios = await _apiService.GetListAsyncWithToken<List<UserDTO>>(URL_API, "usuarios/activos-sin-upa", TokenUser.Token);
+                }
+                else
+                {
+                    usuarios = await _apiService.GetListAsyncWithToken<List<UserDTO>>(URL_API, "usuarios/listar", TokenUser.Token);
+                }
+                ResponseDTO upas = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API, "upas/listar-nombres", TokenUser.Token);
+                var listadoActividades = (List<NameDTO>)actividades.Data;
+                var listadoUsuarios = (List<UserDTO>)usuarios.Data;
+                var listadoUpas = (List<NameDTO>)upas.Data;
+                Upas = new ObservableCollection<NameDTO>(listadoUpas);
+                Usuarios = new ObservableCollection<UserDTO>(listadoUsuarios);
+                if (Usuarios.Count == 0)
+                {
+                    var check = await UserDialogs.Instance.ConfirmAsync("¡Todos los usuarios ya tienen asignada una UPA!",
+                          "Información", "Aceptar","");
+                    if (check)
+                    {
+                        await _navigationService.GoBackAsync();
+                    }
+                    else
+                    {
+                        await _navigationService.GoBackAsync();
+                    }
+                }
+                if (detalleUpaActividad == null)
+                {
+                    Actividades = new ObservableCollection<NameDTO>(listadoActividades);
+                    Actividades.Insert(0, new NameDTO { Id = Guid.Empty, Nombre = "Todas" });
+                }
+                else
+                {
+                    IsVisibleActividades = true;
+                    Upa = Upas.Where(x => x.Id == detalleUpaActividad.UpaId).FirstOrDefault();
+                    User = Usuarios.Where(x => x.Id == detalleUpaActividad.UsuarioId).FirstOrDefault();
+                    UpaUserFilterRequest upaUserFilterRequest = new UpaUserFilterRequest
+                    {
+                        UpaId = Upa.Id,
+                        UsuarioId = User.Id
+                    };
+                    string queryString = Reutilizables.GenerateQueryString(upaUserFilterRequest);
+                    ResponseDTO listaActividadesxUser = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
+                      $"detalle-upas-actividades/listar-por-usuario{queryString}", TokenUser.Token);
+                    if (listaActividadesxUser.IsExito)
+                    {
+                        var listado = (List<NameDTO>)listaActividadesxUser.Data;
+                        Actividades = new ObservableCollection<NameDTO>(listadoActividades);
+                        Actividades.Insert(0, new NameDTO { Id = Guid.Empty, Nombre = "Todas" });
+                        ActividadesAdd = new ObservableCollection<NameDTO>(listado);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -222,22 +246,13 @@ namespace lestoma.App.ViewModels.UpasActividades
 
         private void CreateOrEditClicked(object obj)
         {
-
-            if (_apiService.CheckConnection())
+            if (DetalleUpaActividad == null)
             {
-                if (DetalleUpaActividad == null)
-                {
-                    Crear();
-                }
-                else
-                {
-                    Editar();
-                }
-
+                Crear();
             }
             else
             {
-                AlertNoInternetConnection();
+                Editar();
             }
         }
 
@@ -245,6 +260,17 @@ namespace lestoma.App.ViewModels.UpasActividades
         {
             try
             {
+                if (!AreFieldsValid())
+                {
+                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage(@$"Error: Todos los campos son obligatorios.", Constants.ICON_WARNING));
+                    return;
+
+                }
+                if (!_apiService.CheckConnection())
+                {
+                    AlertNoInternetConnection();
+                    return;
+                }
                 UserDialogs.Instance.ShowLoading("Guardando...");
                 var detalle = new CrearDetalleUpaActividadRequest
                 {
@@ -303,6 +329,11 @@ namespace lestoma.App.ViewModels.UpasActividades
         {
             try
             {
+                if (!_apiService.CheckConnection())
+                {
+                    AlertNoInternetConnection();
+                    return;
+                }
                 var check = await UserDialogs.Instance.ConfirmAsync("¡Recuerde si no deja actividades eliminará el usuario con la upa asignada!",
                     "Alerta", "Aceptar", "Cancelar");
                 if (check)
