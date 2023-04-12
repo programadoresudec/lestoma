@@ -5,7 +5,7 @@
              xmlns:control="clr-namespace:lestoma.App.Controls"
              xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
              xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" 
-             xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms"
+             xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms" 
              prism:ViewModelLocator.AutowireViewModel="True" Title="{Binding Title}"
              x:Class="lestoma.App.Views.Componentes.CreateOrEditComponentPage">
     <StackLayout Spacing="15" VerticalOptions="CenterAndExpand" Padding="30">
@@ -74,9 +74,13 @@
                     <Label Margin="10">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Estado Componente" FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                <Span Text="Estado Componente" FontSize="Small" TextColor="Black" FontFamily="Montserrat-SemiBold"/>
                                 <Span Text="&#10;" TextColor="Transparent" FontSize="Small" />
-                                <Span Text="{Binding JsonEstadoComponente}" TextColor="Black" FontSize="Small"/>
+                                <Span Text="Tipo: " FontFamily="Montserrat-SemiBold" TextColor="Black" FontSize="Small" />
+                                <Span Text="{Binding EstadoComponente.TipoEstado}" FontFamily="Montserrat-Regular" TextColor="Black" FontSize="Small" />
+                                <Span Text="&#10;" TextColor="Transparent" FontSize="Small" />
+                                <Span Text="Byte: " FontFamily="Montserrat-SemiBold" TextColor="Black" FontSize="Small" />
+                                <Span Text="{Binding EstadoComponente.ByteDecimalFuncion}" FontFamily="Montserrat-Regular" TextColor="Black" FontSize="Small" />
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>

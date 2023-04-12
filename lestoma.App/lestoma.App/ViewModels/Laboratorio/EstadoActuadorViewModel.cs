@@ -20,8 +20,8 @@ namespace lestoma.App.ViewModels.Laboratorio
 {
     public class EstadoActuadorViewModel : BaseViewModel
     {
-        CancellationTokenSource tcs = new CancellationTokenSource();
-        CancellationToken token = new CancellationToken();
+        private readonly CancellationTokenSource _cancellationTokenSource;
+        private readonly CancellationToken _cancellationToken;
         private readonly IApiService _apiService;
         private float _valorOnOff;
         private LaboratorioRequest _laboratorioRequest;
@@ -36,6 +36,8 @@ namespace lestoma.App.ViewModels.Laboratorio
             _laboratorioRequest = new LaboratorioRequest();
             _isEnabled = TokenUser.User.RolId != (int)TipoRol.Auxiliar;
             ChangeStatedCommand = new Command<object>(StatedSelected, CanNavigate);
+            _cancellationTokenSource = new CancellationTokenSource();
+            _cancellationToken = new CancellationToken();
         }
 
         private bool CanNavigate(object arg)
@@ -70,12 +72,19 @@ namespace lestoma.App.ViewModels.Laboratorio
 
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
-            base.OnNavigatedTo(parameters);
-            if (parameters.ContainsKey("tramaComponente"))
+            try
             {
-                TramaComponente = parameters.GetValue<TramaComponenteRequest>("tramaComponente");
-                var tramaAEnviar = Reutilizables.TramaConCRC16Modbus(new List<byte>(TramaComponente.TramaOchoBytes));
-                SendTrama(tramaAEnviar);
+                base.OnNavigatedTo(parameters);
+                if (parameters.ContainsKey("tramaComponente"))
+                {
+                    TramaComponente = parameters.GetValue<TramaComponenteRequest>("tramaComponente");
+                    var tramaAEnviar = Reutilizables.TramaConCRC16Modbus(new List<byte>(TramaComponente.TramaOchoBytes));
+                    SendTrama(tramaAEnviar);
+                }
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
             }
         }
         private void StatedSelected(object obj)
@@ -89,50 +98,76 @@ namespace lestoma.App.ViewModels.Laboratorio
             SendTrama(tramaAEnviar, true);
 
         }
-
-
         private async void SendTrama(List<byte> tramaEnviada, bool EditState = false)
         {
             try
             {
-                if (btSocket == null)
+                if (_apiService.CheckConnection())
                 {
-                    AlertError("No hay conexión a ningún Bluetooth.");
-                    return;
-                }
-                Debug.WriteLine("Conectado");
-                if (btSocket.IsConnected)
-                {
-                    await btSocket.OutputStream.WriteAsync(tramaEnviada.ToArray(), 0, tramaEnviada.Count, token);
-
-                    var tramaRecibida = await ReceivedData();
-                    if (string.IsNullOrWhiteSpace(tramaRecibida))
+                    ResponseDTO response = await _apiService.GetAsyncWithToken(URL_API,
+                        $"laboratorio-lestoma/ultimo-registro-componente/{TramaComponente.ComponenteId}", TokenUser.Token);
+                    if (response.IsExito)
                     {
-                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener la trama.", icon: Constants.ICON_WARNING));
-                        return;
-                    }
-                    var response = Reutilizables.VerifyCRCOfReceivedTrama(tramaRecibida);
-                    if (!response.IsExito)
-                    {
-                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: response.MensajeHttp, icon: Constants.ICON_WARNING));
-                        return;
-                    }
-
-                    Valor = Reutilizables.ConvertReceivedTramaToResult(tramaRecibida);
-                    if (EditState)
-                    {
-                        if (Valor == (int)HttpStatusCode.Conflict)
+                        var data = ParsearData<TramaComponenteDTO>(response);
+                        Valor = (float)data.SetPointOut.Value;
+                        if (EditState)
                         {
-                            await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener el estado, ha ocurrido un error al recibir los datos."
-                                                            , icon: Constants.ICON_WARNING));
+                            if (Valor == (int)HttpStatusCode.Conflict)
+                            {
+                                await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener el estado, ha ocurrido un error al recibir los datos."
+                                                                , icon: Constants.ICON_WARNING));
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            IsOn = Valor == 1 ? true : false;
+                        }
+
+                        SaveData(Reutilizables.ByteArrayToHexString(tramaEnviada.ToArray()), data.TramaOutPut, EditState);
+                    }
+                }
+                else
+                {
+                    if (btSocket == null)
+                    {
+                        AlertError("No hay conexión a ningún Bluetooth.");
+                        return;
+                    }
+                    Debug.WriteLine("Conectado");
+                    if (btSocket.IsConnected)
+                    {
+                        await btSocket.OutputStream.WriteAsync(tramaEnviada.ToArray(), 0, tramaEnviada.Count, _cancellationToken);
+
+                        var tramaRecibida = await ReceivedData();
+                        if (string.IsNullOrWhiteSpace(tramaRecibida))
+                        {
+                            await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener la trama.", icon: Constants.ICON_WARNING));
                             return;
                         }
+                        var response = Reutilizables.VerifyCRCOfReceivedTrama(tramaRecibida);
+                        if (!response.IsExito)
+                        {
+                            await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: response.MensajeHttp, icon: Constants.ICON_WARNING));
+                            return;
+                        }
+
+                        Valor = Reutilizables.ConvertReceivedTramaToResult(tramaRecibida);
+                        if (EditState)
+                        {
+                            if (Valor == (int)HttpStatusCode.Conflict)
+                            {
+                                await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener el estado, ha ocurrido un error al recibir los datos."
+                                                                , icon: Constants.ICON_WARNING));
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            IsOn = Valor == 1 ? true : false;
+                        }
+                        SaveData(Reutilizables.ByteArrayToHexString(tramaEnviada.ToArray()), tramaRecibida, EditState);
                     }
-                    else
-                    {
-                        IsOn = Valor == 1 ? true : false;
-                    }
-                    SaveData(Reutilizables.ByteArrayToHexString(tramaEnviada.ToArray()), tramaRecibida, EditState);
                 }
             }
             catch (Exception ex)
@@ -143,7 +178,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             }
             finally
             {
-                tcs.Cancel();
+                _cancellationTokenSource.Cancel();
             }
         }
 

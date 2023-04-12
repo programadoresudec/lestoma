@@ -31,10 +31,10 @@ namespace lestoma.App.ViewModels.Componentes
         private NameDTO _modulo;
         private NameDTO _actividad;
         private InfoComponenteDTO _infoComponente;
+        private EstadoComponenteDTO _estadoComponente;
         private bool _isCreated;
         private bool _isVisible;
         private string _iconStatusComponent;
-        private string _jsonEstadoComponente;
         private bool _isSuperAdmin;
         private bool _isVisibleDireccionRegistro = true;
         private ObservableCollection<int> _direccionesNoUtilizadas;
@@ -66,8 +66,7 @@ namespace lestoma.App.ViewModels.Componentes
             }
             else if (parameters.ContainsKey(Constants.REFRESH))
             {
-                var json = JsonConvert.DeserializeObject<EstadoComponenteDTO>(MovilSettings.EstadoComponente);
-                JsonEstadoComponente = JsonConvert.SerializeObject(json, Formatting.Indented);
+                EstadoComponente = JsonConvert.DeserializeObject<EstadoComponenteDTO>(MovilSettings.EstadoComponente);
             }
             else
             {
@@ -90,6 +89,11 @@ namespace lestoma.App.ViewModels.Componentes
         {
             get => _isSuperAdmin;
             set => SetProperty(ref _isSuperAdmin, value);
+        }
+        public EstadoComponenteDTO EstadoComponente
+        {
+            get => _estadoComponente;
+            set => SetProperty(ref _estadoComponente, value);
         }
 
         public ObservableCollection<int> DireccionesNoUtilizadas
@@ -174,12 +178,6 @@ namespace lestoma.App.ViewModels.Componentes
             get => _iconStatusComponent;
             set => SetProperty(ref _iconStatusComponent, value);
         }
-        public string JsonEstadoComponente
-        {
-            get => _jsonEstadoComponente;
-            set => SetProperty(ref _jsonEstadoComponente, value);
-        }
-
         private async void LoadDireccionesDeRegistro()
         {
             try
@@ -215,7 +213,6 @@ namespace lestoma.App.ViewModels.Componentes
             }
 
         }
-
 
         private async void LoadLists(Guid id)
         {
@@ -267,7 +264,7 @@ namespace lestoma.App.ViewModels.Componentes
                                 Modulo = modulo;
                                 Actividad = actividad;
                             }
-                            JsonEstadoComponente = JsonConvert.SerializeObject(InfoComponente.EstadoComponente, Formatting.Indented);
+                            EstadoComponente = InfoComponente.EstadoComponente;
                         }
                     }
                 }
