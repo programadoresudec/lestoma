@@ -1,6 +1,7 @@
 ﻿using lestoma.App.Models;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
+using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Listados;
 using Newtonsoft.Json;
@@ -16,9 +17,7 @@ namespace lestoma.App.ViewModels.Componentes
     {
         private ObservableCollection<EstadoComponenteDTO> _estados;
         private EstadoComponenteDTO _estadoComponente;
-        private string _error;
-        private bool _isVisible = false;
-        private bool _isEdit = false;
+        private bool _isSuperAdmin;
 
         public InfoEstadoPopupViewModel(INavigationService navigationService)
             : base(navigationService)
@@ -26,21 +25,20 @@ namespace lestoma.App.ViewModels.Componentes
             _estadoComponente = new EstadoComponenteDTO();
             _estados = new ObservableCollection<EstadoComponenteDTO>();
             SaveEstadoCommand = new Command(SaveClicked);
+            _isSuperAdmin = TokenUser.User.RolId == (int)TipoRol.SuperAdministrador;
         }
 
         private async void SaveClicked()
         {
             if (EstadoComponente.Id != Guid.Empty)
             {
-                this.IsVisible = false;
                 MovilSettings.EstadoComponente = JsonConvert.SerializeObject(EstadoComponente);
                 var parameters = new NavigationParameters { { Constants.REFRESH, true } };
                 await _navigationService.GoBackAsync(parameters);
             }
             else
             {
-                this.Error = "El estado es requerido.";
-                this.IsVisible = true;
+                AlertWarning("El estado es requerido.");
             }
         }
 
@@ -49,8 +47,11 @@ namespace lestoma.App.ViewModels.Componentes
             base.OnNavigatedTo(parameters);
             if (parameters.ContainsKey("estadoComponente"))
             {
-                var data = parameters.GetValue<InfoEstadoComponenteModel>("estadoComponente");
-                IsEdit = data.IsEdit;
+                 var data = parameters.GetValue<InfoEstadoComponenteModel>("estadoComponente");
+                if (data.IsCreated)
+                {
+                    IsSuperAdmin = true;
+                }
                 LoadEstadosComponente(data.Estado);
             }
         }
@@ -61,22 +62,10 @@ namespace lestoma.App.ViewModels.Componentes
             set => SetProperty(ref _estados, value);
         }
 
-        public string Error
+        public bool IsSuperAdmin
         {
-            get => _error;
-            set => SetProperty(ref _error, value);
-        }
-
-        public bool IsVisible
-        {
-            get => _isVisible;
-            set => SetProperty(ref _isVisible, value);
-        }
-
-        public bool IsEdit
-        {
-            get => _isEdit;
-            set => SetProperty(ref _isEdit, value);
+            get => _isSuperAdmin;
+            set => SetProperty(ref _isSuperAdmin, value);
         }
 
         public EstadoComponenteDTO EstadoComponente

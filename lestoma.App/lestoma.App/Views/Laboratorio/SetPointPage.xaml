@@ -4,14 +4,12 @@
              xmlns:prism="http://prismlibrary.com" xmlns:gauge="clr-namespace:Syncfusion.SfGauge.XForms;assembly=Syncfusion.SfGauge.XForms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="lestoma.App.Views.Laboratorio.SetPointPage">
-
-
     <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
         <Label
-          FontFamily="Montserrat-SemiBold"
+         FontFamily="Montserrat-SemiBold"
           HorizontalOptions="Center"
           Style="{StaticResource TitleLabelStyle}"
-          Text="{Binding Nombre}"
+          Text="{Binding TramaComponente.NombreComponente}"
           VerticalOptions="Center" />
         <ScrollView>
             <Grid>
@@ -25,15 +23,15 @@
                                 <gauge:LinearTickSettings Thickness="1" Color ="#9E9E9E" Length = "10"/>
                             </gauge:LinearScale.MajorTickSettings>
                             <gauge:LinearScale.MinorTickSettings>
-                                <gauge:LinearTickSettings Thickness="1"  Color="Gray" Length="3"/>
+                                <gauge:LinearTickSettings Thickness="1" Color="Gray" Length="3"/>
                             </gauge:LinearScale.MinorTickSettings>
                             <gauge:LinearScale.Pointers>
-                                <gauge:BarPointer  Value="30" CornerRadiusType="End" EnableAnimation = "True" Color = "{StaticResource PantoneVerdeSecond}" Thickness = "50"/>
-                                <gauge:SymbolPointer Value="70" Color="DeepSkyBlue" Thickness="30"/>
+                                <gauge:BarPointer Value="{Binding TramaComponente.ValorSetPoint}" CornerRadiusType="End" EnableAnimation = "True" 
+                                                  Color = "{StaticResource PantoneVerdeThird}" Thickness = "50"/>
+                                <gauge:SymbolPointer Value="{Binding TramaComponente.ValorSetPoint}" Color="{StaticResource PantoneAmarilloLight}" Thickness="24"/>
                             </gauge:LinearScale.Pointers>
                         </gauge:LinearScale>
                     </gauge:SfLinearGauge.Scales>
-
                 </gauge:SfLinearGauge>
             </Grid>
         </ScrollView>

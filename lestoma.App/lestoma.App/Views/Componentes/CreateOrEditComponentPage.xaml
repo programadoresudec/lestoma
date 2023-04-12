@@ -5,7 +5,7 @@
              xmlns:control="clr-namespace:lestoma.App.Controls"
              xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
              xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" 
-             xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms"
+             xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms" 
              prism:ViewModelLocator.AutowireViewModel="True" Title="{Binding Title}"
              x:Class="lestoma.App.Views.Componentes.CreateOrEditComponentPage">
     <StackLayout Spacing="15" VerticalOptions="CenterAndExpand" Padding="30">
@@ -24,50 +24,49 @@
                     </inputLayout:SfTextInputLayout>
                 </border:SfBorder>
                 <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
-                    <inputLayout:SfTextInputLayout Hint="modulos" HeightRequest="80" IsEnabled="{Binding IsEdit}"
+                    <inputLayout:SfTextInputLayout Hint="modulos" HeightRequest="80" IsEnabled="{Binding IsSuperAdmin}"
                                                    ContainerBackgroundColor="Transparent" 
                                                    Margin="10">
                         <Picker x:Name="moduloEntry" TextColor="Black"  ItemDisplayBinding="{Binding Nombre}" 
-                                    Style="{StaticResource BorderlessEntryStyle}" 
+                                    Style="{StaticResource BorderlessEntryStyle}" IsEnabled="{Binding IsSuperAdmin}" 
                                 SelectedItem="{Binding Modulo}" ItemsSource="{Binding Modulos}">
                         </Picker>
                     </inputLayout:SfTextInputLayout>
                 </border:SfBorder>
                 <border:SfBorder HeightRequest="85" IsVisible="{Binding IsVisible}" Style="{StaticResource ThemeBorderStyle}">
                     <inputLayout:SfTextInputLayout Hint="Upas" IsVisible="{Binding IsVisible}"
-                                                   HeightRequest="80" IsEnabled="{Binding IsEdit}" 
+                                                   HeightRequest="80" IsEnabled="{Binding IsSuperAdmin}" 
                                                    ContainerBackgroundColor="Transparent" 
                                                   Margin="10">
-                        <Picker x:Name="upaEntry" TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
+                        <Picker x:Name="upaEntry" TextColor="Black" ItemDisplayBinding="{Binding Nombre}" IsEnabled="{Binding IsSuperAdmin}" 
                                     Style="{StaticResource BorderlessEntryStyle}" IsVisible="{Binding IsVisible}" 
                                 SelectedItem="{Binding Upa}" ItemsSource="{Binding Upas}">
                         </Picker>
                     </inputLayout:SfTextInputLayout>
                 </border:SfBorder>
                 <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
-                    <inputLayout:SfTextInputLayout Hint="Dirección de registro"
-                                                   HeightRequest="80" IsEnabled="{Binding IsEdit}" 
-                                                   ContainerBackgroundColor="Transparent" 
-                                                   Margin="10">
-                        <Picker TextColor="Black"
-                                Style="{StaticResource BorderlessEntryStyle}"
-                                SelectedItem="{Binding DireccionRegistro}" ItemsSource="{Binding Bytes}">
-                        </Picker>
-                    </inputLayout:SfTextInputLayout>
-                </border:SfBorder>
-
-                <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
-                    <inputLayout:SfTextInputLayout Hint="Actividades" HeightRequest="80" IsEnabled="{Binding IsEdit}" 
+                    <inputLayout:SfTextInputLayout Hint="Actividades" HeightRequest="80" IsEnabled="{Binding IsSuperAdmin}" 
                                                    ContainerBackgroundColor="Transparent" 
                                                    Margin="10">
                         <Picker x:Name="actividadEntry" TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
-                                    Style="{StaticResource BorderlessEntryStyle}"  
+                                    Style="{StaticResource BorderlessEntryStyle}"  IsEnabled="{Binding IsSuperAdmin}" 
                                 SelectedItem="{Binding Actividad}" ItemsSource="{Binding Actividades}">
                         </Picker>
                     </inputLayout:SfTextInputLayout>
                 </border:SfBorder>
+                <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
+                    <inputLayout:SfTextInputLayout Hint="Dirección de registro"
+                                                   HeightRequest="80" IsEnabled="{Binding IsCreated}" 
+                                                   ContainerBackgroundColor="Transparent" 
+                                                   Margin="10">
+                        <Picker TextColor="Black"
+                                Style="{StaticResource BorderlessEntryStyle}" IsEnabled="{Binding IsCreated}" 
+                                SelectedItem="{Binding DireccionRegistro}" ItemsSource="{Binding DireccionesNoUtilizadas}">
+                        </Picker>
+                    </inputLayout:SfTextInputLayout>
+                </border:SfBorder>
                 <buttons:SfButton x:Name="btnStatusComponent" HorizontalOptions="StartAndExpand"
-                    Command="{Binding AddStatusComponentCommand}"
+                    Command="{Binding AddStatusComponentCommand}" 
                     CornerRadius="4" Margin="15" ImageSource="{Binding IconStatusComponent}" ShowIcon="True"
                     Style="{StaticResource LestomaButtonStyle}"
                     Text="{Binding Title, StringFormat='{0} estado'}" />
@@ -75,9 +74,13 @@
                     <Label Margin="10">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Estado Componente" FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                <Span Text="Estado Componente" FontSize="Small" TextColor="Black" FontFamily="Montserrat-SemiBold"/>
                                 <Span Text="&#10;" TextColor="Transparent" FontSize="Small" />
-                                <Span Text="{Binding JsonEstadoComponente}" TextColor="Black" FontSize="Small"/>
+                                <Span Text="Tipo: " FontFamily="Montserrat-SemiBold" TextColor="Black" FontSize="Small" />
+                                <Span Text="{Binding EstadoComponente.TipoEstado}" FontFamily="Montserrat-Regular" TextColor="Black" FontSize="Small" />
+                                <Span Text="&#10;" TextColor="Transparent" FontSize="Small" />
+                                <Span Text="Byte: " FontFamily="Montserrat-SemiBold" TextColor="Black" FontSize="Small" />
+                                <Span Text="{Binding EstadoComponente.ByteDecimalFuncion}" FontFamily="Montserrat-Regular" TextColor="Black" FontSize="Small" />
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>

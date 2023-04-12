@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="http://prismlibrary.com" xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms" 
+             xmlns:prism="http://prismlibrary.com"
              xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" 
              xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" 
              xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms"
              xmlns:cards="clr-namespace:Syncfusion.XForms.Cards;assembly=Syncfusion.Cards.XForms" 
-             xmlns:converter="clr-namespace:lestoma.App.Converters"
+             xmlns:converter="clr-namespace:lestoma.App.Converters" xmlns:control="clr-namespace:lestoma.App.Controls"
              prism:ViewModelLocator.AutowireViewModel="True" Title="{Binding Title}"
              x:Class="lestoma.App.Views.UpasActividades.CreateOrEditDetalleUpaActividadPage">
     <ContentPage.Resources>
@@ -16,54 +16,70 @@
             <converter:NameValidationConverter x:Key="FirstValidationErrorConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
-    <StackLayout VerticalOptions="Start" HorizontalOptions="Start" Padding="30">
+    <StackLayout VerticalOptions="Start" HorizontalOptions="FillAndExpand" Margin="30,20">
         <ScrollView>
             <StackLayout>
-                <border:SfBorder BackgroundColor="{DynamicResource Gray-White}"
-                                 BorderColor="{Binding Source={x:Reference usuarioEntry}, Path=IsFocused, 
-                                 Converter={StaticResource ColorConverter}, ConverterParameter=0}"
-                                 CornerRadius="4" HeightRequest="80" Style="{StaticResource LoginFormBorderlessEntryBorderStyle}">
-                    <Grid ColumnDefinitions="*, Auto">
-                        <inputLayout:SfTextInputLayout Hint="usuarios" HeightRequest="80"  IsEnabled="{Binding IsEdit}" ContainerBackgroundColor="Transparent" 
-                                                   Margin="10,0,0,0">
-                            <Picker x:Name="usuarioEntry" TextColor="Black"  ItemDisplayBinding="{Binding FullName}" 
-                                    Style="{StaticResource BorderlessEntryStyle}" Margin="15,0" 
-                                SelectedItem="{Binding User}" ItemsSource="{Binding Usuarios}">
+                <border:SfBorder HeightRequest="80" Style="{StaticResource ThemeBorderStyle}" IsVisible="{Binding IsCreated}">
+                    <StackLayout Orientation="Horizontal" IsVisible="{Binding IsCreated}">
+                        <Label Margin="10,0,0,10" TextColor="{StaticResource Gray-Black}" FontSize="Medium" HorizontalOptions="Start"
+                                Style="{StaticResource IconLabelStyle}" FontFamily="fontello"
+                                Text="{StaticResource IconUsers}" IsVisible="{Binding IsCreated}"/>
+                        <inputLayout:SfTextInputLayout Hint="Usuarios" HeightRequest="80" ContainerBackgroundColor="Transparent" 
+                                                   Margin="10,0,0,0" HorizontalOptions="FillAndExpand" IsVisible="{Binding IsCreated}">
+                            <Picker x:Name="usuarioEntry" TextColor="Black" ItemDisplayBinding="{Binding Nombre}" IsVisible="{Binding IsCreated}"
+                                    Style="{StaticResource BorderlessEntryStyle}" Title="--Seleccione--" FontFamily="Montserrat-Regular" 
+                                    SelectedItem="{Binding User}" ItemsSource="{Binding Usuarios}">
                             </Picker>
                         </inputLayout:SfTextInputLayout>
-                    </Grid>
+                    </StackLayout>
+                </border:SfBorder>
+                <StackLayout Orientation="Horizontal" IsVisible="{Binding IsEdit}">
+                    <Label Margin="10,0,0,10" TextColor="{StaticResource Gray-Black}" FontSize="Medium" HorizontalOptions="Start"
+                                Style="{StaticResource IconLabelStyle}" FontFamily="fontello"
+                                Text="{StaticResource IconUsers}" IsEnabled="False"/>
+                    <inputLayout:SfTextInputLayout Hint="Usuario" HeightRequest="80" ContainerBackgroundColor="Transparent" 
+                                                   Margin="10,0,0,0" HorizontalOptions="FillAndExpand" IsEnabled="False">
+                        <control:BorderlessEditor IsEnabled="False"
+                                         MaxLength="500" 
+                                         IsExpandable="True"
+                                         Style="{StaticResource BorderlessEditorStyle}"
+                                         Text="{Binding User.FullName}">
+                        </control:BorderlessEditor>
+                    </inputLayout:SfTextInputLayout>
+                </StackLayout>
+                <border:SfBorder HeightRequest="80" Style="{StaticResource ThemeBorderStyle}">
+                    <StackLayout Orientation="Horizontal">
+                        <Label Margin="10,0,0,10" TextColor="{StaticResource Gray-Black}" FontSize="Medium" HorizontalOptions="Start"
+                                Style="{StaticResource IconLabelStyle}" FontFamily="fontello"
+                                Text="{StaticResource IconEnvira}" />
+                        <inputLayout:SfTextInputLayout Hint="Upas" HorizontalOptions="FillAndExpand" HeightRequest="80" 
+                                                       ContainerBackgroundColor="Transparent" Margin="10,0,0,0">
+                            <Picker x:Name="upaEntry" TextColor="Black" Title="--Seleccione--" FontFamily="Montserrat-Regular" 
+                                    ItemDisplayBinding="{Binding Nombre}" Style="{StaticResource BorderlessEntryStyle}" 
+                                    SelectedItem="{Binding Upa}" ItemsSource="{Binding Upas}">
+                            </Picker>
+                        </inputLayout:SfTextInputLayout>
+                    </StackLayout>
                 </border:SfBorder>
 
-                <border:SfBorder BackgroundColor="{DynamicResource Gray-White}"
-                                 BorderColor="{Binding Source={x:Reference upaEntry}, Path=IsFocused, 
-                                 Converter={StaticResource ColorConverter}, ConverterParameter=0}"
-                                 CornerRadius="4" HeightRequest="80" Style="{StaticResource LoginFormBorderlessEntryBorderStyle}">
-                    <Grid ColumnDefinitions="*, Auto">
-                        <inputLayout:SfTextInputLayout Hint="Upas" HeightRequest="80" IsEnabled="{Binding IsEdit}" ContainerBackgroundColor="Transparent" 
+                <border:SfBorder HeightRequest="80" Style="{StaticResource ThemeBorderStyle}">
+                    <StackLayout Orientation="Horizontal">
+                        <Label Margin="10,0,0,10" TextColor="{StaticResource Gray-Black}" FontSize="Medium" HorizontalOptions="Start"
+                                Style="{StaticResource IconLabelStyle}" FontFamily="fontello"
+                                Text="{StaticResource IconTasks}" />
+                        <inputLayout:SfTextInputLayout Hint="Actividades" HorizontalOptions="FillAndExpand"
+                                                       HeightRequest="80" ContainerBackgroundColor="Transparent" 
                                                    Margin="10,0,0,0">
-                            <Picker x:Name="upaEntry" TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
-                                    Style="{StaticResource BorderlessEntryStyle}" Margin="15,0" 
-                                SelectedItem="{Binding Upa}" ItemsSource="{Binding Upas}">
+                            <Picker TextColor="Black" Title="--Seleccione--" FontFamily="Montserrat-Regular" 
+                                    ItemDisplayBinding="{Binding Nombre}" Style="{StaticResource BorderlessEntryStyle}" 
+                                    SelectedItem="{Binding Actividad}" ItemsSource="{Binding Actividades}">
                             </Picker>
                         </inputLayout:SfTextInputLayout>
-                    </Grid>
-                </border:SfBorder>
-                <border:SfBorder Style="{StaticResource ThemeBorderStyle}">
-                    <inputLayout:SfTextInputLayout Hint="Actividades" x:Name="InputComboBox" ContainerBackgroundColor="Transparent" 
-                                                   Margin="10,0,0,0">
-                        <combobox:SfComboBox EnableAutoSize="True" x:Name="comboBoxActividades" AllowFiltering="true" ComboBoxMode="SuggestAppend"
-                                         DisplayMemberPath="Nombre" IsEditableMode="True" NoResultsFoundText="Actividad no encontrada." 
-                                     DataSource="{Binding Actividades}"  >
-                            <combobox:SfComboBox.Behaviors>
-                                <prism:EventToCommandBehavior EventName="SelectionChanging"
-                                          Command="{Binding ItemSelectCommand}" EventArgsParameterPath="Value" />
-                            </combobox:SfComboBox.Behaviors>
-                        </combobox:SfComboBox>
-                    </inputLayout:SfTextInputLayout>
+                    </StackLayout>
                 </border:SfBorder>
                 <cards:SfCardView Margin="20" Padding="15,0,15,0" IsVisible="{Binding IsVisibleActividades}" CornerRadius="30,30,30,30">
                     <StackLayout Spacing="20" VerticalOptions="Center" Padding="10"  IsVisible="{Binding IsVisibleActividades}">
-                        <Label Text="Actividades agregadas"   IsVisible="{Binding IsVisibleActividades}" TextColor="{StaticResource PantoneVerdeSecond}"
+                        <Label Text="Actividades agregadas" IsVisible="{Binding IsVisibleActividades}" TextColor="{StaticResource PantoneVerdeSecond}"
                                FontSize="Medium"  FontAttributes="Bold"/>
                         <StackLayout>
                             <buttons:SfChipGroup x:Name="chipsActividades"
@@ -74,11 +90,6 @@
                                 ChipTextSize="Small"
                                 CloseButtonColor="{StaticResource PantoneVerdeSecond}"
                        	        DisplayMemberPath="Nombre">
-                                <buttons:SfChipGroup.Behaviors>
-                                    <prism:EventToCommandBehavior EventName="ItemRemoved"
-                                          Command="{Binding ItemRemoveCommand}" EventArgsParameterPath="RemovedItem" />
-                                </buttons:SfChipGroup.Behaviors>
-
                                 <buttons:SfChipGroup.ChipLayout>
                                     <FlexLayout 
                                         HorizontalOptions="Start"
@@ -98,7 +109,7 @@
             HorizontalOptions="FillAndExpand"
             VerticalOptions="EndAndExpand"
             Command="{Binding CreateOrEditCommand}"
-             CornerRadius="8" Margin="15"
+             CornerRadius="15" Margin="5"
              Style="{StaticResource LestomaGradientButtonStyle}"
              Text="Guardar" />
     </StackLayout>

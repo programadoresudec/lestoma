@@ -1,5 +1,6 @@
 ﻿using Acr.UserDialogs;
 using lestoma.CommonUtils.DTOs;
+using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests.Filters;
 using Prism.Navigation;
@@ -40,15 +41,17 @@ namespace lestoma.App.ViewModels.UpasActividades
 
         }
 
-        private async void LoadActivities(UpaUserFilterRequest filtro)
+        private async void LoadActivities(UpaUserFilterRequest upaUserFilterRequest)
         {
             try
             {
                 if (_apiService.CheckConnection())
                 {
                     UserDialogs.Instance.ShowLoading("Cargando...");
+
+                    string queryString = Reutilizables.GenerateQueryString(upaUserFilterRequest);
                     ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
-                        $"detalle-upas-actividades/listar-actividades-upa-usuario?UpaId={filtro.UpaId}&UsuarioId={filtro.UsuarioId}", TokenUser.Token);
+                        $"detalle-upas-actividades/listar-por-usuario{queryString}", TokenUser.Token);
                     if (response.IsExito)
                     {
                         var listado = (List<NameDTO>)response.Data;

@@ -87,7 +87,6 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
             {
                 SetProperty(ref _componentSelected, value);
                 AddComponent(_componentSelected);
-
             }
         }
 
@@ -156,6 +155,7 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
         {
             try
             {
+                UserDialogs.Instance.ShowLoading("Agregando...");
                 var checkAll = _componentsAdd.Any(x => x.Id == Guid.Empty);
                 var existe = _componentsAdd.Any(x => x.Id == componentSelected.Id);
                 var count = _componentsAdd.Count(x => x.Id != Guid.Empty);
@@ -169,6 +169,10 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
             catch (Exception ex)
             {
                 SeeError(ex);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
             }
         }
         private async void ListarUpas()
