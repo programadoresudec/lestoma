@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com" xmlns:gauge="clr-namespace:Syncfusion.SfGauge.XForms;assembly=Syncfusion.SfGauge.XForms"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="lestoma.App.Views.Laboratorio.SetPointPage">
+             x:Class="lestoma.App.Views.Laboratorio.SetPointPage"
+             Title="{Binding Title}">
     <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
         <Label
          FontFamily="Montserrat-SemiBold"

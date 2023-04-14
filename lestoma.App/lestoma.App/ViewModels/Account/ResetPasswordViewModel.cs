@@ -200,7 +200,6 @@ namespace lestoma.App.ViewModels.Account
             }
             catch (Exception ex)
             {
-
                 SeeError(ex);
             }
             finally

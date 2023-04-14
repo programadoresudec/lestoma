@@ -1,4 +1,5 @@
-﻿using lestoma.App.Validators;
+﻿using Acr.UserDialogs;
+using lestoma.App.Validators;
 using lestoma.App.Validators.Rules;
 using lestoma.App.Views;
 using lestoma.App.Views.Account;
@@ -125,43 +126,42 @@ namespace lestoma.App.ViewModels.Account
 
         private async void SubmitClicked(object obj)
         {
-            if (this.AreFieldsValid())
+            try
             {
-                try
+                if (AreFieldsValid())
                 {
-                    if (_apiService.CheckConnection())
-                    {
-                        await PopupNavigation.Instance.PushAsync(new LoadingPopupPage());
-                        ChangePasswordRequest cambio = new ChangePasswordRequest
-                        {
-                            IdUser = UserApp.User.Id,
-                            OldPassword = this.CurrentPassword.Value,
-                            NewPassword = this.Password.Item1.Value
-                        };
-                        ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL_API, "Account/changepassword", cambio, UserApp.Token);
-                        if (respuesta.IsExito)
-                        {
-                            AlertSuccess(respuesta.MensajeHttp);
-                            await _navigationService.NavigateAsync($"/{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(SettingsPage)}");
-                        }
-                        else
-                        {
-                            AlertError(respuesta.MensajeHttp);
-                        }
-                        ClosePopup();
-                    }
-                    else
+
+                    if (!_apiService.CheckConnection())
                     {
                         AlertNoInternetConnection();
+                        return;
                     }
+                    UserDialogs.Instance.ShowLoading("Guardando...");
+                    ChangePasswordRequest cambio = new ChangePasswordRequest
+                    {
+                        IdUser = UserApp.User.Id,
+                        OldPassword = this.CurrentPassword.Value,
+                        NewPassword = this.Password.Item1.Value
+                    };
+                    ResponseDTO respuesta = await _apiService.PutAsyncWithToken(URL_API, "Account/changepassword", cambio, UserApp.Token);
+
+                    if (!respuesta.IsExito)
+                    {
+                        AlertError(respuesta.MensajeHttp);
+                        return;
+                    }
+                    AlertSuccess(respuesta.MensajeHttp);
+                    await _navigationService.NavigateAsync($"/{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(SettingsPage)}");
+
                 }
-                catch (Exception ex)
-                {
-                    if (PopupNavigation.Instance.PopupStack.Any())
-                        await PopupNavigation.Instance.PopAsync();
-                    await PopupNavigation.Instance.PopAsync();
-                    SeeError(ex);
-                }
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
             }
         }
         #endregion

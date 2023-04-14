@@ -59,8 +59,10 @@ namespace lestoma.App.ViewModels.Account
                     };
                     ResponseDTO respuesta = await _apiService.PutAsync(URL_API, "Account/forgotpassword", email);
                     if (!respuesta.IsExito)
+                    {
+                        AlertError(respuesta.MensajeHttp);
                         return;
-                    AlertError(respuesta.MensajeHttp);
+                    }
                     AlertSuccess(respuesta.MensajeHttp);
                     await _navigationService.NavigateAsync($"{nameof(ResetPasswordPage)}");
                 }
@@ -74,12 +76,10 @@ namespace lestoma.App.ViewModels.Account
                 }
             }
         }
-
         private async void SignUpClicked(object obj)
         {
             await _navigationService.NavigateAsync(nameof(RegistroPage));
         }
-
         #endregion
     }
 }

@@ -1,5 +1,4 @@
-﻿using Plugin.Toast;
-using Xamarin.Forms.Internals;
+﻿using Xamarin.Forms.Internals;
 using Xamarin.Forms.Xaml;
 
 namespace lestoma.App.Views.Account

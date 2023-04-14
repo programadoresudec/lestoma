@@ -1,5 +1,6 @@
 ﻿using lestoma.App.Views.Laboratorio;
 using lestoma.CommonUtils.DTOs;
+using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using Prism.Navigation;
 using System;
@@ -61,8 +62,7 @@ namespace lestoma.App.ViewModels.Laboratorio
         }
         private void LoadModulos()
         {
-            IsCheckConnection = _apiService.CheckConnection();
-            if (IsCheckConnection)
+            if (_apiService.CheckConnection())
             {
                 ConsumoService();
             }
@@ -76,7 +76,7 @@ namespace lestoma.App.ViewModels.Laboratorio
 
         private void ConsumoServiceLocal()
         {
-            throw new NotImplementedException();
+            LestomaLog.Normal("Consultando modulos.. offline");
         }
 
 

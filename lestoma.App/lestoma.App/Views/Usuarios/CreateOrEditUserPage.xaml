@@ -50,7 +50,7 @@
                                 <!--  Entry to get username from user  -->
                                 <border:SfBorder  BackgroundColor="{DynamicResource Gray-White}"
                                                   BorderColor="{Binding Source={x:Reference NameEntry}, Path=IsFocused, 
-                                Converter={StaticResource ColorConverter}, ConverterParameter=0}"   CornerRadius="4" HeightRequest="75"
+                                Converter={StaticResource ColorConverter}, ConverterParameter=0}" CornerRadius="4" HeightRequest="75"
                                              Style="{StaticResource LoginFormBorderlessEntryBorderStyle}">
                                     <Grid ColumnDefinitions="*, Auto">
                                         <!--  Label to display error message  -->

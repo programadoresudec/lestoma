@@ -9,7 +9,8 @@
                   xmlns:core="clr-namespace:Syncfusion.XForms.Core;assembly=Syncfusion.Core.XForms"
                   xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
                   xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" xmlns:control="clr-namespace:lestoma.App.Controls"
-                  x:Class="lestoma.App.Views.Laboratorio.InputSetPointPopupPage">
+                  x:Class="lestoma.App.Views.Laboratorio.InputSetPointPopupPage"
+                  Title="{Binding Title}">
     <popup:PopupPage.Animation>
         <animations:ScaleAnimation DurationIn="400"
                                    DurationOut="300"

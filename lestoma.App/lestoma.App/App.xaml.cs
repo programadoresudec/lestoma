@@ -28,7 +28,7 @@ using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Services;
-using lestoma.DatabaseOffline.IConfiguration;
+//using lestoma.DatabaseOffline.IConfiguration;
 using Newtonsoft.Json;
 using Prism;
 using Prism.Ioc;
@@ -107,9 +107,9 @@ namespace lestoma.App
             containerRegistry.Register<IApiService, ApiService>();
             containerRegistry.Register<IFilesHelper, FilesHelper>();
 
-            #region injection UnitOfwork Database OFfline
-            containerRegistry.Register<IUnitOfWork, UnitOfWork>();
-            #endregion
+            //#region injection UnitOfwork Database OFfline
+            //containerRegistry.Register<IUnitOfWork, UnitOfWork>();
+            //#endregion
 
             #region Navegaciones
             containerRegistry.RegisterForNavigation<NavigationPage>();

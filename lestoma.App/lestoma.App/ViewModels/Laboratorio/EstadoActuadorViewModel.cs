@@ -10,7 +10,6 @@ using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,13 +30,14 @@ namespace lestoma.App.ViewModels.Laboratorio
         public EstadoActuadorViewModel(INavigationService navigationService, IApiService apiService) :
             base(navigationService)
         {
+
             _apiService = apiService;
             _componenteRequest = new TramaComponenteRequest();
             _laboratorioRequest = new LaboratorioRequest();
             _isEnabled = TokenUser.User.RolId != (int)TipoRol.Auxiliar;
             ChangeStatedCommand = new Command<object>(StatedSelected, CanNavigate);
             _cancellationTokenSource = new CancellationTokenSource();
-            _cancellationToken = new CancellationToken();
+            _cancellationToken = _cancellationTokenSource.Token;
         }
 
         private bool CanNavigate(object arg)
@@ -72,19 +72,13 @@ namespace lestoma.App.ViewModels.Laboratorio
 
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
-            try
+            base.OnNavigatedTo(parameters);
+            if (parameters.ContainsKey("tramaComponente"))
             {
-                base.OnNavigatedTo(parameters);
-                if (parameters.ContainsKey("tramaComponente"))
-                {
-                    TramaComponente = parameters.GetValue<TramaComponenteRequest>("tramaComponente");
-                    var tramaAEnviar = Reutilizables.TramaConCRC16Modbus(new List<byte>(TramaComponente.TramaOchoBytes));
-                    SendTrama(tramaAEnviar);
-                }
-            }
-            catch (Exception ex)
-            {
-                SeeError(ex);
+                TramaComponente = parameters.GetValue<TramaComponenteRequest>("tramaComponente");
+                Title = $"Estado {TramaComponente.NombreComponente}";
+                var tramaAEnviar = Reutilizables.TramaConCRC16Modbus(new List<byte>(TramaComponente.TramaOchoBytes));
+                SendTrama(tramaAEnviar);
             }
         }
         private void StatedSelected(object obj)
@@ -102,10 +96,16 @@ namespace lestoma.App.ViewModels.Laboratorio
         {
             try
             {
-                if (_apiService.CheckConnection())
+                if (_apiService.CheckConnection() && btSocket == null)
                 {
                     ResponseDTO response = await _apiService.GetAsyncWithToken(URL_API,
                         $"laboratorio-lestoma/ultimo-registro-componente/{TramaComponente.ComponenteId}", TokenUser.Token);
+                    if (response.Data == null)
+                    {
+                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No hay datos en el servidor de este componente por el momento.",
+                                                       icon: Constants.ICON_WARNING));
+                        return;
+                    }
                     if (response.IsExito)
                     {
                         var data = ParsearData<TramaComponenteDTO>(response);
@@ -114,65 +114,34 @@ namespace lestoma.App.ViewModels.Laboratorio
                         {
                             if (Valor == (int)HttpStatusCode.Conflict)
                             {
-                                await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener el estado, ha ocurrido un error al recibir los datos."
-                                                                , icon: Constants.ICON_WARNING));
+                                await PopupNavigation.Instance.PushAsync(
+                                    new MessagePopupPage(message: "No se pudo obtener el estado, ha ocurrido un error al recibir los datos.",
+                                    icon: Constants.ICON_WARNING));
                                 return;
                             }
                         }
-                        else
-                        {
-                            IsOn = Valor == 1 ? true : false;
-                        }
-
+                        IsOn = Valor == 1 ? true : false;
                         SaveData(Reutilizables.ByteArrayToHexString(tramaEnviada.ToArray()), data.TramaOutPut, EditState);
                     }
                 }
-                else
+                else if (_apiService.CheckConnection() && btSocket != null)
+                {
+                    LestomaLog.Normal("Conectado al Bluetooth.");
+                    TransmissionBluetooth(tramaEnviada, EditState);
+                }
+                else if (!_apiService.CheckConnection())
                 {
                     if (btSocket == null)
                     {
                         AlertError("No hay conexión a ningún Bluetooth.");
                         return;
                     }
-                    Debug.WriteLine("Conectado");
-                    if (btSocket.IsConnected)
-                    {
-                        await btSocket.OutputStream.WriteAsync(tramaEnviada.ToArray(), 0, tramaEnviada.Count, _cancellationToken);
-
-                        var tramaRecibida = await ReceivedData();
-                        if (string.IsNullOrWhiteSpace(tramaRecibida))
-                        {
-                            await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener la trama.", icon: Constants.ICON_WARNING));
-                            return;
-                        }
-                        var response = Reutilizables.VerifyCRCOfReceivedTrama(tramaRecibida);
-                        if (!response.IsExito)
-                        {
-                            await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: response.MensajeHttp, icon: Constants.ICON_WARNING));
-                            return;
-                        }
-
-                        Valor = Reutilizables.ConvertReceivedTramaToResult(tramaRecibida);
-                        if (EditState)
-                        {
-                            if (Valor == (int)HttpStatusCode.Conflict)
-                            {
-                                await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener el estado, ha ocurrido un error al recibir los datos."
-                                                                , icon: Constants.ICON_WARNING));
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            IsOn = Valor == 1 ? true : false;
-                        }
-                        SaveData(Reutilizables.ByteArrayToHexString(tramaEnviada.ToArray()), tramaRecibida, EditState);
-                    }
+                    LestomaLog.Normal("Conectado al Bluetooth.");
+                    TransmissionBluetooth(tramaEnviada, EditState);
                 }
             }
             catch (Exception ex)
             {
-                LestomaLog.Error(ex.Message);
                 btSocket.Close();
                 SeeError(ex);
             }
@@ -182,6 +151,80 @@ namespace lestoma.App.ViewModels.Laboratorio
             }
         }
 
+        private async void TransmissionBluetooth(List<byte> tramaEnviada, bool editState)
+        {
+            if (btSocket.IsConnected)
+            {
+                await btSocket.OutputStream.WriteAsync(tramaEnviada.ToArray(), 0, tramaEnviada.Count, _cancellationToken);
+
+                var tramaRecibida = await ReceivedData();
+                if (string.IsNullOrWhiteSpace(tramaRecibida))
+                {
+                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener la trama.", icon: Constants.ICON_WARNING));
+                    return;
+                }
+                var response = Reutilizables.VerifyCRCOfReceivedTrama(tramaRecibida);
+                if (!response.IsExito)
+                {
+                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: response.MensajeHttp, icon: Constants.ICON_WARNING));
+                    return;
+                }
+                Valor = Reutilizables.ConvertReceivedTramaToResult(tramaRecibida);
+                if (editState)
+                {
+                    if (Valor == (int)HttpStatusCode.Conflict)
+                    {
+                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener el estado, ha ocurrido un error al recibir los datos."
+                                                        , icon: Constants.ICON_WARNING));
+                        return;
+                    }
+                }
+                else
+                {
+                    IsOn = Valor == 1 ? true : false;
+                }
+                SaveData(Reutilizables.ByteArrayToHexString(tramaEnviada.ToArray()), tramaRecibida, editState);
+            }
+        }
+
+
+
+        private async Task<string> ReceivedData()
+        {
+            string TramaHexadecimal = string.Empty;
+            var inputstream = btSocket.InputStream;
+            byte[] bufferRecibido = new byte[10];  // buffer store for the stream
+            int recibido = 0; // bytes returned from read()
+            return await Task.Run(async () =>
+            {
+                while (!_cancellationToken.IsCancellationRequested)
+                {
+                    try
+                    {
+                        recibido = await inputstream.ReadAsync(bufferRecibido, 0, bufferRecibido.Length, _cancellationToken);
+
+                        if (recibido > 0)
+                        {
+                            byte[] rebuf2 = new byte[recibido];
+                            Array.Copy(bufferRecibido, 0, rebuf2, 0, recibido);
+                            TramaHexadecimal += Reutilizables.ByteArrayToHexString(rebuf2);
+                            if (TramaHexadecimal.Length == 20)
+                            {
+                                break;
+                            }
+                        }
+                        Thread.Sleep(100);
+                    }
+                    catch (Exception ex)
+                    {
+                        SeeError(ex, "No se pudo recibir la data de la trama por bluetooth.");
+                        btSocket.Close();
+                        break;
+                    }
+                }
+                return TramaHexadecimal;
+            }, _cancellationToken);
+        }
         private async void SaveData(string TramaEnviada, string tramaRecibida, bool EditState)
         {
             try
@@ -192,6 +235,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                 _laboratorioRequest.ComponenteId = _componenteRequest.ComponenteId;
                 if (_apiService.CheckConnection())
                 {
+                    LestomaLog.Normal("Enviando al servidor.");
                     _laboratorioRequest.EstadoInternet = true;
                     _laboratorioRequest.SetPointOut = Valor;
                     if (EditState)
@@ -211,9 +255,10 @@ namespace lestoma.App.ViewModels.Laboratorio
                 }
                 else
                 {
+                    LestomaLog.Normal("Guardando en bd del dispositivo.");
                     _laboratorioRequest.EstadoInternet = false;
                     _laboratorioRequest.FechaCreacionDispositivo = DateTime.Now;
-                    UserDialogs.Instance.ShowLoading("Guardando localmente...");
+                    UserDialogs.Instance.ShowLoading("Guardando en el dispositivo...");
                 }
             }
             catch (Exception ex)
@@ -224,45 +269,6 @@ namespace lestoma.App.ViewModels.Laboratorio
             {
                 UserDialogs.Instance.HideLoading();
             }
-        }
-
-        private async Task<string> ReceivedData()
-        {
-            string TramaHexadecimal = string.Empty;
-            var inputstream = btSocket.InputStream;
-            byte[] bufferRecibido = new byte[10];  // buffer store for the stream
-            int recibido = 0; // bytes returned from read()
-            return await Task.Run(async () =>
-            {
-                while (true)
-                {
-                    try
-                    {
-                        recibido = await inputstream.ReadAsync(bufferRecibido, 0, bufferRecibido.Length);
-
-                        if (recibido > 0)
-                        {
-                            byte[] rebuf2 = new byte[recibido];
-                            Array.Copy(bufferRecibido, 0, rebuf2, 0, recibido);
-                            TramaHexadecimal += Reutilizables.ByteArrayToHexString(rebuf2);
-                            if (TramaHexadecimal.Length == 20)
-                            {
-                                break;
-                            }
-                        }
-                        Thread.Sleep(100);
-                    }
-                    catch (Exception ex)
-                    {
-                        SeeError(ex);
-                        LestomaLog.Error(ex.Message);
-                        Debug.WriteLine("no se pudo recibir la data." + ex.Message);
-                        btSocket.Close();
-                        break;
-                    }
-                }
-                return TramaHexadecimal;
-            });
         }
     }
 }

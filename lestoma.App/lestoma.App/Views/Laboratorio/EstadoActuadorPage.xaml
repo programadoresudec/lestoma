@@ -4,6 +4,7 @@
              xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
              xmlns:behaviors="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
+             Title="{Binding Title}"
              x:Class="lestoma.App.Views.Laboratorio.EstadoActuadorPage">
     <StackLayout Margin="20" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
         <Label

@@ -18,8 +18,8 @@ namespace lestoma.App.ViewModels.Laboratorio
 {
     public class SetPointViewModel : BaseViewModel
     {
-        CancellationTokenSource tcs = new CancellationTokenSource();
-        CancellationToken token = new CancellationToken();
+        CancellationTokenSource _cancellationTokenSource;
+        CancellationToken _cancellationToken;
         private readonly IApiService _apiService;
         private LaboratorioRequest _laboratorioRequest;
         private TramaComponenteSetPointRequest _componenteRequest;
@@ -29,6 +29,8 @@ namespace lestoma.App.ViewModels.Laboratorio
             _apiService = apiService;
             _componenteRequest = new TramaComponenteSetPointRequest();
             _laboratorioRequest = new LaboratorioRequest();
+            _cancellationTokenSource = new CancellationTokenSource();
+            _cancellationToken = _cancellationTokenSource.Token;
         }
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
@@ -36,6 +38,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             if (parameters.ContainsKey("tramaComponente"))
             {
                 TramaComponente = parameters.GetValue<TramaComponenteSetPointRequest>("tramaComponente");
+                Title = $"Estado {TramaComponente.NombreComponente}";
                 SendTrama(TramaComponente.TramaWithCRC);
             }
         }
@@ -46,62 +49,73 @@ namespace lestoma.App.ViewModels.Laboratorio
             set => SetProperty(ref _componenteRequest, value);
         }
 
-        private async void SendTrama(List<byte> tramaEnviada)
+        private void SendTrama(List<byte> tramaEnviada)
         {
             try
             {
-                if (_apiService.CheckConnection())
+                if (_apiService.CheckConnection() && btSocket == null)
                 {
                     SaveData(Reutilizables.ByteArrayToHexString(tramaEnviada.ToArray()), Constants.TRAMA_SUCESS, (float)HttpStatusCode.OK);
                 }
-                else
+                else if (_apiService.CheckConnection() && btSocket != null)
+                {
+                    LestomaLog.Normal("Conectado al Bluetooth.");
+                    TransmissionBluetooth(tramaEnviada);
+                }
+                else if (!_apiService.CheckConnection())
                 {
                     if (btSocket == null)
                     {
                         AlertError("No hay conexión a ningún Bluetooth.");
                         return;
                     }
-                    Debug.WriteLine("Conectado..");
-                    if (btSocket.IsConnected)
-                    {
-                        await btSocket.OutputStream.WriteAsync(tramaEnviada.ToArray(), 0, tramaEnviada.Count, token);
-
-                        var tramaRecibida = await ReceivedData();
-
-                        if (string.IsNullOrWhiteSpace(tramaRecibida))
-                        {
-                            await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener la trama.", icon: Constants.ICON_WARNING));
-                            return;
-                        }
-                        var response = Reutilizables.VerifyCRCOfReceivedTrama(tramaRecibida);
-                        if (!response.IsExito)
-                        {
-                            await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: response.MensajeHttp, icon: Constants.ICON_WARNING));
-                            return;
-                        }
-
-                        var dato = Reutilizables.ConvertReceivedTramaToResult(tramaRecibida);
-                        if (dato == (int)HttpStatusCode.Conflict)
-                        {
-                            await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "Ha ocurrido un error al recibir los datos."
-                                                            , icon: Constants.ICON_WARNING));
-                            return;
-                        }
-                        SaveData(Reutilizables.ByteArrayToHexString(tramaEnviada.ToArray()), tramaRecibida, dato);
-                    }
+                    LestomaLog.Normal("Conectado al Bluetooth.");
+                    TransmissionBluetooth(tramaEnviada);
                 }
             }
             catch (Exception ex)
             {
-                LestomaLog.Error(ex.Message);
                 btSocket.Close();
                 SeeError(ex);
             }
             finally
             {
-                tcs.Cancel();
+                _cancellationTokenSource.Cancel();
             }
         }
+
+        private async void TransmissionBluetooth(List<byte> tramaEnviada)
+        {
+            Debug.WriteLine("Conectado..");
+            if (btSocket.IsConnected)
+            {
+                await btSocket.OutputStream.WriteAsync(tramaEnviada.ToArray(), 0, tramaEnviada.Count, _cancellationToken);
+
+                var tramaRecibida = await ReceivedData();
+
+                if (string.IsNullOrWhiteSpace(tramaRecibida))
+                {
+                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener la trama.", icon: Constants.ICON_WARNING));
+                    return;
+                }
+                var response = Reutilizables.VerifyCRCOfReceivedTrama(tramaRecibida);
+                if (!response.IsExito)
+                {
+                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: response.MensajeHttp, icon: Constants.ICON_WARNING));
+                    return;
+                }
+
+                var dato = Reutilizables.ConvertReceivedTramaToResult(tramaRecibida);
+                if (dato == (int)HttpStatusCode.Conflict)
+                {
+                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "Ha ocurrido un error al recibir los datos."
+                                                    , icon: Constants.ICON_WARNING));
+                    return;
+                }
+                SaveData(Reutilizables.ByteArrayToHexString(tramaEnviada.ToArray()), tramaRecibida, dato);
+            }
+        }
+
         private async Task<string> ReceivedData()
         {
             string TramaHexadecimal = string.Empty;
@@ -110,11 +124,11 @@ namespace lestoma.App.ViewModels.Laboratorio
             int recibido = 0; // bytes returned from read()
             return await Task.Run(async () =>
             {
-                while (true)
+                while (!_cancellationToken.IsCancellationRequested)
                 {
                     try
                     {
-                        recibido = await inputstream.ReadAsync(bufferRecibido, 0, bufferRecibido.Length);
+                        recibido = await inputstream.ReadAsync(bufferRecibido, 0, bufferRecibido.Length, _cancellationToken);
 
                         if (recibido > 0)
                         {
@@ -130,15 +144,13 @@ namespace lestoma.App.ViewModels.Laboratorio
                     }
                     catch (Exception ex)
                     {
-                        SeeError(ex);
-                        LestomaLog.Error(ex.Message);
-                        Debug.WriteLine("no se pudo recibir la data." + ex.Message);
+                        SeeError(ex, "No se pudo recibir la data de la trama por bluetooth.");
                         btSocket.Close();
                         break;
                     }
                 }
                 return TramaHexadecimal;
-            });
+            }, _cancellationToken);
         }
         private async void SaveData(string TramaEnviada, string tramaRecibida, float SetPointOut)
         {
@@ -150,6 +162,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                 _laboratorioRequest.ComponenteId = _componenteRequest.ComponenteId;
                 if (_apiService.CheckConnection())
                 {
+                    LestomaLog.Normal("Enviando al servidor.");
                     _laboratorioRequest.EstadoInternet = true;
                     _laboratorioRequest.SetPointIn = TramaComponente.ValorSetPoint;
                     _laboratorioRequest.SetPointOut = SetPointOut;
@@ -165,9 +178,10 @@ namespace lestoma.App.ViewModels.Laboratorio
                 }
                 else
                 {
+                    LestomaLog.Normal("Guardando en bd del dispositivo.");
                     _laboratorioRequest.EstadoInternet = false;
                     _laboratorioRequest.FechaCreacionDispositivo = DateTime.Now;
-                    UserDialogs.Instance.ShowLoading("Guardando localmente...");
+                    UserDialogs.Instance.ShowLoading("Guardando en el dispositivo...");
                 }
             }
             catch (Exception ex)

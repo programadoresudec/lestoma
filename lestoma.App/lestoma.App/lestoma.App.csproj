@@ -18,6 +18,7 @@
     <None Remove="Resources\Fonts\Montserrat-Regular.ttf" />
     <None Remove="Resources\Fonts\Montserrat-SemiBold.ttf" />
     <None Remove="Resources\Fonts\UIFontIcons.ttf" />
+    <None Remove="ViewModels\Laboratorio\ModulosUpaViewModel.cs~RF3bc3984.TMP" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,7 +34,6 @@
     <PackageReference Include="Acr.UserDialogs" Version="7.2.0.564" />
     <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Plugin.Toast" Version="2.2.0" />
     <PackageReference Include="Prism.Plugin.Popups" Version="8.0.76" />
     <PackageReference Include="Syncfusion.Xamarin.Buttons" Version="19.3.0.48" />
     <PackageReference Include="Syncfusion.Xamarin.Cards" Version="19.3.0.48" />
@@ -52,7 +52,6 @@
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2515" />
     <PackageReference Include="Xamarin.Essentials.Interfaces" Version="1.7.0" />
     <PackageReference Include="Prism.DryIoc.Forms" Version="8.0.0.1909" />
-    <PackageReference Include="Xamarin.Plugin.DateTimePicker" Version="1.0.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -282,7 +281,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\lestomaAPI\lestoma.CommonUtils\lestoma.CommonUtils.csproj" />
-    <ProjectReference Include="..\..\lestoma.DatabaseOffline\lestoma.DatabaseOffline.csproj" />
   </ItemGroup>
 
   <ItemGroup>
