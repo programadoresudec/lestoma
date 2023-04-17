@@ -22,11 +22,11 @@ namespace lestoma.App.ViewModels.Laboratorio
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly CancellationToken _cancellationToken;
         private readonly IApiService _apiService;
-        private float _valorOnOff;
+        private float? _valorOnOff;
         private LaboratorioRequest _laboratorioRequest;
         private TramaComponenteRequest _componenteRequest;
         private bool _isEnabled;
-        private bool _IsOn;
+        private Boolean? _IsOn;
         public EstadoActuadorViewModel(INavigationService navigationService, IApiService apiService) :
             base(navigationService)
         {
@@ -58,13 +58,13 @@ namespace lestoma.App.ViewModels.Laboratorio
             set => SetProperty(ref _isEnabled, value);
         }
 
-        public float Valor
+        public float? Valor
         {
             get => _valorOnOff;
             set => SetProperty(ref _valorOnOff, value);
         }
 
-        public bool IsOn
+        public Boolean? IsOn
         {
             get => _IsOn;
             set => SetProperty(ref _IsOn, value);
@@ -83,14 +83,17 @@ namespace lestoma.App.ViewModels.Laboratorio
         }
         private void StatedSelected(object obj)
         {
-            var bytesFlotante = Reutilizables.IEEEFloatingPointToByte(IsOn ? 1 : 0);
-            TramaComponente.TramaOchoBytes[4] = bytesFlotante[0];
-            TramaComponente.TramaOchoBytes[5] = bytesFlotante[1];
-            TramaComponente.TramaOchoBytes[6] = bytesFlotante[2];
-            TramaComponente.TramaOchoBytes[7] = bytesFlotante[3];
-            var tramaAEnviar = Reutilizables.TramaConCRC16Modbus(new List<byte>(TramaComponente.TramaOchoBytes));
-            SendTrama(tramaAEnviar, true);
-
+                byte[] bytesFlotante = new byte[4];
+                if (IsOn.HasValue)
+                {
+                    bytesFlotante = Reutilizables.IEEEFloatingPointToByte(IsOn.Value ? 1 : 0);
+                }
+                TramaComponente.TramaOchoBytes[4] = bytesFlotante[0];
+                TramaComponente.TramaOchoBytes[5] = bytesFlotante[1];
+                TramaComponente.TramaOchoBytes[6] = bytesFlotante[2];
+                TramaComponente.TramaOchoBytes[7] = bytesFlotante[3];
+                var tramaAEnviar = Reutilizables.TramaConCRC16Modbus(new List<byte>(TramaComponente.TramaOchoBytes));
+                SendTrama(tramaAEnviar, true);
         }
         private async void SendTrama(List<byte> tramaEnviada, bool EditState = false)
         {
@@ -98,30 +101,44 @@ namespace lestoma.App.ViewModels.Laboratorio
             {
                 if (_apiService.CheckConnection() && btSocket == null)
                 {
-                    ResponseDTO response = await _apiService.GetAsyncWithToken(URL_API,
-                        $"laboratorio-lestoma/ultimo-registro-componente/{TramaComponente.ComponenteId}", TokenUser.Token);
-                    if (response.Data == null)
+                    if (!EditState)
                     {
-                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No hay datos en el servidor de este componente por el momento.",
-                                                       icon: Constants.ICON_WARNING));
-                        return;
-                    }
-                    if (response.IsExito)
-                    {
-                        var data = ParsearData<TramaComponenteDTO>(response);
-                        Valor = (float)data.SetPointOut.Value;
-                        if (EditState)
+                        ResponseDTO response = await _apiService.GetAsyncWithToken(URL_API,
+                                               $"laboratorio-lestoma/ultimo-registro-componente/{TramaComponente.ComponenteId}", TokenUser.Token);
+                        if (response.Data == null)
                         {
-                            if (Valor == (int)HttpStatusCode.Conflict)
-                            {
-                                await PopupNavigation.Instance.PushAsync(
-                                    new MessagePopupPage(message: "No se pudo obtener el estado, ha ocurrido un error al recibir los datos.",
-                                    icon: Constants.ICON_WARNING));
-                                return;
-                            }
+                            await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No hay datos en el servidor de este componente por el momento.",
+                                                           icon: Constants.ICON_WARNING));
+                            return;
                         }
-                        IsOn = Valor == 1 ? true : false;
-                        SaveData(Reutilizables.ByteArrayToHexString(tramaEnviada.ToArray()), data.TramaOutPut, EditState);
+                        if (response.IsExito)
+                        {
+                            var data = ParsearData<TramaComponenteDTO>(response);
+                            if (data.SetPointOut != null && data.SetPointOut != (int)HttpStatusCode.OK)
+                            {
+                                Valor = (float)data.SetPointOut.Value;
+                            }
+                            if (data.SetPointIn != null)
+                            {
+                                Valor = (float)data.SetPointIn.Value;
+                            }
+                            if (EditState)
+                            {
+                                if (Valor == (int)HttpStatusCode.Conflict)
+                                {
+                                    await PopupNavigation.Instance.PushAsync(
+                                        new MessagePopupPage(message: "No se pudo obtener el estado, ha ocurrido un error al recibir los datos.",
+                                        icon: Constants.ICON_WARNING));
+                                    return;
+                                }
+                            }
+                            IsOn = Valor == 1;
+                            SaveData(Reutilizables.ByteArrayToHexString(tramaEnviada.ToArray()), data.TramaOutPut, EditState);
+                        }
+                    }
+                    else
+                    {
+                        SaveData(Reutilizables.ByteArrayToHexString(tramaEnviada.ToArray()), Constants.TRAMA_SUCESS, EditState);
                     }
                 }
                 else if (_apiService.CheckConnection() && btSocket != null)
@@ -142,7 +159,8 @@ namespace lestoma.App.ViewModels.Laboratorio
             }
             catch (Exception ex)
             {
-                btSocket.Close();
+                if (btSocket != null)
+                    btSocket.Close();
                 SeeError(ex);
             }
             finally
@@ -181,7 +199,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                 }
                 else
                 {
-                    IsOn = Valor == 1 ? true : false;
+                    IsOn = Valor == 1;
                 }
                 SaveData(Reutilizables.ByteArrayToHexString(tramaEnviada.ToArray()), tramaRecibida, editState);
             }
@@ -240,7 +258,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                     _laboratorioRequest.SetPointOut = Valor;
                     if (EditState)
                     {
-                        _laboratorioRequest.SetPointIn = IsOn ? 1 : 0;
+                        _laboratorioRequest.SetPointIn = IsOn.Value ? 1 : 0;
 
                     }
                     UserDialogs.Instance.ShowLoading("Enviando al servidor...");

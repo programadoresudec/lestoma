@@ -34,12 +34,12 @@ namespace lestoma.App.ViewModels.Laboratorio
             _isSuperAdmin = TokenUser.User.RolId == (int)TipoRol.SuperAdministrador;
             _apiService = apiService;
             RedirectionTramaCommand = new Command<object>(ComponentSelected, CanNavigate);
-            Title = "Seleccione un componente";
+            Title = "Componentes laboratorio";
             LoadUpas();
             Bytes = LoadBytes();
+            MessageHelp = _isSuperAdmin ? "Seleccione UPA, protocolo de comunicación y número de esclavo.\n\n Después de clic en alguno de los componentes para LECTURA, AJUSTE Y ON-OFF del laboratorio."
+                                        : "Seleccione protocolo de comunicación y número de esclavo.\n\n Después de clic en alguno de los componentes para LECTURA, AJUSTE Y ON-OFF del laboratorio.";
         }
-
-
         #region Properties
         public Command RedirectionTramaCommand { get; set; }
 

@@ -39,20 +39,26 @@ namespace lestoma.App.ViewModels
 
         protected INavigationService _navigationService { get; private set; }
         private string _title;
+        private string _messageHelp;
         public string Title
         {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
+            get => _title;
+            set => SetProperty(ref _title, value);
         }
+        public string MessageHelp
+        {
+            get => _messageHelp;
+            set => SetProperty(ref _messageHelp, value);
+        }
+
         public int PageSize { get; set; } = 5;
         public int TotalItems { get; set; }
         public int Page { get; set; } = 1;
 
-
         public bool IsBusy
         {
-            get { return isBusy; }
-            set { SetProperty(ref isBusy, value); }
+            get => isBusy;
+            set => SetProperty(ref isBusy, value);
         }
         #endregion
 
@@ -80,18 +86,20 @@ namespace lestoma.App.ViewModels
             _navigationService = navigationService;
             ActivarBluetoothCommand = new Command(OnBluetoothClicked);
             ConnectionBluetoothCommand = new Command(ConectarBluetoothClicked);
+            HelpCommand = new Command(ShowHelpClicked);
             Address = MovilSettings.MacBluetooth;
         }
         #endregion
 
         #region Commands
-        public Command ConnectionBluetoothCommand { get; set; }
+        public Command ConnectionBluetoothCommand { get; }
 
+        public Command HelpCommand { get; }
         public Command<object> BackButtonCommand
         {
             get
             {
-                return backButtonCommand ?? (backButtonCommand = new Command<object>(BackButtonClicked));
+                return backButtonCommand ??= new Command<object>(BackButtonClicked);
             }
         }
         public Command OnSignOutCommand
@@ -113,18 +121,13 @@ namespace lestoma.App.ViewModels
         protected async void OnBluetoothClicked()
         {
 
-#pragma warning disable CS0618 // Type or member is obsolete
             MBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-#pragma warning restore CS0618 // Type or member is obsolete
             //Verificamos que este habilitado
-#pragma warning disable CS0618 // Type or member is obsolete
             if (!MBluetoothAdapter.Enable())
             {
                 await Application.Current.MainPage.DisplayAlert("Bluetooth", "Bluetooth desactivado.", "Aceptar");
                 return;
             }
-#pragma warning restore CS0618 // Type or member is obsolete
-            //verificamos que no sea nulo el sensor
             if (MBluetoothAdapter == null)
             {
                 await Application.Current.MainPage.DisplayAlert("Bluetooth", "Bluetooth No Existe o está ocupado.", "Aceptar");
@@ -183,6 +186,10 @@ namespace lestoma.App.ViewModels
             {
                 UserDialogs.Instance.HideLoading();
             }
+        }
+        protected async void ShowHelpClicked()
+        {
+            await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: MessageHelp));
         }
         protected async void ClosePopup()
         {
@@ -288,43 +295,51 @@ namespace lestoma.App.ViewModels
 
         #endregion
 
-        #region Alerts de CrossToastPopUp
+        #region Alerts de CrossToast
         protected void AlertNoInternetConnection()
         {
-            ToastConfig toasconfig = new ToastConfig("No tiene internet por favor active el wifi.");
-            toasconfig.SetDuration(3000);
-            toasconfig.SetMessageTextColor(Color.White);
-            toasconfig.SetIcon("icon_nowifi.png");
-            toasconfig.SetBackgroundColor(Color.FromHex("#EFB459"));
+            ToastConfig toasconfig = new ToastConfig("No tiene internet por favor active el wifi.")
+            {
+                Duration = TimeSpan.FromSeconds(3),
+                Icon = "icon_nowifi.png",
+                MessageTextColor = Color.White,
+                BackgroundColor = Color.FromHex("#EFB459")
+            };
             UserDialogs.Instance.Toast(toasconfig);
         }
-        protected void AlertError(string Error = "")
+        protected void AlertError(string Error = "", ToastPosition position = ToastPosition.Bottom)
         {
-            ToastConfig toasconfig = new ToastConfig($"ERROR {Error}");
-            toasconfig.SetDuration(2000);
-            toasconfig.SetMessageTextColor(Color.White);
-            toasconfig.SetIcon("icon_error.png");
-            toasconfig.SetBackgroundColor(Color.FromHex("#E5502B"));
+            ToastConfig toasconfig = new ToastConfig($"{Error}")
+            {
+                Position = position,
+                MessageTextColor = Color.White,
+                Icon = "icon_error.png",
+                BackgroundColor = Color.FromHex("#E5502B")
+            };
             UserDialogs.Instance.Toast(toasconfig);
 
         }
-        protected void AlertWarning(string mensaje = "")
+        protected void AlertWarning(string mensaje = "", ToastPosition position = ToastPosition.Bottom)
         {
-            ToastConfig toasconfig = new ToastConfig($"{mensaje}");
-            toasconfig.SetDuration(2000);
-            toasconfig.SetMessageTextColor(Color.White);
-            toasconfig.SetIcon("icon_warn.png");
-            toasconfig.SetBackgroundColor(Color.FromHex("#ECAA00"));
+            ToastConfig toasconfig = new ToastConfig($"{mensaje}")
+            {
+                Position = position,
+                MessageTextColor = Color.White,
+                Icon = "icon_warn.png",
+                BackgroundColor = Color.FromHex("#ECAA00"),
+            };
             UserDialogs.Instance.Toast(toasconfig);
         }
 
-        protected void AlertSuccess(string mensaje = "EXITO")
+        protected void AlertSuccess(string mensaje = "EXITO", ToastPosition position = ToastPosition.Bottom)
         {
-            ToastConfig toasconfig = new ToastConfig($"{mensaje}");
-            toasconfig.SetDuration(2000);
-            toasconfig.SetMessageTextColor(Color.White);
-            toasconfig.SetIcon("icon_check.png");
-            toasconfig.SetBackgroundColor(Color.FromHex("#79A300"));
+            ToastConfig toasconfig = new ToastConfig($"{mensaje}")
+            {
+                Position = position,
+                MessageTextColor = Color.White,
+                Icon = "icon_check.png",
+                BackgroundColor = Color.FromHex("#79A300")
+            };
             UserDialogs.Instance.Toast(toasconfig);
         }
         #endregion

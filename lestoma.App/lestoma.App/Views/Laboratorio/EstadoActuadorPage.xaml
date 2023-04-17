@@ -26,6 +26,25 @@
             </buttons:SfSwitch.Behaviors>
             <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Indeterminate">
+                        <VisualState.Setters>
+                            <Setter Property="SwitchSettings">
+                                <Setter.Value>
+                                    <buttons:CupertinoSwitchSettings                                    
+                                        x:TypeArguments="buttons:OnState"
+                                        TrackHeightRequest="75" TrackWidthRequest="175" 
+                                        ThumbHeightRequest="60" ThumbWidthRequest="60" 
+                                        ThumbCornerRadius="40" TrackCornerRadius="40"
+                                        TrackColor="{StaticResource Gray-400}"
+                                        TrackBorderWidth="5" ThumbBorderWidth="5"
+                                        TrackBorderColor="{StaticResource Gray-700}"
+                                        ThumbBorderColor="{StaticResource Gray-700}"
+                                        ThumbColor="{StaticResource Gray-200}"
+                                      />
+                                </Setter.Value>
+                            </Setter>
+                        </VisualState.Setters>
+                    </VisualState>
                     <VisualState x:Name="On">
                         <VisualState.Setters>
                             <Setter Property="SwitchSettings">

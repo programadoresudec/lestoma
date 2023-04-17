@@ -4,38 +4,59 @@
              xmlns:prism="http://prismlibrary.com"
              xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
              xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup" 
-                 xmlns:cards="clr-namespace:Syncfusion.XForms.Cards;assembly=Syncfusion.Cards.XForms"
+                 xmlns:cards="clr-namespace:Syncfusion.XForms.Cards;assembly=Syncfusion.Cards.XForms" 
+                 xmlns:core="clr-namespace:Syncfusion.XForms.Core;assembly=Syncfusion.Core.XForms"
                  prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="lestoma.App.Views.Sincronizaciones.SyncronizarDataPopupPage">
     <popup:PopupPage.Animation>
         <animations:ScaleAnimation DurationIn="400"
                                    DurationOut="300"
                                    EasingIn="SinOut"
-                                   EasingOut="SinIn"
+                                   EasingOut="SinIn" 
                                    HasBackgroundAnimation="True"
                                    PositionIn="Center"
                                    PositionOut="Center"
                                    ScaleIn="1.2"
                                    ScaleOut="0.8" />
     </popup:PopupPage.Animation>
-    <StackLayout VerticalOptions="CenterAndExpand" Margin="20" Padding="20">
-        <cards:SfCardView BackgroundColor="White" CornerRadius="10">
-            <StackLayout Margin="20" Spacing="15">
-                <Label  Style="{StaticResource IconLabelStyle}" Text="{StaticResource Syncronization}"
-                        FontFamily="Fontello" WidthRequest="64" HeightRequest="64"/>
-                <Label Text="{Binding Message}" TextColor="Black" FontSize="Medium" HorizontalTextAlignment="Center" 
-                       VerticalTextAlignment="Center" FontAttributes="Italic"
-                VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" />
-
-                <!--<StackLayout Orientation="Horizontal" Margin="5">
-                    <Button  HorizontalOptions="Start" Command="{Binding BackButtonCommand}"
-                            Text="Cancelar" Style="{StaticResource LestomaTransparentButtonStyle}"
-                             VerticalOptions="Start" />
-                    <Button  HorizontalOptions="EndAndExpand" Command="{Binding SyncronizationCommand}"
-                        BackgroundColor="{StaticResource PantoneVerdeDark}" CornerRadius="8" Text="Sincronizar" TextColor="White"
-                             VerticalOptions="EndAndExpand" />
-                </StackLayout>-->
-            </StackLayout>
+    <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+        <cards:SfCardView BackgroundColor="White" CornerRadius="10" 
+                          HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"
+                           Margin="{core:OnPlatformOrientationThickness PhonePortrait='30,40',
+                                                                 PhoneLandscape='150,32',
+                                                                 TabletPortrait='200,50',
+                                                                 TabletLandscape='200,50',
+                                                                 Desktop='30'}">
+            <ScrollView>
+                <StackLayout VerticalOptions="End" WidthRequest="500"  Margin="0,0,0,20">
+                    <Grid Padding="30,25,25,0">
+                        <Label Text="Sincronización" FontSize="Medium" FontFamily="Montserrat-SemiBold"
+                           HorizontalTextAlignment="Start" TextColor="{StaticResource PantoneVerdeSecond}"></Label>
+                        <Frame WidthRequest="32" HeightRequest="32"
+                        Padding="0" CornerRadius="40" HorizontalOptions="End">
+                            <ContentView>
+                                <ContentView.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnCloseButtonTapped" />
+                                </ContentView.GestureRecognizers>
+                                <Image Source="icon_close.png"  Aspect="AspectFill" />
+                            </ContentView>
+                        </Frame>
+                    </Grid>
+                    <StackLayout Spacing="20" Margin="30,20">
+                        <Label  Style="{StaticResource IconLabelStyle}" Text="{StaticResource IconSync}"
+                                    FontFamily="Fontello" FontSize="30"/>
+                        <Label Text="{Binding MessageHelp}" TextColor="Black" FontSize="15" HorizontalTextAlignment="Center" 
+                                   VerticalTextAlignment="Center" FontFamily="Montserrat-Regular"
+                                   VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" />
+                        <Button  HorizontalOptions="FillAndExpand" Margin="10,10,10,0" Command="{Binding SyncronizationCommand}"
+                                     BackgroundColor="{StaticResource PantoneVerdeSecond}" CornerRadius="20" Text="Sincronizar" 
+                                     TextColor="White" VerticalOptions="FillAndExpand"  FontFamily="Montserrat-Bold" />
+                        <Button IsVisible="{Binding IsVisible}" HorizontalOptions="FillAndExpand" Margin="10,2,10,0" Command="{Binding CancelSyncronizationCommand}"
+                                     BackgroundColor="{StaticResource PantoneGris}" CornerRadius="20" Text="Cancelar sincronización" 
+                                     TextColor="White" VerticalOptions="FillAndExpand"  FontFamily="Montserrat-Bold" />
+                    </StackLayout>
+                </StackLayout>
+            </ScrollView>
         </cards:SfCardView>
-    </StackLayout>
+    </Grid>
 </popup:PopupPage>

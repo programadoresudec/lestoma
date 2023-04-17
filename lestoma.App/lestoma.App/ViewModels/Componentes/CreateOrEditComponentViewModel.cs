@@ -72,7 +72,7 @@ namespace lestoma.App.ViewModels.Componentes
             {
                 IsSuperAdmin = true;
                 _iconStatusComponent = "icon_create.png";
-                Title = "Crear Componente";
+                Title = "Agregar Componente";
                 LoadLists(Guid.Empty);
             }
         }
@@ -286,15 +286,20 @@ namespace lestoma.App.ViewModels.Componentes
 
         private async void AddStatusComponentClicked()
         {
+            var data = new InfoEstadoComponenteModel
+            {
+                Estado = InfoComponente.Id != Guid.Empty ? InfoComponente.EstadoComponente : null,
+                IsCreated = Title.ToUpper().Contains("AGREGAR")
+            };
+            if (!string.IsNullOrEmpty(MovilSettings.EstadoComponente))
+            {
+                data.Estado = JsonConvert.DeserializeObject<EstadoComponenteDTO>(MovilSettings.EstadoComponente);
+            }
             var parameters = new NavigationParameters
             {
                 {
                     "estadoComponente",
-                    new InfoEstadoComponenteModel
-                    {
-                        Estado = InfoComponente.Id != Guid.Empty ? InfoComponente.EstadoComponente : null,
-                        IsCreated = Title.Contains("Crear")? true: false
-                    }
+                    data
                 }
             };
             await _navigationService.NavigateAsync($"{nameof(InfoEstadoPopupPage)}", parameters);

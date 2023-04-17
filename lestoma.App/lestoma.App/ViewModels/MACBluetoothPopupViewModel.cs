@@ -23,7 +23,8 @@ namespace lestoma.App.ViewModels
         }
         private async void SaveClicked(object obj)
         {
-            if (string.IsNullOrWhiteSpace(_MAC) && _MAC.Length < 17)
+            string sinEspacios = _MAC.Replace("_", string.Empty);
+            if (string.IsNullOrWhiteSpace(sinEspacios) || sinEspacios.Length != 17)
             {
                 AlertWarning("Debe digitar una MAC correcta.");
                 return;

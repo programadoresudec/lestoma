@@ -17,10 +17,7 @@
         <ToolbarItem Text="Cerrar Sesión" Command="{Binding OnSignOutCommand}"
                  Order="Secondary"/>
     </ContentPage.ToolbarItems>
-    
-    
     <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
-         
         <Label Text="Aplicativo móvil el cual realice un control del sistema acuapónico en la finca el vergel de la Universidad Cundinamarca extensión Facatativá,mejorando así la producción de esta misma." 
          HorizontalTextAlignment="Center" 
          Margin="10,10" FontFamily="Montserrat-Regular"

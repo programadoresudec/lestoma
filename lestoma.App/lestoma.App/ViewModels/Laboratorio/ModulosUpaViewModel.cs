@@ -23,7 +23,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             _modulos = new ObservableCollection<NameDTO>();
             SeeComponentCommand = new Command<object>(ModuloSelected, CanNavigate);
             LoadModulos();
-
+            MessageHelp = "Seleccione un modulo para ver los componentes correspondientes.\n\n Dentro de los tres puntos en la parte derecha superior podrá prender el bluetooth y hacer la conexión con el laboratorio.";
         }
 
         private bool CanNavigate(object arg)
