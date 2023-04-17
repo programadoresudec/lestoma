@@ -27,8 +27,6 @@ namespace lestoma.App.ViewModels.Sincronizaciones
             CancelSyncronizationCommand = new Command(CancelSyncToMobileClicked);
         }
 
-
-
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
@@ -37,7 +35,7 @@ namespace lestoma.App.ViewModels.Sincronizaciones
                 TypeSync = parameters.GetValue<TipoSincronizacion>("TypeSyncronization");
                 Debug.WriteLine($"tipo sincronización {TypeSync}");
                 MessageHelp = EnumConfig.GetDescription(TypeSync);
-                Isvisible = TypeSync == TipoSincronizacion.MigrateDataOnlineToDevice;
+                IsVisible = TypeSync == TipoSincronizacion.MigrateDataOnlineToDevice;
             }
         }
 
@@ -46,7 +44,7 @@ namespace lestoma.App.ViewModels.Sincronizaciones
             get => _tipoSincronizacion;
             set => SetProperty(ref _tipoSincronizacion, value);
         }
-        public bool Isvisible
+        public bool IsVisible
         {
             get => _isVisible;
             set => SetProperty(ref _isVisible, value);
@@ -84,7 +82,7 @@ namespace lestoma.App.ViewModels.Sincronizaciones
         {
             if (DependencyService.Resolve<IForegroundService>().IsForeGroundServiceRunning())
             {
-                AlertWarning("Se está sincronizando los datos al dispositivo movil, espere un momento...");
+                AlertWarning("Se está sincronizando los datos al dispositivo móvil, espere un momento...");
             }
             else
             {
@@ -150,7 +148,7 @@ namespace lestoma.App.ViewModels.Sincronizaciones
             {
                 if (!DependencyService.Resolve<IForegroundService>().IsForeGroundServiceRunning())
                 {
-                    AlertWarning("El servicio ya no se esta ejecutando o a a terminado.");
+                    AlertWarning("El servicio ya no se esta ejecutando y ha terminado.");
                 }
                 else
                 {
