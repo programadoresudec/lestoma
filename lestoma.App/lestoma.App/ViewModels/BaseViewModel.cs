@@ -331,11 +331,12 @@ namespace lestoma.App.ViewModels
             UserDialogs.Instance.Toast(toasconfig);
         }
 
-        protected void AlertSuccess(string mensaje = "EXITO", ToastPosition position = ToastPosition.Bottom)
+        protected void AlertSuccess(string mensaje = "EXITO", double seconds = 2.5, ToastPosition position = ToastPosition.Bottom)
         {
             ToastConfig toasconfig = new ToastConfig($"{mensaje}")
             {
                 Position = position,
+                Duration = TimeSpan.FromSeconds(seconds),
                 MessageTextColor = Color.White,
                 Icon = "icon_check.png",
                 BackgroundColor = Color.FromHex("#79A300")

@@ -2,10 +2,12 @@
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
+using lestoma.DatabaseOffline.IConfiguration;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Laboratorio
@@ -15,9 +17,11 @@ namespace lestoma.App.ViewModels.Laboratorio
         private readonly IApiService _apiService;
         private ObservableCollection<NameDTO> _modulos;
         private bool _isCheckConnection;
+        private readonly IUnitOfWork _unitOfWork;
         public ModulosUpaViewModel(INavigationService navigationService, IApiService apiService) :
              base(navigationService)
         {
+            _unitOfWork = new UnitOfWork(App.DbPathSqlLite);
             _apiService = apiService;
             Title = "Seleccione un modulo";
             _modulos = new ObservableCollection<NameDTO>();
@@ -74,9 +78,27 @@ namespace lestoma.App.ViewModels.Laboratorio
 
 
 
-        private void ConsumoServiceLocal()
+        private async void ConsumoServiceLocal()
         {
             LestomaLog.Normal("Consultando modulos.. offline");
+            try
+            {
+                IsBusy = true;
+                Modulos = new ObservableCollection<NameDTO>();
+                var listado = await _unitOfWork.Componentes.GetModulos();
+                if (listado.Any())
+                {
+                    Modulos = new ObservableCollection<NameDTO>(listado);
+                }
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
 

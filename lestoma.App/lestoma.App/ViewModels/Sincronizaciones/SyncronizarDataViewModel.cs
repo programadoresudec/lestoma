@@ -3,6 +3,7 @@ using lestoma.CommonUtils.DTOs.Sync;
 using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
+using lestoma.DatabaseOffline.IConfiguration;
 using Newtonsoft.Json;
 using Prism.Navigation;
 using System;
@@ -15,13 +16,15 @@ namespace lestoma.App.ViewModels.Sincronizaciones
 {
     public class SyncronizarDataViewModel : BaseViewModel
     {
+
         private readonly IApiService _apiService;
         private TipoSincronizacion _tipoSincronizacion;
+        private readonly IUnitOfWork _unitOfWork;
         private bool _isVisible;
-        public SyncronizarDataViewModel(INavigationService navigationService,
-            IApiService apiService)
+        public SyncronizarDataViewModel(INavigationService navigationService, IApiService apiService)
              : base(navigationService)
         {
+            _unitOfWork = new UnitOfWork(App.DbPathSqlLite);
             _apiService = apiService;
             SyncronizationCommand = new Command(SyncDataClicked);
             CancelSyncronizationCommand = new Command(CancelSyncToMobileClicked);
@@ -97,47 +100,38 @@ namespace lestoma.App.ViewModels.Sincronizaciones
                         return;
                     }
                     DependencyService.Resolve<IForegroundService>().StartMyForegroundService();
-                    try
+                    _ = Task.Run(async () =>
                     {
-                        var response = await _apiService.GetListAsyncWithToken<List<DataOnlineSyncDTO>>(URL_API,
-                        "sincronizaciones-lestoma/sync-data-online-to-database-device", TokenUser.Token);
-                        if (!response.IsExito)
+                        try
                         {
-                            LestomaLog.Error(response.MensajeHttp);
-                            return;
+                            var response = await _apiService.GetListAsyncWithToken<List<DataOnlineSyncDTO>>(URL_API,
+                            "sincronizaciones-lestoma/sync-data-online-to-database-device", TokenUser.Token);
+                            if (!response.IsExito)
+                            {
+                                LestomaLog.Error(response.MensajeHttp);
+                                return;
+                            }
+                            var data = (List<DataOnlineSyncDTO>)response.Data;
+                            LestomaLog.Normal("La data es:");
+                            LestomaLog.Normal(JsonConvert.SerializeObject(data));
+                            var responseOffline = await _unitOfWork.Componentes.MigrateDataToDevice(data);
+                            if (response.IsExito)
+                            {
+                                LestomaLog.Normal("Se ha migrado todos los datos.");
+                            }
                         }
-                        var data = (List<DataOnlineSyncDTO>)response.Data;
-                        LestomaLog.Normal(JsonConvert.SerializeObject(data));
-                        LestomaLog.Normal("Se ha migrado todos los datos.");
-                    }
-                    catch (Exception ex)
-                    {
-                        LestomaLog.Error(ex.Message);
-                    }
-                    //_ = Task.Run(async () =>
-                    //{
-                    //    try
-                    //    {
-                    //        var response = await _apiService.GetListAsyncWithToken<List<DataOnlineSyncDTO>>(URL_API,
-                    //        "sincronizaciones-lestoma/sync-data-online-to-database-device", TokenUser.Token);
-                    //        if (response.IsExito)
-                    //        {
-                    //            var data = (List<DataOnlineSyncDTO>)response.Data;
-
-                    //            DependencyService.Resolve<IForegroundService>().StopMyForegroundService();
-                    //            LestomaLog.Normal("Se ha migrado todos los datos.");
-                    //        }
-                    //        else
-                    //        {
-                    //            LestomaLog.Error(response.MensajeHttp);
-                    //        }
-                    //    }
-                    //    catch (Exception ex)
-                    //    {
-                    //        LestomaLog.Error(ex.Message);
-                    //    }
-                    //});
-                    AlertSuccess("Se esta migrando los datos al dispositivo móvil.");
+                        catch (Exception ex)
+                        {
+                            LestomaLog.Error(ex.Message);
+                        }
+                        finally
+                        {
+                            await Task.Delay(2000);
+                            DependencyService.Resolve<IForegroundService>().StopMyForegroundService();
+                        }
+                    });
+                    await _navigationService.GoBackAsync();
+                    AlertSuccess("Se esta migrando los datos al dispositivo móvil.", 4);
                 }
             }
 
@@ -160,6 +154,7 @@ namespace lestoma.App.ViewModels.Sincronizaciones
                         UserDialogs.Instance.ShowLoading("Cancelando...");
                         await Task.Delay(1000);
                         DependencyService.Resolve<IForegroundService>().StopMyForegroundService();
+                        await _navigationService.GoBackAsync();
                     }
                 }
             }

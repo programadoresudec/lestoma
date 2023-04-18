@@ -1,5 +1,7 @@
 ﻿using lestoma.DatabaseOffline.ModelsOffline;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,9 +16,17 @@ namespace lestoma.DatabaseOffline
         public DatabaseOffline(string dbPath)
         {
             _databasePath = dbPath;
+            if (!string.IsNullOrWhiteSpace(dbPath))
+            {
+                //Database.EnsureDeleted();
+                if (!Database.GetService<IRelationalDatabaseCreator>().Exists())
+                {
+                    // la base de datos ha sido creada
+                    Database.EnsureCreated();
+                }
+            }
             // aplicar que cuando se desloguee elimine la bd local de sqlite
-            //Database.EnsureDeleted();
-            Database.EnsureCreated();
+
         }
         #endregion
 

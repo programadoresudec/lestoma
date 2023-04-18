@@ -1,5 +1,4 @@
-﻿using Android.Text.Method;
-using lestoma.App.Validators;
+﻿using lestoma.App.Validators;
 using lestoma.App.Validators.Rules;
 using lestoma.App.Views;
 using lestoma.App.Views.Account;

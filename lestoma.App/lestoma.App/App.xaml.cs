@@ -28,7 +28,7 @@ using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Services;
-//using lestoma.DatabaseOffline.IConfiguration;
+using lestoma.DatabaseOffline.IConfiguration;
 using Newtonsoft.Json;
 using Prism;
 using Prism.Ioc;
@@ -50,8 +50,7 @@ namespace lestoma.App
 {
     public partial class App
     {
-        public static string DbPathSqlLite { get; set; } =
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "lestoma.db");
+        public static string DbPathSqlLite => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "lestoma.db");
 
         public App(IPlatformInitializer initializer)
             : base(initializer)
@@ -60,8 +59,7 @@ namespace lestoma.App
 
         protected override async void OnInitialized()
         {
-            Syncfusion.Licensing.SyncfusionLicenseProvider.
-               RegisterLicense("NTI5MzU5QDMxMzkyZTMzMmUzMGZ5cEJxMUFDNHhqS0hEVlVHU3NCTHNsUTNGOGpEM015bjVJQ05hUkpXOWM9");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTI5MzU5QDMxMzkyZTMzMmUzMGZ5cEJxMUFDNHhqS0hEVlVHU3NCTHNsUTNGOGpEM015bjVJQ05hUkpXOWM9");
             InitializeComponent();
             if (VersionTracking.IsFirstLaunchEver)
             {
@@ -106,11 +104,6 @@ namespace lestoma.App
             containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
             containerRegistry.Register<IApiService, ApiService>();
             containerRegistry.Register<IFilesHelper, FilesHelper>();
-
-            //#region injection UnitOfwork Database OFfline
-            //containerRegistry.Register<IUnitOfWork, UnitOfWork>();
-            //#endregion
-
             #region Navegaciones
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterPopupNavigationService();
@@ -162,8 +155,6 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<MACBluetoothPopupPage, MACBluetoothPopupViewModel>();
             containerRegistry.RegisterForNavigation<InputSetPointPopupPage, InputSetPointPopupViewModel>();
             #endregion
-
-
         }
     }
 }

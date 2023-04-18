@@ -17,7 +17,7 @@ namespace lestoma.DatabaseOffline.ModelsOffline
         public string NombreComponente { get; set; }
         public string Protocolos { get; set; }
         public string DecripcionEstadoJson { get; set; }
-        public string DireccionRegistro { get; set; }
+        public byte DireccionRegistro { get; set; }
 
     }
 }
