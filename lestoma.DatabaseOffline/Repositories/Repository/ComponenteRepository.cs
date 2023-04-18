@@ -19,6 +19,13 @@ namespace lestoma.DatabaseOffline.Repositories.Repository
         {
         }
 
+        public async Task DeleteBulk()
+        {
+            var data = await _context.TablaComponentes.ToListAsync();
+            _context.RemoveRange(data);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<NameDTO>> GetModulos()
         {
             return await _context.TablaComponentes.Select(x => new NameDTO

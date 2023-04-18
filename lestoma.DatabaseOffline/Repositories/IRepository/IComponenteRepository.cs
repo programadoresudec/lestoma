@@ -9,6 +9,7 @@ namespace lestoma.DatabaseOffline.Repositories.IRepository
 {
     public interface IComponenteRepository : IGenericRepository<ComponenteOffline>
     {
+        Task DeleteBulk();
         Task<IEnumerable<NameDTO>> GetModulos();
         public Task<ResponseDTO> MigrateDataToDevice(List<DataOnlineSyncDTO> dataOnline);
     }
