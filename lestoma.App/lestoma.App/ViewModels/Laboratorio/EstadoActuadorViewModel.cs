@@ -159,13 +159,13 @@ namespace lestoma.App.ViewModels.Laboratorio
             }
             catch (Exception ex)
             {
-                if (btSocket != null)
-                    btSocket.Close();
+                btSocket?.Close();
                 SeeError(ex);
             }
             finally
             {
-                _cancellationTokenSource.Cancel();
+                await Task.Delay(1000);
+                await _navigationService.GoBackAsync();
             }
         }
 
@@ -173,35 +173,43 @@ namespace lestoma.App.ViewModels.Laboratorio
         {
             if (btSocket.IsConnected)
             {
-                await btSocket.OutputStream.WriteAsync(tramaEnviada.ToArray(), 0, tramaEnviada.Count, _cancellationToken);
+                try
+                {
+                    await btSocket.OutputStream.WriteAsync(tramaEnviada.ToArray(), 0, tramaEnviada.Count, _cancellationToken);
 
-                var tramaRecibida = await ReceivedData();
-                if (string.IsNullOrWhiteSpace(tramaRecibida))
-                {
-                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener la trama.", icon: Constants.ICON_WARNING));
-                    return;
-                }
-                var response = Reutilizables.VerifyCRCOfReceivedTrama(tramaRecibida);
-                if (!response.IsExito)
-                {
-                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: response.MensajeHttp, icon: Constants.ICON_WARNING));
-                    return;
-                }
-                Valor = Reutilizables.ConvertReceivedTramaToResult(tramaRecibida);
-                if (editState)
-                {
-                    if (Valor == (int)HttpStatusCode.Conflict)
+                    var tramaRecibida = await ReceivedData();
+                    if (string.IsNullOrWhiteSpace(tramaRecibida))
                     {
-                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener el estado, ha ocurrido un error al recibir los datos."
-                                                        , icon: Constants.ICON_WARNING));
+                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener la trama.", icon: Constants.ICON_WARNING));
                         return;
                     }
+                    var response = Reutilizables.VerifyCRCOfReceivedTrama(tramaRecibida);
+                    if (!response.IsExito)
+                    {
+                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: response.MensajeHttp, icon: Constants.ICON_WARNING));
+                        return;
+                    }
+                    Valor = Reutilizables.ConvertReceivedTramaToResult(tramaRecibida);
+                    if (editState)
+                    {
+                        if (Valor == (int)HttpStatusCode.Conflict)
+                        {
+                            await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener el estado, ha ocurrido un error al recibir los datos."
+                                                            , icon: Constants.ICON_WARNING));
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        IsOn = Valor == 1;
+                    }
+                    SaveData(Reutilizables.ByteArrayToHexString(tramaEnviada.ToArray()), tramaRecibida, editState);
                 }
-                else
+                catch (Exception ex)
                 {
-                    IsOn = Valor == 1;
-                }
-                SaveData(Reutilizables.ByteArrayToHexString(tramaEnviada.ToArray()), tramaRecibida, editState);
+                    SeeError(ex);
+                    throw;
+                }       
             }
         }
 
@@ -228,7 +236,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                             TramaHexadecimal += Reutilizables.ByteArrayToHexString(rebuf2);
                             if (TramaHexadecimal.Length == 20)
                             {
-                                break;
+                                _cancellationTokenSource.Cancel();
                             }
                         }
                         Thread.Sleep(100);
@@ -237,7 +245,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                     {
                         SeeError(ex, "No se pudo recibir la data de la trama por bluetooth.");
                         btSocket.Close();
-                        break;
+                        throw;
                     }
                 }
                 return TramaHexadecimal;

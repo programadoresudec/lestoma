@@ -75,45 +75,51 @@ namespace lestoma.App.ViewModels.Laboratorio
             }
             catch (Exception ex)
             {
-                btSocket.Close();
+                btSocket?.Close();
                 SeeError(ex);
-            }
-            finally
-            {
-                _cancellationTokenSource.Cancel();
-            }
+            } 
         }
 
         private async void TransmissionBluetooth(List<byte> tramaEnviada)
         {
             Debug.WriteLine("Conectado..");
-            if (btSocket.IsConnected)
+            try
             {
-                await btSocket.OutputStream.WriteAsync(tramaEnviada.ToArray(), 0, tramaEnviada.Count, _cancellationToken);
-
-                var tramaRecibida = await ReceivedData();
-
-                if (string.IsNullOrWhiteSpace(tramaRecibida))
+                if (btSocket.IsConnected)
                 {
-                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener la trama.", icon: Constants.ICON_WARNING));
-                    return;
-                }
-                var response = Reutilizables.VerifyCRCOfReceivedTrama(tramaRecibida);
-                if (!response.IsExito)
-                {
-                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: response.MensajeHttp, icon: Constants.ICON_WARNING));
-                    return;
-                }
+                    await btSocket.OutputStream.WriteAsync(tramaEnviada.ToArray(), 0, tramaEnviada.Count, _cancellationToken);
 
-                var dato = Reutilizables.ConvertReceivedTramaToResult(tramaRecibida);
-                if (dato == (int)HttpStatusCode.Conflict)
-                {
-                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "Ha ocurrido un error al recibir los datos."
-                                                    , icon: Constants.ICON_WARNING));
-                    return;
+                    var tramaRecibida = await ReceivedData();
+
+                    if (string.IsNullOrWhiteSpace(tramaRecibida))
+                    {
+                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener la trama.", icon: Constants.ICON_WARNING));
+                        return;
+                    }
+                    var response = Reutilizables.VerifyCRCOfReceivedTrama(tramaRecibida);
+                    if (!response.IsExito)
+                    {
+                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: response.MensajeHttp, icon: Constants.ICON_WARNING));
+                        return;
+                    }
+
+                    var dato = Reutilizables.ConvertReceivedTramaToResult(tramaRecibida);
+                    if (dato == (int)HttpStatusCode.Conflict)
+                    {
+                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "Ha ocurrido un error al recibir los datos."
+                                                        , icon: Constants.ICON_WARNING));
+                        return;
+                    }
+                    SaveData(Reutilizables.ByteArrayToHexString(tramaEnviada.ToArray()), tramaRecibida, dato);
                 }
-                SaveData(Reutilizables.ByteArrayToHexString(tramaEnviada.ToArray()), tramaRecibida, dato);
             }
+            catch (Exception ex)
+            {
+                btSocket.Close();
+                SeeError(ex);
+                AlertWarning("Se ha desconectado el bluetooth.");
+            }
+            
         }
 
         private async Task<string> ReceivedData()
@@ -137,7 +143,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                             TramaHexadecimal += Reutilizables.ByteArrayToHexString(rebuf2);
                             if (TramaHexadecimal.Length == 20)
                             {
-                                break;
+                                _cancellationTokenSource.Cancel();
                             }
                         }
                         Thread.Sleep(100);

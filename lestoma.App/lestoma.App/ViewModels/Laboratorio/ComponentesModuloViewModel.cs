@@ -4,8 +4,10 @@ using lestoma.App.Views.Laboratorio;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
+using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
+using lestoma.DatabaseOffline.IConfiguration;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
@@ -27,10 +29,11 @@ namespace lestoma.App.ViewModels.Laboratorio
         private bool _isSuperAdmin;
         private Guid _moduloId;
         private int? _esclavo;
-
+        private readonly IUnitOfWork _unitOfWork;
         public ComponentesModuloViewModel(INavigationService navigationService, IApiService apiService) :
              base(navigationService)
         {
+            _unitOfWork = new UnitOfWork(App.DbPathSqlLite);
             _isSuperAdmin = TokenUser.User.RolId == (int)TipoRol.SuperAdministrador;
             _apiService = apiService;
             RedirectionTramaCommand = new Command<object>(ComponentSelected, CanNavigate);
@@ -128,6 +131,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                     }
                     if (!IsSuperAdmin)
                     {
+
                         ResponseDTO upaAsignada = await _apiService.GetAsyncWithToken(URL_API, "usuarios/upa-asignada", TokenUser.Token);
                         if (response.IsExito)
                         {
@@ -135,14 +139,23 @@ namespace lestoma.App.ViewModels.Laboratorio
                             var selected = Upas.Where(x => x.Id == upa.Id).FirstOrDefault();
                             Upa = selected;
                             ListarComponentesOnline(upa.Id);
+                            ListarProtocolos(upa.Id);
                         }
-                        ListarProtocolos(Upa.Id);
                     }
                 }
                 // consume service en la bd del dispositivo movil
                 else
                 {
+                    var data = await _unitOfWork.Componentes.GetUpas();
+                    Upas = new ObservableCollection<NameDTO>(data);
+                    if (!IsSuperAdmin)
+                    {
+                        var selected = Upas.Where(x => x.Id == Upas[0].Id).FirstOrDefault();
+                        Upa = selected;
+                        ListarProtocolos(Upa.Id);
+                        ListarComponentesOffline(Upa.Id);
 
+                    }
                 }
             }
             catch (Exception ex)
@@ -168,9 +181,28 @@ namespace lestoma.App.ViewModels.Laboratorio
         }
 
 
-        private void ListarComponentesOffline(Guid upaId)
+        private async void ListarComponentesOffline(Guid upaId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                UserDialogs.Instance.ShowLoading("Cargando...");
+                Componentes = new ObservableCollection<ComponentePorModuloDTO>();
+                var listado = await _unitOfWork.Componentes.GetComponentesPorModuloUpa(upaId, _moduloId);
+                if (!listado.Any())
+                {
+                    AlertWarning("No hay componentes con la upa seleccionada.");
+                    return;
+                }
+                Componentes = new ObservableCollection<ComponentePorModuloDTO>(listado);
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
         }
 
 
@@ -182,20 +214,18 @@ namespace lestoma.App.ViewModels.Laboratorio
                 Componentes = new ObservableCollection<ComponentePorModuloDTO>();
                 ResponseDTO response = await _apiService.GetListAsyncWithToken<List<ComponentePorModuloDTO>>(URL_API,
                     $"laboratorio-lestoma/listar-componentes-upa-modulo?UpaId={upaId}&ModuloId={_moduloId}", TokenUser.Token);
-                if (response.IsExito)
-                {
-                    var listado = (List<ComponentePorModuloDTO>)response.Data;
-                    if (listado.Count == 0)
-                    {
-                        AlertWarning("No hay componentes con la upa seleccionada.");
-                        return;
-                    }
-                    Componentes = new ObservableCollection<ComponentePorModuloDTO>(listado);
-                }
-                else
+                if (!response.IsExito)
                 {
                     AlertWarning(response.MensajeHttp);
+                    return;
                 }
+                var listado = (List<ComponentePorModuloDTO>)response.Data;
+                if (listado.Count == 0)
+                {
+                    AlertWarning("No hay componentes con la upa seleccionada.");
+                    return;
+                }
+                Componentes = new ObservableCollection<ComponentePorModuloDTO>(listado);
             }
             catch (Exception ex)
             {
@@ -222,7 +252,8 @@ namespace lestoma.App.ViewModels.Laboratorio
                 }
                 else
                 {
-
+                    var protocolos = await _unitOfWork.Componentes.GetProtocolos(UpaId);
+                    Protocolos = new ObservableCollection<NameProtocoloDTO>(protocolos);
                 }
             }
             catch (Exception ex)

@@ -19,7 +19,7 @@ namespace lestoma.App.ViewModels.Sincronizaciones
 
         private readonly IApiService _apiService;
         private TipoSincronizacion _tipoSincronizacion;
-        private readonly IUnitOfWork _unitOfWork;
+        private  IUnitOfWork _unitOfWork;
         private bool _isVisible;
         public SyncronizarDataViewModel(INavigationService navigationService, IApiService apiService)
              : base(navigationService)
@@ -27,7 +27,6 @@ namespace lestoma.App.ViewModels.Sincronizaciones
             _apiService = apiService;
             SyncronizationCommand = new Command(SyncDataClicked);
             CancelSyncronizationCommand = new Command(CancelSyncToMobileClicked);
-            _unitOfWork = new UnitOfWork(App.DbPathSqlLite);
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)
@@ -99,12 +98,12 @@ namespace lestoma.App.ViewModels.Sincronizaciones
                         AlertNoInternetConnection();
                         return;
                     }
+                    DependencyService.Resolve<IForegroundService>().StartMyForegroundService();
                     _ = Task.Run(async () =>
                     {
                         try
                         {
-                            DependencyService.Resolve<IForegroundService>().StartMyForegroundService();
-                            await Task.Delay(2000);
+                            _unitOfWork = new UnitOfWork(App.DbPathSqlLite);
                             var response = await _apiService.GetListAsyncWithToken<List<DataOnlineSyncDTO>>(URL_API,
                             "sincronizaciones-lestoma/sync-data-online-to-database-device", TokenUser.Token);
                             if (!response.IsExito)
@@ -127,9 +126,8 @@ namespace lestoma.App.ViewModels.Sincronizaciones
                             LestomaLog.Error(ex.Message);
                         }
                         finally
-                        {
-                            await Task.Delay(2000);
-                            DependencyService.Resolve<IForegroundService>().StopMyForegroundService();
+                        {                     
+                          
                         }
                     });
                     await _navigationService.GoBackAsync();

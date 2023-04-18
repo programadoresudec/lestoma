@@ -11,7 +11,7 @@
               Title="Acerca de Lestoma">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="bluetooth.png" Order="Primary" Command="{Binding ActivarBluetoothCommand}"/>
+        <ToolbarItem IconImageSource="icon_about" Order="Primary" Command="{Binding HelpCommand}"/>
         <ToolbarItem Text="Ayuda"
                  Order="Secondary"/>
         <ToolbarItem Text="Cerrar Sesión" Command="{Binding OnSignOutCommand}"
