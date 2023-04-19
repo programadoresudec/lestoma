@@ -4,7 +4,6 @@ using lestoma.App.Views.Laboratorio;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
-using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using lestoma.DatabaseOffline.IConfiguration;
@@ -30,15 +29,18 @@ namespace lestoma.App.ViewModels.Laboratorio
         private Guid _moduloId;
         private int? _esclavo;
         private readonly IUnitOfWork _unitOfWork;
-        public ComponentesModuloViewModel(INavigationService navigationService, IApiService apiService) :
+        public ComponentesModuloViewModel(INavigationService navigationService, IApiService apiService, IUnitOfWork unitOfWork) :
              base(navigationService)
         {
-            _unitOfWork = new UnitOfWork(App.DbPathSqlLite);
+            _unitOfWork = unitOfWork;
             _isSuperAdmin = TokenUser.User.RolId == (int)TipoRol.SuperAdministrador;
             _apiService = apiService;
+            Upas = new ObservableCollection<NameDTO>();
+            _componentes = new ObservableCollection<ComponentePorModuloDTO>();
+            _protocolos = new ObservableCollection<NameProtocoloDTO>();
+            _protocolo = new NameProtocoloDTO();
             RedirectionTramaCommand = new Command<object>(ComponentSelected, CanNavigate);
             Title = "Componentes laboratorio";
-            LoadUpas();
             Bytes = LoadBytes();
             MessageHelp = _isSuperAdmin ? "Seleccione UPA, protocolo de comunicación y número de esclavo.\n\n Después de clic en alguno de los componentes para LECTURA, AJUSTE Y ON-OFF del laboratorio."
                                         : "Seleccione protocolo de comunicación y número de esclavo.\n\n Después de clic en alguno de los componentes para LECTURA, AJUSTE Y ON-OFF del laboratorio.";
@@ -109,7 +111,8 @@ namespace lestoma.App.ViewModels.Laboratorio
             if (parameters.ContainsKey("ModuloId"))
             {
                 _moduloId = parameters.GetValue<Guid>("ModuloId");
-            }
+                LoadUpas();
+            }    
         }
 
         private bool CanNavigate(object arg)
@@ -120,6 +123,7 @@ namespace lestoma.App.ViewModels.Laboratorio
         {
             try
             {
+                Upas.Clear();
                 UserDialogs.Instance.ShowLoading("Cargando...");
                 // consume service en la nube
                 if (_apiService.CheckConnection())
@@ -131,7 +135,6 @@ namespace lestoma.App.ViewModels.Laboratorio
                     }
                     if (!IsSuperAdmin)
                     {
-
                         ResponseDTO upaAsignada = await _apiService.GetAsyncWithToken(URL_API, "usuarios/upa-asignada", TokenUser.Token);
                         if (response.IsExito)
                         {
@@ -148,6 +151,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                 {
                     var data = await _unitOfWork.Componentes.GetUpas();
                     Upas = new ObservableCollection<NameDTO>(data);
+
                     if (!IsSuperAdmin)
                     {
                         var selected = Upas.Where(x => x.Id == Upas[0].Id).FirstOrDefault();

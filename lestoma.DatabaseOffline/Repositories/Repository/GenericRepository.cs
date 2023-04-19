@@ -1,5 +1,6 @@
-﻿using AutoMapper;
-using lestoma.DatabaseOffline.Repositories.IRepository;
+﻿using lestoma.DatabaseOffline.Repositories.IRepository;
+using Mapster;
+using MapsterMapper;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,12 +12,12 @@ namespace lestoma.DatabaseOffline.Repositories.Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        protected readonly IMapper _mapper = Mapper.CreateMapper();
         protected readonly DatabaseOffline _context;
         protected DbSet<T> _dbSet;
 
         public GenericRepository(DatabaseOffline context)
         {
+            MyMapperConfig.Register();
             _context = context;
             _dbSet = context.Set<T>();
         }
@@ -24,7 +25,13 @@ namespace lestoma.DatabaseOffline.Repositories.Repository
         public virtual async Task<IEnumerable<T>> GetAll()
         {
             return await _dbSet.ToListAsync();
+
         }
+        public virtual async Task<bool> ExistData()
+        {
+            return await _dbSet.AnyAsync();
+        }
+
         public virtual async Task<T> GetById(object id)
         {
             return await _dbSet.FindAsync(id);

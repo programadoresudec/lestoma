@@ -18,10 +18,10 @@ namespace lestoma.App.ViewModels.Laboratorio
         private ObservableCollection<NameDTO> _modulos;
         private bool _isCheckConnection;
         private readonly IUnitOfWork _unitOfWork;
-        public ModulosUpaViewModel(INavigationService navigationService, IApiService apiService) :
+        public ModulosUpaViewModel(INavigationService navigationService, IApiService apiService, IUnitOfWork unitOfWork) :
              base(navigationService)
         {
-            _unitOfWork = new UnitOfWork(App.DbPathSqlLite);
+            _unitOfWork = unitOfWork;
             _apiService = apiService;
             Title = "Seleccione un modulo";
             _modulos = new ObservableCollection<NameDTO>();
@@ -86,10 +86,12 @@ namespace lestoma.App.ViewModels.Laboratorio
                 IsBusy = true;
                 Modulos = new ObservableCollection<NameDTO>();
                 var listado = await _unitOfWork.Componentes.GetModulos();
+
                 if (listado.Any())
                 {
                     Modulos = new ObservableCollection<NameDTO>(listado);
                 }
+
             }
             catch (Exception ex)
             {

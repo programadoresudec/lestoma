@@ -307,11 +307,12 @@ namespace lestoma.App.ViewModels
             };
             UserDialogs.Instance.Toast(toasconfig);
         }
-        protected void AlertError(string Error = "", ToastPosition position = ToastPosition.Bottom)
+        protected void AlertError(string Error = "", double seconds = 2.5, ToastPosition position = ToastPosition.Bottom)
         {
             ToastConfig toasconfig = new ToastConfig($"{Error}")
             {
                 Position = position,
+                Duration = TimeSpan.FromSeconds(seconds),
                 MessageTextColor = Color.White,
                 Icon = "icon_error.png",
                 BackgroundColor = Color.FromHex("#E5502B")
@@ -319,11 +320,12 @@ namespace lestoma.App.ViewModels
             UserDialogs.Instance.Toast(toasconfig);
 
         }
-        protected void AlertWarning(string mensaje = "", ToastPosition position = ToastPosition.Bottom)
+        protected void AlertWarning(string mensaje = "", double seconds = 2.5, ToastPosition position = ToastPosition.Bottom)
         {
             ToastConfig toasconfig = new ToastConfig($"{mensaje}")
             {
                 Position = position,
+                Duration = TimeSpan.FromSeconds(seconds),
                 MessageTextColor = Color.White,
                 Icon = "icon_warn.png",
                 BackgroundColor = Color.FromHex("#ECAA00"),

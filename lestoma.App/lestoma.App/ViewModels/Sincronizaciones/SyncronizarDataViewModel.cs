@@ -1,4 +1,5 @@
 ﻿using Acr.UserDialogs;
+using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.DTOs.Sync;
 using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
@@ -19,11 +20,12 @@ namespace lestoma.App.ViewModels.Sincronizaciones
 
         private readonly IApiService _apiService;
         private TipoSincronizacion _tipoSincronizacion;
-        private  IUnitOfWork _unitOfWork;
+        private IUnitOfWork _unitOfWork;
         private bool _isVisible;
-        public SyncronizarDataViewModel(INavigationService navigationService, IApiService apiService)
+        public SyncronizarDataViewModel(INavigationService navigationService, IApiService apiService, IUnitOfWork unitOfWork)
              : base(navigationService)
         {
+            _unitOfWork = unitOfWork;
             _apiService = apiService;
             SyncronizationCommand = new Command(SyncDataClicked);
             CancelSyncronizationCommand = new Command(CancelSyncToMobileClicked);
@@ -72,6 +74,12 @@ namespace lestoma.App.ViewModels.Sincronizaciones
 
         private async void MigrateDataOfflineToServer()
         {
+            var count = await _unitOfWork.Laboratorio.ExistData();
+            if (!count)
+            {
+                AlertWarning("No existe datos dentro del dispositivo móvil para migrar al servidor en la nube.");
+                return;
+            }
             var check = await UserDialogs.Instance.ConfirmAsync("¿Está seguro de sincronizar los datos al servidor en la nube?",
                      "Alerta", "Aceptar", "Cancelar");
             if (check)
@@ -88,8 +96,7 @@ namespace lestoma.App.ViewModels.Sincronizaciones
             }
             else
             {
-                var check = await UserDialogs.Instance.ConfirmAsync("¿Está seguro de sincronizar los datos al dispositivo móvil?",
-                    "Alerta", "Aceptar", "Cancelar");
+                var check = await UserDialogs.Instance.ConfirmAsync("¿Está seguro de sincronizar los datos al dispositivo móvil?", "Alerta", "Aceptar", "Cancelar");
 
                 if (check)
                 {
@@ -101,10 +108,10 @@ namespace lestoma.App.ViewModels.Sincronizaciones
                     DependencyService.Resolve<IForegroundService>().StartMyForegroundService();
                     _ = Task.Run(async () =>
                     {
+                        var response = new ResponseDTO();
                         try
                         {
-                            _unitOfWork = new UnitOfWork(App.DbPathSqlLite);
-                            var response = await _apiService.GetListAsyncWithToken<List<DataOnlineSyncDTO>>(URL_API,
+                            response = await _apiService.GetListAsyncWithToken<List<DataOnlineSyncDTO>>(URL_API,
                             "sincronizaciones-lestoma/sync-data-online-to-database-device", TokenUser.Token);
                             if (!response.IsExito)
                             {
@@ -114,7 +121,12 @@ namespace lestoma.App.ViewModels.Sincronizaciones
                             var data = (List<DataOnlineSyncDTO>)response.Data;
                             LestomaLog.Normal("La data es:");
                             LestomaLog.Normal(JsonConvert.SerializeObject(data));
-                            await _unitOfWork.Componentes.DeleteBulk();
+
+                            if (await _unitOfWork.Componentes.ExistData())
+                            {
+                                await _unitOfWork.Componentes.DeleteBulk();
+                            }
+
                             var responseOffline = await _unitOfWork.Componentes.MigrateDataToDevice(data);
                             if (response.IsExito)
                             {
@@ -126,8 +138,19 @@ namespace lestoma.App.ViewModels.Sincronizaciones
                             LestomaLog.Error(ex.Message);
                         }
                         finally
-                        {                     
-                          
+                        {
+                            await Task.Delay(TimeSpan.FromSeconds(15));
+                            if (response.IsExito)
+                            {
+                                AlertSuccess("Se migró satisfactoriamente los datos al dispositivo móvil.", 5);
+                                MovilSettings.IsOnSyncToDevice = true;
+                            }
+                            else
+                            {
+                                MovilSettings.IsOnSyncToDevice = false;
+                                AlertError("Ha fallado la migración al dispositivo móvil.", 5);
+                            }
+                            DependencyService.Resolve<IForegroundService>().StopMyForegroundService();
                         }
                     });
                     await _navigationService.GoBackAsync();

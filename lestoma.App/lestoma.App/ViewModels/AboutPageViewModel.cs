@@ -4,7 +4,6 @@ namespace lestoma.App.ViewModels
 {
     public class AboutPageViewModel : BaseViewModel
     {
-
         public AboutPageViewModel(INavigationService navigationService)
              : base(navigationService)
         {

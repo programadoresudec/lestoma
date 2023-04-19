@@ -21,9 +21,7 @@ namespace lestoma.DatabaseOffline.IConfiguration
             Componentes = componenteContext;
         }
         public ILaboratorioRepository Laboratorio { get; set; }
-
         public IComponenteRepository Componentes { get; set; }
-
         public async Task<bool> CompleteAsync()
         {
             return await _contextOffline.SaveChangesAsync() > 0;

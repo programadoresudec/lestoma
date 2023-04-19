@@ -9,10 +9,10 @@ namespace lestoma.App.ViewModels.Account
     public class SignOutPopupViewModel : BaseViewModel
     {
         private readonly IUnitOfWork _unitOfWork;
-        public SignOutPopupViewModel(INavigationService navigationService)
+        public SignOutPopupViewModel(INavigationService navigationService, IUnitOfWork unitOfWork)
             : base(navigationService)
         {
-            _unitOfWork = new UnitOfWork(App.DbPathSqlLite);
+            _unitOfWork = unitOfWork;
         }
         public Command SignOutCommand => new Command(SignOutCommandExecuted);
         public Command CancelarCommand => new Command(CancelarCommandExecuted);
@@ -21,6 +21,7 @@ namespace lestoma.App.ViewModels.Account
         {
             MovilSettings.Token = null;
             MovilSettings.IsLogin = false;
+            MovilSettings.IsOnSyncToDevice = false;
             await _unitOfWork.EnsureDeletedBD();
             await _navigationService.NavigateAsync($"/NavigationPage/{nameof(LoginPage)}");
         }

@@ -2,7 +2,6 @@
 using lestoma.CommonUtils.DTOs.Sync;
 using lestoma.DatabaseOffline.ModelsOffline;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

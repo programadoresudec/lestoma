@@ -3,6 +3,7 @@ using lestoma.CommonUtils.DTOs.Sync;
 using lestoma.CommonUtils.Helpers;
 using lestoma.DatabaseOffline.ModelsOffline;
 using lestoma.DatabaseOffline.Repositories.IRepository;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
@@ -22,14 +23,14 @@ namespace lestoma.DatabaseOffline.Repositories.Repository
 
         public async Task DeleteBulk()
         {
-            var data = await _context.TablaComponentes.ToListAsync();
+            var data = await _dbSet.ToListAsync();
             _context.RemoveRange(data);
             await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<NameDTO>> GetModulos()
         {
-            return await _context.TablaComponentes.GroupBy(x => new { x.ModuloId, x.NombreModulo }).Select(x => new NameDTO
+            return await _dbSet.GroupBy(x => new { x.ModuloId, x.NombreModulo }).Select(x => new NameDTO
             {
                 Id = x.Key.ModuloId,
                 Nombre = x.Key.NombreModulo
@@ -38,7 +39,7 @@ namespace lestoma.DatabaseOffline.Repositories.Repository
 
         public async Task<IEnumerable<NameDTO>> GetUpas()
         {
-            return await _context.TablaComponentes.GroupBy(x => new { x.UpaId, x.NombreUpa }).Select(x => new NameDTO
+            return await _dbSet.GroupBy(x => new { x.UpaId, x.NombreUpa }).Select(x => new NameDTO
             {
                 Id = x.Key.UpaId,
                 Nombre = x.Key.NombreUpa
@@ -59,9 +60,8 @@ namespace lestoma.DatabaseOffline.Repositories.Repository
         public async Task<ResponseDTO> MigrateDataToDevice(List<DataOnlineSyncDTO> dataOnline)
         {
             try
-            {   // crear una instancia de DataOnlineSyncDTO
-                // mapear a ComponenteOffline
-                var componentesOffline = _mapper.Map<IEnumerable<ComponenteOffline>>(dataOnline);
+            {   // crear una instancia de DataOnlineSyncDTO mapear a ComponenteOffline
+                var componentesOffline = dataOnline.Adapt<IEnumerable<ComponenteOffline>>();
                 await _context.AddRangeAsync(componentesOffline);
                 await _context.SaveChangesAsync();
                 return Responses.SetOkResponse(null, "Migración satisfactoria.");
@@ -87,5 +87,7 @@ namespace lestoma.DatabaseOffline.Repositories.Repository
                 }).ToListAsync();
             return data;
         }
+
+
     }
 }

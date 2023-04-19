@@ -162,11 +162,6 @@ namespace lestoma.App.ViewModels.Laboratorio
                 btSocket?.Close();
                 SeeError(ex);
             }
-            finally
-            {
-                await Task.Delay(1000);
-                await _navigationService.GoBackAsync();
-            }
         }
 
         private async void TransmissionBluetooth(List<byte> tramaEnviada, bool editState)
