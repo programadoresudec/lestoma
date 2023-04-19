@@ -8,15 +8,14 @@ using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Plugin.Toast;
 using Prism.Mvvm;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Net.Sockets;
 using System.Net;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
@@ -32,28 +31,34 @@ namespace lestoma.App.ViewModels
 
         #region Fields
         private static string Address;
-        private static UUID MY_UUID = UUID.FromString("00001101-0000-1000-8000-00805F9B34FB");
+        private static readonly UUID MY_UUID = UUID.FromString("00001101-0000-1000-8000-00805F9B34FB");
         private Command<object> backButtonCommand;
         private bool isBusy;
-        public BluetoothAdapter mBluetoothAdapter { get; set; }
+        public BluetoothAdapter MBluetoothAdapter { get; set; }
         public static BluetoothSocket btSocket = null;
 
         protected INavigationService _navigationService { get; private set; }
         private string _title;
+        private string _messageHelp;
         public string Title
         {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
+            get => _title;
+            set => SetProperty(ref _title, value);
         }
+        public string MessageHelp
+        {
+            get => _messageHelp;
+            set => SetProperty(ref _messageHelp, value);
+        }
+
         public int PageSize { get; set; } = 5;
         public int TotalItems { get; set; }
         public int Page { get; set; } = 1;
 
-
         public bool IsBusy
         {
-            get { return isBusy; }
-            set { SetProperty(ref isBusy, value); }
+            get => isBusy;
+            set => SetProperty(ref isBusy, value);
         }
         #endregion
 
@@ -81,18 +86,20 @@ namespace lestoma.App.ViewModels
             _navigationService = navigationService;
             ActivarBluetoothCommand = new Command(OnBluetoothClicked);
             ConnectionBluetoothCommand = new Command(ConectarBluetoothClicked);
+            HelpCommand = new Command(ShowHelpClicked);
             Address = MovilSettings.MacBluetooth;
         }
         #endregion
 
         #region Commands
-        public Command ConnectionBluetoothCommand { get; set; }
+        public Command ConnectionBluetoothCommand { get; }
 
+        public Command HelpCommand { get; }
         public Command<object> BackButtonCommand
         {
             get
             {
-                return backButtonCommand ?? (backButtonCommand = new Command<object>(BackButtonClicked));
+                return backButtonCommand ??= new Command<object>(BackButtonClicked);
             }
         }
         public Command OnSignOutCommand
@@ -114,21 +121,16 @@ namespace lestoma.App.ViewModels
         protected async void OnBluetoothClicked()
         {
 
-#pragma warning disable CS0618 // Type or member is obsolete
-            mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-#pragma warning restore CS0618 // Type or member is obsolete
+            MBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
             //Verificamos que este habilitado
-#pragma warning disable CS0618 // Type or member is obsolete
-            if (!mBluetoothAdapter.Enable())
+            if (!MBluetoothAdapter.Enable())
             {
-                await Application.Current.MainPage.DisplayAlert("Bluetooth", "Bluetooth desactivado", "OK");
+                await Application.Current.MainPage.DisplayAlert("Bluetooth", "Bluetooth desactivado.", "Aceptar");
                 return;
             }
-#pragma warning restore CS0618 // Type or member is obsolete
-            //verificamos que no sea nulo el sensor
-            if (mBluetoothAdapter == null)
+            if (MBluetoothAdapter == null)
             {
-                await Application.Current.MainPage.DisplayAlert("Bluetooth", "Bluetooth No Existe o esta Ocupado", "OK");
+                await Application.Current.MainPage.DisplayAlert("Bluetooth", "Bluetooth No Existe o está ocupado.", "Aceptar");
                 return;
             }
         }
@@ -137,8 +139,8 @@ namespace lestoma.App.ViewModels
         {
             try
             {
-                mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-                if (!mBluetoothAdapter.IsEnabled)
+                MBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
+                if (!MBluetoothAdapter.IsEnabled)
                 {
                     AlertError("Debe prender el bluetooth.");
                     return;
@@ -150,9 +152,9 @@ namespace lestoma.App.ViewModels
                     return;
                 }
                 UserDialogs.Instance.ShowLoading("Conectando...");
-                BluetoothDevice device = mBluetoothAdapter.GetRemoteDevice(Address);
+                BluetoothDevice device = MBluetoothAdapter.GetRemoteDevice(Address);
                 //Indicamos al adaptador que ya no sea visible
-                mBluetoothAdapter.CancelDiscovery();
+                MBluetoothAdapter.CancelDiscovery();
                 if (btSocket == null)
                 {
                     btSocket = device.CreateRfcommSocketToServiceRecord(MY_UUID);
@@ -177,7 +179,6 @@ namespace lestoma.App.ViewModels
             catch (Exception ex)
             {
                 //en caso de generarnos error cerramos el socket
-                LestomaLog.Error(ex.Message);
                 btSocket.Close();
                 SeeError(ex);
             }
@@ -185,6 +186,10 @@ namespace lestoma.App.ViewModels
             {
                 UserDialogs.Instance.HideLoading();
             }
+        }
+        protected async void ShowHelpClicked()
+        {
+            await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: MessageHelp));
         }
         protected async void ClosePopup()
         {
@@ -203,8 +208,9 @@ namespace lestoma.App.ViewModels
             return string.Empty;
         }
 
-        protected async void SeeError(Exception exception)
+        protected async void SeeError(Exception exception, string errorMessage = "")
         {
+            LestomaLog.Error($"{errorMessage} {exception.Message}");
             if (exception.Message.Contains("StatusCode"))
             {
                 ResponseDTO error = JsonConvert.DeserializeObject<ResponseDTO>(exception.Message);
@@ -289,27 +295,55 @@ namespace lestoma.App.ViewModels
 
         #endregion
 
-        #region Alerts de CrossToastPopUp
+        #region Alerts de CrossToast
         protected void AlertNoInternetConnection()
         {
-            CrossToastPopUp.Current.ShowToastWarning("No tiene internet por favor active el wifi.",
-                Plugin.Toast.Abstractions.ToastLength.Long);
+            ToastConfig toasconfig = new ToastConfig("No tiene internet por favor active el wifi.")
+            {
+                Duration = TimeSpan.FromSeconds(3),
+                Icon = "icon_nowifi.png",
+                MessageTextColor = Color.White,
+                BackgroundColor = Color.FromHex("#EFB459")
+            };
+            UserDialogs.Instance.Toast(toasconfig);
+        }
+        protected void AlertError(string Error = "", double seconds = 2.5, ToastPosition position = ToastPosition.Bottom)
+        {
+            ToastConfig toasconfig = new ToastConfig($"{Error}")
+            {
+                Position = position,
+                Duration = TimeSpan.FromSeconds(seconds),
+                MessageTextColor = Color.White,
+                Icon = "icon_error.png",
+                BackgroundColor = Color.FromHex("#E5502B")
+            };
+            UserDialogs.Instance.Toast(toasconfig);
 
         }
-        protected void AlertError(string Error = "")
+        protected void AlertWarning(string mensaje = "", double seconds = 2.5, ToastPosition position = ToastPosition.Bottom)
         {
-            CrossToastPopUp.Current.ShowToastError($"ERROR {Error}", Plugin.Toast.Abstractions.ToastLength.Long);
-
+            ToastConfig toasconfig = new ToastConfig($"{mensaje}")
+            {
+                Position = position,
+                Duration = TimeSpan.FromSeconds(seconds),
+                MessageTextColor = Color.White,
+                Icon = "icon_warn.png",
+                BackgroundColor = Color.FromHex("#ECAA00"),
+            };
+            UserDialogs.Instance.Toast(toasconfig);
         }
-        protected void AlertWarning(string mensaje = "")
-        {
-            CrossToastPopUp.Current.ShowToastWarning($"{mensaje}", Plugin.Toast.Abstractions.ToastLength.Long);
 
-        }
-
-        protected void AlertSuccess(string mensaje = "EXITO")
+        protected void AlertSuccess(string mensaje = "EXITO", double seconds = 2.5, ToastPosition position = ToastPosition.Bottom)
         {
-            CrossToastPopUp.Current.ShowToastSuccess($"{mensaje}", Plugin.Toast.Abstractions.ToastLength.Long);
+            ToastConfig toasconfig = new ToastConfig($"{mensaje}")
+            {
+                Position = position,
+                Duration = TimeSpan.FromSeconds(seconds),
+                MessageTextColor = Color.White,
+                Icon = "icon_check.png",
+                BackgroundColor = Color.FromHex("#79A300")
+            };
+            UserDialogs.Instance.Toast(toasconfig);
         }
         #endregion
     }

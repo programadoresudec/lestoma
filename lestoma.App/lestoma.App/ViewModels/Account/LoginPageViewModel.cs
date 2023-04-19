@@ -105,42 +105,39 @@ namespace lestoma.App.ViewModels.Account
             {
                 try
                 {
-                    if (_apiService.CheckConnection())
+                    if (!_apiService.CheckConnection())
                     {
-                        IsBusy = true;
-                        LoginRequest login = new LoginRequest
+
+                        AlertNoInternetConnection();
+                        return;
+                    }
+                    IsBusy = true;
+                    LoginRequest login = new LoginRequest
+                    {
+                        Email = Email.Value,
+                        Clave = password.Value,
+                        TipoAplicacion = (int)TipoAplicacion.AppMovil,
+                        Ip = GetLocalIPAddress()
+                    };
+                    ResponseDTO respuesta = await _apiService.PostAsync(URL_API, "Account/login", login);
+                    if (!respuesta.IsExito)
+                    {
+                        if (respuesta.StatusCode == (int)HttpStatusCode.Unauthorized)
                         {
-                            Email = Email.Value,
-                            Clave = password.Value,
-                            TipoAplicacion = (int)TipoAplicacion.AppMovil,
-                            Ip = GetLocalIPAddress()
-                        };
-                        ResponseDTO respuesta = await _apiService.PostAsync(URL_API, "Account/login", login);
-                        if (respuesta.IsExito)
-                        {
-                            TokenDTO token = ParsearData<TokenDTO>(respuesta);
-                            MovilSettings.Token = JsonConvert.SerializeObject(token);
-                            MovilSettings.IsLogin = true;
-                            ResponseDTO hasNotifications = await _apiService.PostWithoutBodyAsyncWithToken(URL_API, "Account/is-active-notifications-by-mail", token.Token);
-                            MovilSettings.IsOnNotificationsViaMail = ParsearData<HasNotificationsDTO>(hasNotifications).IsActive;
-                            await _navigationService.NavigateAsync($"/{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
+                            AlertWarning(respuesta.MensajeHttp);
                         }
                         else
                         {
-                            if (respuesta.StatusCode == (int)HttpStatusCode.Unauthorized)
-                            {
-                                AlertWarning(respuesta.MensajeHttp);
-                            }
-                            else
-                            {
-                                AlertError(respuesta.MensajeHttp);
-                            }
+                            AlertError(respuesta.MensajeHttp);
                         }
+                        return;
                     }
-                    else
-                    {
-                        AlertNoInternetConnection();
-                    }
+                    TokenDTO token = ParsearData<TokenDTO>(respuesta);
+                    MovilSettings.Token = JsonConvert.SerializeObject(token);
+                    MovilSettings.IsLogin = true;
+                    ResponseDTO hasNotifications = await _apiService.PostWithoutBodyAsyncWithToken(URL_API, "Account/is-active-notifications-by-mail", token.Token);
+                    MovilSettings.IsOnNotificationsViaMail = ParsearData<HasNotificationsDTO>(hasNotifications).IsActive;
+                    await _navigationService.NavigateAsync($"/{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
 
                 }
                 catch (Exception ex)

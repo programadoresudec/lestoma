@@ -32,6 +32,7 @@ using lestoma.DatabaseOffline.IConfiguration;
 using Newtonsoft.Json;
 using Prism;
 using Prism.Ioc;
+using Prism.Navigation;
 using Prism.Plugin.Popups;
 using System;
 using System.IO;
@@ -50,8 +51,7 @@ namespace lestoma.App
 {
     public partial class App
     {
-        public static string DbPathSqlLite { get; set; } =
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "lestoma.db");
+        public static string DbPathSqlLite => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "lestoma.db");
 
         public App(IPlatformInitializer initializer)
             : base(initializer)
@@ -60,8 +60,7 @@ namespace lestoma.App
 
         protected override async void OnInitialized()
         {
-            Syncfusion.Licensing.SyncfusionLicenseProvider.
-               RegisterLicense("NTI5MzU5QDMxMzkyZTMzMmUzMGZ5cEJxMUFDNHhqS0hEVlVHU3NCTHNsUTNGOGpEM015bjVJQ05hUkpXOWM9");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTI5MzU5QDMxMzkyZTMzMmUzMGZ5cEJxMUFDNHhqS0hEVlVHU3NCTHNsUTNGOGpEM015bjVJQ05hUkpXOWM9");
             InitializeComponent();
             if (VersionTracking.IsFirstLaunchEver)
             {
@@ -75,8 +74,7 @@ namespace lestoma.App
                 }
                 else
                 {
-                    TokenDTO TokenUser = !string.IsNullOrEmpty(MovilSettings.Token)
-                        ? JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token) : null;
+                    TokenDTO TokenUser = !string.IsNullOrEmpty(MovilSettings.Token) ? JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token) : null;
 
                     if (TokenUser != null)
                     {
@@ -84,11 +82,19 @@ namespace lestoma.App
                         {
                             MovilSettings.Token = null;
                             MovilSettings.IsLogin = false;
+                            MovilSettings.IsOnSyncToDevice = false;
                             await NavigationService.NavigateAsync($"NavigationPage/{nameof(LoginPage)}");
                         }
                         else
                         {
-                            await NavigationService.NavigateAsync($"{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
+                            if (!MovilSettings.IsOnSyncToDevice && Connectivity.NetworkAccess != NetworkAccess.Internet)
+                            {
+                                await NavigationService.NavigateAsync(nameof(ModeOfflinePage));
+                            }
+                            else
+                            {
+                                await NavigationService.NavigateAsync($"{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
+                            }
                         }
                     }
                     else
@@ -106,11 +112,7 @@ namespace lestoma.App
             containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
             containerRegistry.Register<IApiService, ApiService>();
             containerRegistry.Register<IFilesHelper, FilesHelper>();
-
-            #region injection UnitOfwork Database OFfline
-            containerRegistry.Register<IUnitOfWork, UnitOfWork>();
-            #endregion
-
+            containerRegistry.Register<IUnitOfWork>(c => new UnitOfWork(DbPathSqlLite));
             #region Navegaciones
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterPopupNavigationService();
@@ -162,8 +164,6 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<MACBluetoothPopupPage, MACBluetoothPopupViewModel>();
             containerRegistry.RegisterForNavigation<InputSetPointPopupPage, InputSetPointPopupViewModel>();
             #endregion
-
-
         }
     }
 }

@@ -4,7 +4,7 @@
              xmlns:prism="http://prismlibrary.com" 
              xmlns:gauge="clr-namespace:Syncfusion.SfGauge.XForms;assembly=Syncfusion.SfGauge.XForms" 
              prism:ViewModelLocator.AutowireViewModel="True"
-             Title="Lectura"
+             Title="{Binding Title}"
              x:Class="lestoma.App.Views.Laboratorio.LecturaSensorPage">
     <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
         <Label

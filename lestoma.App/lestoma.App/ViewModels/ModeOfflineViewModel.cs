@@ -1,6 +1,8 @@
 ﻿using lestoma.App.Views;
 using lestoma.App.Views.Usuarios;
+using lestoma.CommonUtils.Helpers;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels
@@ -19,7 +21,14 @@ namespace lestoma.App.ViewModels
             {
                 return new Command(async () =>
                 {
-                    await _navigationService.NavigateAsync($"{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
+                    if (MovilSettings.IsOnSyncToDevice)
+                    {
+                        await _navigationService.NavigateAsync($"{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
+                    }
+                    else
+                    {
+                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage("No puede ingresar al menú porque no sincronizó los datos necesarios para modo Offline."));
+                    }
                 });
             }
         }

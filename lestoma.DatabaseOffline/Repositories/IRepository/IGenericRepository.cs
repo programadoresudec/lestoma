@@ -9,5 +9,6 @@ namespace lestoma.DatabaseOffline.Repositories.IRepository
         Task Create(T entidad);
         Task<T> GetById(object id);
         Task<IEnumerable<T>> GetAll();
+        Task<bool> ExistData();
     }
 }

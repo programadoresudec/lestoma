@@ -6,7 +6,6 @@ using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
-using Plugin.Toast;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
@@ -118,7 +117,7 @@ namespace lestoma.App.ViewModels.Buzon
                         };
 
                         ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL_API, "buzon-de-reportes/create", buzon, TokenUser.Token);
-                        CrossToastPopUp.Current.ShowToastSuccess(respuesta.MensajeHttp);
+                        AlertSuccess(respuesta.MensajeHttp);
                         this.DetalleBuzon = new DetalleBuzonDTO();
                         await _navigationService.GoBackAsync();
                     }
@@ -165,7 +164,7 @@ namespace lestoma.App.ViewModels.Buzon
                 {
                     if (!CrossMedia.Current.IsCameraAvailable)
                     {
-                        CrossToastPopUp.Current.ShowToastError("No soporta la Cámara.");
+                        AlertError("No soporta la Cámara.");
                         return;
                     }
 
@@ -182,7 +181,7 @@ namespace lestoma.App.ViewModels.Buzon
                 {
                     if (!CrossMedia.Current.IsPickPhotoSupported)
                     {
-                        CrossToastPopUp.Current.ShowToastError("No hay galeria.");
+                        AlertError("No hay galeria.");
                         return;
                     }
 
@@ -201,7 +200,7 @@ namespace lestoma.App.ViewModels.Buzon
             catch (Exception ex)
             {
                 SeeError(ex);
-            }         
+            }
         }
         #endregion
     }

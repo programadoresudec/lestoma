@@ -48,7 +48,6 @@ namespace lestoma.App.ViewModels.UpasActividades
                 if (_apiService.CheckConnection())
                 {
                     UserDialogs.Instance.ShowLoading("Cargando...");
-
                     string queryString = Reutilizables.GenerateQueryString(upaUserFilterRequest);
                     ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
                         $"detalle-upas-actividades/listar-por-usuario{queryString}", TokenUser.Token);

@@ -7,6 +7,15 @@
              xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
              prism:ViewModelLocator.AutowireViewModel="True" Title="{Binding Title}"
              x:Class="lestoma.App.Views.Laboratorio.ComponentesModuloPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="icon_about" Order="Primary" Command="{Binding HelpCommand}"/>
+        <ToolbarItem Text="Prender Bluetooth" Command="{Binding ActivarBluetoothCommand}"
+                 Order="Secondary"/>
+        <ToolbarItem Text="Conectar a laboratorio" Command="{Binding ConnectionBluetoothCommand}"
+                 Order="Secondary"/>
+        <ToolbarItem Text="Cerrar Sesión" Priority="1" Command="{Binding OnSignOutCommand}"
+                 Order="Secondary"/>
+    </ContentPage.ToolbarItems>
     <StackLayout Padding="10">
         <StackLayout VerticalOptions="StartAndExpand">
             <border:SfBorder HeightRequest="70" Style="{StaticResource ThemeBorderStyle}" IsEnabled="{Binding IsSuperAdmin}">

@@ -1,6 +1,7 @@
 ﻿using Acr.UserDialogs;
 using lestoma.App.Views;
 using lestoma.App.Views.Account;
+using lestoma.App.Views.Sincronizaciones;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
@@ -74,7 +75,7 @@ namespace lestoma.App.ViewModels.Account
                     {
                          { "TypeSyncronization", TipoSincronizacion.MigrateDataOnlineToDevice }
                     };
-                    await _navigationService.NavigateAsync(nameof(SignOutPopupPage), parameters);
+                    await _navigationService.NavigateAsync(nameof(SyncronizarDataPopupPage), parameters);
                 });
             }
         }
@@ -89,7 +90,7 @@ namespace lestoma.App.ViewModels.Account
                     {
                          { "TypeSyncronization", TipoSincronizacion.MigrateDataOfflineToServer }
                     };
-                    await _navigationService.NavigateAsync(nameof(SignOutPopupPage), parameters);
+                    await _navigationService.NavigateAsync(nameof(SyncronizarDataPopupPage), parameters);
                 });
             }
         }

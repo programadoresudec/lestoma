@@ -1,10 +1,13 @@
 ﻿using lestoma.App.Views.Laboratorio;
 using lestoma.CommonUtils.DTOs;
+using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
+using lestoma.DatabaseOffline.IConfiguration;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Laboratorio
@@ -14,15 +17,17 @@ namespace lestoma.App.ViewModels.Laboratorio
         private readonly IApiService _apiService;
         private ObservableCollection<NameDTO> _modulos;
         private bool _isCheckConnection;
-        public ModulosUpaViewModel(INavigationService navigationService, IApiService apiService) :
+        private readonly IUnitOfWork _unitOfWork;
+        public ModulosUpaViewModel(INavigationService navigationService, IApiService apiService, IUnitOfWork unitOfWork) :
              base(navigationService)
         {
+            _unitOfWork = unitOfWork;
             _apiService = apiService;
             Title = "Seleccione un modulo";
             _modulos = new ObservableCollection<NameDTO>();
             SeeComponentCommand = new Command<object>(ModuloSelected, CanNavigate);
             LoadModulos();
-
+            MessageHelp = "Seleccione un modulo para ver los componentes correspondientes.\n\n Dentro de los tres puntos en la parte derecha superior podrá prender el bluetooth y hacer la conexión con el laboratorio.";
         }
 
         private bool CanNavigate(object arg)
@@ -61,8 +66,7 @@ namespace lestoma.App.ViewModels.Laboratorio
         }
         private void LoadModulos()
         {
-            IsCheckConnection = _apiService.CheckConnection();
-            if (IsCheckConnection)
+            if (_apiService.CheckConnection())
             {
                 ConsumoService();
             }
@@ -74,9 +78,29 @@ namespace lestoma.App.ViewModels.Laboratorio
 
 
 
-        private void ConsumoServiceLocal()
+        private async void ConsumoServiceLocal()
         {
-            throw new NotImplementedException();
+            LestomaLog.Normal("Consultando modulos.. offline");
+            try
+            {
+                IsBusy = true;
+                Modulos = new ObservableCollection<NameDTO>();
+                var listado = await _unitOfWork.Componentes.GetModulos();
+
+                if (listado.Any())
+                {
+                    Modulos = new ObservableCollection<NameDTO>(listado);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
 

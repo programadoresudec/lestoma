@@ -7,8 +7,10 @@
              prism:ViewModelLocator.AutowireViewModel="True" Title="{Binding Title}"
              x:Class="lestoma.App.Views.Laboratorio.ModulosUpaPage">
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="bluetooth.png" Order="Primary" Command="{Binding ActivarBluetoothCommand}"/>
-        <ToolbarItem Text="Ayuda"
+        <ToolbarItem IconImageSource="icon_about" Order="Primary" Command="{Binding HelpCommand}"/>
+        <ToolbarItem Text="Prender Bluetooth" Command="{Binding ActivarBluetoothCommand}"
+                 Order="Secondary"/>
+        <ToolbarItem Text="Conectar a laboratorio" Command="{Binding ConnectionBluetoothCommand}"
                  Order="Secondary"/>
         <ToolbarItem Text="Cerrar Sesión" Command="{Binding OnSignOutCommand}"
                  Order="Secondary"/>
@@ -57,15 +59,19 @@
                     </DataTemplate>
                 </syncfusion:SfListView.ItemTemplate>
             </syncfusion:SfListView>
-            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsCheckConnection}" HorizontalOptions="End" Margin="10,5">
+            <StackLayout Orientation="Horizontal" HorizontalOptions="End" Margin="10,5">
                 <Label  Grid.Column="0"
                                     FontFamily="fontello" TextColor="{StaticResource TwitterBlue}"
                                     Style="{StaticResource IconLabelStyle}"
-                                    Text="{StaticResource IconBluetooth}" />
-                <Button  Text="Conectar" 
-                    BackgroundColor="{StaticResource Gray-200}" CornerRadius="25"
-                    TextColor="Black" Command="{Binding ConnectionBluetoothCommand}">
+                                    Text="{StaticResource IconBluetoothB}" />
+                <Button  Text="Conectar AL Laboratorio"  FontFamily="Montserrat-Bold" FontSize="12"
+                    BackgroundColor="Transparent" CornerRadius="25"
+                    TextColor="{StaticResource PantoneVerdeDark}" Command="{Binding ConnectionBluetoothCommand}">
                 </Button>
+                <Label  Grid.Column="0"
+                                    FontFamily="fontello" TextColor="{StaticResource Gray-Black}"
+                                    Style="{StaticResource IconLabelStyle}"
+                                    Text="{StaticResource IconAngleRight}" />
             </StackLayout>
         </StackLayout>
     </Grid>

@@ -96,9 +96,8 @@ namespace lestoma.App.ViewModels.Componentes
         private async void ComponentSelected(object objeto)
         {
             var list = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
-            ComponenteDTO component = list.ItemData as ComponenteDTO;
 
-            if (component == null)
+            if (!(list.ItemData is ComponenteDTO component))
                 return;
 
             var salida = component.Id;

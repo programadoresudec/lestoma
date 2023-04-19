@@ -13,7 +13,8 @@ using AndroidX.Core.App;
 [assembly: Dependency(typeof(ForegroundService))]
 namespace lestoma.App.Droid.Services
 {
-    internal class ForegroundService : Service, IForegroundService
+    [Service]
+    public class ForegroundService : Service, IForegroundService
     {
         public static bool IsForegroundServiceRunning;
         public override IBinder OnBind(Intent intent)
@@ -24,6 +25,14 @@ namespace lestoma.App.Droid.Services
         [return: GeneratedEnum]
         public override StartCommandResult OnStartCommand(Intent intent, [GeneratedEnum] StartCommandFlags flags, int startId)
         {
+            Task.Run(() =>
+            {
+                while (IsForegroundServiceRunning)
+                {
+                    System.Diagnostics.Debug.WriteLine("Sincronizando los datos...");
+                    Thread.Sleep(TimeSpan.FromSeconds(30));
+                }
+            });
             string channelID = "SyncData";
             var notificationManager = (NotificationManager)GetSystemService(NotificationService);
             if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
@@ -33,9 +42,9 @@ namespace lestoma.App.Droid.Services
             }
 
             var notificationBuilder = new NotificationCompat.Builder(this, channelID)
-                                         .SetContentTitle("Sincronizando Datos")
+                                         .SetContentTitle("Sincronizando datos al dispositivo móvil...")
                                          .SetSmallIcon(Resource.Mipmap.icon)
-                                         .SetContentText("Servicio ejecutandose en primer plano.")
+                                         .SetContentText("Servicio ejecutandose en segundo plano.")
                                          .SetPriority(1)
                                          .SetOngoing(true)
                                          .SetChannelId(channelID)
