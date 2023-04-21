@@ -11,7 +11,6 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="icon_plus.png" Command="{Binding AddCommand}"/>
     </ContentPage.ToolbarItems>
-
     <ContentPage.Resources>
         <ResourceDictionary>
             <helper:InverseBoolConverter x:Key="inverseBoolConverter"/>
@@ -117,6 +116,11 @@
                     </DataTemplate>
                 </syncfusion:SfListView.ItemTemplate>
             </syncfusion:SfListView>
+            <button:SfButton HeightRequest="35" CornerRadius="5" Margin="10"
+                                             HorizontalOptions="CenterAndExpand"                                      
+                                             Text="Cargar más resultados" Style="{StaticResource LestomaGradientButtonStyle}"
+                                            Command="{Binding MoreUpasCommand}" IsVisible="{Binding IsRefreshing}" ImageSource="icon_see.png" ShowIcon="True">
+            </button:SfButton>
         </StackLayout>
     </Grid>
 </ContentPage>

@@ -45,12 +45,8 @@ namespace lestoma.App.ViewModels.Buzon
         #endregion
 
         #region Command
-
-
         public Command SendReportCommand { get; set; }
-
         public Command ChangeImageCommand { get; set; }
-
         #endregion
 
         #region Properties

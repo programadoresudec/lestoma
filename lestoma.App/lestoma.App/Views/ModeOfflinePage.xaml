@@ -20,7 +20,7 @@
                 <!--  Label to display header  -->
                 <Label
                     Margin="0,32,0,8"
-                    FontSize="20"
+                    FontSize="20" FontFamily="Montserrat-SemiBold"
                     Style="{StaticResource HeaderLabel}"
                     Text="¡Advertencia!"
                     TextColor="#333942"
@@ -29,9 +29,9 @@
                 <!--  Label to display content  -->
                 <Label
                     Margin="8,0,8,0"
-                    FontSize="16"
+                    FontSize="16" FontFamily="Montserrat-Regular"
                     Style="{StaticResource HeaderLabel}"
-                    Text="No tiene Conexión a Internet"
+                    Text="No hay conexión a internet"
                     TextColor="#333942"
                     VerticalTextAlignment="Center" />
             </StackLayout>

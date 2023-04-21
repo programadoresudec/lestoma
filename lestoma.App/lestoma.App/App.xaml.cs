@@ -32,7 +32,6 @@ using lestoma.DatabaseOffline.IConfiguration;
 using Newtonsoft.Json;
 using Prism;
 using Prism.Ioc;
-using Prism.Navigation;
 using Prism.Plugin.Popups;
 using System;
 using System.IO;

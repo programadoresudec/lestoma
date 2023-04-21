@@ -4,8 +4,10 @@ using lestoma.App.Views.Laboratorio;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
+using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
+using lestoma.CommonUtils.Requests.Filters;
 using lestoma.DatabaseOffline.IConfiguration;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
@@ -112,7 +114,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             {
                 _moduloId = parameters.GetValue<Guid>("ModuloId");
                 LoadUpas();
-            }    
+            }
         }
 
         private bool CanNavigate(object arg)
@@ -216,8 +218,15 @@ namespace lestoma.App.ViewModels.Laboratorio
             {
                 UserDialogs.Instance.ShowLoading("Cargando...");
                 Componentes = new ObservableCollection<ComponentePorModuloDTO>();
+
+                var upaModuleFilterRequest = new UpaModuleFilterRequest()
+                {
+                    ModuloId = _moduloId,
+                    UpaId = upaId
+                };
+                string querystring = Reutilizables.GenerateQueryString(upaModuleFilterRequest);
                 ResponseDTO response = await _apiService.GetListAsyncWithToken<List<ComponentePorModuloDTO>>(URL_API,
-                    $"laboratorio-lestoma/listar-componentes-upa-modulo?UpaId={upaId}&ModuloId={_moduloId}", TokenUser.Token);
+                    $"laboratorio-lestoma/listar-componentes-upa-modulo{querystring}", TokenUser.Token);
                 if (!response.IsExito)
                 {
                     AlertWarning(response.MensajeHttp);

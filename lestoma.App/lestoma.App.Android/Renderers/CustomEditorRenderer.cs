@@ -1,10 +1,9 @@
-﻿using lestoma.App.Controls;
-using lestoma.App.Droid;
+﻿using lestoma.App.Droid;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using Application = Android.App.Application;
 
-[assembly: ExportRenderer(typeof(BorderlessEditor), typeof(CustomEditorRenderer))]
+[assembly: ExportRenderer(typeof(lestoma.App.Controls.BorderlessEditor), typeof(CustomEditorRenderer))]
 namespace lestoma.App.Droid
 {
     public class CustomEditorRenderer : EditorRenderer

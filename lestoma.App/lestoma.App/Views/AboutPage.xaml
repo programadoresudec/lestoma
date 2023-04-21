@@ -12,8 +12,6 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="icon_about" Order="Primary" Command="{Binding HelpCommand}"/>
-        <ToolbarItem Text="Ayuda"
-                 Order="Secondary"/>
         <ToolbarItem Text="Cerrar Sesión" Command="{Binding OnSignOutCommand}"
                  Order="Secondary"/>
     </ContentPage.ToolbarItems>
