@@ -143,6 +143,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Renderers\NullableTimePickerRenderer.cs" />
     <Compile Include="Services\ForegroundService.cs" />
     <Compile Include="Services\MyBroadCastReceiver.cs" />
     <Compile Include="MainApplication.cs" />

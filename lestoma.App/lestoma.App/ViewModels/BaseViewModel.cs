@@ -34,6 +34,9 @@ namespace lestoma.App.ViewModels
         private static readonly UUID MY_UUID = UUID.FromString("00001101-0000-1000-8000-00805F9B34FB");
         private Command<object> backButtonCommand;
         private bool isBusy;
+        private int _pageSize;
+        private int _pageNumber;
+        private bool _isRefreshing;
         public BluetoothAdapter MBluetoothAdapter { get; set; }
         public static BluetoothSocket btSocket = null;
 
@@ -51,14 +54,30 @@ namespace lestoma.App.ViewModels
             set => SetProperty(ref _messageHelp, value);
         }
 
-        public int PageSize { get; set; } = 5;
+        public int PageSize
+        {
+            get => _pageSize;
+            set => SetProperty(ref _pageSize, value);
+        }
+
+        public int Page
+        {
+            get => _pageNumber;
+            set => SetProperty(ref _pageNumber, value);
+        }
+
         public int TotalItems { get; set; }
-        public int Page { get; set; } = 1;
 
         public bool IsBusy
         {
             get => isBusy;
             set => SetProperty(ref isBusy, value);
+        }
+
+        public bool IsRefreshing
+        {
+            get => _isRefreshing;
+            set => SetProperty(ref _isRefreshing, value);
         }
         #endregion
 
@@ -88,6 +107,8 @@ namespace lestoma.App.ViewModels
             ConnectionBluetoothCommand = new Command(ConectarBluetoothClicked);
             HelpCommand = new Command(ShowHelpClicked);
             Address = MovilSettings.MacBluetooth;
+            _pageNumber = 1;
+            _pageSize = 2;
         }
         #endregion
 

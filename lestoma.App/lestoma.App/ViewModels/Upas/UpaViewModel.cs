@@ -8,6 +8,7 @@ using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Upas
@@ -26,8 +27,8 @@ namespace lestoma.App.ViewModels.Upas
             DeleteCommand = new Command<object>(DeleteClicked, CanNavigate);
             SeeProtocolsCommand = new Command<object>(OnSeeProtocolClicked, CanNavigate);
             LoadUpas();
+            MoreUpasCommand = new Command(LoadMoreUpas);
         }
-
         public ObservableCollection<UpaDTO> Upas
         {
             get => _upas;
@@ -36,6 +37,7 @@ namespace lestoma.App.ViewModels.Upas
 
         public Command EditCommand { get; set; }
         public Command DeleteCommand { get; set; }
+        public Command MoreUpasCommand { get; set; }
         public Command<object> SeeProtocolsCommand
         {
             get => itemTap;
@@ -152,19 +154,17 @@ namespace lestoma.App.ViewModels.Upas
             {
                 IsBusy = true;
                 Upas = new ObservableCollection<UpaDTO>();
-                ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<UpaDTO>(URL_API,
-                    $"upas/paginar", TokenUser.Token);
-                if (response.IsExito)
-                {
-                    var paginador = (Paginador<UpaDTO>)response.Data;
-                    if (paginador.Datos.Count > 0)
-                    {
-                        Upas = new ObservableCollection<UpaDTO>(paginador.Datos);
-                    }
-                }
-                else
+                ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<UpaDTO>(URL_API, $"upas/paginar", TokenUser.Token);
+                if (!response.IsExito)
                 {
                     AlertWarning(response.MensajeHttp);
+                    return;
+                }
+                var paginador = (Paginador<UpaDTO>)response.Data;
+                if (paginador.Datos.Any())
+                {
+                    Upas = new ObservableCollection<UpaDTO>(paginador.Datos);
+                    IsRefreshing = paginador.HasNextPage;
                 }
             }
             catch (Exception ex)
@@ -173,8 +173,45 @@ namespace lestoma.App.ViewModels.Upas
             }
             finally
             {
+                Page++;
                 IsBusy = false;
             }
         }
+        private async void LoadMoreUpas()
+        {
+            try
+            {
+                if (_apiService.CheckConnection())
+                {
+                    UserDialogs.Instance.ShowLoading("Cargando...");
+                    Upas = new ObservableCollection<UpaDTO>();
+                    ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<UpaDTO>(URL_API, $"upas/paginar", TokenUser.Token);
+                    if (!response.IsExito)
+                    {
+                        AlertWarning(response.MensajeHttp);
+                        return;
+                    }
+                    var paginador = (Paginador<UpaDTO>)response.Data;
+                    if (paginador.Datos.Any())
+                    {
+                        foreach (var item in paginador.Datos)
+                        {
+                            Upas.Add(item);
+                        }
+                        IsRefreshing = paginador.HasNextPage;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
+            {
+                Page++;
+                UserDialogs.Instance.HideLoading();
+            }
+        }
+
     }
 }

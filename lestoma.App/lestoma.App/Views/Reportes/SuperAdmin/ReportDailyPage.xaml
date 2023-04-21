@@ -8,7 +8,7 @@
                   xmlns:core="clr-namespace:Syncfusion.XForms.Core;assembly=Syncfusion.Core.XForms"
                   xmlns:border="clr-namespace:Syncfusion.XForms.Border;assembly=Syncfusion.Core.XForms" 
                   xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" 
-                  xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+                  xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms" xmlns:control="clr-namespace:lestoma.App.Controls"
                   prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="lestoma.App.Views.Reportes.SuperAdmin.ReportDailyPage">
     <popup:PopupPage.Animation>
@@ -55,8 +55,9 @@
                                 <Label TextColor="{StaticResource Gray-600}" HorizontalOptions="Start"
                                 FontFamily="Fontello" FontSize="32" Style="{StaticResource IconLabelStyle}" Text="{StaticResource IconClock}"/>
                                 <inputLayout:SfTextInputLayout Hint="Hora" HorizontalOptions="StartAndExpand" FocusedColor="Black" 
-                                                               ContainerBackgroundColor="Transparent" HeightRequest="60" >
-                                    <TimePicker HorizontalOptions="StartAndExpand" Time="{Binding TimeForReportDaily, Mode=TwoWay}"/>
+                                                               ContainerBackgroundColor="Transparent" HeightRequest="60">
+                                    <control:NullableTimePicker WidthRequest="100" HorizontalOptions="FillAndExpand" Time="{Binding TimeForReportDaily, Mode=TwoWay}">
+                                    </control:NullableTimePicker>
                                 </inputLayout:SfTextInputLayout>
                             </StackLayout>
                         </border:SfBorder>

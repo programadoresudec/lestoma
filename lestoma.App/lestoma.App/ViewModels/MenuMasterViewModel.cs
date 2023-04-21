@@ -75,10 +75,10 @@ namespace lestoma.App.ViewModels
             {
                 menus.Add(new Menu
                 {
-                    Icon = UserApp.RolId == (int)TipoRol.Administrador ? "icon_buzon" : "icon_crear_reporte",
+                    Icon = UserApp.RolId == (int)TipoRol.Administrador || UserApp.RolId == (int)TipoRol.SuperAdministrador ? "icon_buzon" : "icon_crear_reporte",
                     PageName = UserApp.RolId == (int)TipoRol.Administrador || UserApp.RolId == (int)TipoRol.SuperAdministrador
                          ? $"{nameof(BuzonDeReportesPage)}" : $"{nameof(CrearReporteDelBuzonPage)}",
-                    Title = UserApp.RolId == (int)TipoRol.Administrador || UserApp.RolId == (int)TipoRol.SuperAdministrador ? "Buzon De Reportes"
+                    Title = UserApp.RolId == (int)TipoRol.Administrador || UserApp.RolId == (int)TipoRol.SuperAdministrador ? "Buzón De Reportes"
                          : "Crear Reporte"
                 });
                 if (UserApp.RolId == (int)TipoRol.SuperAdministrador)

@@ -197,8 +197,10 @@ namespace lestoma.App.ViewModels.Componentes
                         ActividadId = _actividad.Id
                     };
                     var queryString = Reutilizables.GenerateQueryString(upaModuleActivityFilterRequest);
+
                     ResponseDTO direcciones = await _apiService.GetListAsyncWithToken<List<int>>(URL_API,
-                                                $"componentes/direcciones-de-registro-upa-modulo{queryString}", TokenUser.Token);
+                        $"componentes/direcciones-de-registro-upa-modulo{queryString}", TokenUser.Token);
+
                     DireccionesNoUtilizadas = new ObservableCollection<int>((List<int>)direcciones.Data);
                 }
             }

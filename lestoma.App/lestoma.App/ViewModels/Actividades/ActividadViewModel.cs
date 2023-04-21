@@ -26,7 +26,7 @@ namespace lestoma.App.ViewModels.Actividades
             _actividades = new ObservableCollection<ActividadDTO>();
             EditCommand = new Command<object>(ActividadSelected, CanNavigate);
             DeleteCommand = new Command<object>(DeleteClicked, CanNavigate);
-            ServiceListadoActividades();
+            LoadActividades();
         }
         public Command EditCommand { get; set; }
 
@@ -127,14 +127,13 @@ namespace lestoma.App.ViewModels.Actividades
 
         public void LoadActividades()
         {
-            if (_apiService.CheckConnection())
-            {
-                ServiceListadoActividades();
-            }
-            else
+            if (!_apiService.CheckConnection())
             {
                 AlertNoInternetConnection();
+                return;
+
             }
+            ServiceListadoActividades();
         }
 
 

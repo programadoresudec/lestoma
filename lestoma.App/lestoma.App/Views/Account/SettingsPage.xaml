@@ -246,40 +246,6 @@
                     TextColor="{DynamicResource Gray-800}"
                     VerticalOptions="Center"
                     VerticalTextAlignment="Center" />
-
-                <!--  Grid for Help label and navigation bar icon  -->
-                <controls:TapAnimationGrid
-                    BackgroundColor="{DynamicResource Gray-Bg}"
-                    ColumnDefinitions="Auto, *, Auto"
-                    ColumnSpacing="0"
-                    Command="{Binding HelpCommand}"
-                    RowSpacing="0"
-                    Tapped="False">
-
-                    <!--  help icon  -->
-                    <Label
-                        Grid.Column="0"
-                        Margin="16,0,0,0"
-                        FontFamily="Fontello"
-                        Style="{StaticResource IconLabelStyle}"
-                        Text="{StaticResource IconHelpCircled}" />
-                    <!--  Help text label  -->
-                    <Label
-                        Grid.Column="1"
-                        Margin="16,12"
-                        FontFamily="Montserrat-Medium"
-                        HorizontalOptions="Start"
-                        Style="{StaticResource TitleLabelStyle}"
-                        Text="¿Qué es Lestoma?"
-                        VerticalOptions="Center" />
-                    <!--  Navigation icon  -->
-                    <Label
-                        Grid.Column="2"
-                        Margin="16,8"
-                        Style="{StaticResource IconLabelStyle}"
-                        Text="{StaticResource Next}" />
-                </controls:TapAnimationGrid>
-                <BoxView Style="{StaticResource HorizontalSeparatorStyle}" />
                 <BoxView Style="{StaticResource HorizontalSeparatorStyle}" />
                 <controls:TapAnimationGrid
                     BackgroundColor="{DynamicResource Gray-Bg}"
@@ -312,7 +278,7 @@
                         Style="{StaticResource IconLabelStyle}"
                         Text="{StaticResource Next}" />
                 </controls:TapAnimationGrid>
-                
+
                 <BoxView Style="{StaticResource HorizontalSeparatorStyle}" />
                 <controls:TapAnimationGrid
                     BackgroundColor="{DynamicResource Gray-Bg}"

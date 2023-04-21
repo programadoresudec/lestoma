@@ -60,14 +60,12 @@ namespace lestoma.App.ViewModels.Usuarios
 
         private void LoadUsers()
         {
-            if (_apiService.CheckConnection())
-            {
-                ConsumoService();
-            }
-            else
+            if (!_apiService.CheckConnection())
             {
                 AlertNoInternetConnection();
+                return;
             }
+            ConsumoService();
         }
 
         private async void UserSelected(object objeto)

@@ -60,10 +60,8 @@
                        Text="{StaticResource Error}" />
                 </Grid>
             </border:SfBorder>
-            <buttons:SfButton
-            HorizontalOptions="CenterAndExpand"
-            Command="{Binding CreateOrEditCommand}"
-             CornerRadius="4"
+            <buttons:SfButton Command="{Binding CreateOrEditCommand}"
+             HorizontalOptions="FillAndExpand" Margin="20"
              Style="{StaticResource LestomaGradientButtonStyle}"
              Text="Guardar" />
         </StackLayout>

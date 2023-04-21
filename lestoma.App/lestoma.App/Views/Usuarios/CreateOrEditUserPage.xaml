@@ -56,7 +56,7 @@
                                         <!--  Label to display error message  -->
                                         <Label
                                             x:Name="NameValidationLabel"
-                                             Margin="20,10,10,50" Grid.Row="0"
+                                             Margin="20,5,10,50" Grid.Row="0"
                                             IsVisible="{Binding Name.IsValid, Converter={StaticResource InverseBoolConverter}}"
                                             Style="{StaticResource SimpleLabelStyle}"
                                             Text="{Binding Name.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
@@ -93,7 +93,7 @@
                                         <!--  Label to display error message  -->
                                         <Label
                                             x:Name="LastNameValidationLabel"
-                                             Margin="20,10,10,50"
+                                             Margin="20,5,10,50"
                                             IsVisible="{Binding LastName.IsValid, Converter={StaticResource InverseBoolConverter}}"
                                             Style="{StaticResource SimpleLabelStyle}"
                                             Text="{Binding LastName.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
@@ -238,7 +238,7 @@
                                         <!--  Label to display error message  -->
                                         <Label
                                             x:Name="RolValidationLabel"
-                                             Margin="20,10,10,50"
+                                             Margin="20,5,10,50"
                                             IsVisible="{Binding Rol.IsValid, Converter={StaticResource InverseBoolConverter}}"
                                             Style="{StaticResource SimpleLabelStyle}"
                                             Text="{Binding Rol.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
@@ -254,23 +254,22 @@
                                         </inputLayout:SfTextInputLayout>
                                         <!--  Label to display error icon  -->
                                         <Label
-                                        Grid.Column="1"  Margin="15,10,15,0"
+                                        Grid.Column="1" Margin="15,10,15,0"
                                         IsVisible="{Binding Path=IsVisible, Source={x:Reference RolValidationLabel}}"
                                         Style="{StaticResource ErrorIconLabelStyle}"
                                         Text="{StaticResource Error}" />
                                     </Grid>
                                 </border:SfBorder>
                             </StackLayout>
-
-                            <!--  Sign-up button  -->
-                            <buttons:SfButton
-                            Command="{Binding CreateOrEditCommand}"
-                            HorizontalOptions="FillAndExpand"
-                            Style="{StaticResource LestomaGradientButtonStyle}"
-                            Text="GUARDAR" />
                         </StackLayout>
                     </StackLayout>
                 </ScrollView>
+                <!--  Sign-up button  -->
+                <buttons:SfButton
+                            Command="{Binding CreateOrEditCommand}"
+                            HorizontalOptions="FillAndExpand" Margin="20"
+                            Style="{StaticResource LestomaGradientButtonStyle}"
+                            Text="GUARDAR" />
             </StackLayout>
             <busyindicator:SfBusyIndicator AnimationType="Cupertino" 
                                        AbsoluteLayout.LayoutBounds=".5,.5,.5,.5"

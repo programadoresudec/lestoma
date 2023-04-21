@@ -1,10 +1,12 @@
-﻿using lestoma.App.Views.Buzon;
+﻿using Acr.UserDialogs;
+using lestoma.App.Views.Buzon;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using Prism.Navigation;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Buzon
@@ -20,7 +22,47 @@ namespace lestoma.App.ViewModels.Buzon
             _apiService = apiService;
             Title = "Listado de buzón de reportes";
             SeeMoreInfoCommand = new Command<object>(OnSeeMoreInfo, CanNavigate);
+            MoreReportsCommand = new Command(LoadMoreBuzonDeReportesAsync);
             LoadBuzonDeReportesAsync();
+        }
+
+        private async void LoadMoreBuzonDeReportesAsync()
+        {
+            try
+            {
+                if (!_apiService.CheckConnection())
+                {
+                    AlertNoInternetConnection();
+                    return;
+                }
+                UserDialogs.Instance.ShowLoading("Cargando...");
+                if (_reportesDelBuzon.Any())
+                {
+                    ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<BuzonDTO>(URL_API,
+                   $"buzon-de-reportes/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
+                    if (!response.IsExito)
+                    {
+                        AlertError(response.MensajeHttp);
+                        return;
+                    }
+                    Paginador<BuzonDTO> paginador = (Paginador<BuzonDTO>)response.Data;
+                    IsRefreshing = paginador.HasNextPage;
+                    foreach (var item in paginador.Datos)
+                    {
+                        ReportesDelBuzon.Add(item);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
+            {
+                Page++;
+                UserDialogs.Instance.HideLoading();
+            }
         }
 
         public ObservableCollection<BuzonDTO> ReportesDelBuzon
@@ -29,6 +71,7 @@ namespace lestoma.App.ViewModels.Buzon
             set => SetProperty(ref _reportesDelBuzon, value);
         }
 
+        public Command MoreReportsCommand { get; set; }
         public Command<object> SeeMoreInfoCommand
         {
             get => itemTap;
@@ -53,26 +96,29 @@ namespace lestoma.App.ViewModels.Buzon
 
         private async void LoadBuzonDeReportesAsync()
         {
-            PageSize = 100;
             try
             {
-                if (_apiService.CheckConnection())
-                {
-                    IsBusy = true;
-                    ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<BuzonDTO>(URL_API,
-                        $"buzon-de-reportes/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
-                    if (!response.IsExito)
-                    {
-                        AlertError(response.MensajeHttp);
-                        return;
-                    }
-                    Paginador<BuzonDTO> paginador = (Paginador<BuzonDTO>)response.Data;
-                    ReportesDelBuzon = new ObservableCollection<BuzonDTO>(paginador.Datos);
-                }
-                else
+                if (!_apiService.CheckConnection())
                 {
                     AlertNoInternetConnection();
+                    return;
                 }
+                IsBusy = true;
+                ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<BuzonDTO>(URL_API,
+                    $"buzon-de-reportes/paginar?Page={Page}&&PageSize={PageSize}", TokenUser.Token);
+                if (!response.IsExito)
+                {
+                    AlertError(response.MensajeHttp);
+                    return;
+                }
+                Paginador<BuzonDTO> paginador = (Paginador<BuzonDTO>)response.Data;
+                if (paginador.TotalDatos == 0)
+                {
+                    AlertWarning("No hay reportes en el buzón");
+                    return;
+                }
+                IsRefreshing = paginador.HasNextPage;
+                ReportesDelBuzon = new ObservableCollection<BuzonDTO>(paginador.Datos);
             }
             catch (Exception ex)
             {
@@ -80,6 +126,7 @@ namespace lestoma.App.ViewModels.Buzon
             }
             finally
             {
+                Page++;
                 IsBusy = false;
             }
         }

@@ -6,10 +6,12 @@ using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
+using lestoma.CommonUtils.Requests.Filters;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace lestoma.App.ViewModels.Componentes
@@ -32,6 +34,7 @@ namespace lestoma.App.ViewModels.Componentes
             DeleteCommand = new Command<object>(DeleteClicked, CanNavigate);
             _componentes = new ObservableCollection<ComponenteDTO>();
             LoadComponents();
+            MoreComponentsCommand = new Command(LoadMoreComponents);
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)
@@ -76,6 +79,7 @@ namespace lestoma.App.ViewModels.Componentes
         public Command EditCommand { get; set; }
         public Command DeleteCommand { get; set; }
         public Command VerEstadoCommand { get; set; }
+        public Command MoreComponentsCommand { get; set; }
 
         public Command AddCommand
         {
@@ -117,24 +121,20 @@ namespace lestoma.App.ViewModels.Componentes
             try
             {
                 UserDialogs.Instance.ShowLoading("Eliminando...");
-                if (_apiService.CheckConnection())
-                {
-                    ResponseDTO response = await _apiService.DeleteAsyncWithToken(URL_API,
-                        "componentes", detalle.Id, TokenUser.Token);
-                    if (response.IsExito)
-                    {
-                        AlertSuccess(response.MensajeHttp);
-                        ListarComponentesAll();
-                    }
-                    else
-                    {
-                        AlertWarning(response.MensajeHttp);
-                    }
-                }
-                else
+                if (!_apiService.CheckConnection())
                 {
                     AlertNoInternetConnection();
+                    return;
                 }
+                ResponseDTO response = await _apiService.DeleteAsyncWithToken(URL_API,
+                    "componentes", detalle.Id, TokenUser.Token);
+                if (!response.IsExito)
+                {
+                    AlertWarning(response.MensajeHttp);
+                    return;
+                }
+                AlertSuccess(response.MensajeHttp);
+                ListarComponentesAll();
             }
             catch (Exception ex)
             {
@@ -197,23 +197,30 @@ namespace lestoma.App.ViewModels.Componentes
 
         private async void ListarComponentesAll()
         {
-            IsBusy = true;
             try
             {
+                Page = 1;
                 if (_apiService.CheckConnection())
                 {
+                    IsBusy = true;
                     Componentes.Clear();
-                    ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<ComponenteDTO>(URL_API, $"componentes/paginar", TokenUser.Token);
+                    var ComponentFilterRequest = new ComponentFilterRequest
+                    {
+                        Page = this.Page,
+                        PageSize = this.PageSize
+                    };
+                    string querystring = Reutilizables.GenerateQueryString(ComponentFilterRequest);
+                    ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<ComponenteDTO>(URL_API, $"componentes/paginar{querystring}", TokenUser.Token);
                     if (response.IsExito)
                     {
                         var paginador = (Paginador<ComponenteDTO>)response.Data;
-                        if (paginador.Datos.Count > 0)
+                        if (paginador.Datos.Any())
                         {
+                            IsRefreshing = paginador.HasNextPage;
                             Componentes = new ObservableCollection<ComponenteDTO>(paginador.Datos);
                         }
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -221,6 +228,7 @@ namespace lestoma.App.ViewModels.Componentes
             }
             finally
             {
+                Page++;
                 IsBusy = false;
             }
         }
@@ -228,25 +236,31 @@ namespace lestoma.App.ViewModels.Componentes
 
         private async void ListarComponentesUpaId(Guid id)
         {
-            IsBusy = true;
             try
             {
+                Page = 1;
                 if (_apiService.CheckConnection())
                 {
+                    IsBusy = true;
                     Componentes.Clear();
-                    ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<ComponenteDTO>(URL_API,
-                        $"componentes/paginar?UpaId={id}", TokenUser.Token);
-                    if (response.IsExito)
+                    var ComponentFilterRequest = new ComponentFilterRequest
                     {
-                        var paginador = (Paginador<ComponenteDTO>)response.Data;
-                        if (paginador.Datos.Count > 0)
-                        {
-                            Componentes = new ObservableCollection<ComponenteDTO>(paginador.Datos);
-                        }
-                    }
-                    else
+                        Page = this.Page,
+                        PageSize = this.PageSize,
+                        UpaId = id
+                    };
+                    string querystring = Reutilizables.GenerateQueryString(ComponentFilterRequest);
+                    ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<ComponenteDTO>(URL_API, $"componentes/paginar{querystring}", TokenUser.Token);
+                    if (!response.IsExito)
                     {
                         AlertWarning(response.MensajeHttp);
+                        return;
+                    }
+                    var paginador = (Paginador<ComponenteDTO>)response.Data;
+                    if (paginador.Datos.Any())
+                    {
+                        IsRefreshing = paginador.HasNextPage;
+                        Componentes = new ObservableCollection<ComponenteDTO>(paginador.Datos);
                     }
                 }
             }
@@ -256,7 +270,48 @@ namespace lestoma.App.ViewModels.Componentes
             }
             finally
             {
+                Page++;
                 IsBusy = false;
+            }
+        }
+
+        private async void LoadMoreComponents()
+        {
+            try
+            {
+                if (_apiService.CheckConnection())
+                {
+                    UserDialogs.Instance.ShowLoading("Cargando...");
+                    var ComponentFilterRequest = new ComponentFilterRequest
+                    {
+                        Page = this.Page,
+                        PageSize = this.PageSize,
+                        UpaId = Upa != null ? Upa.Id : Guid.Empty
+                    };
+                    string querystring = Reutilizables.GenerateQueryString(ComponentFilterRequest);
+                    ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<ComponenteDTO>(URL_API, $"componentes/paginar{querystring}", TokenUser.Token);
+                    if (response.IsExito)
+                    {
+                        var paginador = (Paginador<ComponenteDTO>)response.Data;
+                        if (paginador.Datos.Any())
+                        {
+                            foreach (var item in paginador.Datos)
+                            {
+                                Componentes.Add(item);
+                            }
+                            IsRefreshing = paginador.HasNextPage;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
+            {
+                Page++;
+                UserDialogs.Instance.HideLoading();
             }
         }
     }

@@ -33,7 +33,7 @@
                         <Frame Margin="0,5,0,5" CornerRadius="10" BackgroundColor="{StaticResource PantoneGrisLight}">
                             <StackLayout Orientation="Vertical" VerticalOptions="Center">
                                 <Label Text="{Binding Nombre}" FontSize="Body" HorizontalTextAlignment="Center"
-                                           TextColor="{x:DynamicResource PantoneVerdeSecond}" FontAttributes="Bold"/>
+                                           TextColor="{x:DynamicResource PantoneVerdeSecond}" FontFamily="Montserrat-Bold"/>
                                 <Label FontFamily="Montserrat-Bold" Text="Auditoría" TextColor="{StaticResource PantoneGris}" FontSize="15"/>
                                 <StackLayout Margin="15,0,0,0">
                                     <Label>
