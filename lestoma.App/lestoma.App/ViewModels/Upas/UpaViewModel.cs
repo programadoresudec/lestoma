@@ -154,7 +154,13 @@ namespace lestoma.App.ViewModels.Upas
             {
                 IsBusy = true;
                 Upas = new ObservableCollection<UpaDTO>();
-                ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<UpaDTO>(URL_API, $"upas/paginar", TokenUser.Token);
+                var paginacion = new Paginacion
+                {
+                    Page = this.Page,
+                    PageSize = this.PageSize
+                };
+                string querystring = Reutilizables.GenerateQueryString(paginacion);
+                ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<UpaDTO>(URL_API, $"upas/paginar{querystring}", TokenUser.Token);
                 if (!response.IsExito)
                 {
                     AlertWarning(response.MensajeHttp);
@@ -184,8 +190,13 @@ namespace lestoma.App.ViewModels.Upas
                 if (_apiService.CheckConnection())
                 {
                     UserDialogs.Instance.ShowLoading("Cargando...");
-                    Upas = new ObservableCollection<UpaDTO>();
-                    ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<UpaDTO>(URL_API, $"upas/paginar", TokenUser.Token);
+                    var paginacion = new Paginacion
+                    {
+                        Page = this.Page,
+                        PageSize = this.PageSize
+                    };
+                    string querystring = Reutilizables.GenerateQueryString(paginacion);
+                    ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<UpaDTO>(URL_API, $"upas/paginar{querystring}", TokenUser.Token);
                     if (!response.IsExito)
                     {
                         AlertWarning(response.MensajeHttp);

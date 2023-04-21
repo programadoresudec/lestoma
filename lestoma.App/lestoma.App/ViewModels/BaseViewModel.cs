@@ -108,7 +108,7 @@ namespace lestoma.App.ViewModels
             HelpCommand = new Command(ShowHelpClicked);
             Address = MovilSettings.MacBluetooth;
             _pageNumber = 1;
-            _pageSize = 2;
+            _pageSize = 10;
         }
         #endregion
 
