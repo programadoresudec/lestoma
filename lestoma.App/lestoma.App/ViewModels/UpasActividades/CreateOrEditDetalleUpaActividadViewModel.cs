@@ -175,7 +175,7 @@ namespace lestoma.App.ViewModels.UpasActividades
                 if (!_apiService.CheckConnection())
                 {
                     AlertNoInternetConnection();
-                    await _navigationService.GoBackAsync();
+                    await NavigationService.GoBackAsync();
                 }
                 ResponseDTO actividades = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API, "actividades/listar-nombres", TokenUser.Token);
                 ResponseDTO usuarios;
@@ -199,11 +199,11 @@ namespace lestoma.App.ViewModels.UpasActividades
                           "Información", "Aceptar","");
                     if (check)
                     {
-                        await _navigationService.GoBackAsync();
+                        await NavigationService.GoBackAsync();
                     }
                     else
                     {
-                        await _navigationService.GoBackAsync();
+                        await NavigationService.GoBackAsync();
                     }
                 }
                 if (detalleUpaActividad == null)
@@ -313,7 +313,7 @@ namespace lestoma.App.ViewModels.UpasActividades
 
                 AlertSuccess(response.MensajeHttp);
                 var parameters = new NavigationParameters { { Constants.REFRESH, true } };
-                await _navigationService.GoBackAsync(parameters);
+                await NavigationService.GoBackAsync(parameters);
             }
             catch (Exception ex)
             {
@@ -380,7 +380,7 @@ namespace lestoma.App.ViewModels.UpasActividades
 
                     AlertSuccess(response.MensajeHttp);
                     var parameters = new NavigationParameters { { Constants.REFRESH, true } };
-                    await _navigationService.GoBackAsync(parameters);
+                    await NavigationService.GoBackAsync(parameters);
                 }
                 else
                     return;

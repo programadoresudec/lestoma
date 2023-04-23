@@ -60,7 +60,7 @@ namespace lestoma.App.ViewModels.Account
             {
                 return new Command(async () =>
                 {
-                    await _navigationService.NavigateAsync(nameof(MACBluetoothPopupPage));
+                    await NavigationService.NavigateAsync(nameof(MACBluetoothPopupPage));
                 });
             }
         }
@@ -75,7 +75,7 @@ namespace lestoma.App.ViewModels.Account
                     {
                          { "TypeSyncronization", TipoSincronizacion.MigrateDataOnlineToDevice }
                     };
-                    await _navigationService.NavigateAsync(nameof(SyncronizarDataPopupPage), parameters);
+                    await NavigationService.NavigateAsync(nameof(SyncronizarDataPopupPage), parameters);
                 });
             }
         }
@@ -90,7 +90,7 @@ namespace lestoma.App.ViewModels.Account
                     {
                          { "TypeSyncronization", TipoSincronizacion.MigrateDataOfflineToServer }
                     };
-                    await _navigationService.NavigateAsync(nameof(SyncronizarDataPopupPage), parameters);
+                    await NavigationService.NavigateAsync(nameof(SyncronizarDataPopupPage), parameters);
                 });
             }
         }
@@ -105,7 +105,7 @@ namespace lestoma.App.ViewModels.Account
  
         private async void ChangePasswordClicked(object obj)
         {
-            await _navigationService.NavigateAsync($"{nameof(ChangePasswordPage)}");
+            await NavigationService.NavigateAsync($"{nameof(ChangePasswordPage)}");
         }
 
         private void HelpClicked(object obj)
@@ -115,7 +115,7 @@ namespace lestoma.App.ViewModels.Account
 
         private async void LogoutClicked(object obj)
         {
-            await _navigationService.NavigateAsync($"{nameof(SignOutPopupPage)}");
+            await NavigationService.NavigateAsync($"{nameof(SignOutPopupPage)}");
         }
         private void SwitchStateChanged(object obj)
         {

@@ -71,7 +71,7 @@ namespace lestoma.App.ViewModels.Upas
             {
                 return new Command(async () =>
                 {
-                    await _navigationService.NavigateAsync(nameof(CreateEditProtocolPopupPage));
+                    await NavigationService.NavigateAsync(nameof(CreateEditProtocolPopupPage));
                 });
             }
         }
@@ -175,7 +175,7 @@ namespace lestoma.App.ViewModels.Upas
                         }
                         AlertSuccess(respuesta.MensajeHttp);
                         var parameters = new NavigationParameters { { Constants.REFRESH, true } };
-                        await _navigationService.GoBackAsync(parameters);
+                        await NavigationService.GoBackAsync(parameters);
                     }
                     else
                     {
@@ -187,7 +187,7 @@ namespace lestoma.App.ViewModels.Upas
                         }
                         AlertSuccess(respuesta.MensajeHttp);
                         var parameters = new NavigationParameters { { Constants.REFRESH, true } };
-                        await _navigationService.GoBackAsync(parameters);
+                        await NavigationService.GoBackAsync(parameters);
                     }
                 }
             }

@@ -43,7 +43,7 @@ namespace lestoma.App.ViewModels
                 if (protocolo == null)
                     return;
                 var parameters = new NavigationParameters { { "dataProtocolo", protocolo } };
-                await _navigationService.NavigateAsync($"{nameof(CreateEditProtocolPopupPage)}", parameters);
+                await NavigationService.NavigateAsync($"{nameof(CreateEditProtocolPopupPage)}", parameters);
             }
             catch (System.Exception ex)
             {

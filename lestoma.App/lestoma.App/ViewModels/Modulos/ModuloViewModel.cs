@@ -45,7 +45,7 @@ namespace lestoma.App.ViewModels.Modulos
             {
                 return new Command(async () =>
                 {
-                    await _navigationService.NavigateAsync(nameof(CreateOrEditModuloPage), null, useModalNavigation: true, true);
+                    await NavigationService.NavigateAsync(nameof(CreateOrEditModuloPage), null, useModalNavigation: true, true);
                 });
             }
         }
@@ -74,7 +74,7 @@ namespace lestoma.App.ViewModels.Modulos
             {
                 { "modulo", salida }
             };
-            await _navigationService.NavigateAsync(nameof(CreateOrEditModuloPage), parameters, useModalNavigation: true, true);
+            await NavigationService.NavigateAsync(nameof(CreateOrEditModuloPage), parameters, useModalNavigation: true, true);
 
         }
         private void LoadModulos()

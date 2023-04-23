@@ -94,12 +94,12 @@ namespace lestoma.App.ViewModels.Upas
                     }
                     AlertSuccess(respuesta.MensajeHttp);
                     var parameters = new NavigationParameters { { Constants.REFRESH, true } };
-                    await _navigationService.ClearPopupStackAsync(parameters);
+                    await NavigationService.ClearPopupStackAsync(parameters);
                 }
                 else
                 {
                     var parameters = new NavigationParameters { { "protocolo", _protocolo } };
-                    await _navigationService.GoBackAsync(parameters);
+                    await NavigationService.GoBackAsync(parameters);
                 }
             }
             catch (Exception ex)

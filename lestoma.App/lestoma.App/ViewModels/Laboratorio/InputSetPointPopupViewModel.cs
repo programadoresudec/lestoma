@@ -68,7 +68,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                     { "tramaComponente", request }
                 };
 
-                await _navigationService.NavigateAsync(nameof(SetPointPage), parameters);
+                await NavigationService.NavigateAsync(nameof(SetPointPage), parameters);
             }
             catch (Exception ex)
             {

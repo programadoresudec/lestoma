@@ -137,7 +137,7 @@ namespace lestoma.App.ViewModels.Account
                     MovilSettings.IsLogin = true;
                     ResponseDTO hasNotifications = await _apiService.PostWithoutBodyAsyncWithToken(URL_API, "Account/is-active-notifications-by-mail", token.Token);
                     MovilSettings.IsOnNotificationsViaMail = ParsearData<HasNotificationsDTO>(hasNotifications).IsActive;
-                    await _navigationService.NavigateAsync($"/{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
+                    await NavigationService.NavigateAsync($"/{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
 
                 }
                 catch (Exception ex)
@@ -154,13 +154,13 @@ namespace lestoma.App.ViewModels.Account
         }
         private async void SignUpClicked(object obj)
         {
-            await _navigationService.NavigateAsync(nameof(RegistroPage));
+            await NavigationService.NavigateAsync(nameof(RegistroPage));
         }
 
 
         private async void ForgotPasswordClicked(object obj)
         {
-            await _navigationService.NavigateAsync(nameof(ForgotPasswordPage));
+            await NavigationService.NavigateAsync(nameof(ForgotPasswordPage));
         }
         #endregion
     }

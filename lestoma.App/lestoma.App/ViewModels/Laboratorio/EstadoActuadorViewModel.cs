@@ -6,6 +6,7 @@ using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
+using lestoma.DatabaseOffline.IConfiguration;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
@@ -21,16 +22,17 @@ namespace lestoma.App.ViewModels.Laboratorio
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly CancellationToken _cancellationToken;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IApiService _apiService;
         private float? _valorOnOff;
         private LaboratorioRequest _laboratorioRequest;
         private TramaComponenteRequest _componenteRequest;
         private bool _isEnabled;
         private Boolean? _IsOn;
-        public EstadoActuadorViewModel(INavigationService navigationService, IApiService apiService) :
+        public EstadoActuadorViewModel(INavigationService navigationService, IApiService apiService, IUnitOfWork unitOfWork) :
             base(navigationService)
         {
-
+            _unitOfWork = unitOfWork;
             _apiService = apiService;
             _componenteRequest = new TramaComponenteRequest();
             _laboratorioRequest = new LaboratorioRequest();
@@ -83,17 +85,17 @@ namespace lestoma.App.ViewModels.Laboratorio
         }
         private void StatedSelected(object obj)
         {
-                byte[] bytesFlotante = new byte[4];
-                if (IsOn.HasValue)
-                {
-                    bytesFlotante = Reutilizables.IEEEFloatingPointToByte(IsOn.Value ? 1 : 0);
-                }
-                TramaComponente.TramaOchoBytes[4] = bytesFlotante[0];
-                TramaComponente.TramaOchoBytes[5] = bytesFlotante[1];
-                TramaComponente.TramaOchoBytes[6] = bytesFlotante[2];
-                TramaComponente.TramaOchoBytes[7] = bytesFlotante[3];
-                var tramaAEnviar = Reutilizables.TramaConCRC16Modbus(new List<byte>(TramaComponente.TramaOchoBytes));
-                SendTrama(tramaAEnviar, true);
+            byte[] bytesFlotante = new byte[4];
+            if (IsOn.HasValue)
+            {
+                bytesFlotante = Reutilizables.IEEEFloatingPointToByte(IsOn.Value ? 1 : 0);
+            }
+            TramaComponente.TramaOchoBytes[4] = bytesFlotante[0];
+            TramaComponente.TramaOchoBytes[5] = bytesFlotante[1];
+            TramaComponente.TramaOchoBytes[6] = bytesFlotante[2];
+            TramaComponente.TramaOchoBytes[7] = bytesFlotante[3];
+            var tramaAEnviar = Reutilizables.TramaConCRC16Modbus(new List<byte>(TramaComponente.TramaOchoBytes));
+            SendTrama(tramaAEnviar, true);
         }
         private async void SendTrama(List<byte> tramaEnviada, bool EditState = false)
         {
@@ -204,7 +206,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                 {
                     SeeError(ex);
                     throw;
-                }       
+                }
             }
         }
 
@@ -254,16 +256,15 @@ namespace lestoma.App.ViewModels.Laboratorio
                 _laboratorioRequest.TramaEnviada = TramaEnviada;
                 _laboratorioRequest.TramaRecibida = tramaRecibida;
                 _laboratorioRequest.ComponenteId = _componenteRequest.ComponenteId;
+                _laboratorioRequest.SetPointOut = Valor;
+                if (EditState)
+                {
+                    _laboratorioRequest.SetPointIn = IsOn.Value ? 1 : 0;
+                }
                 if (_apiService.CheckConnection())
                 {
                     LestomaLog.Normal("Enviando al servidor.");
                     _laboratorioRequest.EstadoInternet = true;
-                    _laboratorioRequest.SetPointOut = Valor;
-                    if (EditState)
-                    {
-                        _laboratorioRequest.SetPointIn = IsOn.Value ? 1 : 0;
-
-                    }
                     UserDialogs.Instance.ShowLoading("Enviando al servidor...");
                     ResponseDTO response = await _apiService.PostAsyncWithToken(URL_API, "laboratorio-lestoma/crear-detalle",
                         _laboratorioRequest, TokenUser.Token);
@@ -276,10 +277,15 @@ namespace lestoma.App.ViewModels.Laboratorio
                 }
                 else
                 {
-                    LestomaLog.Normal("Guardando en bd del dispositivo.");
-                    _laboratorioRequest.EstadoInternet = false;
-                    _laboratorioRequest.FechaCreacionDispositivo = DateTime.Now;
                     UserDialogs.Instance.ShowLoading("Guardando en el dispositivo...");
+                    LestomaLog.Normal("Guardando en bd del dispositivo.");
+                    var response = await _unitOfWork.Laboratorio.SaveDataOffline(_laboratorioRequest);
+                    if (!response.IsExito)
+                    {
+                        AlertError(response.MensajeHttp);
+                        return;
+                    }
+                    AlertSuccess(response.MensajeHttp);
                 }
             }
             catch (Exception ex)

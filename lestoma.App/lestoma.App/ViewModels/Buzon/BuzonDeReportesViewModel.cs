@@ -90,7 +90,7 @@ namespace lestoma.App.ViewModels.Buzon
             {
                 { "BuzonId",  buzon.Id}
             };
-            await _navigationService.NavigateAsync($"{nameof(MoreInfoPopupPage)}", parameters);
+            await NavigationService.NavigateAsync($"{nameof(MoreInfoPopupPage)}", parameters);
         }
 
 

@@ -108,7 +108,7 @@ namespace lestoma.App.ViewModels.Componentes
 
                 MovilSettings.EstadoComponente = JsonConvert.SerializeObject(EstadoComponente);
                 var parameters = new NavigationParameters { { Constants.REFRESH, true } };
-                await _navigationService.GoBackAsync(parameters);
+                await NavigationService.GoBackAsync(parameters);
             }
             catch (Exception ex)
             {

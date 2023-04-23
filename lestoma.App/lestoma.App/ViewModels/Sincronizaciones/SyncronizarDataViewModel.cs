@@ -4,12 +4,14 @@ using lestoma.CommonUtils.DTOs.Sync;
 using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
+using lestoma.CommonUtils.Requests;
 using lestoma.DatabaseOffline.IConfiguration;
 using Newtonsoft.Json;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -20,7 +22,7 @@ namespace lestoma.App.ViewModels.Sincronizaciones
 
         private readonly IApiService _apiService;
         private TipoSincronizacion _tipoSincronizacion;
-        private IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
         private bool _isVisible;
         public SyncronizarDataViewModel(INavigationService navigationService, IApiService apiService, IUnitOfWork unitOfWork)
              : base(navigationService)
@@ -77,14 +79,31 @@ namespace lestoma.App.ViewModels.Sincronizaciones
             var count = await _unitOfWork.Laboratorio.ExistData();
             if (!count)
             {
-                AlertWarning("No existe datos dentro del dispositivo móvil para migrar al servidor en la nube.");
+                AlertWarning("No hay datos nuevos para migrar al servidor en la nube.");
                 return;
             }
-            var check = await UserDialogs.Instance.ConfirmAsync("¿Está seguro de sincronizar los datos al servidor en la nube?",
+            var check = await UserDialogs.Instance.ConfirmAsync($"¿Está seguro de sincronizar los datos al servidor en la nube?, actualmente tiene {count} registros de tramas.",
                      "Alerta", "Aceptar", "Cancelar");
             if (check)
             {
-
+                if (!_apiService.CheckConnection())
+                {
+                    AlertNoInternetConnection();
+                    return;
+                }
+                _ = Task.Run(async () =>
+                {
+                    IEnumerable<LaboratorioRequest> datosOfOffline = await _unitOfWork.Laboratorio.GetDataOffline();
+                    var response = await _apiService.PostAsyncWithToken(URL_API, "sincronizaciones-lestoma/bulk-sync-data-offline", datosOfOffline, TokenUser.Token);
+                    if (!response.IsExito)
+                    {
+                        LestomaLog.Error(response.MensajeHttp);
+                        return;
+                    }
+                    await _unitOfWork.Laboratorio.ChangeIsMigrated(datosOfOffline.Select(x => x.Id));
+                });
+                await NavigationService.GoBackAsync();
+                AlertSuccess("Se esta migrando los datos al servidor de la nube, recibirá un correo cuando ya haya terminado.", 4);
             }
         }
 
@@ -153,7 +172,7 @@ namespace lestoma.App.ViewModels.Sincronizaciones
                             DependencyService.Resolve<IForegroundService>().StopMyForegroundService();
                         }
                     });
-                    await _navigationService.GoBackAsync();
+                    await NavigationService.GoBackAsync();
                     AlertSuccess("Se esta migrando los datos al dispositivo móvil.", 4);
                 }
             }
@@ -177,7 +196,7 @@ namespace lestoma.App.ViewModels.Sincronizaciones
                         UserDialogs.Instance.ShowLoading("Cancelando...");
                         await Task.Delay(1000);
                         DependencyService.Resolve<IForegroundService>().StopMyForegroundService();
-                        await _navigationService.GoBackAsync();
+                        await NavigationService.GoBackAsync();
                     }
                 }
             }

@@ -1,6 +1,4 @@
 ﻿using lestoma.DatabaseOffline.Repositories.IRepository;
-using Mapster;
-using MapsterMapper;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -43,6 +41,7 @@ namespace lestoma.DatabaseOffline.Repositories.Repository
             try
             {
                 await _dbSet.AddAsync(entidad);
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -54,30 +53,6 @@ namespace lestoma.DatabaseOffline.Repositories.Repository
                 else
                 {
                     Debug.WriteLine($"{nameof(entidad)} no se ha podido agregar: {ex.Message}");
-                }
-            }
-        }
-
-        public async Task Merge(List<T> ListadoEntidad)
-        {
-            try
-            {
-                foreach (var item in ListadoEntidad)
-                {
-                    await Create(item);
-                }
-            }
-            catch (Exception ex)
-            {
-
-                var SQLiteException = GetInnerException<SqliteException>(ex);
-                if (SQLiteException != null)
-                {
-                    Debug.WriteLine($"{nameof(ListadoEntidad)} no se ha podido mezclar: {SQLiteException.Message}");
-                }
-                else
-                {
-                    Debug.WriteLine($"{nameof(ListadoEntidad)} no se ha podido mezclar: {ex.Message}");
                 }
             }
         }

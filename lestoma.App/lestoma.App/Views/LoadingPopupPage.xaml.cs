@@ -7,7 +7,7 @@ namespace lestoma.App.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoadingPopupPage : PopupPage
     {
-        public LoadingPopupPage(AnimationTypes animation = AnimationTypes.HorizontalPulsingBox, string texto = "Cargando...")
+        public LoadingPopupPage(AnimationTypes animation = AnimationTypes.Cupertino, string texto = "Cargando...")
         {
             InitializeComponent();
             BusyIndicator.Title = texto;

@@ -163,7 +163,7 @@ namespace lestoma.App.ViewModels.Account
 
         private async void LoginClicked(object obj)
         {
-            await _navigationService.NavigateAsync(nameof(LoginPage));
+            await NavigationService.NavigateAsync(nameof(LoginPage));
         }
 
         private async void SignUpClicked(object obj)
@@ -185,7 +185,7 @@ namespace lestoma.App.ViewModels.Account
                         ResponseDTO respuesta = await _apiService.PostAsync(URL_API, "Account/register", usuario);
                         if (respuesta.IsExito)
                         {
-                            await _navigationService.GoBackAsync();
+                            await NavigationService.GoBackAsync();
                             await PopupNavigation.Instance.PushAsync(new MessagePopupPage(respuesta.MensajeHttp));
                         }
                         else

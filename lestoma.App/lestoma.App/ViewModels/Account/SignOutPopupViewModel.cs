@@ -23,9 +23,9 @@ namespace lestoma.App.ViewModels.Account
             MovilSettings.IsLogin = false;
             MovilSettings.IsOnSyncToDevice = false;
             await _unitOfWork.EnsureDeletedBD();
-            await _navigationService.NavigateAsync($"/NavigationPage/{nameof(LoginPage)}");
+            await NavigationService.NavigateAsync($"/NavigationPage/{nameof(LoginPage)}");
         }
         private async void CancelarCommandExecuted() =>
-            await _navigationService.GoBackAsync();
+            await NavigationService.GoBackAsync();
     }
 }

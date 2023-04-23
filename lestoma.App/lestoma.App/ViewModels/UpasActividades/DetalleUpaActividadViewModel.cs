@@ -33,7 +33,7 @@ namespace lestoma.App.ViewModels.UpasActividades
             {
                 return new Command(async () =>
                 {
-                    await _navigationService.NavigateAsync(nameof(CreateOrEditDetalleUpaActividadPage));
+                    await NavigationService.NavigateAsync(nameof(CreateOrEditDetalleUpaActividadPage));
                 });
             }
         }
@@ -71,7 +71,7 @@ namespace lestoma.App.ViewModels.UpasActividades
             {
                 { "detalleUpaActividad", detalleUpaActividad }
             };
-            await _navigationService.NavigateAsync(nameof(CreateOrEditDetalleUpaActividadPage), parameters);
+            await NavigationService.NavigateAsync(nameof(CreateOrEditDetalleUpaActividadPage), parameters);
         }
         private void LoadDetalle()
         {
@@ -100,7 +100,7 @@ namespace lestoma.App.ViewModels.UpasActividades
             {
                 { "filtroUserUpa", new UpaUserFilterRequest{UpaId = detalle.UpaId, UsuarioId = detalle.UsuarioId } }
             };
-            await _navigationService.NavigateAsync($"{nameof(ActividadesByUsuarioPopupPage)}", parameters);
+            await NavigationService.NavigateAsync($"{nameof(ActividadesByUsuarioPopupPage)}", parameters);
         }
 
         private async void ConsumoService()

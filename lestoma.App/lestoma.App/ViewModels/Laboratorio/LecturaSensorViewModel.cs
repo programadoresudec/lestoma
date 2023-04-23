@@ -5,6 +5,7 @@ using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
+using lestoma.DatabaseOffline.IConfiguration;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
@@ -19,13 +20,15 @@ namespace lestoma.App.ViewModels.Laboratorio
     {
         CancellationTokenSource _cancellationTokenSource;
         CancellationToken _cancellationToken;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IApiService _apiService;
         private float _valorTemperatura;
         private LaboratorioRequest _laboratorioRequest;
         private TramaComponenteRequest _componenteRequest;
-        public LecturaSensorViewModel(INavigationService navigationService, IApiService apiService) :
+        public LecturaSensorViewModel(INavigationService navigationService, IApiService apiService, IUnitOfWork unitOfWork) :
             base(navigationService)
         {
+            _unitOfWork = unitOfWork;
             _apiService = apiService;
             _componenteRequest = new TramaComponenteRequest();
             _laboratorioRequest = new LaboratorioRequest();
@@ -170,12 +173,12 @@ namespace lestoma.App.ViewModels.Laboratorio
                 _laboratorioRequest.TramaEnviada = TramaEnviada;
                 _laboratorioRequest.TramaRecibida = tramaRecibida;
                 _laboratorioRequest.ComponenteId = _componenteRequest.ComponenteId;
+                _laboratorioRequest.SetPointOut = Valor;
                 if (_apiService.CheckConnection())
                 {
                     Debug.WriteLine("Enviando al servidor.");
                     LestomaLog.Normal("Enviando al servidor.");
                     _laboratorioRequest.EstadoInternet = true;
-                    _laboratorioRequest.SetPointOut = Valor;
                     UserDialogs.Instance.ShowLoading("Enviando al servidor...");
                     ResponseDTO response = await _apiService.PostAsyncWithToken(URL_API, "laboratorio-lestoma/crear-detalle",
                         _laboratorioRequest, TokenUser.Token);
@@ -188,10 +191,15 @@ namespace lestoma.App.ViewModels.Laboratorio
                 }
                 else
                 {
-                    LestomaLog.Normal("Guardando en bd del dispositivo.");
-                    _laboratorioRequest.EstadoInternet = false;
-                    _laboratorioRequest.FechaCreacionDispositivo = DateTime.Now;
                     UserDialogs.Instance.ShowLoading("Guardando en el dispositivo...");
+                    LestomaLog.Normal("Guardando en bd del dispositivo.");
+                    ResponseDTO response = await _unitOfWork.Laboratorio.SaveDataOffline(_laboratorioRequest);
+                    if (!response.IsExito)
+                    {
+                        AlertError(response.MensajeHttp);
+                        return;
+                    }
+                    AlertSuccess(response.MensajeHttp);
                 }
             }
             catch (Exception ex)

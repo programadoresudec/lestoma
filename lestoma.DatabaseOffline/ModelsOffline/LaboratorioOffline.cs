@@ -1,7 +1,5 @@
-﻿using lestoma.Entidades.Models;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace lestoma.DatabaseOffline.ModelsOffline
 {
@@ -13,18 +11,12 @@ namespace lestoma.DatabaseOffline.ModelsOffline
         public Guid ComponenteLaboratorioId { get; set; }
         public double? ValorCalculadoTramaEnviada { get; set; }
         public double? ValorCalculadoTramaRecibida { get; set; }
+        [Required(ErrorMessage = "Trama enviada requerido.")]
         public string TramaEnviada { get; set; }
+        [Required(ErrorMessage = "trama recibida requerido.")]
         public string TramaRecibida { get; set; }
-        public bool EstadoInternet { get; set; }
-        [Required(ErrorMessage = "Campo requerido.")]
-        public string Ip { get; set; }
-        [Required(ErrorMessage = "Campo requerido.")]
-        public string Session { get; set; }
-        [Required(ErrorMessage = "Campo requerido.")]
-        public string TipoDeAplicacion { get; set; }
-        [Required(ErrorMessage = "Campo requerido.")]
-        public DateTime FechaCreacionServer { get; set; }
-        [Required(ErrorMessage = "Campo requerido.")]
-        public DateTime FechaCreacionDispositivo { get; set; }
+        public bool EstadoInternet => false;
+        public DateTime FechaCreacionDispositivo => DateTime.Now;
+        public bool IsMigrated { get; set; }
     }
 }

@@ -290,8 +290,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                     return;
                 }
                 var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
-                var componente = lista.ItemData as ComponentePorModuloDTO;
-                if (componente == null)
+                if (!(lista.ItemData is ComponentePorModuloDTO componente))
                     return;
                 var request = new TramaComponenteRequest
                 {
@@ -317,15 +316,15 @@ namespace lestoma.App.ViewModels.Laboratorio
 
                 if (EnumConfig.GetDescription(TipoEstadoComponente.Lectura).Equals(componente.EstadoComponente.TipoEstado))
                 {
-                    await _navigationService.NavigateAsync(nameof(LecturaSensorPage), parameters);
+                    await NavigationService.NavigateAsync(nameof(LecturaSensorPage), parameters);
                 }
                 else if (EnumConfig.GetDescription(TipoEstadoComponente.OnOff).Equals(componente.EstadoComponente.TipoEstado))
                 {
-                    await _navigationService.NavigateAsync(nameof(EstadoActuadorPage), parameters);
+                    await NavigationService.NavigateAsync(nameof(EstadoActuadorPage), parameters);
                 }
                 else if (EnumConfig.GetDescription(TipoEstadoComponente.Ajuste).Equals(componente.EstadoComponente.TipoEstado))
                 {
-                    await _navigationService.NavigateAsync(nameof(InputSetPointPopupPage), parameters);
+                    await NavigationService.NavigateAsync(nameof(InputSetPointPopupPage), parameters);
                 }
             }
             catch (Exception ex)

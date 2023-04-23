@@ -100,7 +100,7 @@ namespace lestoma.App.ViewModels.Reportes
                 {
                 { "filtroFecha", rangos }
             };
-                await _navigationService.GoBackAsync(parameters);
+                await NavigationService.GoBackAsync(parameters);
             }
             catch (Exception ex)
             {

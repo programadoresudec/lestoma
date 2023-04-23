@@ -59,7 +59,7 @@ namespace lestoma.App
 
         protected override async void OnInitialized()
         {
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTI5MzU5QDMxMzkyZTMzMmUzMGZ5cEJxMUFDNHhqS0hEVlVHU3NCTHNsUTNGOGpEM015bjVJQ05hUkpXOWM9");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MTgxMTkxNUAzMjMxMmUzMTJlMzQzMUE0OXFzT3czSy9paFVTQ05DSEpKdENtVXM3YUVmc3FCRGlMV0psY2cyUzA9");
             InitializeComponent();
             if (VersionTracking.IsFirstLaunchEver)
             {

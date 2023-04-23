@@ -1,8 +1,10 @@
 ﻿using lestoma.CommonUtils.DTOs.Sync;
+using lestoma.CommonUtils.Requests;
 using lestoma.DatabaseOffline.ModelsOffline;
 using Mapster;
 using MapsterMapper;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace lestoma.DatabaseOffline
@@ -24,6 +26,12 @@ namespace lestoma.DatabaseOffline
               .Map(dest => dest.Protocolos, src => JsonConvert.SerializeObject(src.Protocolos))
               .Map(dest => dest.DecripcionEstadoJson, src => src.DescripcionEstadoJson)
               .Map(dest => dest.DireccionRegistro, src => src.DireccionRegistro);
+
+            TypeAdapterConfig<LaboratorioOffline, LaboratorioRequest>
+               .NewConfig()
+               .Map(dest => dest.ComponenteId, src => src.ComponenteLaboratorioId)
+               .Map(dest => dest.SetPointIn, src => src.ValorCalculadoTramaEnviada)
+               .Map(dest => dest.SetPointOut, src => src.ValorCalculadoTramaRecibida);
         }
     }
 }

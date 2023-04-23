@@ -61,7 +61,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             {
                 { "ModuloId", modulo.Id }
             };
-            await _navigationService.NavigateAsync(nameof(ComponentesModuloPage), parameters);
+            await NavigationService.NavigateAsync(nameof(ComponentesModuloPage), parameters);
 
         }
         private void LoadModulos()

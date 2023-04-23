@@ -31,7 +31,7 @@ namespace lestoma.App.ViewModels
             }
             MovilSettings.MacBluetooth = _MAC;
             AlertSuccess("Se guardo la MAC satisfactoriamente.");
-            await _navigationService.GoBackAsync();
+            await NavigationService.GoBackAsync();
         }
     }
 }

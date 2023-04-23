@@ -5,6 +5,7 @@ using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
+using lestoma.DatabaseOffline.IConfiguration;
 using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
@@ -22,10 +23,12 @@ namespace lestoma.App.ViewModels.Laboratorio
         CancellationToken _cancellationToken;
         private readonly IApiService _apiService;
         private LaboratorioRequest _laboratorioRequest;
+        private readonly IUnitOfWork _unitOfWork;
         private TramaComponenteSetPointRequest _componenteRequest;
-        public SetPointViewModel(INavigationService navigationService, IApiService apiService) :
+        public SetPointViewModel(INavigationService navigationService, IApiService apiService, IUnitOfWork unitOfWork) :
             base(navigationService)
         {
+            _unitOfWork = unitOfWork;
             _apiService = apiService;
             _componenteRequest = new TramaComponenteSetPointRequest();
             _laboratorioRequest = new LaboratorioRequest();
@@ -77,7 +80,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             {
                 btSocket?.Close();
                 SeeError(ex);
-            } 
+            }
         }
 
         private async void TransmissionBluetooth(List<byte> tramaEnviada)
@@ -119,7 +122,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                 SeeError(ex);
                 AlertWarning("Se ha desconectado el bluetooth.");
             }
-            
+
         }
 
         private async Task<string> ReceivedData()
@@ -166,13 +169,13 @@ namespace lestoma.App.ViewModels.Laboratorio
                 _laboratorioRequest.TramaEnviada = TramaEnviada;
                 _laboratorioRequest.TramaRecibida = tramaRecibida;
                 _laboratorioRequest.ComponenteId = _componenteRequest.ComponenteId;
+                _laboratorioRequest.SetPointIn = TramaComponente.ValorSetPoint;
+                _laboratorioRequest.SetPointOut = SetPointOut;
                 if (_apiService.CheckConnection())
                 {
+                    UserDialogs.Instance.ShowLoading("Enviando al servidor...");
                     LestomaLog.Normal("Enviando al servidor.");
                     _laboratorioRequest.EstadoInternet = true;
-                    _laboratorioRequest.SetPointIn = TramaComponente.ValorSetPoint;
-                    _laboratorioRequest.SetPointOut = SetPointOut;
-                    UserDialogs.Instance.ShowLoading("Enviando al servidor...");
                     ResponseDTO response = await _apiService.PostAsyncWithToken(URL_API, "laboratorio-lestoma/crear-detalle",
                         _laboratorioRequest, TokenUser.Token);
                     if (!response.IsExito)
@@ -184,10 +187,15 @@ namespace lestoma.App.ViewModels.Laboratorio
                 }
                 else
                 {
-                    LestomaLog.Normal("Guardando en bd del dispositivo.");
-                    _laboratorioRequest.EstadoInternet = false;
-                    _laboratorioRequest.FechaCreacionDispositivo = DateTime.Now;
                     UserDialogs.Instance.ShowLoading("Guardando en el dispositivo...");
+                    LestomaLog.Normal("Guardando en bd del dispositivo.");
+                    ResponseDTO response = await _unitOfWork.Laboratorio.SaveDataOffline(_laboratorioRequest);
+                    if (!response.IsExito)
+                    {
+                        AlertError(response.MensajeHttp);
+                        return;
+                    }
+                    AlertSuccess(response.MensajeHttp);
                 }
             }
             catch (Exception ex)

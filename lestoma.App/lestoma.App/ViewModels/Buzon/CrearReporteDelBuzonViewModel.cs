@@ -115,7 +115,7 @@ namespace lestoma.App.ViewModels.Buzon
                         ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL_API, "buzon-de-reportes/create", buzon, TokenUser.Token);
                         AlertSuccess(respuesta.MensajeHttp);
                         this.DetalleBuzon = new DetalleBuzonDTO();
-                        await _navigationService.GoBackAsync();
+                        await NavigationService.GoBackAsync();
                     }
                     else
                     {

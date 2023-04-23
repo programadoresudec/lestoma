@@ -93,7 +93,7 @@ namespace lestoma.App.ViewModels.Modulos
                         {
                             AlertSuccess(respuesta.MensajeHttp);
                             var parameters = new NavigationParameters { { Constants.REFRESH, true } };
-                            await _navigationService.GoBackAsync(parameters, useModalNavigation: true, true);
+                            await NavigationService.GoBackAsync(parameters, useModalNavigation: true, true);
                         }
                         else
                         {

@@ -64,7 +64,7 @@ namespace lestoma.App.ViewModels.Account
                         return;
                     }
                     AlertSuccess(respuesta.MensajeHttp);
-                    await _navigationService.NavigateAsync($"{nameof(ResetPasswordPage)}");
+                    await NavigationService.NavigateAsync($"{nameof(ResetPasswordPage)}");
                 }
                 catch (Exception ex)
                 {
@@ -78,7 +78,7 @@ namespace lestoma.App.ViewModels.Account
         }
         private async void SignUpClicked(object obj)
         {
-            await _navigationService.NavigateAsync(nameof(RegistroPage));
+            await NavigationService.NavigateAsync(nameof(RegistroPage));
         }
         #endregion
     }

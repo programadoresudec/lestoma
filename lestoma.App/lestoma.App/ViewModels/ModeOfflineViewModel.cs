@@ -23,7 +23,7 @@ namespace lestoma.App.ViewModels
                 {
                     if (MovilSettings.IsOnSyncToDevice)
                     {
-                        await _navigationService.NavigateAsync($"{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
+                        await NavigationService.NavigateAsync($"{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
                     }
                     else
                     {

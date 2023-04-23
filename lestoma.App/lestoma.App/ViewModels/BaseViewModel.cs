@@ -40,7 +40,7 @@ namespace lestoma.App.ViewModels
         public BluetoothAdapter MBluetoothAdapter { get; set; }
         public static BluetoothSocket btSocket = null;
 
-        protected INavigationService _navigationService { get; private set; }
+        protected INavigationService NavigationService { get; private set; }
         private string _title;
         private string _messageHelp;
         public string Title
@@ -102,7 +102,7 @@ namespace lestoma.App.ViewModels
 
         public BaseViewModel(INavigationService navigationService)
         {
-            _navigationService = navigationService;
+            NavigationService = navigationService;
             ActivarBluetoothCommand = new Command(OnBluetoothClicked);
             ConnectionBluetoothCommand = new Command(ConectarBluetoothClicked);
             HelpCommand = new Command(ShowHelpClicked);
@@ -129,7 +129,7 @@ namespace lestoma.App.ViewModels
             {
                 return new Command(async () =>
                 {
-                    await _navigationService.NavigateAsync(nameof(SignOutPopupPage));
+                    await NavigationService.NavigateAsync(nameof(SignOutPopupPage));
                 });
             }
         }
@@ -214,7 +214,7 @@ namespace lestoma.App.ViewModels
         }
         protected async void ClosePopup()
         {
-            await _navigationService.ClearPopupStackAsync();
+            await NavigationService.ClearPopupStackAsync();
         }
         protected static string GetLocalIPAddress()
         {

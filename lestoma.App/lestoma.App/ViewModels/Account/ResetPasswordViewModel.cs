@@ -195,7 +195,7 @@ namespace lestoma.App.ViewModels.Account
                         return;
                     }
                     AlertSuccess(respuesta.MensajeHttp);
-                    await _navigationService.NavigateAsync(nameof(LoginPage));
+                    await NavigationService.NavigateAsync(nameof(LoginPage));
                 }
             }
             catch (Exception ex)
@@ -214,7 +214,7 @@ namespace lestoma.App.ViewModels.Account
         /// <param name="obj">The Object</param>
         private async void SignInClicked(object obj)
         {
-            await _navigationService.NavigateAsync(nameof(LoginPage));
+            await NavigationService.NavigateAsync(nameof(LoginPage));
         }
 
         #endregion

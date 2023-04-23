@@ -273,7 +273,7 @@ namespace lestoma.App.ViewModels.Componentes
                 else
                 {
                     AlertNoInternetConnection();
-                    await _navigationService.GoBackAsync();
+                    await NavigationService.GoBackAsync();
                 }
             }
             catch (Exception ex)
@@ -304,7 +304,7 @@ namespace lestoma.App.ViewModels.Componentes
                     data
                 }
             };
-            await _navigationService.NavigateAsync($"{nameof(InfoEstadoPopupPage)}", parameters);
+            await NavigationService.NavigateAsync($"{nameof(InfoEstadoPopupPage)}", parameters);
         }
 
         private async void CreateOrEditClicked(object obj)
@@ -346,7 +346,7 @@ namespace lestoma.App.ViewModels.Componentes
                     {
                         AlertSuccess(respuesta.MensajeHttp);
                         var parameters = new NavigationParameters { { Constants.REFRESH, true } };
-                        await _navigationService.GoBackAsync(parameters);
+                        await NavigationService.GoBackAsync(parameters);
                     }
                     else
                     {
@@ -378,7 +378,7 @@ namespace lestoma.App.ViewModels.Componentes
                     {
                         AlertSuccess(respuesta.MensajeHttp);
                         var parameters = new NavigationParameters { { Constants.REFRESH, true } };
-                        await _navigationService.GoBackAsync(parameters);
+                        await NavigationService.GoBackAsync(parameters);
                     }
                     else
                     {

@@ -36,15 +36,15 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Prism.Plugin.Popups" Version="8.0.76" />
     <PackageReference Include="SkiaSharp.Views.Forms" Version="2.88.3" />
-    <PackageReference Include="Syncfusion.Xamarin.Buttons" Version="19.3.0.48" />
-    <PackageReference Include="Syncfusion.Xamarin.Cards" Version="19.3.0.48" />
-    <PackageReference Include="Syncfusion.Xamarin.Core" Version="19.3.0.48" />
-    <PackageReference Include="Syncfusion.Xamarin.SfAutoComplete" Version="19.3.0.48" />
-    <PackageReference Include="Syncfusion.Xamarin.SfBusyIndicator" Version="19.3.0.48" />
-    <PackageReference Include="Syncfusion.Xamarin.SfComboBox" Version="19.3.0.48" />
-    <PackageReference Include="Syncfusion.Xamarin.SfGauge" Version="19.3.0.48" />
-    <PackageReference Include="Syncfusion.Xamarin.SfListView" Version="19.3.0.48" />
-    <PackageReference Include="Syncfusion.Xamarin.SfMaskedEdit" Version="19.3.0.48" />
+    <PackageReference Include="Syncfusion.Xamarin.Buttons" Version="21.1.41" />
+    <PackageReference Include="Syncfusion.Xamarin.Cards" Version="21.1.41" />
+    <PackageReference Include="Syncfusion.Xamarin.Core" Version="21.1.41" />
+    <PackageReference Include="Syncfusion.Xamarin.SfAutoComplete" Version="21.1.41" />
+    <PackageReference Include="Syncfusion.Xamarin.SfBusyIndicator" Version="21.1.41" />
+    <PackageReference Include="Syncfusion.Xamarin.SfComboBox" Version="21.1.41" />
+    <PackageReference Include="Syncfusion.Xamarin.SfGauge" Version="21.1.41" />
+    <PackageReference Include="Syncfusion.Xamarin.SfListView" Version="21.1.41" />
+    <PackageReference Include="Syncfusion.Xamarin.SfMaskedEdit" Version="21.1.41" />
     <PackageReference Include="Xam.Plugin.Media" Version="5.0.1" />
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
     <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />

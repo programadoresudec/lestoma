@@ -134,7 +134,7 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
             {
                 return new Command(async () =>
                 {
-                    await _navigationService.NavigateAsync(nameof(FilterDatePopupPage));
+                    await NavigationService.NavigateAsync(nameof(FilterDatePopupPage));
                 });
             }
         }

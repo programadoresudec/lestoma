@@ -49,7 +49,7 @@ namespace lestoma.App.ViewModels.Upas
             {
                 return new Command(async () =>
                 {
-                    await _navigationService.NavigateAsync(nameof(CreateOrEditUpaPage));
+                    await NavigationService.NavigateAsync(nameof(CreateOrEditUpaPage));
                 });
             }
         }
@@ -80,7 +80,7 @@ namespace lestoma.App.ViewModels.Upas
             {
                 { "upa", upaEdit }
             };
-            await _navigationService.NavigateAsync(nameof(CreateOrEditUpaPage), parameters);
+            await NavigationService.NavigateAsync(nameof(CreateOrEditUpaPage), parameters);
 
         }
 
@@ -93,7 +93,7 @@ namespace lestoma.App.ViewModels.Upas
             {
                 { "protocolos", detalle.ProtocolosCOM }
             };
-            await _navigationService.NavigateAsync($"{nameof(InfoProtocolPopupPage)}", parameters);
+            await NavigationService.NavigateAsync($"{nameof(InfoProtocolPopupPage)}", parameters);
         }
 
         private bool CanNavigate(object arg)

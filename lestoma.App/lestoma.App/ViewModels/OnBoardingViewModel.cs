@@ -70,9 +70,8 @@ namespace lestoma.App.ViewModels
         {
             try
             {
-
-                await _navigationService.NavigateAsync($"{nameof(LoadingPopupPage)}");
-                await _navigationService.NavigateAsync($"/NavigationPage/{nameof(LoginPage)}");
+                await NavigationService.NavigateAsync($"{nameof(LoadingPopupPage)}");
+                await NavigationService.NavigateAsync($"/NavigationPage/{nameof(LoginPage)}");
             }
             catch (Exception ex)
             {
@@ -80,7 +79,7 @@ namespace lestoma.App.ViewModels
             }
             finally
             {
-                await _navigationService.ClearPopupStackAsync();
+                await NavigationService.ClearPopupStackAsync();
             }
 
         }

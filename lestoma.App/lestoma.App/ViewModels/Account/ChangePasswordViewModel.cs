@@ -151,7 +151,7 @@ namespace lestoma.App.ViewModels.Account
                         return;
                     }
                     AlertSuccess(respuesta.MensajeHttp);
-                    await _navigationService.NavigateAsync($"/{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(SettingsPage)}");
+                    await NavigationService.NavigateAsync($"/{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(SettingsPage)}");
 
                 }
             }

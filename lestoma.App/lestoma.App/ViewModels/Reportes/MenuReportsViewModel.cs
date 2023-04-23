@@ -45,7 +45,7 @@ namespace lestoma.App.ViewModels.Reportes
             });
 
             MenuReport = new ObservableCollection<MenuItemViewModel>(
-                 menu.Select(m => new MenuItemViewModel(_navigationService)
+                 menu.Select(m => new MenuItemViewModel(NavigationService)
                  {
                      Icon = m.Icon,
                      PageName = m.PageName,

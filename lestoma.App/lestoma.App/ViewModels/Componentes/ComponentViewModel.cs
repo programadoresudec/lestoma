@@ -87,7 +87,7 @@ namespace lestoma.App.ViewModels.Componentes
             {
                 return new Command(async () =>
                 {
-                    await _navigationService.NavigateAsync(nameof(CreateOrEditComponentPage), null);
+                    await NavigationService.NavigateAsync(nameof(CreateOrEditComponentPage), null);
                 });
             }
         }
@@ -110,7 +110,7 @@ namespace lestoma.App.ViewModels.Componentes
             {
                 { "idComponent", salida }
             };
-            await _navigationService.NavigateAsync(nameof(CreateOrEditComponentPage), parameters);
+            await NavigationService.NavigateAsync(nameof(CreateOrEditComponentPage), parameters);
         }
 
         private async void DeleteClicked(object obj)
@@ -160,7 +160,7 @@ namespace lestoma.App.ViewModels.Componentes
                         new InfoEstadoComponenteModel { Estado = detalle.TipoEstadoComponente, IsCreated = false }
                     }
                 };
-                await _navigationService.NavigateAsync($"{nameof(InfoEstadoPopupPage)}", parameters);
+                await NavigationService.NavigateAsync($"{nameof(InfoEstadoPopupPage)}", parameters);
             }
             catch (Exception ex)
             {

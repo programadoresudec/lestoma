@@ -36,7 +36,7 @@ namespace lestoma.App.ViewModels.Usuarios
             {
                 return new Command(async () =>
                 {
-                    await _navigationService.NavigateAsync($"{nameof(CreateOrEditUserPage)}");
+                    await NavigationService.NavigateAsync($"{nameof(CreateOrEditUserPage)}");
                 });
             }
         }
@@ -83,7 +83,7 @@ namespace lestoma.App.ViewModels.Usuarios
             {
                 { "usuario", userEdit }
             };
-                await _navigationService.NavigateAsync($"{nameof(CreateOrEditUserPage)}", parameters);
+                await NavigationService.NavigateAsync($"{nameof(CreateOrEditUserPage)}", parameters);
             }
             catch (Exception ex)
             {
