@@ -56,7 +56,7 @@
                                 FontFamily="Fontello" FontSize="32" Style="{StaticResource IconLabelStyle}" Text="{StaticResource IconClock}"/>
                                 <inputLayout:SfTextInputLayout Hint="Hora" HorizontalOptions="StartAndExpand" FocusedColor="Black" 
                                                                ContainerBackgroundColor="Transparent" HeightRequest="60">
-                                    <control:NullableTimePicker WidthRequest="100" HorizontalOptions="FillAndExpand" Time="{Binding TimeForReportDaily, Mode=TwoWay}">
+                                    <control:NullableTimePicker WidthRequest="100" HorizontalOptions="FillAndExpand" Time="{Binding TimeForReportDaily}">
                                     </control:NullableTimePicker>
                                 </inputLayout:SfTextInputLayout>
                             </StackLayout>

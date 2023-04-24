@@ -2,10 +2,7 @@
 using lestoma.CommonUtils.Requests;
 using lestoma.DatabaseOffline.ModelsOffline;
 using Mapster;
-using MapsterMapper;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 
 namespace lestoma.DatabaseOffline
 {
@@ -26,6 +23,12 @@ namespace lestoma.DatabaseOffline
               .Map(dest => dest.Protocolos, src => JsonConvert.SerializeObject(src.Protocolos))
               .Map(dest => dest.DecripcionEstadoJson, src => src.DescripcionEstadoJson)
               .Map(dest => dest.DireccionRegistro, src => src.DireccionRegistro);
+
+            TypeAdapterConfig<LaboratorioRequest, LaboratorioOffline>
+               .NewConfig()
+               .Map(dest => dest.ComponenteLaboratorioId, src => src.ComponenteId)
+               .Map(dest => dest.ValorCalculadoTramaEnviada, src => src.SetPointIn)
+               .Map(dest => dest.ValorCalculadoTramaRecibida, src => src.SetPointOut);
 
             TypeAdapterConfig<LaboratorioOffline, LaboratorioRequest>
                .NewConfig()

@@ -16,6 +16,7 @@ namespace lestoma.App.ViewModels.Modulos
     {
         private readonly IApiService _apiService;
         private ObservableCollection<ModuloDTO> _modulos;
+        private bool _isNavigating = false;
         public ModuloViewModel(INavigationService navigationService, IApiService apiService) :
              base(navigationService)
         {
@@ -59,22 +60,27 @@ namespace lestoma.App.ViewModels.Modulos
         }
         private async void ModuloSelected(object objeto)
         {
-            var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
-            var modulo = lista.ItemData as ModuloDTO;
-
-            if (modulo == null)
-                return;
-
-            var salida = new ModuloRequest
+            if (!_isNavigating)
             {
-                Nombre = modulo.Nombre,
-                Id = modulo.Id
-            };
-            var parameters = new NavigationParameters
-            {
-                { "modulo", salida }
-            };
-            await NavigationService.NavigateAsync(nameof(CreateOrEditModuloPage), parameters, useModalNavigation: true, true);
+                _isNavigating = true;
+                Syncfusion.ListView.XForms.ItemTappedEventArgs lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
+
+                if (!(lista.ItemData is ModuloDTO modulo))
+                    return;
+
+                var salida = new ModuloRequest
+                {
+                    Nombre = modulo.Nombre,
+                    Id = modulo.Id
+                };
+                var parameters = new NavigationParameters
+                    {
+                        { "modulo", salida }
+                    };
+                await NavigationService.NavigateAsync(nameof(CreateOrEditModuloPage), parameters, useModalNavigation: true, true);
+                _isNavigating = false;
+            }
+
 
         }
         private void LoadModulos()

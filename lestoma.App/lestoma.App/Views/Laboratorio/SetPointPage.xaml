@@ -14,26 +14,40 @@
           VerticalOptions="Center" />
         <ScrollView>
             <Grid>
-                <gauge:SfLinearGauge Orientation="OrientationVertical" HeightRequest="700" MinimumHeightRequest="200"
-                                     HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                    <gauge:SfLinearGauge.Scales>
-                        <gauge:LinearScale MinimumValue="5" MaximumValue="200" Interval="10"
-                            ScaleBarColor="{StaticResource Gray-100}" LabelColor="#424242" CornerRadiusType="End" CornerRadius="20"
-                                           ScaleBarSize = "80" LabelFontSize ="14">
-                            <gauge:LinearScale.MajorTickSettings>
-                                <gauge:LinearTickSettings Thickness="1" Color ="#9E9E9E" Length = "10"/>
-                            </gauge:LinearScale.MajorTickSettings>
-                            <gauge:LinearScale.MinorTickSettings>
-                                <gauge:LinearTickSettings Thickness="1" Color="Gray" Length="3"/>
-                            </gauge:LinearScale.MinorTickSettings>
-                            <gauge:LinearScale.Pointers>
-                                <gauge:BarPointer Value="{Binding TramaComponente.ValorSetPoint}" CornerRadiusType="End" EnableAnimation = "True" 
-                                                  Color = "{StaticResource PantoneVerdeThird}" Thickness = "50"/>
-                                <gauge:SymbolPointer Value="{Binding TramaComponente.ValorSetPoint}" Color="{StaticResource PantoneAmarilloLight}" Thickness="24"/>
-                            </gauge:LinearScale.Pointers>
-                        </gauge:LinearScale>
-                    </gauge:SfLinearGauge.Scales>
-                </gauge:SfLinearGauge>
+                <gauge:SfCircularGauge>
+                    <gauge:SfCircularGauge.Headers>
+                        <gauge:Header Text="{Binding TramaComponente.ValorSetPoint}" Position="0.48, 0.6" ForegroundColor="#424242" FontAttributes="Bold" TextSize="20"/>
+                        <gauge:Header Text="o" Position="0.55,0.58" ForegroundColor="#424242" FontAttributes="Bold" TextSize="12"/>
+                        <gauge:Header Text="C" Position="0.58,0.6" ForegroundColor="#424242" FontAttributes="Bold" TextSize="20"/>
+                    </gauge:SfCircularGauge.Headers>
+                    <gauge:SfCircularGauge.Scales>
+                        <gauge:Scale  LabelFontSize = "16" ShowRim = "False" 
+                          LabelOffset = "0.95" StartValue = "0" EndValue = "100" Interval = "10" RimThickness="28" MinorTicksPerInterval ="4" >
+                            <gauge:Scale.MajorTickSettings>
+                                <gauge:TickSettings Thickness="1" EndOffset="0.83" StartOffset="0.75" Length="8" />
+                            </gauge:Scale.MajorTickSettings>
+                            <gauge:Scale.MinorTickSettings>
+                                <gauge:TickSettings  Thickness="0.7"  EndOffset="0.79" StartOffset="0.75"/>
+                            </gauge:Scale.MinorTickSettings>
+                            <gauge:Scale.Ranges>
+                                <gauge:Range StartValue = "0" EndValue = "100" Thickness = "30" Offset = "0.6">
+                                    <gauge:Range.GradientStops>
+                                        <gauge:GaugeGradientStop Value="0" Color="#30B32D"/>
+                                        <gauge:GaugeGradientStop Value="50" Color="#FFDD00"/>
+                                        <gauge:GaugeGradientStop Value="80" Color="#F03E3E"/>
+                                    </gauge:Range.GradientStops>
+                                </gauge:Range>
+                            </gauge:Scale.Ranges>
+                            <gauge:Scale.Pointers>
+                                <gauge:NeedlePointer Thickness="7" LengthFactor="0.55" Color="LightGray"
+                                             KnobColor="White" TailColor="LightGray" TailLengthFactor="0.2"
+                                             Type="Triangle"  KnobRadius="12" Value="{Binding TramaComponente.ValorSetPoint}"
+                                             AnimationDuration="5" TailStrokeWidth="2" TailStrokeColor="LightGray"
+                                            KnobStrokeColor="LightGray" KnobStrokeWidth="8"/>
+                            </gauge:Scale.Pointers>
+                        </gauge:Scale>
+                    </gauge:SfCircularGauge.Scales>
+                </gauge:SfCircularGauge>
             </Grid>
         </ScrollView>
     </StackLayout>

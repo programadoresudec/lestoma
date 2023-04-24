@@ -48,12 +48,9 @@
                     <StackLayout Spacing="10" Margin="30,0,30,20">
                         <ffimageloading:CachedImage Aspect="AspectFit"
                                                 Source="{Binding Buzon.PathImagen, TargetNullValue = 'DefaultImagen.png'}" 
-                                                Margin="15,10,10,10"
-                                                WidthRequest="100"
-                                                CacheDuration= "50"
-                                                HeightRequest="150"
-                                                RetryCount= "3" 
-                                                RetryDelay= "600">
+                                                Margin="15,10,10,10" CacheDuration ="30"
+                                                WidthRequest="200" LoadingPlaceholder="Loading_icon.gif" 
+                                                HeightRequest="250" RetryDelay="300">
                             <ffimageloading:CachedImage.Transformations>
                                 <fftransformations:CropTransformation />
                             </ffimageloading:CachedImage.Transformations>

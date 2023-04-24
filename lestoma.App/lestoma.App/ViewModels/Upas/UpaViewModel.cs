@@ -18,6 +18,7 @@ namespace lestoma.App.ViewModels.Upas
         private readonly IApiService _apiService;
         private ObservableCollection<UpaDTO> _upas;
         private Command<object> itemTap;
+        private bool _isNavigating = false;
         public UpaViewModel(INavigationService navigationService, IApiService apiService) :
             base(navigationService)
         {
@@ -63,25 +64,28 @@ namespace lestoma.App.ViewModels.Upas
         }
         private async void UpaSelected(object objeto)
         {
-            var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
-            var upa = lista.ItemData as UpaDTO;
-
-            if (upa == null)
-                return;
-
-            UpaRequest upaEdit = new UpaRequest
+            if (!_isNavigating)
             {
-                CantidadActividades = upa.CantidadActividades,
-                Descripcion = upa.Descripcion,
-                Id = upa.Id,
-                Nombre = upa.Nombre
-            };
-            var parameters = new NavigationParameters
-            {
-                { "upa", upaEdit }
-            };
-            await NavigationService.NavigateAsync(nameof(CreateOrEditUpaPage), parameters);
+                _isNavigating = true;
+                Syncfusion.ListView.XForms.ItemTappedEventArgs lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
 
+                if (!(lista.ItemData is UpaDTO upa))
+                    return;
+
+                UpaRequest upaEdit = new UpaRequest
+                {
+                    CantidadActividades = upa.CantidadActividades,
+                    Descripcion = upa.Descripcion,
+                    Id = upa.Id,
+                    Nombre = upa.Nombre
+                };
+                var parameters = new NavigationParameters
+                    {
+                        { "upa", upaEdit }
+                    };
+                await NavigationService.NavigateAsync(nameof(CreateOrEditUpaPage), parameters);
+                _isNavigating = false;
+            }
         }
 
         private async void OnSeeProtocolClicked(object obj)

@@ -10,7 +10,7 @@ namespace lestoma.DatabaseOffline.Repositories.IRepository
     public interface ILaboratorioRepository : IGenericRepository<LaboratorioOffline>
     {
         Task ChangeIsMigrated(IEnumerable<Guid> ids);
-        Task<IEnumerable<LaboratorioRequest>> GetDataOffline();
+        Task<IEnumerable<LaboratorioRequest>> GetDataOffline(string ip);
         Task<ResponseDTO> SaveDataOffline(LaboratorioRequest laboratorioRequest);
     }
 }

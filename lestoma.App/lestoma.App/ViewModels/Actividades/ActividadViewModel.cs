@@ -17,6 +17,7 @@ namespace lestoma.App.ViewModels.Actividades
     {
         private readonly INavigationService _navigationService;
         private readonly IApiService _apiService;
+        private bool _isNavigating = false;
         private ObservableCollection<ActividadDTO> _actividades;
         public ActividadViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
@@ -40,7 +41,6 @@ namespace lestoma.App.ViewModels.Actividades
                 return new Command(async () =>
                 {
                     await _navigationService.NavigateAsync(nameof(CrearOrEditActividadPage), null, useModalNavigation: true, true);
-
                 });
             }
         }
@@ -100,23 +100,27 @@ namespace lestoma.App.ViewModels.Actividades
 
         private async void ActividadSelected(object objeto)
         {
-            var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
-            var actividad = lista.ItemData as ActividadDTO;
-
-            if (actividad == null)
-                return;
-
-            ActividadRequest request = new ActividadRequest
+            if (!_isNavigating)
             {
-                Id = actividad.Id,
-                Nombre = actividad.Nombre
-            };
-            var parameters = new NavigationParameters
-            {
-                { "actividad", request }
-            };
-            await _navigationService.NavigateAsync(nameof(CrearOrEditActividadPage), parameters, useModalNavigation: true, true);
+                _isNavigating = true;
+                var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
+                var actividad = lista.ItemData as ActividadDTO;
 
+                if (actividad == null)
+                    return;
+
+                ActividadRequest request = new ActividadRequest
+                {
+                    Id = actividad.Id,
+                    Nombre = actividad.Nombre
+                };
+                var parameters = new NavigationParameters
+                    {
+                        { "actividad", request }
+                    };
+                await _navigationService.NavigateAsync(nameof(CrearOrEditActividadPage), parameters, useModalNavigation: true, true);
+                _isNavigating = false;
+            }
         }
 
         public ObservableCollection<ActividadDTO> Actividades

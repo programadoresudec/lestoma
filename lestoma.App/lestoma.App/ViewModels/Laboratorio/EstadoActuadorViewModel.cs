@@ -204,6 +204,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                 }
                 catch (Exception ex)
                 {
+                    btSocket?.Close();
                     SeeError(ex);
                     throw;
                 }
@@ -290,6 +291,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             }
             catch (Exception ex)
             {
+                btSocket?.Close();
                 SeeError(ex);
             }
             finally

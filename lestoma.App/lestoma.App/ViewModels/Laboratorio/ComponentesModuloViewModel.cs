@@ -30,6 +30,8 @@ namespace lestoma.App.ViewModels.Laboratorio
         private bool _isSuperAdmin;
         private Guid _moduloId;
         private int? _esclavo;
+        private bool _isEnabled = true;
+        private bool _isNavigating = false;
         private readonly IUnitOfWork _unitOfWork;
         public ComponentesModuloViewModel(INavigationService navigationService, IApiService apiService, IUnitOfWork unitOfWork) :
              base(navigationService)
@@ -55,6 +57,12 @@ namespace lestoma.App.ViewModels.Laboratorio
             get => _isSuperAdmin;
             set => SetProperty(ref _isSuperAdmin, value);
         }
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set => SetProperty(ref _isEnabled, value);
+        }
+
         public ObservableCollection<NameDTO> Upas
         {
             get => _upas;
@@ -83,7 +91,23 @@ namespace lestoma.App.ViewModels.Laboratorio
         public NameProtocoloDTO Protocolo
         {
             get => _protocolo;
-            set => SetProperty(ref _protocolo, value);
+            set
+            {
+                SetProperty(ref _protocolo, value);
+                if (_protocolo != null && !string.IsNullOrWhiteSpace(_protocolo.Nombre))
+                {
+                    if (_protocolo.Nombre.ToUpper().Contains("BROAD") || _protocolo.Nombre.ToUpper().Equals("BROADCAST"))
+                    {
+                        Esclavo = 0;
+                        IsEnabled = false;
+                    }
+                    else
+                    {
+                        IsEnabled = true;
+                        Esclavo = null;
+                    }
+                }
+            }
         }
 
         public ObservableCollection<ComponentePorModuloDTO> Componentes
@@ -284,19 +308,22 @@ namespace lestoma.App.ViewModels.Laboratorio
         {
             try
             {
-                if (!AreFieldsValid())
+                if (!_isNavigating)
                 {
-                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage(@$"Error: Todos los campos son obligatorios.", Constants.ICON_WARNING));
-                    return;
-                }
-                var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
-                if (!(lista.ItemData is ComponentePorModuloDTO componente))
-                    return;
-                var request = new TramaComponenteRequest
-                {
-                    ComponenteId = componente.Id,
-                    NombreComponente = componente.Nombre,
-                    TramaOchoBytes = new List<byte>()
+                    _isNavigating = true;
+                    if (!AreFieldsValid())
+                    {
+                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage(@$"Error: Todos los campos son obligatorios.", Constants.ICON_WARNING));
+                        return;
+                    }
+                    var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
+                    if (!(lista.ItemData is ComponentePorModuloDTO componente))
+                        return;
+                    var request = new TramaComponenteRequest
+                    {
+                        ComponenteId = componente.Id,
+                        NombreComponente = componente.Nombre,
+                        TramaOchoBytes = new List<byte>()
                                      {
                                          Protocolo.PrimerByteTrama,
                                          (byte)Esclavo.Value,
@@ -307,29 +334,34 @@ namespace lestoma.App.ViewModels.Laboratorio
                                          0,
                                          0
                                      }
-                };
+                    };
 
-                var parameters = new NavigationParameters
-                {
-                    { "tramaComponente", request }
-                };
+                    var parameters = new NavigationParameters
+                       {
+                           { "tramaComponente", request }
+                       };
 
-                if (EnumConfig.GetDescription(TipoEstadoComponente.Lectura).Equals(componente.EstadoComponente.TipoEstado))
-                {
-                    await NavigationService.NavigateAsync(nameof(LecturaSensorPage), parameters);
-                }
-                else if (EnumConfig.GetDescription(TipoEstadoComponente.OnOff).Equals(componente.EstadoComponente.TipoEstado))
-                {
-                    await NavigationService.NavigateAsync(nameof(EstadoActuadorPage), parameters);
-                }
-                else if (EnumConfig.GetDescription(TipoEstadoComponente.Ajuste).Equals(componente.EstadoComponente.TipoEstado))
-                {
-                    await NavigationService.NavigateAsync(nameof(InputSetPointPopupPage), parameters);
+                    if (EnumConfig.GetDescription(TipoEstadoComponente.Lectura).Equals(componente.EstadoComponente.TipoEstado))
+                    {
+                        await NavigationService.NavigateAsync(nameof(LecturaSensorPage), parameters);
+                    }
+                    else if (EnumConfig.GetDescription(TipoEstadoComponente.OnOff).Equals(componente.EstadoComponente.TipoEstado))
+                    {
+                        await NavigationService.NavigateAsync(nameof(EstadoActuadorPage), parameters);
+                    }
+                    else if (EnumConfig.GetDescription(TipoEstadoComponente.Ajuste).Equals(componente.EstadoComponente.TipoEstado))
+                    {
+                        await NavigationService.NavigateAsync(nameof(InputSetPointPopupPage), parameters);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 SeeError(ex);
+            }
+            finally
+            {
+                _isNavigating = false;
             }
         }
         private bool AreFieldsValid()

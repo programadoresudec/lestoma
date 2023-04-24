@@ -30,6 +30,11 @@ namespace lestoma.DatabaseOffline.Repositories.Repository
             return await _dbSet.AnyAsync();
         }
 
+        public virtual async Task<int> CountData()
+        {
+            return await _dbSet.CountAsync();
+        }
+
         public virtual async Task<T> GetById(object id)
         {
             return await _dbSet.FindAsync(id);

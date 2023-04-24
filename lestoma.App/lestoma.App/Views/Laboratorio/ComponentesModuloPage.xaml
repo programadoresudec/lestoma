@@ -38,12 +38,12 @@
                         </Picker>
                     </inputLayout:SfTextInputLayout>
                 </border:SfBorder>
-                <border:SfBorder HeightRequest="70" Style="{StaticResource ThemeBorderStyle}">
-                    <inputLayout:SfTextInputLayout Hint="Esclavo" HeightRequest="60"
+                <border:SfBorder HeightRequest="70" Style="{StaticResource ThemeBorderStyle}" IsEnabled="{Binding IsEnabled}">
+                    <inputLayout:SfTextInputLayout Hint="Esclavo" HeightRequest="60" IsEnabled="{Binding IsEnabled}"
                                                    ContainerBackgroundColor="Transparent" VerticalOptions="Start"
                                                   Margin="0">
                         <Picker TextColor="Black"
-                                    Style="{StaticResource BorderlessEntryStyle}"
+                                    Style="{StaticResource BorderlessEntryStyle}" IsEnabled="{Binding IsEnabled}"
                                 SelectedItem="{Binding Esclavo}" ItemsSource="{Binding Bytes}">
                         </Picker>
                     </inputLayout:SfTextInputLayout>

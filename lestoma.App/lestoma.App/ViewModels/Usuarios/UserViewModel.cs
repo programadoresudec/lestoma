@@ -16,6 +16,7 @@ namespace lestoma.App.ViewModels.Usuarios
     {
         private readonly IApiService _apiService;
         private ObservableCollection<InfoUserModel> _usuarios;
+        private bool _isNavigating = false;
         public UserViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
@@ -70,24 +71,22 @@ namespace lestoma.App.ViewModels.Usuarios
 
         private async void UserSelected(object objeto)
         {
-            try
-            {
-                var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
-                var infoUser = lista.ItemData as InfoUserModel;
 
-                if (infoUser == null)
+            if (!_isNavigating)
+            {
+                _isNavigating = true;
+                Syncfusion.ListView.XForms.ItemTappedEventArgs lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
+
+                if (!(lista.ItemData is InfoUserModel infoUser))
                     return;
 
                 string userEdit = JsonConvert.SerializeObject(infoUser.InfoUser);
                 var parameters = new NavigationParameters
-            {
-                { "usuario", userEdit }
-            };
+                    {
+                        { "usuario", userEdit }
+                    };
                 await NavigationService.NavigateAsync($"{nameof(CreateOrEditUserPage)}", parameters);
-            }
-            catch (Exception ex)
-            {
-                SeeError(ex);
+                _isNavigating = false;
             }
         }
 

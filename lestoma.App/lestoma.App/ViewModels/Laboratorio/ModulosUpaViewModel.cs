@@ -18,6 +18,7 @@ namespace lestoma.App.ViewModels.Laboratorio
         private ObservableCollection<NameDTO> _modulos;
         private bool _isCheckConnection;
         private readonly IUnitOfWork _unitOfWork;
+        private bool _isNavigating = false;
         public ModulosUpaViewModel(INavigationService navigationService, IApiService apiService, IUnitOfWork unitOfWork) :
              base(navigationService)
         {
@@ -51,18 +52,21 @@ namespace lestoma.App.ViewModels.Laboratorio
 
         private async void ModuloSelected(object objeto)
         {
-            var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
-            var modulo = lista.ItemData as NameDTO;
-
-            if (modulo == null)
-                return;
-
-            var parameters = new NavigationParameters
+            if (!_isNavigating)
             {
-                { "ModuloId", modulo.Id }
-            };
-            await NavigationService.NavigateAsync(nameof(ComponentesModuloPage), parameters);
+                _isNavigating = true;
+                Syncfusion.ListView.XForms.ItemTappedEventArgs lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
 
+                if (!(lista.ItemData is NameDTO modulo))
+                    return;
+
+                var parameters = new NavigationParameters
+                    {
+                        { "ModuloId", modulo.Id }
+                    };
+                await NavigationService.NavigateAsync(nameof(ComponentesModuloPage), parameters);
+                _isNavigating = false;
+            }
         }
         private void LoadModulos()
         {

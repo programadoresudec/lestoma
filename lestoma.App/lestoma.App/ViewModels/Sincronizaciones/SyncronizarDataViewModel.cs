@@ -76,13 +76,16 @@ namespace lestoma.App.ViewModels.Sincronizaciones
 
         private async void MigrateDataOfflineToServer()
         {
-            var count = await _unitOfWork.Laboratorio.ExistData();
-            if (!count)
+            UserDialogs.Instance.ShowLoading("Cargando...");
+            var count = await _unitOfWork.Laboratorio.CountData();
+            if (count == 0)
             {
+                UserDialogs.Instance.HideLoading();
                 AlertWarning("No hay datos nuevos para migrar al servidor en la nube.");
                 return;
             }
-            var check = await UserDialogs.Instance.ConfirmAsync($"¿Está seguro de sincronizar los datos al servidor en la nube?, actualmente tiene {count} registros de tramas.",
+            UserDialogs.Instance.HideLoading();
+            var check = await UserDialogs.Instance.ConfirmAsync($"¿Está seguro de sincronizar los datos al servidor en la nube?.\n\nActualmente tiene {count} registros de tramas.",
                      "Alerta", "Aceptar", "Cancelar");
             if (check)
             {
@@ -91,9 +94,11 @@ namespace lestoma.App.ViewModels.Sincronizaciones
                     AlertNoInternetConnection();
                     return;
                 }
-                _ = Task.Run(async () =>
+                //_ = Task.Run(async () =>
+                //{
+                try
                 {
-                    IEnumerable<LaboratorioRequest> datosOfOffline = await _unitOfWork.Laboratorio.GetDataOffline();
+                    IEnumerable<LaboratorioRequest> datosOfOffline = await _unitOfWork.Laboratorio.GetDataOffline(GetLocalIPAddress());
                     var response = await _apiService.PostAsyncWithToken(URL_API, "sincronizaciones-lestoma/bulk-sync-data-offline", datosOfOffline, TokenUser.Token);
                     if (!response.IsExito)
                     {
@@ -101,7 +106,13 @@ namespace lestoma.App.ViewModels.Sincronizaciones
                         return;
                     }
                     await _unitOfWork.Laboratorio.ChangeIsMigrated(datosOfOffline.Select(x => x.Id));
-                });
+                }
+                catch (Exception ex)
+                {
+                    LestomaLog.Error(ex.Message);
+                    throw;
+                }
+                //});
                 await NavigationService.GoBackAsync();
                 AlertSuccess("Se esta migrando los datos al servidor de la nube, recibirá un correo cuando ya haya terminado.", 4);
             }

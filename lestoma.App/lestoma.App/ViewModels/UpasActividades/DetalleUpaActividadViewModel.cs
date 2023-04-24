@@ -16,6 +16,7 @@ namespace lestoma.App.ViewModels.UpasActividades
         private readonly IApiService _apiService;
         private ObservableCollection<DetalleUpaActividadDTO> _detalleUpaActividad;
         private Command<object> itemTap;
+        private bool _isNavigating = false;
         public DetalleUpaActividadViewModel(INavigationService navigationService, IApiService apiService) :
         base(navigationService)
         {
@@ -62,16 +63,21 @@ namespace lestoma.App.ViewModels.UpasActividades
         }
         private async void DetalleSelected(object objeto)
         {
-            var lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
-            var detalleUpaActividad = lista.ItemData as DetalleUpaActividadDTO;
-
-            if (detalleUpaActividad == null)
-                return;
-            var parameters = new NavigationParameters
+            if (!_isNavigating)
             {
-                { "detalleUpaActividad", detalleUpaActividad }
-            };
-            await NavigationService.NavigateAsync(nameof(CreateOrEditDetalleUpaActividadPage), parameters);
+                _isNavigating = true;
+                Syncfusion.ListView.XForms.ItemTappedEventArgs lista = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
+
+                if (!(lista.ItemData is DetalleUpaActividadDTO detalleUpaActividad))
+                    return;
+                var parameters = new NavigationParameters
+                    {
+                        { "detalleUpaActividad", detalleUpaActividad }
+                    };
+                await NavigationService.NavigateAsync(nameof(CreateOrEditDetalleUpaActividadPage), parameters);
+                _isNavigating = false;
+            }
+
         }
         private void LoadDetalle()
         {

@@ -291,7 +291,7 @@ namespace lestoma.App.ViewModels.Componentes
             var data = new InfoEstadoComponenteModel
             {
                 Estado = InfoComponente.Id != Guid.Empty ? InfoComponente.EstadoComponente : null,
-                IsCreated = Title.ToUpper().Contains("AGREGAR")
+                IsCreated = true
             };
             if (!string.IsNullOrEmpty(MovilSettings.EstadoComponente))
             {

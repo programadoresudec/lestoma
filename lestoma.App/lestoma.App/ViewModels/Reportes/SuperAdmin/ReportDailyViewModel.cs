@@ -56,9 +56,9 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
                 }
 
                 TimeJobDTO time = ParsearData<TimeJobDTO>(response);
-                TimeForReportDaily = time.Time;
                 Title = $"La tarea recurrente ya esta configurada con la hora: {time.Time}";
                 Isvisible = true;
+                TimeForReportDaily = time.Time;
             }
             catch (Exception ex)
             {

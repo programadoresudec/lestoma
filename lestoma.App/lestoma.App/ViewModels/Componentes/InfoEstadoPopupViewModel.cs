@@ -2,7 +2,6 @@
 using lestoma.App.Models;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
-using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Listados;
 using Newtonsoft.Json;
@@ -44,7 +43,7 @@ namespace lestoma.App.ViewModels.Componentes
                     IsSuperAdmin = false;
                 }
                 LoadEstadosComponente(data.Estado);
-            } 
+            }
         }
 
         public ObservableCollection<EstadoComponenteDTO> Estados
@@ -100,7 +99,7 @@ namespace lestoma.App.ViewModels.Componentes
         {
             try
             {
-                if (_estadoComponente == null && _estadoComponente.Id != Guid.Empty)
+                if (_estadoComponente == null)
                 {
                     AlertWarning("El estado es requerido.");
                     return;

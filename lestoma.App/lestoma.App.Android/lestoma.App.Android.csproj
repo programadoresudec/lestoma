@@ -410,5 +410,8 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\icon_check.png" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\Loading_icon.gif" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

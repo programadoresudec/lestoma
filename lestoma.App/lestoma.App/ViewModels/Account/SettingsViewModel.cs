@@ -20,15 +20,12 @@ namespace lestoma.App.ViewModels.Account
         private readonly IApiService _apiService;
         private string _fullName;
         private bool _isOn;
+        private bool _isNavigating = false;
         #region Constructor
-
         public SettingsViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
             _apiService = apiService;
-            ChangePasswordCommand = new Command(ChangePasswordClicked);
-            HelpCommand = new Command(HelpClicked);
-            LogoutCommand = new Command(LogoutClicked);
             StateChangedCommand = new Command(SwitchStateChanged, CanNavigate);
             _fullName = TokenUser.User.FullName;
             _isOn = MovilSettings.IsOnNotificationsViaMail;
@@ -49,9 +46,37 @@ namespace lestoma.App.ViewModels.Account
         #endregion
 
         #region Commands
-        public Command ChangePasswordCommand { get; set; }
-        public Command HelpCommand { get; set; }
-        public Command LogoutCommand { get; set; }
+        public Command ChangePasswordCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    if (!_isNavigating)
+                    {
+                        _isNavigating = true;
+                        await NavigationService.NavigateAsync($"{nameof(ChangePasswordPage)}");
+                        _isNavigating = false;
+                    }
+
+                });
+            }
+        }
+        public Command LogoutCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    if (!_isNavigating)
+                    {
+                        _isNavigating = true;
+                        await NavigationService.NavigateAsync($"{nameof(SignOutPopupPage)}");
+                        _isNavigating = false;
+                    }
+                });
+            }
+        }
         public Command StateChangedCommand { get; set; }
 
         public Command SetUpBluetoothCommand
@@ -60,7 +85,13 @@ namespace lestoma.App.ViewModels.Account
             {
                 return new Command(async () =>
                 {
-                    await NavigationService.NavigateAsync(nameof(MACBluetoothPopupPage));
+                    if (!_isNavigating)
+                    {
+                        _isNavigating = true;
+                        await NavigationService.NavigateAsync(nameof(MACBluetoothPopupPage));
+                        _isNavigating = false;
+                    }
+
                 });
             }
         }
@@ -71,11 +102,16 @@ namespace lestoma.App.ViewModels.Account
             {
                 return new Command(async () =>
                 {
-                    var parameters = new NavigationParameters
+                    if (!_isNavigating)
                     {
-                         { "TypeSyncronization", TipoSincronizacion.MigrateDataOnlineToDevice }
-                    };
-                    await NavigationService.NavigateAsync(nameof(SyncronizarDataPopupPage), parameters);
+                        _isNavigating = true;
+                        var parameters = new NavigationParameters
+                            {
+                                 { "TypeSyncronization", TipoSincronizacion.MigrateDataOnlineToDevice }
+                            };
+                        await NavigationService.NavigateAsync(nameof(SyncronizarDataPopupPage), parameters);
+                        _isNavigating = false;
+                    }
                 });
             }
         }
@@ -86,11 +122,16 @@ namespace lestoma.App.ViewModels.Account
             {
                 return new Command(async () =>
                 {
-                    var parameters = new NavigationParameters
+                    if (!_isNavigating)
                     {
-                         { "TypeSyncronization", TipoSincronizacion.MigrateDataOfflineToServer }
-                    };
-                    await NavigationService.NavigateAsync(nameof(SyncronizarDataPopupPage), parameters);
+                        _isNavigating = true;
+                        var parameters = new NavigationParameters
+                            {
+                                 { "TypeSyncronization", TipoSincronizacion.MigrateDataOfflineToServer }
+                            };
+                        await NavigationService.NavigateAsync(nameof(SyncronizarDataPopupPage), parameters);
+                        _isNavigating = false;
+                    }
                 });
             }
         }
@@ -102,24 +143,8 @@ namespace lestoma.App.ViewModels.Account
         {
             return true;
         }
- 
-        private async void ChangePasswordClicked(object obj)
-        {
-            await NavigationService.NavigateAsync($"{nameof(ChangePasswordPage)}");
-        }
-
-        private void HelpClicked(object obj)
-        {
-            // Do something
-        }
-
-        private async void LogoutClicked(object obj)
-        {
-            await NavigationService.NavigateAsync($"{nameof(SignOutPopupPage)}");
-        }
         private void SwitchStateChanged(object obj)
         {
-
             if (IsOn)
             {
                 MovilSettings.IsOnNotificationsViaMail = true;
@@ -129,7 +154,6 @@ namespace lestoma.App.ViewModels.Account
             {
                 MovilSettings.IsOnNotificationsViaMail = false;
                 DesactivateNotificationsViaEmail();
-
             }
         }
         private async void ActivateNotificationsViaEmail()

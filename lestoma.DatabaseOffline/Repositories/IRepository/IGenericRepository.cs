@@ -10,5 +10,6 @@ namespace lestoma.DatabaseOffline.Repositories.IRepository
         Task<T> GetById(object id);
         Task<IEnumerable<T>> GetAll();
         Task<bool> ExistData();
+        Task<int> CountData();
     }
 }

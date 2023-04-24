@@ -208,11 +208,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             }
             finally
             {
-                if (btSocket != null)
-                {
-                    btSocket.Close();
-                    _cancellationTokenSource.Cancel();
-                }
+                _cancellationTokenSource.Cancel();
                 UserDialogs.Instance.HideLoading();
             }
         }

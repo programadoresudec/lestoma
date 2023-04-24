@@ -23,6 +23,7 @@ namespace lestoma.App.ViewModels.Componentes
         private NameDTO _upa;
         private ObservableCollection<NameDTO> _upas;
         private bool _isSuperAdmin;
+        private bool _isNavigating = false;
 
         public ComponentViewModel(INavigationService navigationService, IApiService apiService) :
             base(navigationService)
@@ -99,18 +100,23 @@ namespace lestoma.App.ViewModels.Componentes
 
         private async void ComponentSelected(object objeto)
         {
-            var list = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
-
-            if (!(list.ItemData is ComponenteDTO component))
-                return;
-
-            var salida = component.Id;
-
-            var parameters = new NavigationParameters
+            if (!_isNavigating)
             {
-                { "idComponent", salida }
-            };
-            await NavigationService.NavigateAsync(nameof(CreateOrEditComponentPage), parameters);
+                _isNavigating = true;
+                var list = objeto as Syncfusion.ListView.XForms.ItemTappedEventArgs;
+
+                if (!(list.ItemData is ComponenteDTO component))
+                    return;
+
+                var salida = component.Id;
+
+                var parameters = new NavigationParameters
+                    {
+                        { "idComponent", salida }
+                    };
+                await NavigationService.NavigateAsync(nameof(CreateOrEditComponentPage), parameters);
+                _isNavigating = false;
+            }
         }
 
         private async void DeleteClicked(object obj)
