@@ -85,17 +85,24 @@ namespace lestoma.App.ViewModels.Laboratorio
         }
         private void StatedSelected(object obj)
         {
-            byte[] bytesFlotante = new byte[4];
-            if (IsOn.HasValue)
+            try
             {
-                bytesFlotante = Reutilizables.IEEEFloatingPointToByte(IsOn.Value ? 1 : 0);
+                byte[] bytesFlotante = new byte[4];
+                if (IsOn.HasValue)
+                {
+                    bytesFlotante = Reutilizables.IEEEFloatingPointToByte(IsOn.Value ? 1 : 0);
+                }
+                TramaComponente.TramaOchoBytes[4] = bytesFlotante[0];
+                TramaComponente.TramaOchoBytes[5] = bytesFlotante[1];
+                TramaComponente.TramaOchoBytes[6] = bytesFlotante[2];
+                TramaComponente.TramaOchoBytes[7] = bytesFlotante[3];
+                var tramaAEnviar = Reutilizables.TramaConCRC16Modbus(new List<byte>(TramaComponente.TramaOchoBytes));
+                SendTrama(tramaAEnviar, true);
             }
-            TramaComponente.TramaOchoBytes[4] = bytesFlotante[0];
-            TramaComponente.TramaOchoBytes[5] = bytesFlotante[1];
-            TramaComponente.TramaOchoBytes[6] = bytesFlotante[2];
-            TramaComponente.TramaOchoBytes[7] = bytesFlotante[3];
-            var tramaAEnviar = Reutilizables.TramaConCRC16Modbus(new List<byte>(TramaComponente.TramaOchoBytes));
-            SendTrama(tramaAEnviar, true);
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
         }
         private async void SendTrama(List<byte> tramaEnviada, bool EditState = false)
         {
@@ -206,7 +213,6 @@ namespace lestoma.App.ViewModels.Laboratorio
                 {
                     btSocket?.Close();
                     SeeError(ex);
-                    throw;
                 }
             }
         }

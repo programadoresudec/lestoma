@@ -46,15 +46,14 @@
                             </ContentView>
                         </Frame>
                     </Grid>
-                    <StackLayout Spacing="20" Margin="30,0,30,20">
- 
-                        <inputLayout:SfTextInputLayout Hint="MAC" FocusedColor="Black" HeightRequest="90"
+                    <StackLayout Spacing="20" Margin="15,0,15,20">
+                        <inputLayout:SfTextInputLayout Hint="MAC" Margin="0,10" FocusedColor="Black" HeightRequest="90"
                                                    ContainerBackgroundColor="Transparent">
                             <syncmaskededit:SfMaskedEdit x:Name="MaskMac" ValueMaskFormat="IncludePromptAndLiterals" MaskType="RegEx" Value="{Binding MAC}"
-                                                         Mask="[0-9A-F]{2}\:[0-9A-F]{2}\:[0-9A-F]{2}\:[0-9A-F]{2}\:[0-9A-F]{2}\:[0-9A-F]{2}">
+                                                         Mask="[0-9A-F]{2}\:[0-9A-F]{2}\:[0-9A-F]{2}\:[0-9A-F]{2}\:[0-9A-F]{2}\:[0-9A-F]{2}" Margin="5,0,0,10" FontSize="32">
                             </syncmaskededit:SfMaskedEdit>
                         </inputLayout:SfTextInputLayout>
-                        
+
                         <buttons:SfButton
                         HorizontalOptions="FillAndExpand" 
                         Command="{Binding SaveCommand}"

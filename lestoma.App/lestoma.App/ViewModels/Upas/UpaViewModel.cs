@@ -59,6 +59,7 @@ namespace lestoma.App.ViewModels.Upas
             base.OnNavigatedTo(parameters);
             if (parameters.ContainsKey(Constants.REFRESH))
             {
+                this.Page = 1;
                 LoadUpas();
             }
         }
@@ -130,7 +131,8 @@ namespace lestoma.App.ViewModels.Upas
                     if (response.IsExito)
                     {
                         AlertSuccess(response.MensajeHttp);
-                        ConsumoService();
+                        this.Page = 1;
+                        LoadUpas();
                     }
                     else
                     {
