@@ -2,6 +2,7 @@
 using lestoma.App.Views;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
+using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
@@ -171,22 +172,24 @@ namespace lestoma.App.ViewModels.Laboratorio
                 _laboratorioRequest.ComponenteId = _componenteRequest.ComponenteId;
                 _laboratorioRequest.SetPointIn = TramaComponente.ValorSetPoint;
                 _laboratorioRequest.SetPointOut = SetPointOut;
-                //if (_apiService.CheckConnection())
-                //{
-                //    UserDialogs.Instance.ShowLoading("Enviando al servidor...");
-                //    LestomaLog.Normal("Enviando al servidor.");
-                //    _laboratorioRequest.EstadoInternet = true;
-                //    ResponseDTO response = await _apiService.PostAsyncWithToken(URL_API, "laboratorio-lestoma/crear-detalle",
-                //        _laboratorioRequest, TokenUser.Token);
-                //    if (!response.IsExito)
-                //    {
-                //        AlertError(response.MensajeHttp);
-                //        return;
-                //    }
-                //    AlertSuccess(response.MensajeHttp);
-                //}
-                //else
-                //{
+                _laboratorioRequest.Session = TokenUser.User.FullName;
+                _laboratorioRequest.TipoDeAplicacion = EnumConfig.GetDescription(TipoAplicacion.AppMovil);
+                if (_apiService.CheckConnection())
+                {
+                    UserDialogs.Instance.ShowLoading("Enviando al servidor...");
+                    LestomaLog.Normal("Enviando al servidor.");
+                    _laboratorioRequest.EstadoInternet = true;
+                    ResponseDTO response = await _apiService.PostAsyncWithToken(URL_API, "laboratorio-lestoma/crear-detalle",
+                        _laboratorioRequest, TokenUser.Token);
+                    if (!response.IsExito)
+                    {
+                        AlertError(response.MensajeHttp);
+                        return;
+                    }
+                    AlertSuccess(response.MensajeHttp);
+                }
+                else
+                {
                     UserDialogs.Instance.ShowLoading("Guardando en el dispositivo...");
                     LestomaLog.Normal("Guardando en bd del dispositivo.");
                     ResponseDTO response = await _unitOfWork.Laboratorio.SaveDataOffline(_laboratorioRequest);
@@ -196,7 +199,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                         return;
                     }
                     AlertSuccess(response.MensajeHttp);
-                //}
+                }
             }
             catch (Exception ex)
             {

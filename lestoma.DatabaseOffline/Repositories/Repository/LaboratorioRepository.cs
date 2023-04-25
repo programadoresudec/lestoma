@@ -49,8 +49,8 @@ namespace lestoma.DatabaseOffline.Repositories.Repository
             try
             {
                 var dataOffline = await _dbSet.Where(x => x.IsMigrated == false).ToListAsync();
-                var data = dataOffline.Adapt<IEnumerable<LaboratorioRequest>>();
-                data.ToList().ForEach(x => x.Ip = ip);
+                var data = dataOffline.Adapt<List<LaboratorioRequest>>();
+                data.ForEach(x => x.Ip = ip);
                 return data;
             }
             catch (Exception ex)

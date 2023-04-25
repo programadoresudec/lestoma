@@ -15,8 +15,10 @@ namespace lestoma.DatabaseOffline.ModelsOffline
         public string TramaEnviada { get; set; }
         [Required(ErrorMessage = "trama recibida requerido.")]
         public string TramaRecibida { get; set; }
+        public string Session { get; set; }
+        public string TipoDeAplicacion { get; set; }
         public bool EstadoInternet => false;
         public DateTime FechaCreacionDispositivo => DateTime.Now;
-        public bool IsMigrated { get; set; }
+        public bool IsMigrated { get; set; } = false;
     }
 }

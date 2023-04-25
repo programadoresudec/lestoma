@@ -258,6 +258,8 @@ namespace lestoma.App.ViewModels.Laboratorio
                 _laboratorioRequest.TramaRecibida = tramaRecibida;
                 _laboratorioRequest.ComponenteId = _componenteRequest.ComponenteId;
                 _laboratorioRequest.SetPointOut = Valor;
+                _laboratorioRequest.Session = TokenUser.User.FullName;
+                _laboratorioRequest.TipoDeAplicacion = EnumConfig.GetDescription(TipoAplicacion.AppMovil);
                 if (EditState)
                 {
                     _laboratorioRequest.SetPointIn = IsOn.Value ? 1 : 0;

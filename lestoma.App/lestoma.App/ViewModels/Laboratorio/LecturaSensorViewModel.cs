@@ -2,6 +2,7 @@
 using lestoma.App.Views;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
+using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
@@ -174,6 +175,8 @@ namespace lestoma.App.ViewModels.Laboratorio
                 _laboratorioRequest.TramaRecibida = tramaRecibida;
                 _laboratorioRequest.ComponenteId = _componenteRequest.ComponenteId;
                 _laboratorioRequest.SetPointOut = Valor;
+                _laboratorioRequest.Session = TokenUser.User.FullName;
+                _laboratorioRequest.TipoDeAplicacion = EnumConfig.GetDescription(TipoAplicacion.AppMovil);
                 if (_apiService.CheckConnection())
                 {
                     Debug.WriteLine("Enviando al servidor.");

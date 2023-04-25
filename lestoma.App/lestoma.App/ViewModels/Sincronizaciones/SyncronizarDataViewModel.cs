@@ -94,25 +94,25 @@ namespace lestoma.App.ViewModels.Sincronizaciones
                     AlertNoInternetConnection();
                     return;
                 }
-                //_ = Task.Run(async () =>
-                //{
-                try
+                _ = Task.Run(async () =>
                 {
-                    IEnumerable<LaboratorioRequest> datosOfOffline = await _unitOfWork.Laboratorio.GetDataOffline(GetLocalIPAddress());
-                    var response = await _apiService.PostAsyncWithToken(URL_API, "sincronizaciones-lestoma/bulk-sync-data-offline", datosOfOffline, TokenUser.Token);
-                    if (!response.IsExito)
+                    try
                     {
-                        LestomaLog.Error(response.MensajeHttp);
-                        return;
+                        IEnumerable<LaboratorioRequest> datosOfOffline = await _unitOfWork.Laboratorio.GetDataOffline(GetLocalIPAddress());
+                        var response = await _apiService.PostAsyncWithToken(URL_API, "sincronizaciones-lestoma/bulk-sync-data-offline", datosOfOffline, TokenUser.Token);
+                        if (!response.IsExito)
+                        {
+                            LestomaLog.Error(response.MensajeHttp);
+                            return;
+                        }
+                        await _unitOfWork.Laboratorio.ChangeIsMigrated(datosOfOffline.Select(x => x.Id));
                     }
-                    await _unitOfWork.Laboratorio.ChangeIsMigrated(datosOfOffline.Select(x => x.Id));
-                }
-                catch (Exception ex)
-                {
-                    LestomaLog.Error(ex.Message);
-                    throw;
-                }
-                //});
+                    catch (Exception ex)
+                    {
+                        LestomaLog.Error(ex.Message);
+                        throw;
+                    }
+                });
                 await NavigationService.GoBackAsync();
                 AlertSuccess("Se esta migrando los datos al servidor de la nube, recibirá un correo cuando ya haya terminado.", 4);
             }
