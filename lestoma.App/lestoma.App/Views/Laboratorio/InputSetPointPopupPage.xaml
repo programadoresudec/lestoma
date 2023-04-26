@@ -52,7 +52,7 @@
                         <StackLayout Orientation="Horizontal">
                             <Label HorizontalOptions="Start" Margin="16,0,0,0" FontFamily="Fontello"
                                         Style="{StaticResource IconLabelStyle}" Text="{StaticResource IconInfo}" />
-                            <Label Text="Para ingresar el valor de ajuste esta limitado a un número de tres cifras y dos decimales." FontFamily="Montserrat-Regular" FontSize="12" 
+                            <Label Text="Para ingresar el valor de ajuste, está limitado a un número de tres cifras y dos decimales, de un rango de 0-500." FontFamily="Montserrat-Regular" FontSize="12" 
                            HorizontalTextAlignment="Start" TextColor="{StaticResource Gray-600}"/>
                         </StackLayout>
                         <inputLayout:SfTextInputLayout Hint="Ingrese valor" FocusedColor="Black" HeightRequest="90"
