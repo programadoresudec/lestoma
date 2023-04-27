@@ -12,50 +12,47 @@
         <ScrollView>
             <StackLayout>
                 <border:SfBorder HeightRequest="85"  Style="{StaticResource ThemeBorderStyle}">
-                    <inputLayout:SfTextInputLayout Hint="Nombre" FocusedColor="Black" 
+                    <inputLayout:SfTextInputLayout Hint="Nombre componente" FocusedColor="Black" 
                                                    ContainerBackgroundColor="Transparent"
                                                    Margin="10">
-                        <control:BorderlessEntry x:Name="NameEntry" Text="{Binding InfoComponente.Nombre}"
-                                             PlaceholderColor="#606a7b"
-                                             Margin="15,0"
-                                             Style="{StaticResource BorderlessEntryStyle}" MaxLength="60"
-                                                 TextColor="#333942">
+                        <control:BorderlessEntry x:Name="nombreComponentEntry" Text="{Binding InfoComponente.Nombre}"
+                                             PlaceholderColor="#606a7b"  Margin="15,0"
+                                             Style="{StaticResource BorderlessEntryStyle}" MaxLength="60" TextColor="#333942">
                         </control:BorderlessEntry>
                     </inputLayout:SfTextInputLayout>
                 </border:SfBorder>
                 <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
-                    <inputLayout:SfTextInputLayout Hint="modulos" HeightRequest="80" IsEnabled="{Binding IsSuperAdmin}"
+                    <inputLayout:SfTextInputLayout Hint="Módulo" HeightRequest="80"
                                                    ContainerBackgroundColor="Transparent" 
                                                    Margin="10">
-                        <Picker x:Name="moduloEntry" TextColor="Black"  ItemDisplayBinding="{Binding Nombre}" 
-                                    Style="{StaticResource BorderlessEntryStyle}" IsEnabled="{Binding IsSuperAdmin}" 
+                        <Picker x:Name="moduloEntry" TextColor="Black" ItemDisplayBinding="{Binding Nombre}" 
+                                    Style="{StaticResource BorderlessEntryStyle}" 
                                 SelectedItem="{Binding Modulo}" ItemsSource="{Binding Modulos}">
                         </Picker>
                     </inputLayout:SfTextInputLayout>
                 </border:SfBorder>
-                <border:SfBorder HeightRequest="85" IsVisible="{Binding IsVisible}" Style="{StaticResource ThemeBorderStyle}">
-                    <inputLayout:SfTextInputLayout Hint="Upas" IsVisible="{Binding IsVisible}"
-                                                   HeightRequest="80" IsEnabled="{Binding IsSuperAdmin}" 
+                <border:SfBorder HeightRequest="85" IsEnabled="{Binding IsEnabled}"  Style="{StaticResource ThemeBorderStyle}">
+                    <inputLayout:SfTextInputLayout Hint="Upa" 
+                                                   HeightRequest="80" IsEnabled="{Binding IsEnabled}"  
                                                    ContainerBackgroundColor="Transparent" 
                                                   Margin="10">
-                        <Picker x:Name="upaEntry" TextColor="Black" ItemDisplayBinding="{Binding Nombre}" IsEnabled="{Binding IsSuperAdmin}" 
-                                    Style="{StaticResource BorderlessEntryStyle}" IsVisible="{Binding IsVisible}" 
+                        <Picker x:Name="upaEntry" TextColor="Black" ItemDisplayBinding="{Binding Nombre}" IsEnabled="{Binding IsEnabled}" 
+                                    Style="{StaticResource BorderlessEntryStyle}"
                                 SelectedItem="{Binding Upa}" ItemsSource="{Binding Upas}">
                         </Picker>
                     </inputLayout:SfTextInputLayout>
                 </border:SfBorder>
                 <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
-                    <inputLayout:SfTextInputLayout Hint="Actividades" HeightRequest="80" IsEnabled="{Binding IsSuperAdmin}" 
+                    <inputLayout:SfTextInputLayout Hint="Actividad" HeightRequest="80" 
                                                    ContainerBackgroundColor="Transparent" 
                                                    Margin="10">
                         <Picker x:Name="actividadEntry" TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
-                                    Style="{StaticResource BorderlessEntryStyle}"  IsEnabled="{Binding IsSuperAdmin}" 
-                                SelectedItem="{Binding Actividad}" ItemsSource="{Binding Actividades}">
+                                    Style="{StaticResource BorderlessEntryStyle}" SelectedItem="{Binding Actividad}" ItemsSource="{Binding Actividades}">
                         </Picker>
                     </inputLayout:SfTextInputLayout>
                 </border:SfBorder>
                 <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
-                    <inputLayout:SfTextInputLayout Hint="Dirección de registro"
+                    <inputLayout:SfTextInputLayout x:Name="dregistroEntry" Hint="Dirección de registro"
                                                    HeightRequest="80" IsEnabled="{Binding IsCreated}" 
                                                    ContainerBackgroundColor="Transparent" 
                                                    Margin="10">

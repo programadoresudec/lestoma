@@ -22,6 +22,7 @@ namespace lestoma.App.ViewModels.Componentes
 {
     public class CreateOrEditComponentViewModel : BaseViewModel
     {
+        #region attributes
         private readonly IApiService _apiService;
         private ObservableCollection<NameDTO> _upas;
         private ObservableCollection<NameDTO> _modulos;
@@ -33,14 +34,16 @@ namespace lestoma.App.ViewModels.Componentes
         private InfoComponenteDTO _infoComponente;
         private EstadoComponenteDTO _estadoComponente;
         private bool _isCreated;
-        private bool _isVisible;
         private string _iconStatusComponent;
         private bool _isSuperAdmin;
+        private bool _isEnabled;
         private bool _isVisibleDireccionRegistro = true;
         private ObservableCollection<int> _direccionesNoUtilizadas;
+        #endregion
 
+        #region Ctor y OnNavigatedTo
         public CreateOrEditComponentViewModel(INavigationService navigationService, IApiService apiService) :
-            base(navigationService)
+           base(navigationService)
         {
             _isSuperAdmin = TokenUser.User.RolId == (int)TipoRol.SuperAdministrador;
             _apiService = apiService;
@@ -49,9 +52,6 @@ namespace lestoma.App.ViewModels.Componentes
             _infoComponente = new InfoComponenteDTO();
             _iconStatusComponent = "icon_create.png";
         }
-
-
-
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
@@ -61,7 +61,10 @@ namespace lestoma.App.ViewModels.Componentes
                 Title = "Editar Componente";
                 _iconStatusComponent = "icon_edit.png";
                 IsCreated = false;
-                _isVisibleDireccionRegistro = false;
+                if (TokenUser.User.RolId == (int)TipoRol.Administrador)
+                {
+                    _isVisibleDireccionRegistro = false;
+                }
                 LoadLists(Id);
             }
             else if (parameters.ContainsKey(Constants.REFRESH))
@@ -76,7 +79,9 @@ namespace lestoma.App.ViewModels.Componentes
                 LoadLists(Guid.Empty);
             }
         }
+        #endregion
 
+        #region properties
         public Command AddStatusComponentCommand { get; }
         public Command CreateOrEditCommand { get; }
 
@@ -84,6 +89,11 @@ namespace lestoma.App.ViewModels.Componentes
         {
             get => _modulos;
             set => SetProperty(ref _modulos, value);
+        }
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set => SetProperty(ref _isEnabled, value);
         }
         public bool IsSuperAdmin
         {
@@ -168,17 +178,15 @@ namespace lestoma.App.ViewModels.Componentes
             set => SetProperty(ref _isCreated, value);
         }
 
-        public bool IsVisible
-        {
-            get => _isVisible;
-            set => SetProperty(ref _isVisible, value);
-        }
         public string IconStatusComponent
         {
             get => _iconStatusComponent;
             set => SetProperty(ref _iconStatusComponent, value);
         }
-        private async void LoadDireccionesDeRegistro()
+        #endregion
+
+        #region methods
+        private async void LoadDireccionesDeRegistro(int? direccionregistro = null)
         {
             try
             {
@@ -202,6 +210,27 @@ namespace lestoma.App.ViewModels.Componentes
                         $"componentes/direcciones-de-registro-upa-modulo{queryString}", TokenUser.Token);
 
                     DireccionesNoUtilizadas = new ObservableCollection<int>((List<int>)direcciones.Data);
+                    if (direccionregistro.HasValue)
+                    {
+                        int existe = DireccionesNoUtilizadas.FirstOrDefault(x => x == direccionregistro.Value);
+                        if (existe > 0)
+                        {
+                            DireccionRegistro = existe;
+                        }
+                        else
+                        {
+                            if (!DireccionesNoUtilizadas.Any(x => x == 0))
+                            {
+                                DireccionesNoUtilizadas.Add(direccionregistro.Value);
+                                DireccionRegistro = DireccionesNoUtilizadas.FirstOrDefault(x => x == direccionregistro.Value);
+                            }
+                            else
+                            {
+                                DireccionRegistro = existe;
+                            }
+                        }
+                        _isVisibleDireccionRegistro = true;
+                    }
                 }
             }
             catch (Exception ex)
@@ -231,22 +260,26 @@ namespace lestoma.App.ViewModels.Componentes
                     ResponseDTO modulos = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
                         "modulos/listar-nombres", TokenUser.Token);
                     Modulos = new ObservableCollection<NameDTO>((List<NameDTO>)modulos.Data);
-
+                    ResponseDTO upas = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API, "upas/listar-nombres", TokenUser.Token);
+                    Upas = new ObservableCollection<NameDTO>((List<NameDTO>)upas.Data);
                     if (TokenUser.User.RolId == (int)TipoRol.SuperAdministrador)
                     {
-                        IsVisible = true;
-                        ResponseDTO upas = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
-                       "upas/listar-nombres", TokenUser.Token);
-                        Upas = new ObservableCollection<NameDTO>((List<NameDTO>)upas.Data);
-                        ResponseDTO actividades = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
-                        "actividades/listar-nombres", TokenUser.Token);
+                        IsEnabled = true;
+                        ResponseDTO actividades = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API, "actividades/listar-nombres", TokenUser.Token);
                         Actividades = new ObservableCollection<NameDTO>((List<NameDTO>)actividades.Data);
                     }
                     else
                     {
-                        IsVisible = false;
-                        ResponseDTO actividades = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
-                        $"detalle-upas-actividades/listar-por-usuario", TokenUser.Token);
+                        IsEnabled = false;
+                        ResponseDTO response = await _apiService.GetAsyncWithToken(URL_API, "usuarios/upa-asignada", TokenUser.Token);
+                        if (response.IsExito)
+                        {
+                            var upa = ParsearData<NameDTO>(response);
+                            var selected = Upas.Where(x => x.Id == upa.Id).FirstOrDefault();
+                            Upa = selected;
+                        }
+                        ResponseDTO actividades = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API, $"detalle-upas-actividades/listar-por-usuario",
+                            TokenUser.Token);
                         Actividades = new ObservableCollection<NameDTO>((List<NameDTO>)actividades.Data);
                     }
                     if (id != Guid.Empty)
@@ -254,19 +287,24 @@ namespace lestoma.App.ViewModels.Componentes
                         var infoComponente = await _apiService.GetAsyncWithToken(URL_API, $"componentes/{id}", TokenUser.Token);
                         if (infoComponente.IsExito)
                         {
+                            _isVisibleDireccionRegistro = false;
                             InfoComponente = ParsearData<InfoComponenteDTO>(infoComponente);
                             DireccionRegistro = InfoComponente.DireccionDeRegistro;
                             var modulo = Modulos.Where(x => x.Id == InfoComponente.Modulo.Id).FirstOrDefault();
-                            var upa = Upas?.Where(x => x.Id == InfoComponente.Upa.Id).FirstOrDefault();
+                            if (TokenUser.User.RolId == (int)TipoRol.SuperAdministrador)
+                            {
+                                var upa = Upas?.Where(x => x.Id == InfoComponente.Upa.Id).FirstOrDefault();
+                                Upa = upa;
+                            }
                             var actividad = Actividades.Where(x => x.Id == InfoComponente.Actividad.Id).FirstOrDefault();
-
                             if (modulo != null && actividad != null)
                             {
-                                Upa = upa;
                                 Modulo = modulo;
                                 Actividad = actividad;
                             }
                             EstadoComponente = InfoComponente.EstadoComponente;
+                            LoadDireccionesDeRegistro(_direccionregistro);
+
                         }
                     }
                 }
@@ -290,13 +328,9 @@ namespace lestoma.App.ViewModels.Componentes
         {
             var data = new InfoEstadoComponenteModel
             {
-                Estado = InfoComponente.Id != Guid.Empty ? InfoComponente.EstadoComponente : null,
+                Estado = EstadoComponente ?? null,
                 IsCreated = true
             };
-            if (!string.IsNullOrEmpty(MovilSettings.EstadoComponente))
-            {
-                data.Estado = JsonConvert.DeserializeObject<EstadoComponenteDTO>(MovilSettings.EstadoComponente);
-            }
             var parameters = new NavigationParameters
             {
                 {
@@ -407,11 +441,12 @@ namespace lestoma.App.ViewModels.Componentes
             bool isModuloValid = Modulo != null;
             bool isDireccionValid = DireccionRegistro != null;
             bool isEstadoValid = InfoComponente.EstadoComponente != null;
-            if (TokenUser.User.RolId == (int)TipoRol.Administrador)
+            if (_isSuperAdmin)
             {
                 isUpaValid = true;
             }
             return isNameValid && isDireccionValid && isEstadoValid && isUpaValid && isModuloValid && isActividadValid;
         }
+        #endregion
     }
 }

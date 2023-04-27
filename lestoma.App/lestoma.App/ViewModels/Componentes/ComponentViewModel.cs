@@ -18,15 +18,18 @@ namespace lestoma.App.ViewModels.Componentes
 {
     public class ComponentViewModel : BaseViewModel
     {
+        #region attributes
         private readonly IApiService _apiService;
         private ObservableCollection<ComponenteDTO> _componentes;
         private NameDTO _upa;
         private ObservableCollection<NameDTO> _upas;
         private bool _isSuperAdmin;
-        private bool _isNavigating = false;
+        private bool _isNavigating = false; 
+        #endregion
 
+        #region ctor y OnNavigatedTo
         public ComponentViewModel(INavigationService navigationService, IApiService apiService) :
-            base(navigationService)
+           base(navigationService)
         {
             _isSuperAdmin = TokenUser.User.RolId == (int)TipoRol.SuperAdministrador;
             _apiService = apiService;
@@ -45,8 +48,10 @@ namespace lestoma.App.ViewModels.Componentes
             {
                 ListarComponentesAll();
             }
-        }
+        } 
+        #endregion
 
+        #region properties
         public ObservableCollection<ComponenteDTO> Componentes
         {
             get => _componentes;
@@ -91,8 +96,10 @@ namespace lestoma.App.ViewModels.Componentes
                     await NavigationService.NavigateAsync(nameof(CreateOrEditComponentPage), null);
                 });
             }
-        }
+        } 
+        #endregion
 
+        #region methods
         private bool CanNavigate(object arg)
         {
             return true;
@@ -319,6 +326,7 @@ namespace lestoma.App.ViewModels.Componentes
                 Page++;
                 UserDialogs.Instance.HideLoading();
             }
-        }
+        } 
+        #endregion
     }
 }

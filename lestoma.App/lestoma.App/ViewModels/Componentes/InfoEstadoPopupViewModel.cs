@@ -16,10 +16,13 @@ namespace lestoma.App.ViewModels.Componentes
 {
     public class InfoEstadoPopupViewModel : BaseViewModel
     {
+        #region attributes
         private ObservableCollection<EstadoComponenteDTO> _estados;
         private EstadoComponenteDTO _estadoComponente;
         private bool _isSuperAdmin;
+        #endregion
 
+        #region ctor y OnNavigatedTo
         public InfoEstadoPopupViewModel(INavigationService navigationService)
             : base(navigationService)
         {
@@ -27,6 +30,7 @@ namespace lestoma.App.ViewModels.Componentes
             _estados = new ObservableCollection<EstadoComponenteDTO>();
             SaveEstadoCommand = new Command(SaveClicked);
         }
+  
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
 
@@ -45,7 +49,9 @@ namespace lestoma.App.ViewModels.Componentes
                 LoadEstadosComponente(data.Estado);
             }
         }
+        #endregion
 
+        #region properties
         public ObservableCollection<EstadoComponenteDTO> Estados
         {
             get => _estados;
@@ -65,7 +71,9 @@ namespace lestoma.App.ViewModels.Componentes
         }
 
         public Command SaveEstadoCommand { get; set; }
+        #endregion
 
+        #region methods
         private async void LoadEstadosComponente(EstadoComponenteDTO estadoComponente)
         {
             try
@@ -114,7 +122,6 @@ namespace lestoma.App.ViewModels.Componentes
                 AlertError(ex.Message);
             }
         }
-
-
+        #endregion
     }
 }
