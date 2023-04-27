@@ -16,7 +16,7 @@
             <Grid>
                 <gauge:SfCircularGauge>
                     <gauge:SfCircularGauge.Headers>
-                        <gauge:Header Text="{Binding TramaComponente.ValorSetPoint}" Position="0.50, 0.70" ForegroundColor="#424242" FontAttributes="Bold" TextSize="20"/>
+                        <gauge:Header Text="{Binding TramaComponente.ValorSetPoint}" Position="0.48, 0.6" ForegroundColor="#424242" FontAttributes="Bold" TextSize="20"/>
                               </gauge:SfCircularGauge.Headers>
                     <gauge:SfCircularGauge.Scales>
                         <gauge:Scale  LabelFontSize = "16" ShowRim = "False" 

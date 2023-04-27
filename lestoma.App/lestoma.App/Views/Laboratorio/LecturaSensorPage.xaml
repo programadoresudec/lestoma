@@ -34,8 +34,8 @@
                                 <gauge:Range StartValue = "0" EndValue = "500" Thickness = "60" Offset = "0.6">
                                     <gauge:Range.GradientStops>
                                         <gauge:GaugeGradientStop Value="0" Color="#30B32D"/>
-                                        <gauge:GaugeGradientStop Value="50" Color="#FFDD00"/>
-                                        <gauge:GaugeGradientStop Value="80" Color="#F03E3E"/>
+                                        <gauge:GaugeGradientStop Value="166" Color="#FFDD00"/>
+                                        <gauge:GaugeGradientStop Value="333" Color="#F03E3E"/>
                                     </gauge:Range.GradientStops>
                                 </gauge:Range>
                             </gauge:Scale.Ranges>
