@@ -135,6 +135,21 @@ namespace lestoma.App.ViewModels.Account
                 });
             }
         }
+        public Command RedirectionManualAppCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    if (!_isNavigating)
+                    {
+                        _isNavigating = true;
+                        await NavigationService.NavigateAsync(nameof(ManualPage));
+                        _isNavigating = false;
+                    }
+                });
+            }
+        }
 
         #endregion
 

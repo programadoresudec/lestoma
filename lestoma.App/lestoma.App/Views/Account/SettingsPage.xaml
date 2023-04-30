@@ -251,7 +251,7 @@
                     BackgroundColor="{DynamicResource Gray-Bg}"
                     ColumnDefinitions="Auto, *, Auto"
                     ColumnSpacing="0"
-                    Command="{Binding HelpCommand}"
+                    Command="{Binding RedirectionManualAppCommand}"
                     RowSpacing="0"
                     Tapped="False">
 
@@ -269,7 +269,7 @@
                         FontFamily="Montserrat-Medium"
                         HorizontalOptions="Start"
                         Style="{StaticResource TitleLabelStyle}"
-                        Text="Manuales"
+                        Text="Manual"
                         VerticalOptions="Center" />
                     <!--  Navigation icon  -->
                     <Label
