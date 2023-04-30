@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="http://prismlibrary.com" xmlns:gauge="clr-namespace:Syncfusion.SfGauge.XForms;assembly=Syncfusion.SfGauge.XForms"
+             xmlns:prism="http://prismlibrary.com"
+             xmlns:gauge="clr-namespace:Syncfusion.SfGauge.XForms;assembly=Syncfusion.SfGauge.XForms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="lestoma.App.Views.Laboratorio.SetPointPage"
              Title="{Binding Title}">
@@ -16,7 +17,7 @@
             <Grid>
                 <gauge:SfCircularGauge>
                     <gauge:SfCircularGauge.Headers>
-                        <gauge:Header Text="{Binding TramaComponente.ValorSetPoint}" Position="0.48, 0.6" ForegroundColor="#424242" FontAttributes="Bold" TextSize="20"/>
+                        <gauge:Header Text="{Binding TramaComponente.ValorSetPoint}" Position="0.50, 0.65" ForegroundColor="#424242" FontAttributes="Bold" TextSize="20"/>
                               </gauge:SfCircularGauge.Headers>
                     <gauge:SfCircularGauge.Scales>
                         <gauge:Scale  LabelFontSize = "16" ShowRim = "False" 

@@ -200,7 +200,7 @@ namespace lestoma.App.ViewModels
             catch (Exception ex)
             {
                 //en caso de generarnos error cerramos el socket
-                btSocket.Close();
+                btSocket?.Close();
                 SeeError(ex);
             }
             finally

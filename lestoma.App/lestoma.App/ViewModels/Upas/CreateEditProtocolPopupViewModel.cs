@@ -7,6 +7,7 @@ using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Xamarin.Forms;
 
@@ -16,8 +17,10 @@ namespace lestoma.App.ViewModels.Upas
     {
         private ProtocoloModel _protocolo;
         private bool _isEdit;
+        private int _idProtocolo;
         private readonly IApiService _apiService;
-
+        private ObservableCollection<ProtocoloModel> _protocolos;
+        private Guid _upaId;
         public CreateEditProtocolPopupViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
@@ -25,7 +28,30 @@ namespace lestoma.App.ViewModels.Upas
             SaveCommand = new Command(SaveClicked);
             Bytes = LoadBytes();
             _apiService = apiService;
+            LoadProtocols();
         }
+
+        private void LoadProtocols()
+        {
+            _protocolos = new ObservableCollection<ProtocoloModel>()
+            {
+                new ProtocoloModel()
+                {
+                    Id = 1,
+                    Nombre ="Peer To Peer",
+                    PrimerByteTrama = 73,
+                    Sigla ="P2P"
+                },
+                new ProtocoloModel()
+                {
+                    Id = 2,
+                    Nombre ="Broadcast",
+                    PrimerByteTrama = 111,
+                    Sigla ="BR"
+                }
+            };
+        }
+
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
@@ -35,16 +61,14 @@ namespace lestoma.App.ViewModels.Upas
                 if (protocolo != null)
                 {
                     IsEdit = true;
-                    var byteResult = Bytes.Where(x => x == protocolo.PrimerByteTrama).FirstOrDefault();
-                    Protocolo = new ProtocoloModel
-                    {
-                        Id = protocolo.Id,
-                        Nombre = protocolo.Nombre,
-                        PrimerByteTrama = byteResult,
-                        Sigla = protocolo.Sigla
-                    };
+                    var comunicacion = Protocolos.Where(x => x.Nombre == protocolo.Nombre).FirstOrDefault();
+                    Protocolo = comunicacion;
+                    _idProtocolo = protocolo.Id;
                 }
-
+            }
+            else if (parameters.ContainsKey("upaId"))
+            {
+                _upaId = parameters.GetValue<Guid>("upaId");
             }
         }
         private List<int> LoadBytes()
@@ -66,10 +90,40 @@ namespace lestoma.App.ViewModels.Upas
             get => _protocolo;
             set => SetProperty(ref _protocolo, value);
         }
+        public ObservableCollection<ProtocoloModel> Protocolos
+        {
+            get => _protocolos;
+            set => SetProperty(ref _protocolos, value);
+        }
         private async void SaveClicked(object obj)
         {
             try
             {
+                if (_upaId != Guid.Empty)
+                {
+                    UserDialogs.Instance.ShowLoading("Guardando...");
+                    if (!_apiService.CheckConnection())
+                    {
+                        AlertNoInternetConnection();
+                        return;
+                    }
+                    ProtocoloRequest protocoloRequest = new ProtocoloRequest
+                    {
+                        Nombre = _protocolo.Nombre,
+                        PrimerByteTrama = (byte)_protocolo.PrimerByteTrama,
+                        Sigla = _protocolo.Sigla,
+                        UpaId = _upaId
+                    };
+                    ResponseDTO respuesta = await _apiService.PostAsyncWithToken(URL_API, "upas/agregar-protocolo", protocoloRequest, TokenUser.Token);
+                    if (!respuesta.IsExito)
+                    {
+                        AlertWarning(respuesta.MensajeHttp);
+                        return;
+                    }
+                    AlertSuccess(respuesta.MensajeHttp);
+                    var parameters = new NavigationParameters { { Constants.REFRESH, true } };
+                    await NavigationService.GoBackAsync(parameters);
+                }
                 if (IsEdit)
                 {
                     UserDialogs.Instance.ShowLoading("Guardando...");
@@ -80,7 +134,7 @@ namespace lestoma.App.ViewModels.Upas
                     }
                     ProtocoloRequest protocoloRequest = new ProtocoloRequest
                     {
-                        Id = _protocolo.Id,
+                        Id = _idProtocolo,
                         Nombre = _protocolo.Nombre,
                         PrimerByteTrama = (byte)_protocolo.PrimerByteTrama,
                         Sigla = _protocolo.Sigla
@@ -104,7 +158,6 @@ namespace lestoma.App.ViewModels.Upas
             }
             catch (Exception ex)
             {
-
                 SeeError(ex);
             }
             finally

@@ -29,9 +29,14 @@ namespace lestoma.DatabaseOffline.IConfiguration
 
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+          
+        }
+        protected virtual void Dispose(bool disposing)
+        {
             _contextOffline.DisposeAsync();
         }
-
         public async Task EnsureDeletedBD()
         {
             if (_contextOffline.Database.GetService<IRelationalDatabaseCreator>().Exists())

@@ -65,6 +65,7 @@ namespace lestoma.DatabaseOffline.Repositories.Repository
             try
             {
                 var data = laboratorioRequest.Adapt<LaboratorioOffline>();
+                data.FechaCreacionDispositivo = DateTime.Now;
                 await Create(data);
                 return Responses.SetCreatedResponse();
             }

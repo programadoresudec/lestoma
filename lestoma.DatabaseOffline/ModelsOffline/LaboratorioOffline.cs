@@ -18,7 +18,7 @@ namespace lestoma.DatabaseOffline.ModelsOffline
         public string Session { get; set; }
         public string TipoDeAplicacion { get; set; }
         public bool EstadoInternet => false;
-        public DateTime FechaCreacionDispositivo => DateTime.Now;
+        public DateTime FechaCreacionDispositivo { get; set; }
         public bool IsMigrated { get; set; } = false;
     }
 }

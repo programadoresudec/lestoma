@@ -37,6 +37,7 @@ namespace lestoma.App.ViewModels.Componentes
         private string _iconStatusComponent;
         private bool _isSuperAdmin;
         private bool _isEnabled;
+        private string _titleFuncion;
         private bool _isVisibleDireccionRegistro = true;
         private ObservableCollection<int> _direccionesNoUtilizadas;
         #endregion
@@ -59,6 +60,7 @@ namespace lestoma.App.ViewModels.Componentes
             {
                 var Id = parameters.GetValue<Guid>("idComponent");
                 Title = "Editar Componente";
+                TitleFuncion = "Editar";
                 _iconStatusComponent = "icon_edit.png";
                 IsCreated = false;
                 if (TokenUser.User.RolId == (int)TipoRol.Administrador)
@@ -76,6 +78,7 @@ namespace lestoma.App.ViewModels.Componentes
                 IsSuperAdmin = true;
                 _iconStatusComponent = "icon_create.png";
                 Title = "Agregar Componente";
+                TitleFuncion = "Agregar";
                 LoadLists(Guid.Empty);
             }
         }
@@ -89,6 +92,11 @@ namespace lestoma.App.ViewModels.Componentes
         {
             get => _modulos;
             set => SetProperty(ref _modulos, value);
+        }
+        public string TitleFuncion
+        {
+            get => _titleFuncion;
+            set => SetProperty(ref _titleFuncion, value);
         }
         public bool IsEnabled
         {
@@ -212,22 +220,15 @@ namespace lestoma.App.ViewModels.Componentes
                     DireccionesNoUtilizadas = new ObservableCollection<int>((List<int>)direcciones.Data);
                     if (direccionregistro.HasValue)
                     {
-                        int existe = DireccionesNoUtilizadas.FirstOrDefault(x => x == direccionregistro.Value);
-                        if (existe > 0)
+                        bool existe = DireccionesNoUtilizadas.Any(x => x == direccionregistro.Value);
+                        if (!existe)
                         {
-                            DireccionRegistro = existe;
+                            DireccionesNoUtilizadas.Add(direccionregistro.Value);
+                            DireccionRegistro = DireccionesNoUtilizadas.FirstOrDefault(x => x == direccionregistro.Value);
                         }
                         else
                         {
-                            if (!DireccionesNoUtilizadas.Any(x => x == 0))
-                            {
-                                DireccionesNoUtilizadas.Add(direccionregistro.Value);
-                                DireccionRegistro = DireccionesNoUtilizadas.FirstOrDefault(x => x == direccionregistro.Value);
-                            }
-                            else
-                            {
-                                DireccionRegistro = existe;
-                            }
+                            DireccionRegistro = direccionregistro;
                         }
                         _isVisibleDireccionRegistro = true;
                     }
@@ -395,6 +396,7 @@ namespace lestoma.App.ViewModels.Componentes
                         TipoEstadoComponente = InfoComponente.EstadoComponente,
                         Nombre = InfoComponente.Nombre,
                         ActividadId = Actividad.Id,
+                        DireccionRegistro = (byte)DireccionRegistro,
                         UpaId = Upa != null ? Upa.Id : Guid.Empty,
                         ModuloComponenteId = Modulo.Id
                     };

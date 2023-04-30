@@ -24,7 +24,7 @@ namespace lestoma.App.ViewModels.Componentes
         private NameDTO _upa;
         private ObservableCollection<NameDTO> _upas;
         private bool _isSuperAdmin;
-        private bool _isNavigating = false; 
+        private bool _isNavigating = false;
         #endregion
 
         #region ctor y OnNavigatedTo
@@ -46,9 +46,16 @@ namespace lestoma.App.ViewModels.Componentes
             base.OnNavigatedTo(parameters);
             if (parameters.ContainsKey(Constants.REFRESH))
             {
-                ListarComponentesAll();
+                if (_upa != null)
+                {
+                    ListarComponentesUpaId(_upa.Id);
+                }
+                else
+                {
+                    ListarComponentesAll();
+                }
             }
-        } 
+        }
         #endregion
 
         #region properties
@@ -96,7 +103,7 @@ namespace lestoma.App.ViewModels.Componentes
                     await NavigationService.NavigateAsync(nameof(CreateOrEditComponentPage), null);
                 });
             }
-        } 
+        }
         #endregion
 
         #region methods
@@ -147,7 +154,14 @@ namespace lestoma.App.ViewModels.Componentes
                     return;
                 }
                 AlertSuccess(response.MensajeHttp);
-                ListarComponentesAll();
+                if (_upa != null)
+                {
+                    ListarComponentesUpaId(_upa.Id);
+                }
+                else
+                {
+                    ListarComponentesAll();
+                }
             }
             catch (Exception ex)
             {
@@ -326,7 +340,7 @@ namespace lestoma.App.ViewModels.Componentes
                 Page++;
                 UserDialogs.Instance.HideLoading();
             }
-        } 
+        }
         #endregion
     }
 }
