@@ -16,8 +16,7 @@
         <buttons:SfSwitch
             IsOn="{Binding IsOn}" 
             MinimumHeightRequest="300"
-            HeightRequest="300"
-            IsEnabled="{Binding IsEnabled}"
+            HeightRequest="300"  
             WidthRequest="500"
             VisualType="Cupertino">
             <buttons:SfSwitch.Behaviors>
@@ -49,7 +48,7 @@
                         <VisualState.Setters>
                             <Setter Property="SwitchSettings">
                                 <Setter.Value>
-                                    <buttons:CupertinoSwitchSettings                                    
+                                    <buttons:CupertinoSwitchSettings                                   
                                         x:TypeArguments="buttons:OnState"
                                         TrackHeightRequest="75" TrackWidthRequest="175" 
                                         ThumbHeightRequest="60" ThumbWidthRequest="60" 

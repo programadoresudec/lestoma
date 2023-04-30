@@ -91,6 +91,12 @@ namespace lestoma.App.ViewModels.Laboratorio
         {
             try
             {
+                if (!IsEnabled)
+                {
+                    AlertWarning("No tiene permisos para realizar esta acción.");
+                    IsOn = !IsOn;
+                    return;
+                }
                 _cancellationTokenSource = new CancellationTokenSource();
                 _cancellationToken = _cancellationTokenSource.Token;
 
