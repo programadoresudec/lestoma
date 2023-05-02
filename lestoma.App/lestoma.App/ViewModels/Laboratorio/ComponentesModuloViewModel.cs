@@ -125,7 +125,7 @@ namespace lestoma.App.ViewModels.Laboratorio
 
         private List<int> LoadBytes()
         {
-            return Enumerable.Range(0, 10).ToList();
+            return Enumerable.Range(0, 256).ToList();
         }
 
         #endregion
