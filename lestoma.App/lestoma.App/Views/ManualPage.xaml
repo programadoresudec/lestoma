@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             prism:ViewModelLocator.AutowireViewModel="True" Title="Manual App Lestoma"
+             x:Class="lestoma.App.Views.ManualPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="icon_manual" Order="Primary"/>
+        <ToolbarItem Text="Cerrar Sesión" Priority="1" Command="{Binding OnSignOutCommand}"
+                 Order="Secondary"/>
+    </ContentPage.ToolbarItems>
+    <WebView Source="https://www.lestoma.site/manual_app_lestoma">
+    </WebView>
+</ContentPage>

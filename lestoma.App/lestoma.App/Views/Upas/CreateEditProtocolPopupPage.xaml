@@ -21,7 +21,7 @@
                 <StackLayout VerticalOptions="End" WidthRequest="500"
                Margin="0,0,0,20">
                     <Grid Padding="30,25,25,0">
-                        <Label Text="Agregar Protocolo" FontSize="Large"  HorizontalTextAlignment="Start" 
+                        <Label Text="Agregar Comunicación" FontSize="Large"  HorizontalTextAlignment="Start" 
                            TextColor="{StaticResource PantoneVerdeDark}"></Label>
                         <Frame WidthRequest="32" HeightRequest="32"
                         Padding="0" CornerRadius="40" HorizontalOptions="End">
@@ -34,25 +34,25 @@
                         </Frame>
                     </Grid>
                     <StackLayout Margin="30,0,30,0" Spacing="15">
-                        <inputLayout:SfTextInputLayout Hint="Nombre Protocolo"  HeightRequest="90"
+                        <inputLayout:SfTextInputLayout Hint="Nombre comunicación"  HeightRequest="90"
                                                FocusedColor="Black" ContainerBackgroundColor="Transparent">
-                            <control:BorderlessEntry x:Name="Byte" Text="{Binding Protocolo.Nombre}" 
-                                                     PlaceholderColor="#606a7b" Style="{StaticResource BorderlessEntryStyle}" 
-                                                   MaxLength="60" TextColor="#333942">
-                            </control:BorderlessEntry>
-                        </inputLayout:SfTextInputLayout>
-                        <inputLayout:SfTextInputLayout Hint=" Byte" FocusedColor="Black" HeightRequest="90"
-                                                   ContainerBackgroundColor="Transparent">
-                            <Picker TextColor="Black"
-                                Style="{StaticResource BorderlessEntryStyle}"
-                                SelectedItem="{Binding Protocolo.PrimerByteTrama}" ItemsSource="{Binding Bytes}">
+                            <Picker TextColor="Black" FontFamily="Montserrat-Regular"
+                                Style="{StaticResource BorderlessEntryStyle}" ItemDisplayBinding="{Binding Nombre}"
+                                SelectedItem="{Binding Protocolo}" ItemsSource="{Binding Protocolos}">
                             </Picker>
                         </inputLayout:SfTextInputLayout>
-                        <inputLayout:SfTextInputLayout Hint="Sigla" HeightRequest="90"
-                                               FocusedColor="Black" ContainerBackgroundColor="Transparent">
-                            <control:BorderlessEntry Text="{Binding Protocolo.Sigla}" 
+                        <inputLayout:SfTextInputLayout Hint="Byte (trama inicio)" FocusedColor="Black" HeightRequest="90"
+                                                   ContainerBackgroundColor="Transparent" IsEnabled="False">
+                            <control:BorderlessEntry x:Name="Byte" Text="{Binding Protocolo.PrimerByteTrama}" IsEnabled="False" FontFamily="Montserrat-Regular"
                                                      PlaceholderColor="#606a7b" Style="{StaticResource BorderlessEntryStyle}" 
-                                                   MaxLength="4" TextColor="#333942">
+                                                   MaxLength="60" TextColor="Black">
+                            </control:BorderlessEntry>
+                        </inputLayout:SfTextInputLayout>
+                        <inputLayout:SfTextInputLayout Hint="Sigla" HeightRequest="90" IsEnabled="False"
+                                               FocusedColor="Black" ContainerBackgroundColor="Transparent">
+                            <control:BorderlessEntry Text="{Binding Protocolo.Sigla}" FontFamily="Montserrat-Regular" IsEnabled="False"
+                                                     PlaceholderColor="#606a7b" Style="{StaticResource BorderlessEntryStyle}" 
+                                                   MaxLength="4" TextColor="Black">
                             </control:BorderlessEntry>
                         </inputLayout:SfTextInputLayout>
                     </StackLayout>

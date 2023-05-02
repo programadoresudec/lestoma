@@ -17,10 +17,8 @@
             <Grid>
                 <gauge:SfCircularGauge>
                     <gauge:SfCircularGauge.Headers>
-                        <gauge:Header Text="{Binding Valor}" Position="0.48, 0.6" ForegroundColor="#424242" FontAttributes="Bold" TextSize="20"/>
-                        <gauge:Header Text="o" Position="0.55,0.58" ForegroundColor="#424242" FontAttributes="Bold" TextSize="12"/>
-                        <gauge:Header Text="C" Position="0.58,0.6" ForegroundColor="#424242" FontAttributes="Bold" TextSize="20"/>
-                    </gauge:SfCircularGauge.Headers>
+                        <gauge:Header Text="{Binding Valor}" Position="0.50, 0.62" ForegroundColor="#424242" FontAttributes="Bold" TextSize="20"/>
+                        </gauge:SfCircularGauge.Headers>
                     <gauge:SfCircularGauge.Scales>
                         <gauge:Scale  LabelFontSize = "16" ShowRim = "False" 
                           LabelOffset = "0.95" StartValue = "0" EndValue = "500" Interval = "50" RimThickness="28" MinorTicksPerInterval ="4" >
@@ -31,11 +29,11 @@
                                 <gauge:TickSettings  Thickness="0.7"  EndOffset="0.79" StartOffset="0.75"/>
                             </gauge:Scale.MinorTickSettings>
                             <gauge:Scale.Ranges>
-                                <gauge:Range StartValue = "0" EndValue = "500" Thickness = "60" Offset = "0.6">
+                                <gauge:Range StartValue = "0" EndValue = "500" Thickness = "20" Offset = "0.6">
                                     <gauge:Range.GradientStops>
                                         <gauge:GaugeGradientStop Value="0" Color="#30B32D"/>
-                                        <gauge:GaugeGradientStop Value="50" Color="#FFDD00"/>
-                                        <gauge:GaugeGradientStop Value="80" Color="#F03E3E"/>
+                                        <gauge:GaugeGradientStop Value="166" Color="#FFDD00"/>
+                                        <gauge:GaugeGradientStop Value="333" Color="#F03E3E"/>
                                     </gauge:Range.GradientStops>
                                 </gauge:Range>
                             </gauge:Scale.Ranges>

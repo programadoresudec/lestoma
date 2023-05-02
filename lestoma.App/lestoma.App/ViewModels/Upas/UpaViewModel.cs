@@ -15,44 +15,24 @@ namespace lestoma.App.ViewModels.Upas
 {
     public class UpaViewModel : BaseViewModel
     {
+        #region attributes
         private readonly IApiService _apiService;
         private ObservableCollection<UpaDTO> _upas;
-        private Command<object> itemTap;
         private bool _isNavigating = false;
+        #endregion
+
+        #region ctor y onNavigatedTo
         public UpaViewModel(INavigationService navigationService, IApiService apiService) :
-            base(navigationService)
+           base(navigationService)
         {
             _apiService = apiService;
             _upas = new ObservableCollection<UpaDTO>();
             EditCommand = new Command<object>(UpaSelected, CanNavigate);
             DeleteCommand = new Command<object>(DeleteClicked, CanNavigate);
             SeeProtocolsCommand = new Command<object>(OnSeeProtocolClicked, CanNavigate);
-            LoadUpas();
+            CreateProtocolCommand = new Command<object>(CreateProtocolClicked, CanNavigate);
             MoreUpasCommand = new Command(LoadMoreUpas);
-        }
-        public ObservableCollection<UpaDTO> Upas
-        {
-            get => _upas;
-            set => SetProperty(ref _upas, value);
-        }
-
-        public Command EditCommand { get; set; }
-        public Command DeleteCommand { get; set; }
-        public Command MoreUpasCommand { get; set; }
-        public Command<object> SeeProtocolsCommand
-        {
-            get => itemTap;
-            set => SetProperty(ref itemTap, value);
-        }
-        public Command AddCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    await NavigationService.NavigateAsync(nameof(CreateOrEditUpaPage));
-                });
-            }
+            LoadUpas();
         }
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
@@ -63,6 +43,34 @@ namespace lestoma.App.ViewModels.Upas
                 LoadUpas();
             }
         }
+        #endregion
+
+        #region properties
+        public ObservableCollection<UpaDTO> Upas
+        {
+            get => _upas;
+            set => SetProperty(ref _upas, value);
+        }
+
+        public Command EditCommand { get; set; }
+        public Command DeleteCommand { get; set; }
+        public Command MoreUpasCommand { get; set; }
+        public Command<object> SeeProtocolsCommand { get; set; }  
+        public Command<object> CreateProtocolCommand { get; set; }
+
+        public Command AddCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    await NavigationService.NavigateAsync(nameof(CreateOrEditUpaPage));
+                });
+            }
+        }
+        #endregion
+
+        #region methods
         private async void UpaSelected(object objeto)
         {
             if (!_isNavigating)
@@ -91,14 +99,35 @@ namespace lestoma.App.ViewModels.Upas
 
         private async void OnSeeProtocolClicked(object obj)
         {
-            UpaDTO detalle = (UpaDTO)obj;
-            if (detalle == null)
-                return;
-            var parameters = new NavigationParameters
+            if (!_isNavigating)
             {
-                { "protocolos", detalle.ProtocolosCOM }
-            };
-            await NavigationService.NavigateAsync($"{nameof(InfoProtocolPopupPage)}", parameters);
+                _isNavigating = true;
+                UpaDTO detalle = (UpaDTO)obj;
+                if (detalle == null)
+                    return;
+                var parameters = new NavigationParameters
+                    {
+                        { "protocolos", detalle.ProtocolosCOM }
+                    };
+                await NavigationService.NavigateAsync($"{nameof(InfoProtocolPopupPage)}", parameters);
+                _isNavigating = false;
+            }
+        }
+        private async void CreateProtocolClicked(object obj)
+        {
+            if (!_isNavigating)
+            {
+                _isNavigating = true;
+                UpaDTO detalle = (UpaDTO)obj;
+                if (detalle == null)
+                    return;
+                var parameters = new NavigationParameters
+                    {
+                        { "upaId", detalle.Id }
+                    };
+                await NavigationService.NavigateAsync($"{nameof(CreateEditProtocolPopupPage)}", parameters);
+                _isNavigating = false;
+            }
         }
 
         private bool CanNavigate(object arg)
@@ -117,41 +146,46 @@ namespace lestoma.App.ViewModels.Upas
             }
         }
 
-        public async void DeleteClicked(object obj)
+        private async void DeleteClicked(object obj)
         {
-            UpaDTO detalle = (UpaDTO)obj;
-            if (detalle == null)
-                return;
-            try
+            if (!_isNavigating)
             {
-                UserDialogs.Instance.ShowLoading("Eliminando...");
-                if (_apiService.CheckConnection())
+                _isNavigating = true;
+                UpaDTO detalle = (UpaDTO)obj;
+                if (detalle == null)
+                    return;
+                try
                 {
-                    ResponseDTO response = await _apiService.DeleteAsyncWithToken(URL_API, "upas", detalle.Id, TokenUser.Token);
-                    if (response.IsExito)
+                    UserDialogs.Instance.ShowLoading("Eliminando...");
+                    if (_apiService.CheckConnection())
                     {
-                        AlertSuccess(response.MensajeHttp);
-                        this.Page = 1;
-                        LoadUpas();
+                        ResponseDTO response = await _apiService.DeleteAsyncWithToken(URL_API, "upas", detalle.Id, TokenUser.Token);
+                        if (response.IsExito)
+                        {
+                            AlertSuccess(response.MensajeHttp);
+                            this.Page = 1;
+                            LoadUpas();
+                        }
+                        else
+                        {
+                            AlertWarning(response.MensajeHttp);
+                        }
                     }
                     else
                     {
-                        AlertWarning(response.MensajeHttp);
+                        AlertNoInternetConnection();
                     }
-                }
-                else
-                {
-                    AlertNoInternetConnection();
-                }
 
-            }
-            catch (Exception ex)
-            {
-                SeeError(ex);
-            }
-            finally
-            {
-                UserDialogs.Instance.HideLoading();
+                }
+                catch (Exception ex)
+                {
+                    SeeError(ex);
+                }
+                finally
+                {
+                    UserDialogs.Instance.HideLoading();
+                    _isNavigating = false;
+                }
             }
         }
         private async void ConsumoService()
@@ -230,5 +264,6 @@ namespace lestoma.App.ViewModels.Upas
             }
         }
 
+        #endregion
     }
 }

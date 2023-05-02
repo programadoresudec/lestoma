@@ -136,7 +136,7 @@
                             Command="{Binding AddProtocolCommand}"
                             CornerRadius="4" Margin="15,20,0,15" ImageSource="icon_create.png" ShowIcon="True"
                             Style="{StaticResource LestomaButtonStyle}"
-                            Text="Agregar Protocolo" />
+                            Text="Agregar Comunicación" />
                 <syncfusion:SfListView x:Name="LV_Protocolos" IsVisible="{Binding IsVisibleProtocols}" ItemsSource="{Binding Protocolos}" AutoFitMode="DynamicHeight"
                                        SelectionBackgroundColor="Transparent">
                     <syncfusion:SfListView.ItemTemplate>

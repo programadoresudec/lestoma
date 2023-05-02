@@ -5,8 +5,9 @@
              xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup" 
              xmlns:cards="clr-namespace:Syncfusion.XForms.Cards;assembly=Syncfusion.Cards.XForms" 
              xmlns:core="clr-namespace:Syncfusion.XForms.Core;assembly=Syncfusion.Core.XForms" 
-             xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
-             prism:ViewModelLocator.AutowireViewModel="True"
+             xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms" 
+             xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="lestoma.App.Views.Upas.InfoProtocolPopupPage">
     <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
         <cards:SfCardView BackgroundColor="White" CornerRadius="10" 
@@ -19,7 +20,7 @@
                 <StackLayout VerticalOptions="End" WidthRequest="500"
                Margin="0,0,0,20">
                     <Grid Padding="30,25,25,0">
-                        <Label Text="Protocolos" FontSize="Large"  HorizontalTextAlignment="Start" 
+                        <Label Text="Tipos de comunicación" FontSize="Large"  HorizontalTextAlignment="Start" 
                            TextColor="{StaticResource PantoneVerdeDark}"></Label>
                         <Frame WidthRequest="32" HeightRequest="32"
                         Padding="0" CornerRadius="40" HorizontalOptions="End">
@@ -32,7 +33,7 @@
                         </Frame>
                     </Grid>
                     <StackLayout Margin="30,0,30,0">
-                        <syncfusion:SfListView  HeightRequest="200" AutoFitMode="DynamicHeight"
+                        <syncfusion:SfListView  HeightRequest="200" AutoFitMode="DynamicHeight" x:Name="LV_Protocolos"
                                                      TapCommand="{Binding EditProtocolCommand}" ItemsSource="{Binding Protocolos}"
                                        SelectionBackgroundColor="Transparent">
                             <syncfusion:SfListView.ItemTemplate>
@@ -40,10 +41,10 @@
                                     <StackLayout Orientation="Vertical" Spacing="10">
                                         <StackLayout Orientation="Horizontal">
                                             <Label HorizontalOptions="Start"
-                                                   Margin="16,0,0,0"
+                                                   Margin="16,0,0,0" FontSize="28"
                                                    FontFamily="Fontello"
                                                    Style="{StaticResource IconLabelStyle}"
-                                                   Text="{StaticResource IconPlug}" />
+                                                   Text="{StaticResource IconAssistiveListeningSystems}" />
                                             <StackLayout Orientation="Vertical">
                                                 <Label
                                                 Margin="16,0,0,0"
@@ -69,12 +70,12 @@
                                                 Text="{Binding ByteHexa, StringFormat='Byte Hexa {0}'}"
                                                 VerticalOptions="Center" />
                                             </StackLayout>
-                                            <Label
-                                            HorizontalOptions="EndAndExpand"
-                                            Margin="16,8"       
-                                            FontFamily="Fontello"        
-                                            Style="{StaticResource IconLabelStyle}"
-                                            Text="{StaticResource IconEdit}" />
+                                            <button:SfButton 
+                                                HeightRequest="24" CornerRadius="5" Margin="0,0,5,5" VerticalOptions="CenterAndExpand"
+                                                HorizontalOptions="EndAndExpand" BackgroundColor="{StaticResource Transparent}"
+                                                Command="{Binding BindingContext.DeleteCommand, Source={x:Reference LV_Protocolos}}" 
+                                                CommandParameter="{Binding .}" ImageSource="icon_delete.png" ImageAlignment="Start" ShowIcon="True">
+                                            </button:SfButton>
                                         </StackLayout>
                                         <BoxView  Style="{StaticResource HorizontalSeparatorStyle}" HeightRequest="2" />
                                     </StackLayout>

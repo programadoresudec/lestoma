@@ -5,6 +5,7 @@ using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
+using lestoma.CommonUtils.Listados;
 using lestoma.CommonUtils.Requests;
 using lestoma.DatabaseOffline.IConfiguration;
 using Prism.Navigation;
@@ -20,16 +21,18 @@ namespace lestoma.App.ViewModels.Laboratorio
 {
     public class EstadoActuadorViewModel : BaseViewModel
     {
-        private readonly CancellationTokenSource _cancellationTokenSource;
-        private readonly CancellationToken _cancellationToken;
+        private CancellationTokenSource _cancellationTokenSource;
+        private CancellationToken _cancellationToken;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IApiService _apiService;
+        private readonly ICRCHelper _crcHelper;
         private float? _valorOnOff;
         private LaboratorioRequest _laboratorioRequest;
         private TramaComponenteRequest _componenteRequest;
         private bool _isEnabled;
         private Boolean? _IsOn;
-        public EstadoActuadorViewModel(INavigationService navigationService, IApiService apiService, IUnitOfWork unitOfWork) :
+        public EstadoActuadorViewModel(INavigationService navigationService, IApiService apiService,
+            IUnitOfWork unitOfWork, ICRCHelper crcHelper) :
             base(navigationService)
         {
             _unitOfWork = unitOfWork;
@@ -40,6 +43,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             ChangeStatedCommand = new Command<object>(StatedSelected, CanNavigate);
             _cancellationTokenSource = new CancellationTokenSource();
             _cancellationToken = _cancellationTokenSource.Token;
+            _crcHelper = crcHelper;
         }
 
         private bool CanNavigate(object arg)
@@ -79,7 +83,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             {
                 TramaComponente = parameters.GetValue<TramaComponenteRequest>("tramaComponente");
                 Title = $"Estado {TramaComponente.NombreComponente}";
-                var tramaAEnviar = Reutilizables.TramaConCRC16Modbus(new List<byte>(TramaComponente.TramaOchoBytes));
+                var tramaAEnviar = _crcHelper.TramaConCRC16Modbus(new List<byte>(TramaComponente.TramaOchoBytes));
                 SendTrama(tramaAEnviar);
             }
         }
@@ -87,16 +91,26 @@ namespace lestoma.App.ViewModels.Laboratorio
         {
             try
             {
+                if (!IsEnabled)
+                {
+                    AlertWarning("No tiene permisos para realizar esta acción.");
+                    IsOn = !IsOn;
+                    return;
+                }
+                _cancellationTokenSource = new CancellationTokenSource();
+                _cancellationToken = _cancellationTokenSource.Token;
+
                 byte[] bytesFlotante = new byte[4];
                 if (IsOn.HasValue)
                 {
                     bytesFlotante = Reutilizables.IEEEFloatingPointToByte(IsOn.Value ? 1 : 0);
                 }
+                TramaComponente.TramaOchoBytes[2] = new ListadoEstadoComponente().GetEstadoAjuste().ByteDecimalFuncion;
                 TramaComponente.TramaOchoBytes[4] = bytesFlotante[0];
                 TramaComponente.TramaOchoBytes[5] = bytesFlotante[1];
                 TramaComponente.TramaOchoBytes[6] = bytesFlotante[2];
                 TramaComponente.TramaOchoBytes[7] = bytesFlotante[3];
-                var tramaAEnviar = Reutilizables.TramaConCRC16Modbus(new List<byte>(TramaComponente.TramaOchoBytes));
+                var tramaAEnviar = _crcHelper.TramaConCRC16Modbus(new List<byte>(TramaComponente.TramaOchoBytes));
                 SendTrama(tramaAEnviar, true);
             }
             catch (Exception ex)
@@ -131,15 +145,12 @@ namespace lestoma.App.ViewModels.Laboratorio
                             {
                                 Valor = (float)data.SetPointIn.Value;
                             }
-                            if (EditState)
+                            if (EditState && Valor == (int)HttpStatusCode.Conflict)
                             {
-                                if (Valor == (int)HttpStatusCode.Conflict)
-                                {
-                                    await PopupNavigation.Instance.PushAsync(
-                                        new MessagePopupPage(message: "No se pudo obtener el estado, ha ocurrido un error al recibir los datos.",
-                                        icon: Constants.ICON_WARNING));
-                                    return;
-                                }
+                                await PopupNavigation.Instance.PushAsync(
+                                    new MessagePopupPage(message: "No se pudo obtener el estado, ha ocurrido un error al recibir los datos.",
+                                    icon: Constants.ICON_WARNING));
+                                return;
                             }
                             IsOn = Valor == 1;
                             SaveData(Reutilizables.ByteArrayToHexString(tramaEnviada.ToArray()), data.TramaOutPut, EditState);
@@ -187,7 +198,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                         await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener la trama.", icon: Constants.ICON_WARNING));
                         return;
                     }
-                    var response = Reutilizables.VerifyCRCOfReceivedTrama(tramaRecibida);
+                    var response = _crcHelper.VerifyCRCOfReceivedTrama(tramaRecibida);
                     if (!response.IsExito)
                     {
                         await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: response.MensajeHttp, icon: Constants.ICON_WARNING));
@@ -238,9 +249,12 @@ namespace lestoma.App.ViewModels.Laboratorio
                             byte[] rebuf2 = new byte[recibido];
                             Array.Copy(bufferRecibido, 0, rebuf2, 0, recibido);
                             TramaHexadecimal += Reutilizables.ByteArrayToHexString(rebuf2);
-                            if (TramaHexadecimal.Length == 20)
+                            if (!string.IsNullOrWhiteSpace(TramaHexadecimal))
                             {
-                                _cancellationTokenSource.Cancel();
+                                if (TramaHexadecimal.Length == 20)
+                                {
+                                    _cancellationTokenSource.Cancel();
+                                }
                             }
                         }
                         Thread.Sleep(100);

@@ -196,15 +196,8 @@ namespace lestoma.App.ViewModels.UpasActividades
                 if (Usuarios.Count == 0)
                 {
                     var check = await UserDialogs.Instance.ConfirmAsync("¡Todos los usuarios ya tienen asignada una UPA!",
-                          "Información", "Aceptar","");
-                    if (check)
-                    {
-                        await NavigationService.GoBackAsync();
-                    }
-                    else
-                    {
-                        await NavigationService.GoBackAsync();
-                    }
+                          "Información", "Aceptar", "");
+                    await NavigationService.GoBackAsync();
                 }
                 if (detalleUpaActividad == null)
                 {

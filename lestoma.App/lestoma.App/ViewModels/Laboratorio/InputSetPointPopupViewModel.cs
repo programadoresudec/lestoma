@@ -11,12 +11,14 @@ namespace lestoma.App.ViewModels.Laboratorio
     public class InputSetPointPopupViewModel : BaseViewModel
     {
         private TramaComponenteRequest _componenteRequest;
+        private readonly ICRCHelper _crcHelper;
         private float? _inputSetPoint;
-        public InputSetPointPopupViewModel(INavigationService navigationService) :
+        public InputSetPointPopupViewModel(INavigationService navigationService, ICRCHelper crcHelper) :
                base(navigationService)
         {
             _componenteRequest = new TramaComponenteRequest();
             SaveCommand = new Command(SaveClicked);
+            _crcHelper = crcHelper;
         }
 
         public TramaComponenteRequest TramaComponente
@@ -62,7 +64,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                 TramaComponente.TramaOchoBytes[6] = bytesFlotante[2];
                 TramaComponente.TramaOchoBytes[7] = bytesFlotante[3];
                 request.ValorSetPoint = InputSetPoint.Value;
-                request.TramaWithCRC = Reutilizables.TramaConCRC16Modbus(TramaComponente.TramaOchoBytes);
+                request.TramaWithCRC = _crcHelper.TramaConCRC16Modbus(TramaComponente.TramaOchoBytes);
                 var parameters = new NavigationParameters
                 {
                     { "tramaComponente", request }

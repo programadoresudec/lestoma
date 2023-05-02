@@ -65,42 +65,32 @@ namespace lestoma.App
             {
                 await NavigationService.NavigateAsync($"NavigationPage/{nameof(OnBoardingPage)}");
             }
+            else if (!MovilSettings.IsLogin)
+            {
+                await NavigationService.NavigateAsync($"NavigationPage/{nameof(LoginPage)}");
+            }
             else
             {
-                if (!MovilSettings.IsLogin)
+                TokenDTO tokenUser = null;
+                if (!string.IsNullOrEmpty(MovilSettings.Token))
                 {
+                    tokenUser = JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token);
+                }
+
+                if (tokenUser == null || tokenUser.Expiration <= DateTime.Now)
+                {
+                    MovilSettings.Token = null;
+                    MovilSettings.IsLogin = false;
+                    MovilSettings.IsOnSyncToDevice = false;
                     await NavigationService.NavigateAsync($"NavigationPage/{nameof(LoginPage)}");
+                }
+                else if (!MovilSettings.IsOnSyncToDevice && Connectivity.NetworkAccess != NetworkAccess.Internet)
+                {
+                    await NavigationService.NavigateAsync(nameof(ModeOfflinePage));
                 }
                 else
                 {
-                    TokenDTO TokenUser = !string.IsNullOrEmpty(MovilSettings.Token) ? JsonConvert.DeserializeObject<TokenDTO>(MovilSettings.Token) : null;
-
-                    if (TokenUser != null)
-                    {
-                        if (TokenUser.Expiration <= DateTime.Now)
-                        {
-                            MovilSettings.Token = null;
-                            MovilSettings.IsLogin = false;
-                            MovilSettings.IsOnSyncToDevice = false;
-                            await NavigationService.NavigateAsync($"NavigationPage/{nameof(LoginPage)}");
-                        }
-                        else
-                        {
-                            if (!MovilSettings.IsOnSyncToDevice && Connectivity.NetworkAccess != NetworkAccess.Internet)
-                            {
-                                await NavigationService.NavigateAsync(nameof(ModeOfflinePage));
-                            }
-                            else
-                            {
-                                await NavigationService.NavigateAsync($"{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        await NavigationService.NavigateAsync($"NavigationPage/{nameof(LoginPage)}");
-                    }
-
+                    await NavigationService.NavigateAsync($"{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
                 }
             }
 
@@ -111,6 +101,7 @@ namespace lestoma.App
             containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
             containerRegistry.Register<IApiService, ApiService>();
             containerRegistry.Register<IFilesHelper, FilesHelper>();
+            containerRegistry.Register<ICRCHelper, CRCHelper>();
             containerRegistry.Register<IUnitOfWork>(c => new UnitOfWork(DbPathSqlLite));
             #region Navegaciones
             containerRegistry.RegisterForNavigation<NavigationPage>();
@@ -163,6 +154,7 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<MACBluetoothPopupPage, MACBluetoothPopupViewModel>();
             containerRegistry.RegisterForNavigation<InputSetPointPopupPage, InputSetPointPopupViewModel>();
             #endregion
+            containerRegistry.RegisterForNavigation<ManualPage, ManualPageViewModel>();
         }
     }
 }

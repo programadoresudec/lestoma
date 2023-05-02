@@ -44,7 +44,7 @@
                                         <Label.FormattedText>
                                             <FormattedString>
                                                 <Span Text="Upa: " FontFamily="Montserrat-SemiBold" FontSize="15"  TextColor="{StaticResource PantoneGris}"  />
-                                                <Span Text="{Binding Upa}" FontFamily="Montserrat-Regular"  />
+                                                <Span Text="{Binding Upa.Nombre}" FontFamily="Montserrat-Regular"  />
                                             </FormattedString>
                                         </Label.FormattedText>
                                     </Label>

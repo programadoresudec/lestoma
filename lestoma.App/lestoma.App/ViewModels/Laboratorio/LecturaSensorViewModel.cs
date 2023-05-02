@@ -23,10 +23,11 @@ namespace lestoma.App.ViewModels.Laboratorio
         CancellationToken _cancellationToken;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IApiService _apiService;
+        private readonly ICRCHelper _crcHelper;
         private float _valorTemperatura;
         private LaboratorioRequest _laboratorioRequest;
         private TramaComponenteRequest _componenteRequest;
-        public LecturaSensorViewModel(INavigationService navigationService, IApiService apiService, IUnitOfWork unitOfWork) :
+        public LecturaSensorViewModel(INavigationService navigationService, IApiService apiService, IUnitOfWork unitOfWork, ICRCHelper crcHelper) :
             base(navigationService)
         {
             _unitOfWork = unitOfWork;
@@ -35,6 +36,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             _laboratorioRequest = new LaboratorioRequest();
             _cancellationTokenSource = new CancellationTokenSource();
             _cancellationToken = _cancellationTokenSource.Token;
+            _crcHelper = crcHelper;
         }
 
         public TramaComponenteRequest TramaComponente
@@ -56,7 +58,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             {
                 TramaComponente = parameters.GetValue<TramaComponenteRequest>("tramaComponente");
                 Title = $"Estado {TramaComponente.NombreComponente}";
-                var tramaAEnviar = Reutilizables.TramaConCRC16Modbus(TramaComponente.TramaOchoBytes);
+                var tramaAEnviar = _crcHelper.TramaConCRC16Modbus(TramaComponente.TramaOchoBytes);
                 SendTrama(tramaAEnviar);
             }
         }
@@ -116,6 +118,12 @@ namespace lestoma.App.ViewModels.Laboratorio
                     if (string.IsNullOrWhiteSpace(tramaRecibida))
                     {
                         await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener la trama.", icon: Constants.ICON_WARNING));
+                        return;
+                    }
+                    var response = _crcHelper.VerifyCRCOfReceivedTrama(tramaRecibida);
+                    if (!response.IsExito)
+                    {
+                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: response.MensajeHttp, icon: Constants.ICON_WARNING));
                         return;
                     }
                     Valor = Reutilizables.ConvertReceivedTramaToResult(tramaRecibida);

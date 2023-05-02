@@ -25,8 +25,9 @@ namespace lestoma.App.ViewModels.Laboratorio
         private readonly IApiService _apiService;
         private LaboratorioRequest _laboratorioRequest;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICRCHelper _crcHelper;
         private TramaComponenteSetPointRequest _componenteRequest;
-        public SetPointViewModel(INavigationService navigationService, IApiService apiService, IUnitOfWork unitOfWork) :
+        public SetPointViewModel(INavigationService navigationService, IApiService apiService, IUnitOfWork unitOfWork, ICRCHelper crcHelper) :
             base(navigationService)
         {
             _unitOfWork = unitOfWork;
@@ -35,6 +36,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             _laboratorioRequest = new LaboratorioRequest();
             _cancellationTokenSource = new CancellationTokenSource();
             _cancellationToken = _cancellationTokenSource.Token;
+            _crcHelper = crcHelper;
         }
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
@@ -100,7 +102,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                         await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: "No se pudo obtener la trama.", icon: Constants.ICON_WARNING));
                         return;
                     }
-                    var response = Reutilizables.VerifyCRCOfReceivedTrama(tramaRecibida);
+                    var response = _crcHelper.VerifyCRCOfReceivedTrama(tramaRecibida);
                     if (!response.IsExito)
                     {
                         await PopupNavigation.Instance.PushAsync(new MessagePopupPage(message: response.MensajeHttp, icon: Constants.ICON_WARNING));

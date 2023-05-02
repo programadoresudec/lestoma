@@ -44,7 +44,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             _protocolos = new ObservableCollection<NameProtocoloDTO>();
             _protocolo = new NameProtocoloDTO();
             RedirectionTramaCommand = new Command<object>(ComponentSelected, CanNavigate);
-            Title = "Componentes laboratorio";
+            Title = "Laboratorio";
             Bytes = LoadBytes();
             MessageHelp = _isSuperAdmin ? "Seleccione UPA, protocolo de comunicación y número de esclavo.\n\n Después de clic en alguno de los componentes para LECTURA, AJUSTE Y ON-OFF del laboratorio."
                                         : "Seleccione protocolo de comunicación y número de esclavo.\n\n Después de clic en alguno de los componentes para LECTURA, AJUSTE Y ON-OFF del laboratorio.";
@@ -125,7 +125,7 @@ namespace lestoma.App.ViewModels.Laboratorio
 
         private List<int> LoadBytes()
         {
-            return Enumerable.Range(0, 10).ToList();
+            return Enumerable.Range(0, 256).ToList();
         }
 
         #endregion
