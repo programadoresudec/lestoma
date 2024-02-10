@@ -182,8 +182,8 @@
     <AndroidResource Include="Resources\values\strings.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\BackEnd\src\lestoma.CommonUtils\lestoma.CommonUtils.csproj">
-      <Project>{9c971d0a-df51-4294-ac66-68dd87864927}</Project>
+    <ProjectReference Include="..\..\..\lestomaAPI\lestoma.CommonUtils\lestoma.CommonUtils.csproj">
+      <Project>{9DD3C8A2-4517-454F-B9E7-558D19A5D2BB}</Project>
       <Name>lestoma.CommonUtils</Name>
     </ProjectReference>
     <ProjectReference Include="..\lestoma.App\lestoma.App.csproj">

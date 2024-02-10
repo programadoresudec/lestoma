@@ -287,6 +287,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\lestomaAPI\lestoma.CommonUtils\lestoma.CommonUtils.csproj" />
     <ProjectReference Include="..\..\lestoma.DatabaseOffline\lestoma.DatabaseOffline.csproj" />
   </ItemGroup>
 
