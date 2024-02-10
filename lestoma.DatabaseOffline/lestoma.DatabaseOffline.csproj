@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\lestomaAPI\lestoma.CommonUtils\lestoma.CommonUtils.csproj" />
-    <ProjectReference Include="..\..\lestomaAPI\lestoma.Entidades\lestoma.Entidades.csproj" />
+    <ProjectReference Include="..\..\BackEnd\src\lestoma.CommonUtils\lestoma.CommonUtils.csproj" />
+    <ProjectReference Include="..\..\BackEnd\src\lestoma.Entidades\lestoma.Entidades.csproj" />
   </ItemGroup>
 
 </Project>

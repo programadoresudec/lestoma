@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<popup:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+             xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup" 
+                 xmlns:cards="clr-namespace:Syncfusion.XForms.Cards;assembly=Syncfusion.Cards.XForms" 
+                 xmlns:core="clr-namespace:Syncfusion.XForms.Core;assembly=Syncfusion.Core.XForms" 
+                 xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms" xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+                 prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="lestoma.App.Views.Buzon.EditStatusPopupPage">
+    <popup:PopupPage.Animation>
+        <animations:ScaleAnimation DurationIn="400"
+                                   DurationOut="300"
+                                   EasingIn="SinOut"
+                                   EasingOut="SinIn"
+                                   HasBackgroundAnimation="True"
+                                   PositionIn="Center"
+                                   PositionOut="Center"
+                                   ScaleIn="1.2"
+                                   ScaleOut="0.8" />
+    </popup:PopupPage.Animation>
+    <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+        <cards:SfCardView BackgroundColor="White" CornerRadius="10" 
+                          HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"
+                           Margin="{core:OnPlatformOrientationThickness  PhonePortrait='30,40',
+                                                                 PhoneLandscape='150,32',
+                                                                 TabletPortrait='200,50',
+                                                                 TabletLandscape='200,50',
+                                                                 Desktop='30'}">
+            <ScrollView>
+                <StackLayout VerticalOptions="EndAndExpand" WidthRequest="500"
+               Margin="0,0,0,20">
+                    <Grid Padding="30,25,25,0">
+                        <Label Text="Editar Estado" FontSize="Large" 
+                           HorizontalTextAlignment="Start" TextColor="{StaticResource PantoneVerdeDark}"></Label>
+                        <Frame WidthRequest="32" HeightRequest="32"
+                        Padding="0" CornerRadius="40" HorizontalOptions="End">
+                            <ContentView>
+                                <ContentView.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnCloseButtonTapped" />
+                                </ContentView.GestureRecognizers>
+                                <Image Source="icon_close.png"  Aspect="AspectFill" />
+                            </ContentView>
+                        </Frame>
+                    </Grid>
+                    <StackLayout Spacing="10" Margin="30,0,30,20">
+                        <inputLayout:SfTextInputLayout Hint="Tipo estado"  HeightRequest="90"
+                                               FocusedColor="Black" ContainerBackgroundColor="Transparent">
+                            <Picker TextColor="Black" FontFamily="Montserrat-Regular"
+                                Style="{StaticResource BorderlessEntryStyle}" ItemDisplayBinding="{Binding Nombre}"
+                                SelectedItem="{Binding EstadoBuzon}" ItemsSource="{Binding EstadosBuzon}">
+                            </Picker>
+                        </inputLayout:SfTextInputLayout>
+                    </StackLayout>
+                    <buttons:SfButton
+                        HorizontalOptions="FillAndExpand" Margin="20"
+                        Command="{Binding SaveCommand}"
+                        CornerRadius="12"
+                        Style="{StaticResource LestomaPopupGradientButtonStyle}"
+                        Text="Guardar" />
+                </StackLayout>
+            </ScrollView>
+        </cards:SfCardView>
+    </Grid>
+</popup:PopupPage>

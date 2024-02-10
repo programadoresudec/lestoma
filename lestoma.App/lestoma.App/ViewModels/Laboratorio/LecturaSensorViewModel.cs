@@ -11,7 +11,6 @@ using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -57,7 +56,7 @@ namespace lestoma.App.ViewModels.Laboratorio
             if (parameters.ContainsKey("tramaComponente"))
             {
                 TramaComponente = parameters.GetValue<TramaComponenteRequest>("tramaComponente");
-                Title = $"Estado {TramaComponente.NombreComponente}";
+                Title = $"Lectura {TramaComponente.NombreComponente}";
                 var tramaAEnviar = _crcHelper.TramaConCRC16Modbus(TramaComponente.TramaOchoBytes);
                 SendTrama(tramaAEnviar);
             }
@@ -111,8 +110,14 @@ namespace lestoma.App.ViewModels.Laboratorio
         {
             try
             {
+                if (!MBluetoothAdapter.IsEnabled)
+                {
+                    AlertError("Debe prender el bluetooth.");
+                    return;
+                }
                 if (btSocket.IsConnected)
                 {
+                    Timer timer = new Timer(state => _cancellationTokenSource.Cancel(), null, 30000, Timeout.Infinite);
                     await btSocket.OutputStream.WriteAsync(tramaEnviada.ToArray(), 0, tramaEnviada.Count, _cancellationToken);
                     var tramaRecibida = await ReceivedData();
                     if (string.IsNullOrWhiteSpace(tramaRecibida))
@@ -132,9 +137,8 @@ namespace lestoma.App.ViewModels.Laboratorio
             }
             catch (Exception ex)
             {
-                btSocket.Close();
+                btSocket?.Close();
                 SeeError(ex);
-                AlertWarning("Se ha desconectado el bluetooth.");
             }
         }
 
@@ -142,33 +146,42 @@ namespace lestoma.App.ViewModels.Laboratorio
         {
             string TramaHexadecimal = string.Empty;
             var inputstream = btSocket.InputStream;
-            byte[] bufferRecibido = new byte[10];  // buffer store for the stream
-            int recibido = 0; // bytes returned from read()
+            // buffer store for the stream
+            byte[] bufferRecibido = new byte[Constants.BYTE_TRAMA_LENGTH];
+            // bytes returned from read()
+            int recibido = 0;
             return await Task.Run(async () =>
             {
+                UserDialogs.Instance.ShowLoading("Cargando información...");
                 while (!_cancellationToken.IsCancellationRequested)
                 {
                     try
                     {
                         recibido = await inputstream.ReadAsync(bufferRecibido, 0, bufferRecibido.Length, _cancellationToken);
-
                         if (recibido > 0)
                         {
                             byte[] rebuf2 = new byte[recibido];
                             Array.Copy(bufferRecibido, 0, rebuf2, 0, recibido);
                             TramaHexadecimal += Reutilizables.ByteArrayToHexString(rebuf2);
-                            if (TramaHexadecimal.Length == 20)
+                            if (!string.IsNullOrWhiteSpace(TramaHexadecimal))
                             {
-                                _cancellationTokenSource.Cancel();
+                                if (TramaHexadecimal.Length == Constants.HEXADECIMAL_TRAMA_LENGTH)
+                                {
+                                    _cancellationTokenSource.Cancel();
+                                }
                             }
                         }
-                        Thread.Sleep(100);
+                        // Esta pausa es útil para evitar una lectura excesivamente rápida o continua del flujo de entrada.
+                        await Task.Delay(100);
                     }
                     catch (Exception ex)
                     {
-                        SeeError(ex, "No se pudo recibir la data de la trama por bluetooth.");
-                        btSocket.Close();
-                        throw;
+                        SeeError(ex);
+                        btSocket?.Close();
+                    }
+                    finally
+                    {
+                        UserDialogs.Instance.HideLoading();
                     }
                 }
                 return TramaHexadecimal;
@@ -178,7 +191,7 @@ namespace lestoma.App.ViewModels.Laboratorio
         {
             try
             {
-                _laboratorioRequest.Ip = GetLocalIPAddress();
+               
                 _laboratorioRequest.TramaEnviada = TramaEnviada;
                 _laboratorioRequest.TramaRecibida = tramaRecibida;
                 _laboratorioRequest.ComponenteId = _componenteRequest.ComponenteId;
@@ -187,10 +200,10 @@ namespace lestoma.App.ViewModels.Laboratorio
                 _laboratorioRequest.TipoDeAplicacion = EnumConfig.GetDescription(TipoAplicacion.AppMovil);
                 if (_apiService.CheckConnection())
                 {
-                    Debug.WriteLine("Enviando al servidor.");
                     LestomaLog.Normal("Enviando al servidor.");
-                    _laboratorioRequest.EstadoInternet = true;
                     UserDialogs.Instance.ShowLoading("Enviando al servidor...");
+                    _laboratorioRequest.EstadoInternet = true;
+                    _laboratorioRequest.Ip = await GetPublicIPAddressAsync();
                     ResponseDTO response = await _apiService.PostAsyncWithToken(URL_API, "laboratorio-lestoma/crear-detalle",
                         _laboratorioRequest, TokenUser.Token);
                     if (!response.IsExito)
@@ -198,7 +211,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                         AlertError(response.MensajeHttp);
                         return;
                     }
-                    AlertSuccess(response.MensajeHttp);
+                    AlertSuccess("Lectura recibida satisfactoriamente.");
                 }
                 else
                 {
@@ -210,7 +223,7 @@ namespace lestoma.App.ViewModels.Laboratorio
                         AlertError(response.MensajeHttp);
                         return;
                     }
-                    AlertSuccess(response.MensajeHttp);
+                    AlertSuccess("Lectura recibida satisfactoriamente.");
                 }
             }
             catch (Exception ex)

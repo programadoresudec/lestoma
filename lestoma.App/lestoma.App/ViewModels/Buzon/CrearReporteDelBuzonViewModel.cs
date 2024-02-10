@@ -163,13 +163,12 @@ namespace lestoma.App.ViewModels.Buzon
                         AlertError("No soporta la Cámara.");
                         return;
                     }
-
                     _file = await CrossMedia.Current.TakePhotoAsync(
                         new StoreCameraMediaOptions
                         {
                             Directory = "Sample",
                             Name = "test.jpg",
-                            PhotoSize = PhotoSize.Small,
+                            PhotoSize = PhotoSize.Medium,
                         }
                     );
                 }
@@ -179,9 +178,9 @@ namespace lestoma.App.ViewModels.Buzon
                     {
                         AlertError("No hay galeria.");
                         return;
-                    }
-
+                    }    
                     _file = await CrossMedia.Current.PickPhotoAsync();
+                    UserDialogs.Instance.ShowLoading("Cargando imagen...");
                 }
 
                 if (_file != null)
@@ -196,6 +195,11 @@ namespace lestoma.App.ViewModels.Buzon
             catch (Exception ex)
             {
                 SeeError(ex);
+               
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
             }
         }
         #endregion

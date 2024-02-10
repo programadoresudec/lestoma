@@ -17,8 +17,8 @@
                 <ffimageloading:CachedImage Aspect="AspectFit"
                                                 Source="{Binding Image}" 
                                                 CacheDuration= "50"
-                                                HeightRequest="150"
-                                                Margin="5"
+                                                HeightRequest="150" LoadingPlaceholder="Loading_icon.gif" 
+                                                Margin="5"  ErrorPlaceholder="icon_fish_error.png"
                                                 RetryCount= "3"
                                                 RetryDelay= "600">
                     <ffimageloading:CachedImage.Transformations>

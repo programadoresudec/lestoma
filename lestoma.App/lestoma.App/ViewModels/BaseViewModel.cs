@@ -6,6 +6,7 @@ using lestoma.App.Views.Account;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Helpers;
+using lestoma.CommonUtils.MyException;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Prism.Mvvm;
@@ -14,11 +15,11 @@ using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Net;
-using System.Net.Sockets;
+using System.Net.Http;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -31,13 +32,12 @@ namespace lestoma.App.ViewModels
 
         #region Fields
         private static string Address;
-        private static readonly UUID MY_UUID = UUID.FromString("00001101-0000-1000-8000-00805F9B34FB");
         private Command<object> backButtonCommand;
         private bool isBusy;
         private int _pageSize;
         private int _pageNumber;
         private bool _isRefreshing;
-        public BluetoothAdapter MBluetoothAdapter { get; set; }
+        public static BluetoothAdapter MBluetoothAdapter { get; set; }
         public static BluetoothSocket btSocket = null;
 
         protected INavigationService NavigationService { get; private set; }
@@ -139,23 +139,90 @@ namespace lestoma.App.ViewModels
         #endregion
 
         #region Methods
+
         protected async void OnBluetoothClicked()
         {
-
-            MBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-            //Verificamos que este habilitado
-            if (!MBluetoothAdapter.Enable())
+            if (MBluetoothAdapter != null)
             {
-                await Application.Current.MainPage.DisplayAlert("Bluetooth", "Bluetooth desactivado.", "Aceptar");
-                return;
+                if (MBluetoothAdapter.IsEnabled)
+                {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        AlertSuccess("El bluetooth ya se encuentra encendido.");
+                    });
+                    return;
+                }
             }
-            if (MBluetoothAdapter == null)
+            var confirmConfig = new ConfirmConfig
             {
-                await Application.Current.MainPage.DisplayAlert("Bluetooth", "Bluetooth No Existe o está ocupado.", "Aceptar");
-                return;
+                Title = "Alerta",
+                Message = "¿Está seguro de encender el Bluetooth?",
+                OkText = "Aceptar",
+                CancelText = "Cancelar"
+            };
+
+            var result = await UserDialogs.Instance.ConfirmAsync(confirmConfig);
+
+            if (result)
+            {
+                MBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
+                // Verificamos que esté habilitado
+                if (!MBluetoothAdapter.Enable())
+                {
+                    await Device.InvokeOnMainThreadAsync(async () =>
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Alerta", "Bluetooth desactivado.", "Aceptar");
+                    });
+                }
+
+                if (MBluetoothAdapter == null)
+                {
+                    await Device.InvokeOnMainThreadAsync(async () =>
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Alerta", "Bluetooth no existe o está ocupado.", "Aceptar");
+                    });
+                }
+
+                if (MBluetoothAdapter.Enable())
+                {
+                    await Device.InvokeOnMainThreadAsync(async () =>
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Alerta", "El Bluetooth se ha encendido.", "Aceptar");
+                    });
+                }
             }
         }
+        protected async Task<bool> ConnectUsingProfiles(BluetoothDevice device)
+        {
+            BluetoothProfileData bluetoothProfile = new BluetoothProfileData();
+            bool isConnected = false;
 
+            foreach (var profileEntry in bluetoothProfile.profileData)
+            {
+                var profileKey = profileEntry.Key;
+                var profileInfo = profileEntry.Value;
+
+                btSocket = device.CreateRfcommSocketToServiceRecord(UUID.FromString(profileInfo.UUID));
+
+                try
+                {
+                    await btSocket.ConnectAsync();
+                    if (btSocket.IsConnected)
+                    {
+                        isConnected = true;
+                        Console.WriteLine($"Conexión establecida con el perfil: {profileKey}");
+                        break;
+                    }
+                }
+                catch (Exception)
+                {
+                    // La conexión no se pudo establecer con este perfil, continúa con el siguiente
+                    continue;
+                }
+            }
+
+            return isConnected;
+        }
         protected async void ConectarBluetoothClicked(object obj)
         {
             try
@@ -174,27 +241,30 @@ namespace lestoma.App.ViewModels
                 }
                 UserDialogs.Instance.ShowLoading("Conectando...");
                 BluetoothDevice device = MBluetoothAdapter.GetRemoteDevice(Address);
+
                 //Indicamos al adaptador que ya no sea visible
                 MBluetoothAdapter.CancelDiscovery();
                 if (btSocket == null)
                 {
-                    btSocket = device.CreateRfcommSocketToServiceRecord(MY_UUID);
-                    await btSocket.ConnectAsync();
-                    if (btSocket.IsConnected)
+                    bool isConnected = await ConnectUsingProfiles(device);
+                    if (!isConnected)
                     {
-                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage("Conexión establecida."));
+                        AlertError("No se pudo establecer conexión con ninguno de los perfiles disponibles.");
+                        return;
                     }
+                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage("Conexión establecida."));
                 }
                 else
                 {
                     //Inicamos el socket de comunicacion con el arduino
-                    btSocket.Close();
-                    btSocket = device.CreateRfcommSocketToServiceRecord(MY_UUID);
-                    await btSocket.ConnectAsync();
-                    if (btSocket.IsConnected)
+                    btSocket?.Close();
+                    bool isConnected = await ConnectUsingProfiles(device);
+                    if (!isConnected)
                     {
-                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage("Conexión establecida."));
+                        AlertError("No se pudo establecer conexión con ninguno de los perfiles disponibles.");
+                        return;
                     }
+                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage("Conexión establecida."));
                 }
             }
             catch (Exception ex)
@@ -216,18 +286,24 @@ namespace lestoma.App.ViewModels
         {
             await NavigationService.ClearPopupStackAsync();
         }
-        protected static string GetLocalIPAddress()
+        protected static async Task<string> GetPublicIPAddressAsync()
         {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
+            try
             {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                using (var client = new HttpClient())
                 {
-                    return ip.ToString();
+                    // Utiliza el servicio de ipify.org para obtener la dirección IP pública
+                    var response = await client.GetStringAsync("https://api.ipify.org");
+                    return response.Trim();
                 }
             }
-            return string.Empty;
+            catch
+            {
+                // En caso de error, regresa una cadena vacía
+                return string.Empty;
+            }
         }
+
 
         protected async void SeeError(Exception exception, string errorMessage = "")
         {
@@ -239,7 +315,23 @@ namespace lestoma.App.ViewModels
             }
             else
             {
-                await PopupNavigation.Instance.PushAsync(new MessagePopupPage($"Error: {exception.Message}", Constants.ICON_ERROR));
+                ExceptionDictionary dictionary = new ExceptionDictionary();
+                int exceptionCode = exception.HResult;
+                if (exception.Message.Contains("socket"))
+                {
+                    var exceptionDescription = dictionary.GetExceptionDescription(exceptionCode);
+                    if (exceptionDescription.IsExceptionCode)
+                    {
+                        await PopupNavigation.Instance.PushAsync(new MessagePopupPage($"{exceptionDescription.MessageError}", Constants.ICON_ERROR));
+                        await Task.Delay(2000);
+                    }
+                }
+                else
+                {
+                    await PopupNavigation.Instance.PushAsync(new MessagePopupPage($"Error: {exception.Message}", Constants.ICON_ERROR));
+                    await Task.Delay(2000);
+                }
+
             }
         }
 

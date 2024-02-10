@@ -23,8 +23,8 @@ namespace lestoma.App.ViewModels.Reportes
         private readonly IApiService _apiService;
         private NameDTO _upa;
         private ObservableCollection<NameDTO> _upas;
-        private NameDTO _tipoArchivo;
-        private ObservableCollection<NameDTO> _tipoArchivos;
+        private NameArchivoDTO _tipoArchivo;
+        private ObservableCollection<NameArchivoDTO> _tipoArchivos;
         private bool _isSuperAdmin;
         private FiltroFechaModel _filtroFecha;
         #endregion
@@ -37,19 +37,7 @@ namespace lestoma.App.ViewModels.Reportes
             _apiService = apiService;
             Title = "Reporte por rango de fecha";
             ListarUpas();
-            _tipoArchivos = new ObservableCollection<NameDTO>()
-            {
-                new NameDTO()
-                {
-                    Id = Guid.NewGuid(),
-                    Nombre = GrupoTipoArchivo.PDF.ToString(),
-                },
-                new NameDTO()
-                {
-                    Id = Guid.NewGuid(),
-                    Nombre = GrupoTipoArchivo.EXCEL.ToString(),
-                }
-            };
+            ListarTiposFormato();
             SendCommand = new Command(GenerateReportClicked);
 
         }
@@ -68,13 +56,13 @@ namespace lestoma.App.ViewModels.Reportes
             set => SetProperty(ref _filtroFecha, value);
         }
 
-        public ObservableCollection<NameDTO> TipoArchivos
+        public ObservableCollection<NameArchivoDTO> TipoArchivos
         {
             get => _tipoArchivos;
             set => SetProperty(ref _tipoArchivos, value);
         }
 
-        public NameDTO TipoArchivo
+        public NameArchivoDTO TipoArchivo
         {
             get => _tipoArchivo;
             set => SetProperty(ref _tipoArchivo, value);
@@ -116,6 +104,27 @@ namespace lestoma.App.ViewModels.Reportes
             {
                 FiltroFecha = parameters.GetValue<FiltroFechaModel>("filtroFecha");
             }
+        }
+        private void ListarTiposFormato()
+        {
+            _tipoArchivos = new ObservableCollection<NameArchivoDTO>()
+            {
+                new NameArchivoDTO()
+                {
+                    Id = (int)GrupoTipoArchivo.PDF,
+                    Nombre = GrupoTipoArchivo.PDF.ToString(),
+                },
+                 new NameArchivoDTO()
+                {
+                    Id = (int)GrupoTipoArchivo.CSV,
+                    Nombre = GrupoTipoArchivo.CSV.ToString(),
+                },
+                new NameArchivoDTO()
+                {
+                    Id = (int)GrupoTipoArchivo.EXCEL,
+                    Nombre = GrupoTipoArchivo.EXCEL.ToString(),
+                }
+            };
         }
         private async void ListarUpas()
         {
@@ -167,7 +176,7 @@ namespace lestoma.App.ViewModels.Reportes
 
                 ReportFilterRequest reportFilterRequest = new ReportFilterRequest
                 {
-                    TipoFormato = TipoArchivo.Nombre == GrupoTipoArchivo.PDF.ToString() ? GrupoTipoArchivo.PDF : GrupoTipoArchivo.EXCEL,
+                    TipoFormato = GetFormatFile(TipoArchivo.Id),
                     UpaId = Upa.Id,
                     FechaInicial = _filtroFecha.FechaInicio,
                     FechaFinal = _filtroFecha.FechaFin
@@ -182,6 +191,21 @@ namespace lestoma.App.ViewModels.Reportes
             finally
             {
                 UserDialogs.Instance.HideLoading();
+            }
+        }
+
+        private GrupoTipoArchivo GetFormatFile(int idFormato)
+        {
+            switch (idFormato)
+            {
+                case (int)GrupoTipoArchivo.PDF:
+                    return GrupoTipoArchivo.PDF;
+                case (int)GrupoTipoArchivo.CSV:
+                    return GrupoTipoArchivo.CSV;
+                case (int)GrupoTipoArchivo.EXCEL:
+                    return GrupoTipoArchivo.EXCEL;
+                default:
+                    return GrupoTipoArchivo.PDF;
             }
         }
 

@@ -46,9 +46,9 @@ namespace lestoma.App.ViewModels.Laboratorio
         {
             try
             {
-                if (!InputSetPoint.HasValue || InputSetPoint.Value > 500)
+                if (!InputSetPoint.HasValue || InputSetPoint.Value > 500 || InputSetPoint.Value < 0.0)
                 {
-                    AlertWarning("Es requerido un valor de 0 a 500.");
+                    AlertWarning("Es requerido un valor de 0 a 500.0");
                     return;
                 }
                 UserDialogs.Instance.ShowLoading("Guardando...");

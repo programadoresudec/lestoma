@@ -158,17 +158,36 @@ namespace lestoma.App.ViewModels.Account
         {
             return true;
         }
-        private void SwitchStateChanged(object obj)
+        private async void SwitchStateChanged(object obj)
         {
             if (IsOn)
             {
-                MovilSettings.IsOnNotificationsViaMail = true;
-                ActivateNotificationsViaEmail();
+
+                var check = await UserDialogs.Instance.ConfirmAsync($"¿Está seguro de activar notificaciones via email?\n\n¡Tenga presente que si no activa las notificaciones no podrá recibir información.!",
+                    "Alerta", "Aceptar", "Cancelar");
+                if (check)
+                {
+                    MovilSettings.IsOnNotificationsViaMail = true;
+                    ActivateNotificationsViaEmail();
+                }
+                else
+                {
+                    IsOn = !IsOn;
+                }
             }
             else
             {
-                MovilSettings.IsOnNotificationsViaMail = false;
-                DesactivateNotificationsViaEmail();
+                var check = await UserDialogs.Instance.ConfirmAsync($"¿Está seguro de desactivar notificaciones via email?\n\n¡Tenga presente que no podrá recibir información, (reportes, correos entre otros)!",
+                    "Alerta", "Aceptar", "Cancelar");
+                if (check)
+                {
+                    MovilSettings.IsOnNotificationsViaMail = false;
+                    DesactivateNotificationsViaEmail();
+                }
+                else
+                {
+                    IsOn = !IsOn;
+                }
             }
         }
         private async void ActivateNotificationsViaEmail()

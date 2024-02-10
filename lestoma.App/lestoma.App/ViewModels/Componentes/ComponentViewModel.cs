@@ -23,6 +23,8 @@ namespace lestoma.App.ViewModels.Componentes
         private ObservableCollection<ComponenteDTO> _componentes;
         private NameDTO _upa;
         private ObservableCollection<NameDTO> _upas;
+        private NameDTO _modulo;
+        private ObservableCollection<NameDTO> _modulos;
         private bool _isSuperAdmin;
         private bool _isNavigating = false;
         #endregion
@@ -37,8 +39,8 @@ namespace lestoma.App.ViewModels.Componentes
             VerEstadoCommand = new Command<object>(OnSeeStatusSelected, CanNavigate);
             DeleteCommand = new Command<object>(DeleteClicked, CanNavigate);
             _componentes = new ObservableCollection<ComponenteDTO>();
-            LoadComponents();
             MoreComponentsCommand = new Command(LoadMoreComponents);
+            LoadComponents();
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)
@@ -46,19 +48,26 @@ namespace lestoma.App.ViewModels.Componentes
             base.OnNavigatedTo(parameters);
             if (parameters.ContainsKey(Constants.REFRESH))
             {
-                if (_upa != null)
-                {
-                    ListarComponentesUpaId(_upa.Id);
-                }
-                else
+                if (_upa == null && _modulo == null)
                 {
                     ListarComponentesAll();
+                }
+                else if (_upa != null || _modulo != null)
+                {
+                    ListarComponentesModuloUpaId(_upa != null ? _upa.Id : Guid.Empty, _modulo != null ? _modulo.Id : Guid.Empty);
                 }
             }
         }
         #endregion
 
         #region properties
+
+        public bool IsSuperAdmin
+        {
+            get => _isSuperAdmin;
+            set => SetProperty(ref _isSuperAdmin, value);
+        }
+
         public ObservableCollection<ComponenteDTO> Componentes
         {
             get => _componentes;
@@ -72,22 +81,45 @@ namespace lestoma.App.ViewModels.Componentes
             set => SetProperty(ref _upas, value);
         }
 
-        public bool IsSuperAdmin
-        {
-            get => _isSuperAdmin;
-            set => SetProperty(ref _isSuperAdmin, value);
-        }
-
         public NameDTO Upa
         {
             get => _upa;
             set
             {
                 SetProperty(ref _upa, value);
-                ListarComponentesUpaId(_upa.Id);
+                if (_modulo == null)
+                {
+                    ListarComponentesModuloUpaId(_upa.Id, Guid.Empty);
+                }
+                else
+                {
+                    ListarComponentesModuloUpaId(_upa.Id, _modulo.Id);
+                }
             }
         }
+        public ObservableCollection<NameDTO> Modulos
+        {
+            get => _modulos;
 
+            set => SetProperty(ref _modulos, value);
+        }
+
+        public NameDTO Modulo
+        {
+            get => _modulo;
+            set
+            {
+                SetProperty(ref _modulo, value);
+                if (_upa == null)
+                {
+                    ListarComponentesModuloUpaId(Guid.Empty, _modulo.Id);
+                }
+                else
+                {
+                    ListarComponentesModuloUpaId(_upa.Id, _modulo.Id);
+                }
+            }
+        }
         public ModuloDTO ItemDelete { get; set; }
         public Command EditCommand { get; set; }
         public Command DeleteCommand { get; set; }
@@ -154,13 +186,13 @@ namespace lestoma.App.ViewModels.Componentes
                     return;
                 }
                 AlertSuccess(response.MensajeHttp);
-                if (_upa != null)
-                {
-                    ListarComponentesUpaId(_upa.Id);
-                }
-                else
+                if (_upa == null && _modulo == null)
                 {
                     ListarComponentesAll();
+                }
+                else if (_upa != null || _modulo != null)
+                {
+                    ListarComponentesModuloUpaId(_upa != null ? _upa.Id : Guid.Empty, _modulo != null ? _modulo.Id : Guid.Empty);
                 }
             }
             catch (Exception ex)
@@ -201,6 +233,7 @@ namespace lestoma.App.ViewModels.Componentes
             {
                 ListarUpas();
             }
+            ListarModulos();
             ListarComponentesAll();
         }
 
@@ -213,6 +246,32 @@ namespace lestoma.App.ViewModels.Componentes
                     ResponseDTO upas = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API, "upas/listar-nombres", TokenUser.Token);
                     Upas = new ObservableCollection<NameDTO>((List<NameDTO>)upas.Data);
                     Upas.Insert(0, new NameDTO { Id = Guid.Empty, Nombre = "Todas" });
+                }
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+
+        }
+
+        private async void ListarModulos()
+        {
+            try
+            {
+                if (_apiService.CheckConnection())
+                {
+                    ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
+                    $"laboratorio-lestoma/listar-modulos-upa-actividad-por-usuario", TokenUser.Token);
+                    if (response.IsExito)
+                    {
+                        var listado = (List<NameDTO>)response.Data;
+                        if (listado.Count > 0)
+                        {
+                            Modulos = new ObservableCollection<NameDTO>(listado);
+                            Modulos.Insert(0, new NameDTO { Id = Guid.Empty, Nombre = "Todos" });
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -261,7 +320,7 @@ namespace lestoma.App.ViewModels.Componentes
         }
 
 
-        private async void ListarComponentesUpaId(Guid id)
+        private async void ListarComponentesModuloUpaId(Guid upaId, Guid moduloId)
         {
             try
             {
@@ -274,7 +333,8 @@ namespace lestoma.App.ViewModels.Componentes
                     {
                         Page = this.Page,
                         PageSize = this.PageSize,
-                        UpaId = id
+                        UpaId = upaId,
+                        ModuloId = moduloId
                     };
                     string querystring = Reutilizables.GenerateQueryString(ComponentFilterRequest);
                     ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<ComponenteDTO>(URL_API, $"componentes/paginar{querystring}", TokenUser.Token);
@@ -313,7 +373,8 @@ namespace lestoma.App.ViewModels.Componentes
                     {
                         Page = this.Page,
                         PageSize = this.PageSize,
-                        UpaId = Upa != null ? Upa.Id : Guid.Empty
+                        UpaId = Upa != null ? Upa.Id : Guid.Empty,
+                        ModuloId = Modulo != null ? Modulo.Id : Guid.Empty
                     };
                     string querystring = Reutilizables.GenerateQueryString(ComponentFilterRequest);
                     ResponseDTO response = await _apiService.GetPaginadoAsyncWithToken<ComponenteDTO>(URL_API, $"componentes/paginar{querystring}", TokenUser.Token);

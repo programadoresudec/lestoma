@@ -30,7 +30,7 @@
             </border:SfBorder>
             <StackLayout Orientation="Horizontal">
                 <border:SfBorder HeightRequest="70" Style="{StaticResource ThemeBorderStyle}">
-                    <inputLayout:SfTextInputLayout Hint="Comunicación" HeightRequest="60" ContainerBackgroundColor="Transparent" VerticalOptions="Start"
+                    <inputLayout:SfTextInputLayout Hint="Tipo de comunicación (P2MP, P2P)" HeightRequest="60" ContainerBackgroundColor="Transparent" VerticalOptions="Start"
                                                   Margin="0">
                         <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
                                     Style="{StaticResource BorderlessEntryStyle}"
@@ -39,7 +39,7 @@
                     </inputLayout:SfTextInputLayout>
                 </border:SfBorder>
                 <border:SfBorder HeightRequest="70" Style="{StaticResource ThemeBorderStyle}" IsEnabled="{Binding IsEnabled}">
-                    <inputLayout:SfTextInputLayout Hint="Terminal" HeightRequest="60" IsEnabled="{Binding IsEnabled}"
+                    <inputLayout:SfTextInputLayout Hint="Unidad terminal remota (RTU)" HeightRequest="60" IsEnabled="{Binding IsEnabled}"
                                                    ContainerBackgroundColor="Transparent" VerticalOptions="Start"
                                                   Margin="0">
                         <Picker TextColor="Black"

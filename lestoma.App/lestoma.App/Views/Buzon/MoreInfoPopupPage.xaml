@@ -48,7 +48,7 @@
                     <StackLayout Spacing="10" Margin="30,0,30,20">
                         <ffimageloading:CachedImage Aspect="AspectFit"
                                                 Source="{Binding Buzon.PathImagen, TargetNullValue = 'DefaultImagen.png'}" 
-                                                Margin="15,10,10,10" CacheDuration ="30"
+                                                Margin="15,10,10,10" CacheDuration ="30" ErrorPlaceholder="icon_fish_error.png"
                                                 WidthRequest="200" LoadingPlaceholder="Loading_icon.gif" 
                                                 HeightRequest="250" RetryDelay="300">
                             <ffimageloading:CachedImage.Transformations>
@@ -57,7 +57,7 @@
                         </ffimageloading:CachedImage>
                         <border:SfBorder Style="{StaticResource ThemeBorderStyle}">
                             <StackLayout>
-                                <Label Text="Titulo" FontFamily="Montserrat-SemiBold"
+                                <Label Text="Título" FontFamily="Montserrat-SemiBold"
                                     FontSize="Small"
                                     HorizontalOptions="StartAndExpand"
                                     Style="{StaticResource TitleLabelStyle}"/>
@@ -83,7 +83,7 @@
                         </border:SfBorder>
                         <border:SfBorder Style="{StaticResource ThemeBorderStyle}">
                             <StackLayout>
-                                <Label Text="Típo de gravedad" FontFamily="Montserrat-SemiBold"
+                                <Label Text="Tipo de gravedad" FontFamily="Montserrat-SemiBold"
                                     FontSize="Small"
                                     HorizontalOptions="StartAndExpand"
                                     Style="{StaticResource TitleLabelStyle}"/>

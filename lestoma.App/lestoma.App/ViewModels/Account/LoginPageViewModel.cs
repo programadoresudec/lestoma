@@ -117,7 +117,7 @@ namespace lestoma.App.ViewModels.Account
                         Email = Email.Value,
                         Clave = password.Value,
                         TipoAplicacion = (int)TipoAplicacion.AppMovil,
-                        Ip = GetLocalIPAddress()
+                        Ip = await GetPublicIPAddressAsync()
                     };
                     ResponseDTO respuesta = await _apiService.PostAsync(URL_API, "Account/login", login);
                     if (!respuesta.IsExito)

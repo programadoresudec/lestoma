@@ -61,11 +61,25 @@
                                 Style="{StaticResource IconLabelStyle}" FontFamily="fontello"
                                 Text="{StaticResource IconEnvira}" />
                             <inputLayout:SfTextInputLayout Hint="Upa" HeightRequest="80" IsEnabled="{Binding IsSuperAdmin}"
-                                                   ContainerBackgroundColor="Transparent"   HorizontalOptions="FillAndExpand"
+                                                   ContainerBackgroundColor="Transparent" HorizontalOptions="FillAndExpand"
                                                   Margin="10">
                                 <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}" IsEnabled="{Binding IsSuperAdmin}"
                                     Style="{StaticResource BorderlessEntryStyle}"
                                 SelectedItem="{Binding Upa}" ItemsSource="{Binding Upas}">
+                                </Picker>
+                            </inputLayout:SfTextInputLayout>
+                        </StackLayout>
+                    </border:SfBorder>
+                    <border:SfBorder HeightRequest="80" Style="{StaticResource ThemeBorderStyle}">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Margin="10,20,0,10" TextColor="{StaticResource Gray-Black}" FontSize="Medium" HorizontalOptions="Start"
+                                Style="{StaticResource IconLabelStyle}" FontFamily="fontello"
+                                Text="{StaticResource IconMicrochip}" />
+                            <inputLayout:SfTextInputLayout Hint="Modulos" HeightRequest="80" 
+                                                   ContainerBackgroundColor="Transparent" HorizontalOptions="FillAndExpand"
+                                                  Margin="10">
+                                <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}" Style="{StaticResource BorderlessEntryStyle}"
+                                SelectedItem="{Binding Modulo}" ItemsSource="{Binding Modulos}">
                                 </Picker>
                             </inputLayout:SfTextInputLayout>
                         </StackLayout>

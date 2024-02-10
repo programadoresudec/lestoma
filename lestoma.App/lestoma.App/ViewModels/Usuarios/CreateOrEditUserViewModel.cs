@@ -143,7 +143,7 @@ namespace lestoma.App.ViewModels.Usuarios
                 this.SetProperty(ref this.estado, value);
             }
         }
-        public ValidatableObject<string> Rol
+        public ValidatableObject<string> Role
         {
             get
             {
@@ -225,7 +225,7 @@ namespace lestoma.App.ViewModels.Usuarios
             bool isNameValid = this.Name.Validate();
             bool isLastNameValid = this.LastName.Validate();
             bool isEstadoValid = this.Estado.Validate();
-            bool isRolValid = this.Rol.Validate();
+            bool isRolValid = this.Role.Validate();
             if (!isEdit)
             {
                 isEmailValid = this.Email.Validate();
@@ -243,7 +243,7 @@ namespace lestoma.App.ViewModels.Usuarios
             this.LastName = new ValidatableObject<string>();
             this.Password = new ValidatablePair<string>();
             this.Estado = new ValidatableObject<string>();
-            this.Rol = new ValidatableObject<string>();
+            this.Role = new ValidatableObject<string>();
             this.EstadoActual = new EstadoDTO();
             this.RolActual = new RolDTO();
         }
@@ -254,7 +254,7 @@ namespace lestoma.App.ViewModels.Usuarios
         private void AddValidationRules()
         {
             this.Name.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Nombre requerido." });
-            this.Rol.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Rol requerido." });
+            this.Role.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Rol requerido." });
             this.Estado.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Estado requerido." });
             this.LastName.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Apellido requerido." });
             this.Password.Item1.Validations.Add(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Contraseña requerida." });
@@ -291,7 +291,7 @@ namespace lestoma.App.ViewModels.Usuarios
         {
             Name.Value = Nombre != null ? this.Nombre.Trim() : string.Empty;
             LastName.Value = Apellido != null ? this.Apellido.Trim() : string.Empty;
-            Rol.Value = RolActual != null ? RolActual.NombreRol : string.Empty;
+            Role.Value = RolActual != null ? RolActual.NombreRol : string.Empty;
             Estado.Value = EstadoActual != null ? EstadoActual.NombreEstado : string.Empty;
         }
 

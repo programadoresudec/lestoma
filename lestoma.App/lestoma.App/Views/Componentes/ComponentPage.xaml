@@ -41,6 +41,16 @@
                         </Picker>
                     </inputLayout:SfTextInputLayout>
                 </border:SfBorder>
+                <border:SfBorder HeightRequest="85" Style="{StaticResource ThemeBorderStyle}">
+                    <inputLayout:SfTextInputLayout Hint="Modulos" HeightRequest="80" 
+                                                   ContainerBackgroundColor="Transparent" VerticalOptions="Start"
+                                                  Margin="10">
+                        <Picker TextColor="Black" ItemDisplayBinding="{Binding Nombre}"
+                                    Style="{StaticResource BorderlessEntryStyle}"
+                                SelectedItem="{Binding Modulo}" ItemsSource="{Binding Modulos}">
+                        </Picker>
+                    </inputLayout:SfTextInputLayout>
+                </border:SfBorder>
             </StackLayout>
             <syncfusion:SfListView x:Name="LV_Componentes" AutoFitMode="DynamicHeight"
                                TapCommand="{Binding EditCommand}"

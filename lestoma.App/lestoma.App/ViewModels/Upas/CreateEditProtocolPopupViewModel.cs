@@ -2,6 +2,7 @@
 using lestoma.App.Models;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
+using lestoma.CommonUtils.Enums;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests;
 using Prism.Navigation;
@@ -15,41 +16,20 @@ namespace lestoma.App.ViewModels.Upas
 {
     public class CreateEditProtocolPopupViewModel : BaseViewModel
     {
-        private ProtocoloModel _protocolo;
         private bool _isEdit;
         private int _idProtocolo;
         private readonly IApiService _apiService;
+        private ProtocoloModel _protocolo;
         private ObservableCollection<ProtocoloModel> _protocolos;
         private Guid _upaId;
         public CreateEditProtocolPopupViewModel(INavigationService navigationService, IApiService apiService)
             : base(navigationService)
         {
+            _apiService = apiService;
             _protocolo = new ProtocoloModel();
             SaveCommand = new Command(SaveClicked);
             Bytes = LoadBytes();
-            _apiService = apiService;
             LoadProtocols();
-        }
-
-        private void LoadProtocols()
-        {
-            _protocolos = new ObservableCollection<ProtocoloModel>()
-            {
-                new ProtocoloModel()
-                {
-                    Id = 1,
-                    Nombre ="Peer To Peer",
-                    PrimerByteTrama = 73,
-                    Sigla ="P2P"
-                },
-                new ProtocoloModel()
-                {
-                    Id = 2,
-                    Nombre ="Broadcast",
-                    PrimerByteTrama = 111,
-                    Sigla ="BR"
-                }
-            };
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)
@@ -71,11 +51,9 @@ namespace lestoma.App.ViewModels.Upas
                 _upaId = parameters.GetValue<Guid>("upaId");
             }
         }
-        private List<int> LoadBytes()
-        {
-            return Enumerable.Range(0, 256).ToList();
-        }
 
+
+        #region properties
         public bool IsEdit
         {
             get => _isEdit;
@@ -95,6 +73,32 @@ namespace lestoma.App.ViewModels.Upas
             get => _protocolos;
             set => SetProperty(ref _protocolos, value);
         }
+        #endregion
+
+        #region methods
+        private List<int> LoadBytes()
+        {
+            return Enumerable.Range(0, 256).ToList();
+        }
+        private void LoadProtocols()
+        {
+            _protocolos = new ObservableCollection<ProtocoloModel>()
+            {
+                new ProtocoloModel()
+                {
+                    Nombre =EnumConfig.GetDescription(TipoComunicacion.P2P),
+                    PrimerByteTrama = (int)TipoComunicacion.P2P,
+                    Sigla =TipoComunicacion.P2P.ToString()
+                },
+                new ProtocoloModel()
+                {
+                    Nombre =EnumConfig.GetDescription(TipoComunicacion.P2MP),
+                    PrimerByteTrama = (int)TipoComunicacion.P2MP,
+                    Sigla =TipoComunicacion.P2MP.ToString()
+                }
+            };
+        }
+
         private async void SaveClicked(object obj)
         {
             try
@@ -165,5 +169,6 @@ namespace lestoma.App.ViewModels.Upas
                 UserDialogs.Instance.HideLoading();
             }
         }
+        #endregion
     }
 }
