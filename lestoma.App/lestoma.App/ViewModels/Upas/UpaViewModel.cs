@@ -193,7 +193,7 @@ namespace lestoma.App.ViewModels.Upas
             try
             {
                 IsBusy = true;
-                Upas = new ObservableCollection<UpaDTO>();
+                Upas.Clear();
                 var paginacion = new Paginacion
                 {
                     Page = this.Page,

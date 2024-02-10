@@ -5,6 +5,7 @@ using lestoma.App.Views.Reportes;
 using lestoma.CommonUtils.Constants;
 using lestoma.CommonUtils.DTOs;
 using lestoma.CommonUtils.Enums;
+using lestoma.CommonUtils.Helpers;
 using lestoma.CommonUtils.Interfaces;
 using lestoma.CommonUtils.Requests.Filters;
 using Prism.Navigation;
@@ -27,10 +28,12 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
         private bool _isSuperAdmin;
         private bool _isEnabled;
         private FiltroFechaModel _filtroFecha;
+        private NameDTO _modulo;
+        private ObservableCollection<NameDTO> _modulos;
         private ObservableCollection<ComponenteCheckModel> _componentsAdd;
         private ComponenteCheckModel _componentSelected;
-        private NameDTO _tipoArchivo;
-        private ObservableCollection<NameDTO> _tipoArchivos;
+        private NameArchivoDTO _tipoArchivo;
+        private ObservableCollection<NameArchivoDTO> _tipoArchivos;
         #endregion
 
         #region constructor
@@ -42,26 +45,12 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
             _apiService = apiService;
             Title = "Reporte por fechas y componentes";
             _Components = new ObservableCollection<ComponenteCheckModel>();
-            ListarUpas();
             _componentsAdd = new ObservableCollection<ComponenteCheckModel>();
             SendCommand = new Command(GenerateReportClicked);
-            _tipoArchivos = new ObservableCollection<NameDTO>()
-            {
-                new NameDTO()
-                {
-                    Id = Guid.NewGuid(),
-                    Nombre = GrupoTipoArchivo.PDF.ToString(),
-                },
-                new NameDTO()
-                {
-                    Id = Guid.NewGuid(),
-                    Nombre = GrupoTipoArchivo.EXCEL.ToString(),
-                }
-            };
+            ListarUpas();
+            ListarModulos();
+            ListarTiposFormato();
         }
-
-
-
         #endregion
 
         #region properties
@@ -69,6 +58,22 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
         {
             get => _filtroFecha;
             set => SetProperty(ref _filtroFecha, value);
+        }
+        public NameDTO Upa
+        {
+            get => _upa;
+            set
+            {
+                SetProperty(ref _upa, value);
+                if (_modulo == null)
+                {
+                    ListarComponentes(_upa.Id, Guid.Empty);
+                }
+                else
+                {
+                    ListarComponentes(_upa.Id, _modulo.Id);
+                }
+            }
         }
         public ObservableCollection<NameDTO> Upas
         {
@@ -105,26 +110,40 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
             get => _isEnabled;
             set => SetProperty(ref _isEnabled, value);
         }
-        public ObservableCollection<NameDTO> TipoArchivos
+        public ObservableCollection<NameArchivoDTO> TipoArchivos
         {
             get => _tipoArchivos;
             set => SetProperty(ref _tipoArchivos, value);
         }
 
-        public NameDTO TipoArchivo
+        public NameArchivoDTO TipoArchivo
         {
             get => _tipoArchivo;
             set => SetProperty(ref _tipoArchivo, value);
         }
-        public NameDTO Upa
+
+        public ObservableCollection<NameDTO> Modulos
         {
-            get => _upa;
+            get => _modulos;
+
+            set => SetProperty(ref _modulos, value);
+        }
+
+        public NameDTO Modulo
+        {
+            get => _modulo;
             set
             {
-                SetProperty(ref _upa, value);
-                ListarComponentes(_upa.Id);
+                SetProperty(ref _modulo, value);
+                if (_upa == null)
+                {
+                    ListarComponentes(Guid.Empty, _modulo.Id);
+                }
+                else
+                {
+                    ListarComponentes(_upa.Id, _modulo.Id);
+                }
             }
-
         }
         public Command ItemRemoveCommand { get; }
 
@@ -150,6 +169,57 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
             {
                 FiltroFecha = parameters.GetValue<FiltroFechaModel>("filtroFecha");
             }
+        }
+        private async void ListarModulos()
+        {
+            try
+            {
+                if (_apiService.CheckConnection())
+                {
+                    UserDialogs.Instance.ShowLoading("Cargando...");
+                    ResponseDTO response = await _apiService.GetListAsyncWithToken<List<NameDTO>>(URL_API,
+                    $"laboratorio-lestoma/listar-modulos-upa-actividad-por-usuario", TokenUser.Token);
+                    if (response.IsExito)
+                    {
+                        var listado = (List<NameDTO>)response.Data;
+                        if (listado.Count > 0)
+                        {
+                            Modulos = new ObservableCollection<NameDTO>(listado);
+                            Modulos.Insert(0, new NameDTO { Id = Guid.Empty, Nombre = "Todos" });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                SeeError(ex);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+        }
+
+        private void ListarTiposFormato()
+        {
+            _tipoArchivos = new ObservableCollection<NameArchivoDTO>()
+            {
+                new NameArchivoDTO()
+                {
+                    Id = (int)GrupoTipoArchivo.PDF,
+                    Nombre = GrupoTipoArchivo.PDF.ToString(),
+                },
+                 new NameArchivoDTO()
+                {
+                    Id = (int) GrupoTipoArchivo.CSV,
+                    Nombre = GrupoTipoArchivo.CSV.ToString(),
+                },
+                new NameArchivoDTO()
+                {
+                    Id = (int) GrupoTipoArchivo.EXCEL,
+                    Nombre = GrupoTipoArchivo.EXCEL.ToString(),
+                }
+            };
         }
         private void AddComponent(ComponenteCheckModel componentSelected)
         {
@@ -193,7 +263,7 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
                             var upa = ParsearData<NameDTO>(response);
                             var selected = Upas.Where(x => x.Id == upa.Id).FirstOrDefault();
                             Upa = selected;
-                            ListarComponentes(upa.Id);
+                            ListarComponentes(upa.Id, Guid.Empty);
                         }
                     }
                 }
@@ -223,8 +293,6 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
                     return;
                 }
                 UserDialogs.Instance.ShowLoading("Enviando...");
-
-
                 ReportComponentFilterRequest reportComponentFilterRequest = new ReportComponentFilterRequest
                 {
                     ComponentesId = _componentsAdd.Select(x => x.Id).ToList(),
@@ -232,7 +300,7 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
                     {
                         FechaInicial = _filtroFecha.FechaInicio,
                         FechaFinal = _filtroFecha.FechaFin,
-                        TipoFormato = TipoArchivo.Nombre == GrupoTipoArchivo.PDF.ToString() ? GrupoTipoArchivo.PDF : GrupoTipoArchivo.EXCEL,
+                        TipoFormato = GetFormatFile(TipoArchivo.Id),
                         UpaId = Upa.Id
                     }
                 };
@@ -249,7 +317,20 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
                 UserDialogs.Instance.HideLoading();
             }
         }
-
+        private GrupoTipoArchivo GetFormatFile(int idFormato)
+        {
+            switch (idFormato)
+            {
+                case (int)GrupoTipoArchivo.PDF:
+                    return GrupoTipoArchivo.PDF;
+                case (int)GrupoTipoArchivo.CSV:
+                    return GrupoTipoArchivo.CSV;
+                case (int)GrupoTipoArchivo.EXCEL:
+                    return GrupoTipoArchivo.EXCEL;
+                default:
+                    return GrupoTipoArchivo.PDF;
+            }
+        }
         private bool Validations()
         {
             bool isFiltroFechaValid = _filtroFecha != null;
@@ -263,9 +344,8 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
             return isFiltroFechaValid && isUpaValid && istipoArchivoValid && isComponentValid;
         }
 
-        private async void ListarComponentes(Guid IdUpa)
+        private async void ListarComponentes(Guid upaId, Guid moduloId)
         {
-
             try
             {
                 if (_apiService.CheckConnection())
@@ -273,8 +353,15 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
                     UserDialogs.Instance.ShowLoading("Cargando...");
                     Components.Clear();
                     ComponentsAdd.Clear();
+                    var FilterRequest = new UpaModuleFilterRequest
+                    {
+                        UpaId = upaId,
+                        ModuloId = moduloId,
+                    };
+                    string queryString = Reutilizables.GenerateQueryString(FilterRequest);
+
                     ResponseDTO response = await _apiService.GetListAsyncWithToken<List<ComponenteCheckModel>>(URL_API,
-                        $"componentes/listar-nombres-por-upa/{IdUpa}", TokenUser.Token);
+                        $"componentes/listar-nombres-por-upa-modulo/{queryString}", TokenUser.Token);
                     if (response.IsExito)
                     {
                         Components = new ObservableCollection<ComponenteCheckModel>((List<ComponenteCheckModel>)response.Data);
@@ -285,7 +372,10 @@ namespace lestoma.App.ViewModels.Reportes.SuperAdmin
                         }
 
                         IsEnabled = true;
-                        Components.Insert(0, new ComponenteCheckModel { Id = Guid.Empty, Nombre = "Todas" });
+                        if (_modulo == null)
+                        {
+                            Components.Insert(0, new ComponenteCheckModel { Id = Guid.Empty, Nombre = "Todos" });
+                        }
                     }
                 }
 

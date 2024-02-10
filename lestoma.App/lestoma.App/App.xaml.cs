@@ -32,6 +32,7 @@ using lestoma.DatabaseOffline.IConfiguration;
 using Newtonsoft.Json;
 using Prism;
 using Prism.Ioc;
+using Prism.Navigation;
 using Prism.Plugin.Popups;
 using System;
 using System.IO;
@@ -90,7 +91,11 @@ namespace lestoma.App
                 }
                 else
                 {
-                    await NavigationService.NavigateAsync($"{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
+                    var parameters = new NavigationParameters
+                                {
+                                    { "isModeOnline", true }
+                                };
+                    await NavigationService.NavigateAsync($"{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}", parameters);
                 }
             }
 
@@ -103,6 +108,7 @@ namespace lestoma.App
             containerRegistry.Register<IFilesHelper, FilesHelper>();
             containerRegistry.Register<ICRCHelper, CRCHelper>();
             containerRegistry.Register<IUnitOfWork>(c => new UnitOfWork(DbPathSqlLite));
+            
             #region Navegaciones
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterPopupNavigationService();
@@ -153,8 +159,11 @@ namespace lestoma.App
             containerRegistry.RegisterForNavigation<EstadoActuadorPage, EstadoActuadorViewModel>();
             containerRegistry.RegisterForNavigation<MACBluetoothPopupPage, MACBluetoothPopupViewModel>();
             containerRegistry.RegisterForNavigation<InputSetPointPopupPage, InputSetPointPopupViewModel>();
-            #endregion
             containerRegistry.RegisterForNavigation<ManualPage, ManualPageViewModel>();
+            containerRegistry.RegisterForNavigation<EditStatusPopupPage, EditStatusPopupViewModel>();
+            #endregion
+
+
         }
     }
 }

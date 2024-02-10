@@ -239,9 +239,9 @@
                                         <Label
                                             x:Name="RolValidationLabel"
                                              Margin="20,5,10,50"
-                                            IsVisible="{Binding Rol.IsValid, Converter={StaticResource InverseBoolConverter}}"
+                                            IsVisible="{Binding Role.IsValid, Converter={StaticResource InverseBoolConverter}}"
                                             Style="{StaticResource SimpleLabelStyle}"
-                                            Text="{Binding Rol.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+                                            Text="{Binding Role.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
                                             TextColor="{DynamicResource Red}"
                                             VerticalOptions="FillAndExpand" />
                                         <inputLayout:SfTextInputLayout Hint="Seleccione Rol" HeightRequest="80" 

@@ -98,7 +98,7 @@ namespace lestoma.App.ViewModels.Sincronizaciones
                 {
                     try
                     {
-                        IEnumerable<LaboratorioRequest> datosOfOffline = await _unitOfWork.Laboratorio.GetDataOffline(GetLocalIPAddress());
+                        IEnumerable<LaboratorioRequest> datosOfOffline = await _unitOfWork.Laboratorio.GetDataOffline(await GetPublicIPAddressAsync());
                         var response = await _apiService.PostAsyncWithToken(URL_API, "sincronizaciones-lestoma/bulk-sync-data-offline", datosOfOffline, TokenUser.Token);
                         if (!response.IsExito)
                         {

@@ -35,7 +35,7 @@ namespace lestoma.App.Droid.Services
             });
             string channelID = "SyncData";
             var notificationManager = (NotificationManager)GetSystemService(NotificationService);
-            if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
             {
                 var notfificationChannel = new NotificationChannel(channelID, channelID, NotificationImportance.High);
                 notificationManager.CreateNotificationChannel(notfificationChannel);

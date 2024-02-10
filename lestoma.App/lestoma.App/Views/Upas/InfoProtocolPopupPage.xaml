@@ -52,7 +52,7 @@
                                                 HorizontalOptions="StartAndExpand"
                                                 Style="{StaticResource TitleLabelStyle}"
                                                 Text="{Binding Nombre}"
-                                                VerticalOptions="Center" />
+                                                VerticalOptions="StartAndExpand" />
                                                 <Label
                                                 Margin="16,0,0,0"
                                                 FontFamily="Montserrat-Regular"

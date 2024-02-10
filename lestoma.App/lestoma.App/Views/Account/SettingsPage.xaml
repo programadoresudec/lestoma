@@ -194,7 +194,7 @@
                         FontFamily="Montserrat-Medium"
                         HorizontalOptions="Start"
                         Style="{StaticResource TitleLabelStyle}"
-                        Text="Sincronizar Datos Offline"
+                        Text="Sincronizar datos al modo offline"
                         VerticalOptions="Center" />
 
                     <Label
@@ -224,7 +224,7 @@
                         FontFamily="Montserrat-Medium"
                         HorizontalOptions="Start"
                         Style="{StaticResource TitleLabelStyle}"
-                        Text="Sincronizar Datos Nube"
+                        Text="Sincronizar datos a la nube"
                         VerticalOptions="Center" />
 
                     <Label

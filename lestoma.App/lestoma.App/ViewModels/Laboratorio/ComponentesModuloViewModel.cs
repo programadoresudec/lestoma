@@ -46,8 +46,8 @@ namespace lestoma.App.ViewModels.Laboratorio
             RedirectionTramaCommand = new Command<object>(ComponentSelected, CanNavigate);
             Title = "Laboratorio";
             Bytes = LoadBytes();
-            MessageHelp = _isSuperAdmin ? "Seleccione UPA, protocolo de comunicación y número de esclavo.\n\n Después de clic en alguno de los componentes para LECTURA, AJUSTE Y ON-OFF del laboratorio."
-                                        : "Seleccione protocolo de comunicación y número de esclavo.\n\n Después de clic en alguno de los componentes para LECTURA, AJUSTE Y ON-OFF del laboratorio.";
+            MessageHelp = _isSuperAdmin ? "Seleccione UPA, protocolo de comunicación y terminal.\n\n Después de clic en alguno de los componentes para LECTURA, AJUSTE Y ON-OFF del laboratorio.\n\nEn LECTURA no es permitido el BROADCAST."
+                                        : "Seleccione protocolo de comunicación y terminal.\n\n Después de clic en alguno de los componentes para LECTURA, AJUSTE Y ON-OFF del laboratorio. \n\nEn LECTURA no es permitido el BROADCAST.";
         }
         #region Properties
         public Command RedirectionTramaCommand { get; set; }
@@ -343,6 +343,11 @@ namespace lestoma.App.ViewModels.Laboratorio
 
                     if (EnumConfig.GetDescription(TipoEstadoComponente.Lectura).Equals(componente.EstadoComponente.TipoEstado))
                     {
+                        if (Protocolo.Nombre.ToUpper().Contains("BROAD") || Protocolo.Nombre.ToUpper().Equals("BROADCAST"))
+                        {
+                            await PopupNavigation.Instance.PushAsync(new MessagePopupPage($"No es permitido el protocolo broadcast, en tipo de función LECTURA.", Constants.ICON_WARNING));
+                            return;
+                        }
                         await NavigationService.NavigateAsync(nameof(LecturaSensorPage), parameters);
                     }
                     else if (EnumConfig.GetDescription(TipoEstadoComponente.OnOff).Equals(componente.EstadoComponente.TipoEstado))

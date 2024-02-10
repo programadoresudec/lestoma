@@ -142,7 +142,7 @@ namespace lestoma.App.ViewModels.Upas
                 {
                     if (IsCreate && Protocolos.Count == 0)
                     {
-                        AlertWarning("Agregue un protocolo.");
+                        AlertWarning("Agregue un tipo de comunicación.");
                         return;
                     }
                     UserDialogs.Instance.ShowLoading("Guardando...");

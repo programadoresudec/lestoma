@@ -34,7 +34,7 @@ namespace lestoma.DatabaseOffline.Repositories.Repository
             {
                 Id = x.Key.ModuloId,
                 Nombre = x.Key.NombreModulo
-            }).ToListAsync();
+            }).OrderBy(y => y.Nombre).ToListAsync();
         }
 
         public async Task<IEnumerable<NameDTO>> GetUpas()
@@ -43,12 +43,13 @@ namespace lestoma.DatabaseOffline.Repositories.Repository
             {
                 Id = x.Key.UpaId,
                 Nombre = x.Key.NombreUpa
-            }).ToListAsync();
+            }).OrderBy(y => y.Nombre).ToListAsync();
         }
 
         public async Task<IEnumerable<NameProtocoloDTO>> GetProtocolos(Guid idUpa)
         {
             var data = new List<NameProtocoloDTO>();
+            var datos = await _dbSet.ToListAsync();
             var protocolos = await _dbSet.Where(y => y.UpaId == idUpa).Select(x => x.Protocolos).FirstOrDefaultAsync();
             if (!string.IsNullOrWhiteSpace(protocolos))
             {
@@ -84,7 +85,7 @@ namespace lestoma.DatabaseOffline.Repositories.Repository
                     Id = y.Id,
                     Nombre = y.NombreComponente,
                     EstadoComponente = JsonConvert.DeserializeObject<EstadoComponenteDTO>(y.DecripcionEstadoJson)
-                }).ToListAsync();
+                }).OrderBy(y => y.Nombre).ToListAsync();
             return data;
         }
 
