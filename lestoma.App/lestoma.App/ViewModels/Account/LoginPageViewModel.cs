@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Prism.Navigation;
 using System;
 using System.Net;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -135,8 +136,7 @@ namespace lestoma.App.ViewModels.Account
                     TokenDTO token = ParsearData<TokenDTO>(respuesta);
                     MovilSettings.Token = JsonConvert.SerializeObject(token);
                     MovilSettings.IsLogin = true;
-                    ResponseDTO hasNotifications = await _apiService.PostWithoutBodyAsyncWithToken(URL_API, "Account/is-active-notifications-by-mail", token.Token);
-                    MovilSettings.IsOnNotificationsViaMail = ParsearData<HasNotificationsDTO>(hasNotifications).IsActive;
+                    VerifyIsActiveNotifications(token);
                     await NavigationService.NavigateAsync($"/{nameof(MenuMasterDetailPage)}/NavigationPage/{nameof(AboutPage)}");
 
                 }
@@ -152,6 +152,16 @@ namespace lestoma.App.ViewModels.Account
                 }
             }
         }
+
+        private void VerifyIsActiveNotifications(TokenDTO token)
+        {
+            Task.Run(async () =>
+            {
+                ResponseDTO hasNotifications = await _apiService.PostWithoutBodyAsyncWithToken(URL_API, "Account/is-active-notifications-by-mail", token.Token);
+                MovilSettings.IsOnNotificationsViaMail = ParsearData<HasNotificationsDTO>(hasNotifications).IsActive;
+            });
+        }
+
         private async void SignUpClicked(object obj)
         {
             await NavigationService.NavigateAsync(nameof(RegistroPage));
