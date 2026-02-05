@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30907.101
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11415.280 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "lestoma.App", "lestoma.App\lestoma.App\lestoma.App.csproj", "{E85FFB03-49C3-4992-86AA-238A2AAD1325}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "lestoma.Entidades", "..\lestomaAPI\lestoma.Entidades\lestoma.Entidades.csproj", "{76EEABA6-C47D-4C30-AD7C-7E37D2F0C790}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "lestoma.CRC", "..\lestomaAPI\lestoma.CRC\lestoma.CRC.csproj", "{38EB605A-37D5-49E8-BB0F-81DA9E687C4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lestoma.AppMaui", "lestoma.AppMaui\lestoma.AppMaui.csproj", "{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -229,6 +231,37 @@ Global
 		{38EB605A-37D5-49E8-BB0F-81DA9E687C4F}.Release|iPhone.Build.0 = Release|Any CPU
 		{38EB605A-37D5-49E8-BB0F-81DA9E687C4F}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{38EB605A-37D5-49E8-BB0F-81DA9E687C4F}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Ad-Hoc|iPhone.ActiveCfg = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Ad-Hoc|iPhone.Build.0 = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Ad-Hoc|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Ad-Hoc|iPhoneSimulator.Build.0 = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.AppStore|Any CPU.Build.0 = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.AppStore|iPhone.ActiveCfg = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.AppStore|iPhone.Build.0 = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.AppStore|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.AppStore|iPhoneSimulator.Build.0 = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Configuration active|Any CPU.ActiveCfg = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Configuration active|Any CPU.Build.0 = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Configuration active|iPhone.ActiveCfg = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Configuration active|iPhone.Build.0 = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Configuration active|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Configuration active|iPhoneSimulator.Build.0 = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Release|iPhone.Build.0 = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{8BB8DF22-1D4C-4655-BAA5-A2459AEA4D80}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
